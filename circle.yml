@@ -1,0 +1,35 @@
+## Customize the test machine
+machine:
+
+  timezone:
+    America/Los_Angeles # Set the timezone
+    
+  xcode:
+    version: 7.2
+    
+  environment:
+    # CocoaPods versions greater than 0.34 require
+    # your terminal to be using UTF-8 encoding.
+    LANG: en_US.UTF-8
+
+## Customize checkout
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init # use submodules
+
+## Customize dependencies
+dependencies:
+
+  pre:
+    - brew install xctool
+    - sudo gem install cocoapods --version 0.38.2
+    # CocoaPods sometimes has issues using caches
+    # between different versions of CocoaPods.
+    - pod setup
+    - pod repo update --silent
+    - pod install
+    
+  override:
+    - bundle install: # note ':' here
+        timeout: 180 # fail if command has no output for 3 minutes
