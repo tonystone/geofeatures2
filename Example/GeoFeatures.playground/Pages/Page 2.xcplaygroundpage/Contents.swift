@@ -8,14 +8,6 @@ import GeoFeatures2
 Usage Scenarios
 */
 
-
-// drawing tests
-let poly1 = Polygon<Coordinate2D>(rings: ([(50,50), (70,30), (90,50)],[]))
-let poly2 = Polygon<Coordinate2D>(rings: ([(50,50), (170,230), (490,150), (90,60), (40,550)],[]))
-
-poly1.drawBezierPath(poly1)
-poly2.drawBezierPath(poly2)
-
 var lineString1 = LineString<Coordinate2D>()
 lineString1.append((1.001, 1.001))
 lineString1.append((2.001, 2.001))
