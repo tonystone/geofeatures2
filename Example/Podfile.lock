@@ -10,9 +10,9 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   GeoFeatures2:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
-  GeoFeatures2: 3cf3283443e4fad884109749131f603339f00b3b
+  GeoFeatures2: 6e15f5a87d96a2ba80e94f8c77792c7b8e622119
 
 COCOAPODS: 0.39.0

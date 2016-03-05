@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.version          = "0.1.0"
   s.summary          = "A lightweight, high performance geometry library for Swift"
 
-  s.homepage         = "https://github.com/tonystone/geofeatures"
+  s.homepage         = "https://github.com/tonystone/geofeatures2"
   s.license          = 'Apache License, Version 2.0'
   s.author           = { "Tony Stone" => "https://github.com/tonystone" }
   s.source           = { :git => "https://github.com/tonystone/geofeatures2.git", :tag => s.version.to_s }
