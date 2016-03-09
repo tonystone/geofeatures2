@@ -51,6 +51,10 @@ public struct Coordinate3DM : Coordinate, ThreeDimensional, Measured, TupleConve
         self.z = tuple.z
         self.m = tuple.m
     }
+    
+    public func isEmpty() -> Bool {
+        return self.y.isNaN || self.x.isNaN || self.z.isNaN || self.m.isNaN
+    }
 }
 
 public func ==(lhs: Coordinate3DM, rhs: Coordinate3DM) -> Bool {

@@ -30,6 +30,12 @@ public protocol Coordinate : Equatable {
     var y: Double { get set }
     
     init()
+    
+    /**
+     - Returns true if this Geometry is an empty Geometry.
+     */
+    @warn_unused_result
+    func isEmpty() -> Bool
 }
 
 /**

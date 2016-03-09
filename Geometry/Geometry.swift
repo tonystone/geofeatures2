@@ -38,6 +38,11 @@ public let defaultCoordinateReferenceSystem = Cartesian()
 public protocol Geometry {
     
     /**
+        Geometries must be constructable with a CoordinateReferenceSystem and Precision
+     */
+    init(coordinateReferenceSystem: CoordinateReferenceSystem, precision: Precision)
+    
+    /**
         The Precision used to store the coordinates for this Geometry
     */
     var precision: Precision { get }

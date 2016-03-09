@@ -34,6 +34,21 @@ public struct Point<CoordinateType : protocol<Coordinate, TupleConvertable>> : G
     public var x: Double { get { return coordinate.x } }
     public var y: Double { get { return coordinate.y } }
     
+    public init(coordinateReferenceSystem: CoordinateReferenceSystem) {
+        self.init(coordinateReferenceSystem: coordinateReferenceSystem, precision: defaultPrecision)
+    }
+    
+    public init(precision: Precision) {
+        self.init(coordinateReferenceSystem: defaultCoordinateReferenceSystem, precision: precision)
+    }
+    
+    public init(coordinateReferenceSystem: CoordinateReferenceSystem, precision: Precision) {
+        self.precision = precision
+        self.coordinateReferenceSystem = coordinateReferenceSystem
+        
+        self.coordinate = CoordinateType()
+    }
+    
     public init(coordinate: CoordinateType, coordinateReferenceSystem: CoordinateReferenceSystem = defaultCoordinateReferenceSystem, precision: Precision = defaultPrecision) {
         
         self.precision = precision

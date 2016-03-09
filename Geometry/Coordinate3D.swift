@@ -48,6 +48,10 @@ public struct Coordinate3D : Coordinate, ThreeDimensional, TupleConvertable {
         self.y = tuple.y
         self.z = tuple.z
     }
+    
+    public func isEmpty() -> Bool {
+        return self.y.isNaN || self.x.isNaN || self.z.isNaN
+    }
 }
 
 public func ==(lhs: Coordinate3D, rhs: Coordinate3D) -> Bool {

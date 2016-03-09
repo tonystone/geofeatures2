@@ -11,7 +11,7 @@ import Swift
 extension Point /* Geometry Conformance */ {
 
     public func isEmpty() -> Bool {
-        return false    // Point can never be empty
+        return self.coordinate.isEmpty()
     }
     
     public func equals(other: Geometry) -> Bool {
