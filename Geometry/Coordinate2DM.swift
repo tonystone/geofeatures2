@@ -48,6 +48,10 @@ public struct Coordinate2DM : Coordinate, Measured, TupleConvertable  {
         self.y = tuple.y
         self.m = tuple.m
     }
+    
+    public func isEmpty() -> Bool {
+        return self.y.isNaN || self.x.isNaN || self.m.isNaN
+    }
 }
 
 public func ==(lhs: Coordinate2DM, rhs: Coordinate2DM) -> Bool {

@@ -45,6 +45,10 @@ public struct Coordinate2D : Coordinate, TupleConvertable {
         self.x = tuple.x
         self.y = tuple.y
     }
+    
+    public func isEmpty() -> Bool {
+        return self.y.isNaN || self.x.isNaN
+    }
 }
 
 public func ==(lhs: Coordinate2D, rhs: Coordinate2D) -> Bool {
