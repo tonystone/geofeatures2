@@ -35,7 +35,7 @@ import Swift
     All the elements in a MultiPolygon shall be in the same Spatial Reference System. This is also the Spatial Reference System for the MultiPolygon.
  */
 
-public struct MultiPolygon<CoordinateType : protocol<Coordinate, CopyConstructable>> {
+public struct MultiPolygon<CoordinateType : Coordinate> {
 
     public typealias Element = Polygon<CoordinateType>
     

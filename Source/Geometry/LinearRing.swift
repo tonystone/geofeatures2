@@ -33,7 +33,7 @@ import Swift
     A LinearRing is a Curve with linear interpolation between Coordinates. Each consecutive pair of
     Coordinates defines a Line segment.
  */
-public struct LinearRing<CoordinateType : protocol<Coordinate, CopyConstructable>> {
+public struct LinearRing<CoordinateType : Coordinate> {
 
     public let precision: Precision
     public let coordinateReferenceSystem: CoordinateReferenceSystem

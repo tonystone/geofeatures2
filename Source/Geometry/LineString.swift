@@ -33,7 +33,7 @@ import Swift
     A LineString is a Curve with linear interpolation between Coordinates. Each consecutive pair of
     Coordinates defines a Line segment.
  */
-public struct LineString<CoordinateType : protocol<Coordinate, CopyConstructable>> {
+public struct LineString<CoordinateType : Coordinate> {
 
     public let precision: Precision
     public let coordinateReferenceSystem: CoordinateReferenceSystem

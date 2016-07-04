@@ -36,7 +36,7 @@ import Swift
  */
 
 %if CoordinateSpecialized == 'true':
-public struct ${Self}<CoordinateType : protocol<Coordinate, CopyConstructable>> {
+public struct ${Self}<CoordinateType : Coordinate> {
 
     public typealias Element = ${Element}<CoordinateType>
 %else:

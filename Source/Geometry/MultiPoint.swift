@@ -35,7 +35,7 @@ import Swift
     All the elements in a MultiPoint shall be in the same Spatial Reference System. This is also the Spatial Reference System for the MultiPoint.
  */
 
-public struct MultiPoint<CoordinateType : protocol<Coordinate, CopyConstructable>> {
+public struct MultiPoint<CoordinateType : Coordinate> {
 
     public typealias Element = Point<CoordinateType>
     
@@ -346,7 +346,7 @@ extension MultiPoint : Equatable {}
 public func ==<CoordinateType : protocol<Coordinate, CopyConstructable>>(lhs: MultiPoint<CoordinateType>, rhs: MultiPoint<CoordinateType>) -> Bool {
     return lhs.equals(rhs)
 }
-
+    
 
 
 

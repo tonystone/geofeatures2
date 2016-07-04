@@ -33,7 +33,7 @@ import Swift
     A ${Self} is a Curve with linear interpolation between Coordinates. Each consecutive pair of
     Coordinates defines a Line segment.
  */
-public struct ${Self}<CoordinateType : protocol<Coordinate, CopyConstructable>> {
+public struct ${Self}<CoordinateType : Coordinate> {
 
     public let precision: Precision
     public let coordinateReferenceSystem: CoordinateReferenceSystem
