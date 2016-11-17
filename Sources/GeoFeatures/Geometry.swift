@@ -55,22 +55,18 @@ public protocol Geometry {
     /**
      - Returns: true if this Geometry is an empty Geometry.
     */
-
     func isEmpty() -> Bool
 
     /**
      - Returns: the closure of the combinatorial boundary of this Geometry instance.
      */
-
     func boundary() -> Geometry
 
-//    /**
-//     - Returns:  true if this GeoemetryType instance has no anomalous geometric points, such
-//     as self intersection or self tangency.
-//    */
-//    @warn_unused_result
-//    func isSimple() -> Bool
-//
+    /**
+     - Returns:  true if this GeoemetryType instance has no anomalous geometric points, such as self intersection or self tangency.
+    */
+    func isSimple() -> Bool
+
 //    /**
 //     The minimum bounding box for this Geometry, returned as a Geometry (Polygon).
 //    */

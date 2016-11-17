@@ -45,9 +45,14 @@ extension GeometryCollection: Geometry {
         return self.count == 0
     }
 
+    public
+    func isSimple() -> Bool {
+        return true
+    }
+
     /**
         - Returns: the closure of the combinatorial boundary of this Geometry instance.
-        
+
         - Note: GeometryCollection at this point does not implement boundary as there is no clear defination of what the boundary of this type would be.
      */
 

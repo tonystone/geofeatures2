@@ -21,10 +21,17 @@ import Swift
 
 extension Polygon: Geometry {
 
-    public var dimension: Dimension { return .two }
+    public
+    var dimension: Dimension { return .two }
 
-    public func isEmpty() -> Bool {
+    public
+    func isEmpty() -> Bool {
         return self.outerRing.count == 0
+    }
+
+    public
+    func isSimple() -> Bool {
+        return true
     }
 
     /**
@@ -48,7 +55,8 @@ extension Polygon: Geometry {
         return multiLineString
     }
 
-    public func equals(_ other: Geometry) -> Bool {
+    public
+    func equals(_ other: Geometry) -> Bool {
         if let other = other as? Polygon<CoordinateType> {
             return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing<CoordinateType>, rhs: LinearRing<CoordinateType>) -> Bool in
                 return lhs.equals(rhs)

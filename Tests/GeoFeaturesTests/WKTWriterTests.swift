@@ -38,6 +38,11 @@ fileprivate struct UnsupportedGeometry: Geometry {
         return true
     }
 
+    public
+    func isSimple() -> Bool {
+        return true
+    }
+
     func boundary() -> Geometry {
         return GeometryCollection()
     }

@@ -29,6 +29,11 @@ extension MultiLineString: Geometry {
         return self.count == 0
     }
 
+    public
+    func isSimple() -> Bool {
+        return true
+    }
+
     /**
      - Returns: the closure of the combinatorial boundary of this Geometry instance.
 
