@@ -21,17 +21,30 @@ import Swift
 
 extension MultiPoint: Geometry {
 
-    public
-    var dimension: Dimension { return .zero }
+    public var dimension: Dimension { return .zero }
 
-    public
-    func isEmpty() -> Bool {
+    public func isEmpty() -> Bool {
         return self.count == 0
     }
 
-    public
-    func isSimple() -> Bool {
-        return true
+    ///
+    /// Determin whether this MultiPoint is considered simple.
+    ///
+    /// A MultiPoint is simple if it has no duplicate Points.
+    ///
+    public func isSimple() -> Bool {
+
+        return buffer.withUnsafeMutablePointers { (header, elements) -> Bool in
+            var points = [Element]()
+
+            for i in 0..<header.pointee.count {
+                if points.contains(elements[i]) {
+                    return false
+                }
+                points.append(elements[i])
+            }
+            return true
+        }
     }
 
     /**
@@ -40,13 +53,11 @@ extension MultiPoint: Geometry {
      - Note: The boundary of a MultiPoint is the empty set.
      */
 
-    public
-    func boundary() -> Geometry {
+    public func boundary() -> Geometry {
         return MultiPoint<CoordinateType>(precision: self.precision, coordinateReferenceSystem: self.coordinateReferenceSystem)
     }
 
-    public
-    func equals(_ other: Geometry) -> Bool {
+    public func equals(_ other: Geometry) -> Bool {
         if let other = other as? MultiPoint<CoordinateType> {
             return self.elementsEqual(other)
         }
