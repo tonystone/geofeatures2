@@ -25,15 +25,13 @@ import Foundation
     fileprivate typealias RegularExpression = NSRegularExpression
 #endif
 
-public enum ParseError: Error  {
+public enum WKTReaderError: Error  {
+    case invalidNumberOfCoordinates(String)
+    case invalidData(String)
     case unsupportedType(String)
     case unexpectedToken(String)
     case missingElement(String)
 }
-
-//private func == (lhs: RegularExpression, rhs: RegularExpression) -> Bool {
-//    return lhs.regex?.pattern == rhs.regex?.pattern
-//}
 
 private class WKT: Token, CustomStringConvertible {
 
@@ -80,25 +78,43 @@ private class WKT: Token, CustomStringConvertible {
     var pattern: String
 }
 
-/**
-    TODO: Full header class doc with examples
- */
-open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayConstructable> {
+///
+/// Well Known Text (WKT) parser for GeoFeatures based on the OGC WKT specification
+///
+/// - Parameters:
+///     - CoordinateType: The coordinate type to use for all generated Geometry types.
+///
+public class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayConstructable> {
 
     fileprivate let crs: CoordinateReferenceSystem
     fileprivate let precision: Precision
 
+    ///
+    /// Initialize this reader
+    ///
+    /// - Parameters:
+    ///     - precision: The `Precision` model that should used for all coordinates.
+    ///     - coordinateReferenceSystem: The 'CoordinateReferenceSystem` the result Geometries should use in calculations on their coordinates.
+    ///
+    /// - SeeAlso: `Precision`
+    /// - SeeAlso: `CoordinateReferenceSystem`
+    ///
     public init(precision: Precision = defaultPrecision, coordinateReferenceSystem: CoordinateReferenceSystem = defaultCoordinateReferenceSystem) {
         self.crs = coordinateReferenceSystem
         self.precision = precision
     }
 
-    /**
-        TODO: Full header func doc for read
-     */
-    open func read(wkt: String) throws -> Geometry {
+    ///
+    /// Parse a WKT String into Geometry objects.
+    ///
+    /// - Parameters:
+    ///     - string: The WKT string to parse
+    ///
+    /// - Returns: A Geometry object representing the WKT
+    ///
+    public func read(string: String) throws -> Geometry {
 
-        let tokenizer = Tokenizer<WKT>(string: wkt)
+        let tokenizer = Tokenizer<WKT>(string: string)
 
         // BNF: <geometry tagged text> ::= <point tagged text>
         //                          | <linestring tagged text>
@@ -151,7 +167,24 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         if tokenizer.accept(.GEOMETRYCOLLECTION) != nil {
             return try self.geometryCollectionTaggedText(tokenizer, require: (z: nil, m: nil))
         }
-        throw ParseError.unsupportedType("Unsupported type -> '\(wkt)'")
+        throw WKTReaderError.unsupportedType("Unsupported type -> '\(string)'")
+    }
+
+    ///
+    /// Parse the WKT Data object into Geometry objects.
+    ///
+    /// - Parameters:
+    ///     - data: The Data object to parse
+    ///     - encoding: The encoding that should be used to read the data.
+    ///
+    /// - Returns: A Geometry object representing the WKT
+    ///
+    public func read(data: Data, encoding: String.Encoding = .utf8) throws -> Geometry {
+
+        guard let string = String(data: data, encoding: encoding) else {
+            throw WKTReaderError.invalidData("The Data object can not be converted using the given encoding '\(encoding)'.")
+        }
+        return try self.read(string: string)
     }
 
     // BNF: <point tagged text> ::= point <point text>
@@ -164,13 +197,13 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
     fileprivate func pointText(_ tokenizer: Tokenizer<WKT>, require: (z: Bool, m: Bool)) throws -> Point<CoordinateType> {
 
         if tokenizer.accept(.LEFT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
         let coordinate = try self.coordinate(tokenizer, require: require)
 
         if tokenizer.accept(.RIGHT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
         return Point<CoordinateType>(coordinate: coordinate, precision: precision, coordinateReferenceSystem: crs)
     }
@@ -189,7 +222,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         }
 
         if tokenizer.accept(.LEFT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
         var coordinates = [CoordinateType]()
@@ -201,7 +234,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
 
             if tokenizer.accept(.COMMA) != nil {
                 if tokenizer.accept(.SINGLE_SPACE) == nil {
-                    throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                    throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
                 }
             } else {
                 done = true
@@ -209,7 +242,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         } while !done
 
         if tokenizer.accept(.RIGHT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
         return LineString<CoordinateType>(elements: coordinates, precision: precision, coordinateReferenceSystem: crs)
     }
@@ -228,7 +261,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         }
 
         if tokenizer.accept(.LEFT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
         var coordinates = [CoordinateType]()
@@ -240,7 +273,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
 
             if tokenizer.accept(.COMMA) != nil {
                 if tokenizer.accept(.SINGLE_SPACE) == nil {
-                    throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                    throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
                 }
             } else {
                 done = true
@@ -248,7 +281,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         } while !done
 
         if tokenizer.accept(.RIGHT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
         return LinearRing<CoordinateType>(elements: coordinates, precision: precision, coordinateReferenceSystem: crs)
     }
@@ -267,7 +300,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         }
 
         if tokenizer.accept(.LEFT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
         let outerRing = try self.linearRingText(tokenizer, require: require)
@@ -277,11 +310,11 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         }
 
         if tokenizer.accept(.COMMA) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .COMMA))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .COMMA))
         }
 
         if tokenizer.accept(.SINGLE_SPACE) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
         }
 
         var innerRings = [LinearRing<CoordinateType>]()
@@ -293,7 +326,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
 
             if tokenizer.accept(.COMMA) != nil {
                 if tokenizer.accept(.SINGLE_SPACE) == nil {
-                    throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                    throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
                 }
             } else {
                 done = true
@@ -301,7 +334,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         } while !done
 
         if tokenizer.accept(.RIGHT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
         return Polygon<CoordinateType>(outerRing: outerRing, innerRings: innerRings)
     }
@@ -320,7 +353,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         }
 
         if tokenizer.accept(.LEFT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
         var elements = [Point<CoordinateType>]()
@@ -332,7 +365,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
 
             if tokenizer.accept(.COMMA) != nil {
                 if tokenizer.accept(.SINGLE_SPACE) == nil {
-                    throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                    throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
                 }
             } else {
                 done = true
@@ -340,7 +373,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         } while !done
 
         if tokenizer.accept(.RIGHT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
         return MultiPoint<CoordinateType>(elements: elements, precision: precision, coordinateReferenceSystem: crs)
     }
@@ -359,7 +392,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         }
 
         if tokenizer.accept(.LEFT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
         var elements = [LineString<CoordinateType>]()
@@ -370,7 +403,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
 
             if tokenizer.accept(.COMMA) != nil {
                 if tokenizer.accept(.SINGLE_SPACE) == nil {
-                    throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                    throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
                 }
             } else {
                 done = true
@@ -378,7 +411,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         } while !done
 
         if tokenizer.accept(.RIGHT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
         return MultiLineString<CoordinateType>(elements: elements, precision: precision, coordinateReferenceSystem: crs)
     }
@@ -397,7 +430,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         }
 
         if tokenizer.accept(.LEFT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
         var elements = [Polygon<CoordinateType>]()
@@ -409,7 +442,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
 
             if tokenizer.accept(.COMMA) != nil {
                 if tokenizer.accept(.SINGLE_SPACE) == nil {
-                    throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                    throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
                 }
             } else {
                 done = true
@@ -417,7 +450,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         } while !done
 
         if tokenizer.accept(.RIGHT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
 
         return MultiPolygon<CoordinateType>(elements: elements)
@@ -437,7 +470,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         }
 
         if tokenizer.accept(.LEFT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
         var elements = [Geometry]()
@@ -476,12 +509,12 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
             } else if tokenizer.accept(.GEOMETRYCOLLECTION) != nil {
                 elements.append(try self.geometryCollectionTaggedText(tokenizer, require: (z: require.z, m: require.m)))
             } else {
-                throw ParseError.missingElement("At least one Geometry is required unless you specify EMPTY for the GoemetryCollection")
+                throw WKTReaderError.missingElement("At least one Geometry is required unless you specify EMPTY for the GoemetryCollection")
             }
 
             if tokenizer.accept(.COMMA) != nil {
                 if tokenizer.accept(.SINGLE_SPACE) == nil {
-                    throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                    throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
                 }
             } else {
                 done = true
@@ -489,7 +522,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         } while !done
 
         if tokenizer.accept(.RIGHT_PAREN) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
         return GeometryCollection(elements: elements, precision: precision, coordinateReferenceSystem: crs)
     }
@@ -505,55 +538,51 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         if let token = tokenizer.accept(.NUMERIC_LITERAL), let value = Double(token) {
             coordinates.append(value)
         } else {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .NUMERIC_LITERAL))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .NUMERIC_LITERAL))
         }
 
         if tokenizer.accept(.SINGLE_SPACE) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
         }
 
         if let token = tokenizer.accept(.NUMERIC_LITERAL), let value = Double(token) {
             coordinates.append(value)
         } else {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .NUMERIC_LITERAL))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .NUMERIC_LITERAL))
         }
 
         if require.z {
 
             if tokenizer.accept(.SINGLE_SPACE) == nil {
-                throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
             }
 
             if let token = tokenizer.accept(.NUMERIC_LITERAL), let value = Double(token) {
                 coordinates.append(value)
             } else {
-                throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .NUMERIC_LITERAL))
+                throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .NUMERIC_LITERAL))
             }
         }
 
         if require.m {
 
             if tokenizer.accept(.SINGLE_SPACE) == nil {
-                throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
             }
 
             if let token = tokenizer.accept(.NUMERIC_LITERAL), let value = Double(token) {
                 coordinates.append(value)
             } else {
-                throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .NUMERIC_LITERAL))
+                throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .NUMERIC_LITERAL))
             }
         }
 
-        ///
-        ///  Note, since we don't know the actual type of the target we
-        ///  want to make sure we have an array the size of the largest
-        ///  possible coorinate type.
-        ///
-        for _ in coordinates.count..<4 {
-            coordinates.append(Double.nan)
-        }
+        do {
+            return try CoordinateType(array: coordinates)
 
-        return CoordinateType(array: coordinates)
+        } catch _ArrayConstructableError.invalidArraySize {
+            throw WKTReaderError.invalidNumberOfCoordinates("Invalid number of coordinates (\(coordinates.count)) supplied for type \(String(reflecting: CoordinateType.self)).")
+        }
     }
 
     fileprivate func dimensionText(_ tokenizer: Tokenizer<WKT>, require: (z: Bool?, m: Bool?)) throws -> (z: Bool, m: Bool) {
@@ -561,7 +590,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         var result = (z: false, m: false)
 
         if tokenizer.accept(.SINGLE_SPACE) == nil {
-            throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+            throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
         }
 
         if let requireZ = require.z, requireZ  == true { // Z is required and must be present
@@ -569,7 +598,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
             result.z = requireZ
 
             if tokenizer.accept(.THREEDIMENSIONAL) == nil {
-                throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .THREEDIMENSIONAL))
+                throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .THREEDIMENSIONAL))
             }
         } else {
             result.z = tokenizer.accept(.THREEDIMENSIONAL) != nil
@@ -580,7 +609,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
             result.m = requireM
 
             if tokenizer.accept(.MEASURED) == nil {
-                throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .MEASURED))
+                throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .MEASURED))
             }
         } else {
             result.m = tokenizer.accept(.MEASURED) != nil
@@ -589,7 +618,7 @@ open class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCons
         // If either was present, a single space after it is required.
         if result.z || result.m {
             if tokenizer.accept(.SINGLE_SPACE) == nil {
-                throw ParseError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
+                throw WKTReaderError.unexpectedToken(errorMessage(tokenizer, expectedToken: .SINGLE_SPACE))
             }
         }
         return result
