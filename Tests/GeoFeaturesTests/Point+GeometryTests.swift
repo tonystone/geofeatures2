@@ -58,6 +58,14 @@ class Point_Geometry_Coordinate2D_FloatingPrecision_Cartesian_Tests: XCTestCase 
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
+
+    func testIsSimple_True() {
+
+        let input = Point<Coordinate2D>(coordinate: (x: 1.001, y: 1.001), precision: precision, coordinateReferenceSystem: crs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
 }
 
 // MARK: - Coordinate2DM, FloatingPrecision, Cartesian -
@@ -95,6 +103,14 @@ class Point_Geometry_Coordinate2DM_FloatingPrecision_Cartesian_Tests: XCTestCase
         let expected = MultiPoint<Coordinate2DM>(precision: precision, coordinateReferenceSystem: crs)
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+    }
+
+    func testIsSimple_True() {
+
+        let input = Point<Coordinate2DM>(coordinate: (x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateReferenceSystem: crs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
     }
 }
 
@@ -134,6 +150,14 @@ class Point_Geometry_Coordinate3D_FloatingPrecision_Cartesian_Tests: XCTestCase 
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
+
+    func testIsSimple_True() {
+
+        let input = Point<Coordinate3D>(coordinate: (x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateReferenceSystem: crs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
 }
 
 // MARK: - Coordinate3DM, FloatingPrecision, Cartesian -
@@ -171,6 +195,14 @@ class Point_Geometry_Coordinate3DM_FloatingPrecision_Cartesian_Tests: XCTestCase
         let expected = MultiPoint<Coordinate3DM>(precision: precision, coordinateReferenceSystem: crs)
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+    }
+
+    func testIsSimple_True() {
+
+        let input = Point<Coordinate3DM>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateReferenceSystem: crs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
     }
 }
 
@@ -210,6 +242,14 @@ class Point_Geometry_Coordinate2D_FixedPrecision_Cartesian_Tests: XCTestCase {
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
+
+    func testIsSimple_True() {
+
+        let input = Point<Coordinate2D>(coordinate: (x: 1.001, y: 1.001), precision: precision, coordinateReferenceSystem: crs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
 }
 
 // MARK: - Coordinate2DM, FixedPrecision, Cartesian -
@@ -247,6 +287,14 @@ class Point_Geometry_Coordinate2DM_FixedPrecision_Cartesian_Tests: XCTestCase {
         let expected = MultiPoint<Coordinate2DM>(precision: precision, coordinateReferenceSystem: crs)
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+    }
+
+    func testIsSimple_True() {
+
+        let input = Point<Coordinate2DM>(coordinate: (x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateReferenceSystem: crs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
     }
 }
 
@@ -286,6 +334,14 @@ class Point_Geometry_Coordinate3D_FixedPrecision_Cartesian_Tests: XCTestCase {
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
+
+    func testIsSimple_True() {
+
+        let input = Point<Coordinate3D>(coordinate: (x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateReferenceSystem: crs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
 }
 
 // MARK: - Coordinate3DM, FixedPrecision, Cartesian -
@@ -323,5 +379,13 @@ class Point_Geometry_Coordinate3DM_FixedPrecision_Cartesian_Tests: XCTestCase {
         let expected = MultiPoint<Coordinate3DM>(precision: precision, coordinateReferenceSystem: crs)
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+    }
+
+    func testIsSimple_True() {
+
+        let input = Point<Coordinate3DM>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateReferenceSystem: crs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
     }
 }

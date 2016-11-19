@@ -31,7 +31,7 @@ extension Point: Geometry {
 
     public
     func isSimple() -> Bool {
-        return true
+        return true     // Points are always simple by definition
     }
 
     /**
