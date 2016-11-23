@@ -13,10 +13,10 @@ import Foundation
 /// Low level type to represent a segment of a line used in geometric computations.
 ///
 internal class Segment<CoordinateType: Coordinate & CopyConstructable> {
-    
+
     internal var c1: CoordinateType
     internal var c2: CoordinateType
-    
+
     init(c1: CoordinateType, c2: CoordinateType) {
         self.c1 = c1
         self.c2 = c2

@@ -52,9 +52,8 @@ extension MultiPoint: Geometry {
 
      - Note: The boundary of a MultiPoint is the empty set.
      */
-
     public func boundary() -> Geometry {
-        return MultiPoint<CoordinateType>(precision: self.precision, coordinateReferenceSystem: self.coordinateReferenceSystem)
+        return MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
     public func equals(_ other: Geometry) -> Bool {

@@ -29,29 +29,29 @@ class MultiPoint_Geometry_Coordinate2D_FloatingPrecision_Cartesian_Tests: XCTest
     private typealias CoordinateType = Coordinate2D
 
     let precision = FloatingPrecision()
-    let crs       = Cartesian()
+    let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundary() {
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundary_Empty() {
-        let input = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testIsSimple_WithNoEqualPoints() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -59,7 +59,7 @@ class MultiPoint_Geometry_Coordinate2D_FloatingPrecision_Cartesian_Tests: XCTest
 
     func testIsSimple_WithNoEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -67,7 +67,7 @@ class MultiPoint_Geometry_Coordinate2D_FloatingPrecision_Cartesian_Tests: XCTest
 
     func testIsSimple_WithEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -81,29 +81,29 @@ class MultiPoint_Geometry_Coordinate2DM_FloatingPrecision_Cartesian_Tests: XCTes
     private typealias CoordinateType = Coordinate2DM
 
     let precision = FloatingPrecision()
-    let crs       = Cartesian()
+    let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundary() {
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundary_Empty() {
-        let input = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testIsSimple_WithNoEqualPoints() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, m: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, m: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -111,7 +111,7 @@ class MultiPoint_Geometry_Coordinate2DM_FloatingPrecision_Cartesian_Tests: XCTes
 
     func testIsSimple_WithNoEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, m: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, m: 2.004))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, m: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, m: 2.004))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -119,7 +119,7 @@ class MultiPoint_Geometry_Coordinate2DM_FloatingPrecision_Cartesian_Tests: XCTes
 
     func testIsSimple_WithEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -133,29 +133,29 @@ class MultiPoint_Geometry_Coordinate3D_FloatingPrecision_Cartesian_Tests: XCTest
     private typealias CoordinateType = Coordinate3D
 
     let precision = FloatingPrecision()
-    let crs       = Cartesian()
+    let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundary() {
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundary_Empty() {
-        let input = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testIsSimple_WithNoEqualPoints() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, z: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, z: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -163,7 +163,7 @@ class MultiPoint_Geometry_Coordinate3D_FloatingPrecision_Cartesian_Tests: XCTest
 
     func testIsSimple_WithNoEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, z: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, z: 2.004))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, z: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, z: 2.004))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -171,7 +171,7 @@ class MultiPoint_Geometry_Coordinate3D_FloatingPrecision_Cartesian_Tests: XCTest
 
     func testIsSimple_WithEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -185,29 +185,29 @@ class MultiPoint_Geometry_Coordinate3DM_FloatingPrecision_Cartesian_Tests: XCTes
     private typealias CoordinateType = Coordinate3DM
 
     let precision = FloatingPrecision()
-    let crs       = Cartesian()
+    let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundary() {
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundary_Empty() {
-        let input = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testIsSimple_WithNoEqualPoints() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -215,7 +215,7 @@ class MultiPoint_Geometry_Coordinate3DM_FloatingPrecision_Cartesian_Tests: XCTes
 
     func testIsSimple_WithNoEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, z: 2.006, m: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, z: 2.004, m: 2.004))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, z: 2.006, m: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, z: 2.004, m: 2.004))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -223,7 +223,7 @@ class MultiPoint_Geometry_Coordinate3DM_FloatingPrecision_Cartesian_Tests: XCTes
 
     func testIsSimple_WithEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -237,29 +237,29 @@ class MultiPoint_Geometry_Coordinate2D_FixedPrecision_Cartesian_Tests: XCTestCas
     private typealias CoordinateType = Coordinate2D
 
     let precision = FixedPrecision(scale: 100)
-    let crs       = Cartesian()
+    let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundary() {
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundary_Empty() {
-        let input = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testIsSimple_WithNoEqualPoints() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -267,7 +267,7 @@ class MultiPoint_Geometry_Coordinate2D_FixedPrecision_Cartesian_Tests: XCTestCas
 
     func testIsSimple_WithNoEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -275,7 +275,7 @@ class MultiPoint_Geometry_Coordinate2D_FixedPrecision_Cartesian_Tests: XCTestCas
 
     func testIsSimple_WithEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.001, y: 2.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.001, y: 2.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -289,29 +289,29 @@ class MultiPoint_Geometry_Coordinate2DM_FixedPrecision_Cartesian_Tests: XCTestCa
     private typealias CoordinateType = Coordinate2DM
 
     let precision = FixedPrecision(scale: 100)
-    let crs       = Cartesian()
+    let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundary() {
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundary_Empty() {
-        let input = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testIsSimple_WithNoEqualPoints() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, m: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, m: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -319,7 +319,7 @@ class MultiPoint_Geometry_Coordinate2DM_FixedPrecision_Cartesian_Tests: XCTestCa
 
     func testIsSimple_WithNoEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, m: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, m: 2.004))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, m: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, m: 2.004))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -327,7 +327,7 @@ class MultiPoint_Geometry_Coordinate2DM_FixedPrecision_Cartesian_Tests: XCTestCa
 
     func testIsSimple_WithEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.001, y: 2.001, m: 2.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.001, y: 2.001, m: 2.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -341,43 +341,43 @@ class MultiPoint_Geometry_Coordinate3D_FixedPrecision_Cartesian_Tests: XCTestCas
     private typealias CoordinateType = Coordinate3D
 
     let precision = FixedPrecision(scale: 100)
-    let crs       = Cartesian()
+    let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundary() {
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundary_Empty() {
-        let input = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testEqual_True() {
-        let input1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateReferenceSystem: crs)
-        let input2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateReferenceSystem: crs)
+        let input1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
+        let input2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
      }
 
      func testEqual_False() {
-        let input1            = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateReferenceSystem: crs)
-        let input2: Geometry  = Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateReferenceSystem: crs)
+        let input1            = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
 
     func testIsSimple_WithNoEqualPoints() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, z: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, z: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -385,7 +385,7 @@ class MultiPoint_Geometry_Coordinate3D_FixedPrecision_Cartesian_Tests: XCTestCas
 
     func testIsSimple_WithNoEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, z: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, z: 2.004))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, z: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, z: 2.004))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -393,7 +393,7 @@ class MultiPoint_Geometry_Coordinate3D_FixedPrecision_Cartesian_Tests: XCTestCas
 
     func testIsSimple_WithEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.001, y: 2.001, z: 2.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.001, y: 2.001, z: 2.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -407,43 +407,43 @@ class MultiPoint_Geometry_Coordinate3DM_FixedPrecision_Cartesian_Tests: XCTestCa
     private typealias CoordinateType = Coordinate3DM
 
     let precision = FixedPrecision(scale: 100)
-    let crs       = Cartesian()
+    let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundary() {
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundary_Empty() {
-        let input = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs).boundary()
-        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateReferenceSystem: crs)  // Empty Set
+        let input = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint<CoordinateType>(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testEqual_True() {
-        let input1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateReferenceSystem: crs)
-        let input2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateReferenceSystem: crs)
+        let input1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateSystem: cs)
+        let input2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
      }
 
      func testEqual_False() {
-        let input1            = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateReferenceSystem: crs)
-        let input2: Geometry  = Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateReferenceSystem: crs)
+        let input1            = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
 
     func testIsSimple_WithNoEqualPoints() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -451,7 +451,7 @@ class MultiPoint_Geometry_Coordinate3DM_FixedPrecision_Cartesian_Tests: XCTestCa
 
     func testIsSimple_WithNoEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, z: 2.006, m: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, z: 2.004, m: 2.004))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.006, y: 2.006, z: 2.006, m: 2.006)), Point<CoordinateType>(coordinate: (x: 2.004, y: 2.004, z: 2.004, m: 2.004))], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -459,7 +459,7 @@ class MultiPoint_Geometry_Coordinate3DM_FixedPrecision_Cartesian_Tests: XCTestCa
 
     func testIsSimple_WithEqualPointsAfterPrecision() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.001, y: 2.001, z: 2.001, m: 2.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateReferenceSystem: crs)
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 2.001, y: 2.001, z: 2.001, m: 2.001)), Point<CoordinateType>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
