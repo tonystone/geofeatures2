@@ -173,44 +173,68 @@ class AVLTreeTests: XCTestCase {
     }
 
     func testNextOf1() {
-        let input = tree.find(value: 1)!    // swiftlint:disable:this force_unwrapping
+        let input = tree.find(value: 1)
         let expected = 5
 
-        XCTAssertEqual(tree.next(node: input)?.value, expected)
+        if let input = input {
+            XCTAssertEqual(tree.next(node: input)?.value, expected)
+        } else {
+            XCTFail("Expected value '\(expected)' not found in tree \(tree).")
+        }
     }
 
     func testNextOf8() {
-        let input = tree.find(value: 8)!   // swiftlint:disable:this force_unwrapping
+        let input = tree.find(value: 8)
         let expected = 10
 
-        XCTAssertEqual(tree.next(node: input)?.value, expected)
+        if let input = input {
+            XCTAssertEqual(tree.next(node: input)?.value, expected)
+        } else {
+            XCTFail("Expected value '\(expected)' not found in tree \(tree).")
+        }
     }
 
     func testNextOf15() {
-        let input = tree.find(value: 15)!   // swiftlint:disable:this force_unwrapping
+        let input = tree.find(value: 15)
         let expected = 17
 
-        XCTAssertEqual(tree.next(node: input)?.value, expected)
+        if let input = input {
+            XCTAssertEqual(tree.next(node: input)?.value, expected)
+        } else {
+            XCTFail("Expected value '\(expected)' not found in tree \(tree).")
+        }
     }
 
     func testPreviousOf1() {
-        let input = tree.find(value: 1)!    // swiftlint:disable:this force_unwrapping
+        let input = tree.find(value: 1)
         let expected: Int? = nil
 
-        XCTAssertEqual(tree.previous(node: input)?.value, expected)
+        if let input = input {
+            XCTAssertEqual(tree.next(node: input)?.value, expected)
+        } else {
+            XCTFail("Expected value '\(expected)' not found in tree \(tree).")
+        }
     }
 
     func testPreviousOf8() {
-        let input = tree.find(value: 8)!   // swiftlint:disable:this force_unwrapping
+        let input = tree.find(value: 8)
         let expected = 7
 
-        XCTAssertEqual(tree.previous(node: input)?.value, expected)
+        if let input = input {
+            XCTAssertEqual(tree.next(node: input)?.value, expected)
+        } else {
+            XCTFail("Expected value '\(expected)' not found in tree \(tree).")
+        }
     }
 
     func testPreviousOf15() {
-        let input = tree.find(value: 15)!   // swiftlint:disable:this force_unwrapping
+        let input = tree.find(value: 15)
         let expected = 10
 
-        XCTAssertEqual(tree.previous(node: input)?.value, expected)
+        if let input = input {
+            XCTAssertEqual(tree.next(node: input)?.value, expected)
+        } else {
+            XCTFail("Expected value '\(expected)' not found in tree \(tree).")
+        }
     }
 }
