@@ -52,11 +52,46 @@ class AVLTreeTests: XCTestCase {
         XCTAssertEqual(input.balanced, expected)
     }
 
-    func testBalanced3NodeTree() {
+    func testBalanced3NodeRightHeavyTree() {
         let input: AVLTree<Int> = [1, 5, 8]
         let expected = true
 
         XCTAssertEqual(input.balanced, expected)
+    }
+
+    func testHeight3NodeRightHeavyTree() {
+        let input: AVLTree<Int> = [1, 5, 8]
+        let expected = 2
+
+        XCTAssertEqual(input.height, expected)
+    }
+
+    func testBalanced3NodeLeftHeavyTree() {
+        let input: AVLTree<Int> = [8, 5, 1]
+        let expected = true
+
+        XCTAssertEqual(input.balanced, expected)
+    }
+
+    func testHeight3NodeLeftHeavyTree() {
+        let input: AVLTree<Int> = [8, 5, 1]
+        let expected = 2
+
+        XCTAssertEqual(input.height, expected)
+    }
+
+    func testBalanced3NodeLeftRightHeavyTree() {
+        let input: AVLTree<Int> = [8, 1, 5]
+        let expected = true
+
+        XCTAssertEqual(input.balanced, expected)
+    }
+
+    func testHeight3NodeLeftRightHeavyTree() {
+        let input: AVLTree<Int> = [8, 1, 5]
+        let expected = 2
+
+        XCTAssertEqual(input.height, expected)
     }
 
     func testBalanced3NodeOrderedTree() {
