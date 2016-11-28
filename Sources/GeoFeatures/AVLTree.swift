@@ -51,10 +51,18 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
         print(self)
     }
 
+    ///
+    /// The current height of this tree
+    ///
     internal var height: Int {
         return self.root?.height ?? 0
     }
 
+    ///
+    /// Check to see if the tree is height balanced.
+    ///
+    /// - Returns: true if this tree is balanced for height
+    ///
     internal var balanced: Bool {
         guard let root = self.root else {
             return true
@@ -71,7 +79,6 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     ///
     @discardableResult
     public func insert(value: ValueType) -> NodeType {
-
         return self.insert(value: value, node: &self.root)
     }
 
@@ -156,12 +163,18 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
         }
         return next
     }
+}
+
+///
+/// Fileprivate private implementation
+///
+fileprivate extension AVLTree {
 
     ///
     /// Insert this node in the proper place in the tree ensuring it's balanced
     ///
     @discardableResult
-    private func insert(value: ValueType, node root: inout NodeType?) -> NodeType {
+    fileprivate func insert(value: ValueType, node root: inout NodeType?) -> NodeType {
 
         guard let node = root else {
             let newNode = NodeType(value: value)
@@ -201,7 +214,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
         }
     }
 
-    private func remove(node: NodeType) {
+    fileprivate func remove(node: NodeType) {
 
 //        if node.left == nil && node.right == nil {
 //
@@ -220,7 +233,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
 //        }
     }
 
-    private func find(value: ValueType, start node: NodeType?) -> NodeType? {
+    fileprivate func find(value: ValueType, start node: NodeType?) -> NodeType? {
         guard let node = node else {
             return nil
         }
