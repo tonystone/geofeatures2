@@ -50,11 +50,25 @@ class AVLTreeTests: XCTestCase {
         XCTAssertEqual(input.balanced && input.height == 2, expected)
     }
 
+    func testHeightEmptyTree() {
+        let input = AVLTree<Int>()
+        let expected = 0
+
+        XCTAssertEqual(input.height, expected)
+    }
+
     func testHeight() {
         let input: AVLTree<Int> = [1, 5, 8, 7, 10, 15, 20, 17, 25]
         let expected = 4
 
         XCTAssertEqual(input.height, expected)
+    }
+
+    func testBalancedEmptyTree() {
+        let input = AVLTree<Int>()
+        let expected = true
+
+        XCTAssertEqual(input.balanced, expected)
     }
 
     func testBalanced9NodeTree() {

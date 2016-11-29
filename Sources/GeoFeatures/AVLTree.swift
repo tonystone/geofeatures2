@@ -310,17 +310,17 @@ fileprivate extension AVLTree {
     @discardableResult
     fileprivate func leftRotate(node root: inout NodeType?) {
 
-        guard let a = root, let b = a.right else {
-            return
-        }
-        a.right = b.left    /// A's right becomes B's left
-        b.left  = a         /// B's left becomes A
+        if let a = root, let b = a.right {
 
-        /// Note: if this is the root node the parent will never be set by it's
-        ///       parent (because it does not have one) so you must nil the parent
-        ///       before assining it to the root pointer
-        b.parent = nil
-        root = b            /// Assign B as the new root
+            a.right = b.left    /// A's right becomes B's left
+            b.left  = a         /// B's left becomes A
+
+            /// Note: if this is the root node the parent will never be set by it's
+            ///       parent (because it does not have one) so you must nil the parent
+            ///       before assining it to the root pointer
+            b.parent = nil
+            root = b            /// Assign B as the new root
+        }
     }
 
     ///
@@ -347,17 +347,17 @@ fileprivate extension AVLTree {
     @discardableResult
     fileprivate func rightRotate(node root: inout NodeType?) {
 
-        guard let c = root, let b = c.left else {
-            return
-        }
-        c.left  = b.right  /// C's left becomes B's right
-        b.right = c        /// B's right becomes C
+        if let c = root, let b = c.left {
 
-        /// Note: if this is the root node the parent will never be set by it's
-        ///       parent (because it does not have one) so you must nil the parent
-        ///       before assining it to the root pointer
-        b.parent = nil
-        root = b           /// Assign B as the new root
+            c.left  = b.right  /// C's left becomes B's right
+            b.right = c        /// B's right becomes C
+
+            /// Note: if this is the root node the parent will never be set by it's
+            ///       parent (because it does not have one) so you must nil the parent
+            ///       before assigning it to the root pointer
+            b.parent = nil
+            root = b           /// Assign B as the new root
+        }
     }
 
     ///
@@ -384,23 +384,23 @@ fileprivate extension AVLTree {
     @discardableResult
     fileprivate func leftRightRotate(node root: inout NodeType?) {
 
-        guard let c = root, let a = c.left, let b = a.right else {
-            return
+        if let c = root, let a = c.left, let b = a.right {
+
+            /// Left rotation
+            a.right = b.left
+            b.left = a
+            c.left = b
+
+            /// Right rotation
+            c.left = b.right
+            b.right = c
+
+            /// Note: if this is the root node the parent will never be set by it's
+            ///       parent (because it does not have one) so you must nil the parent
+            ///       before assigning it to the root pointer
+            b.parent = nil
+            root = b
         }
-        /// Left rotation
-        a.right = b.left
-        b.left = a
-        c.left = b
-
-        /// Right rotation
-        c.left = b.right
-        b.right = c
-
-        /// Note: if this is the root node the parent will never be set by it's
-        ///       parent (because it does not have one) so you must nil the parent
-        ///       before assining it to the root pointer
-        b.parent = nil
-        root = b
     }
 
     ///
@@ -427,23 +427,23 @@ fileprivate extension AVLTree {
     @discardableResult
     fileprivate func rightLeftRotate(node root: inout NodeType?) {
 
-        guard let a = root, let c = a.right, let b = c.left else {
-            return
+        if let a = root, let c = a.right, let b = c.left {
+
+            /// Right rotate
+            c.left = b.right
+            b.right = c
+            a.right = b
+
+            /// Left rotate
+            a.right = b.left
+            b.left = a
+
+            /// Note: if this is the root node the parent will never be set by it's
+            ///       parent (because it does not have one) so you must nil the parent
+            ///       before assigning it to the root pointer
+            b.parent = nil
+            root = b
         }
-        /// Right rotate
-        c.left = b.right
-        b.right = c
-        a.right = b
-
-        /// Left rotate
-        a.right = b.left
-        b.left = a
-
-        /// Note: if this is the root node the parent will never be set by it's 
-        ///       parent (because it does not have one) so you must nil the parent 
-        ///       before assining it to the root pointer
-        b.parent = nil
-        root = b
     }
 }
 
