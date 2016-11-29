@@ -56,13 +56,16 @@ extension AVLTreeTests {
                 ("testFindNonExisting0", testFindNonExisting0),
                 ("testFindNonExisting30", testFindNonExisting30),
                 ("testNextOf1", testNextOf1),
+                ("testNextOf7", testNextOf7),
                 ("testNextOf8", testNextOf8),
-                ("testNextOf15_1", testNextOf15_1),
-                ("testNextOf25", testNextOf25),
+                ("testNextOf10", testNextOf10),
                 ("testNextOf15", testNextOf15),
+                ("testNextOf25", testNextOf25),
                 ("testPreviousOf1", testPreviousOf1),
                 ("testPreviousOf8", testPreviousOf8),
+                ("testPreviousOf10", testPreviousOf10),
                 ("testPreviousOf15", testPreviousOf15),
+                ("testPreviousOf17", testPreviousOf17),
            ]
    }
 }
