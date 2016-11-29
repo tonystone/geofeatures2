@@ -91,6 +91,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
         if let node = self.search(value: value) {
             self.remove(node: node)
         }
+
     }
 
     ///
@@ -178,6 +179,7 @@ fileprivate extension AVLTree {
     ///
     /// Insert this node in the proper place in the tree ensuring it's balanced
     ///
+    @inline(__always)
     @discardableResult
     fileprivate func insert(value: ValueType, node root: inout NodeType?) -> NodeType {
 
@@ -219,6 +221,10 @@ fileprivate extension AVLTree {
         }
     }
 
+    ///
+    /// Remove the node from the tree
+    ///
+    @inline(__always)
     fileprivate func remove(node: NodeType) {
 
 //        if node.left == nil && node.right == nil {
@@ -238,6 +244,7 @@ fileprivate extension AVLTree {
 //        }
     }
 
+    @inline(__always)
     fileprivate func search(value: ValueType, start node: NodeType?) -> NodeType? {
         guard let node = node else {
             return nil
@@ -261,6 +268,7 @@ fileprivate extension AVLTree {
     ///
     /// Balance the tree from the node given.
     ///
+    @inline(__always)
     fileprivate func balance(from root: inout NodeType?) {
 
         if let node = root {
@@ -312,6 +320,7 @@ fileprivate extension AVLTree {
     ///  (A)    (C)
     /// ```
     ///
+    @inline(__always)
     @discardableResult
     fileprivate func leftRotate(node root: inout NodeType?) {
 
@@ -349,6 +358,7 @@ fileprivate extension AVLTree {
     ///  (A)    (C)
     /// ```
     ///
+    @inline(__always)
     @discardableResult
     fileprivate func rightRotate(node root: inout NodeType?) {
 
@@ -386,6 +396,7 @@ fileprivate extension AVLTree {
     ///  (A)    (C)
     /// ```
     ///
+    @inline(__always)
     @discardableResult
     fileprivate func leftRightRotate(node root: inout NodeType?) {
 
@@ -429,6 +440,7 @@ fileprivate extension AVLTree {
     ///  (A)    (C)
     /// ```
     ///
+    @inline(__always)
     @discardableResult
     fileprivate func rightLeftRotate(node root: inout NodeType?) {
 
