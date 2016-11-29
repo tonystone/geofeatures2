@@ -24,30 +24,34 @@ class AVLTreeTests: XCTestCase {
 
     func testLeftRotation() {
         let input: AVLTree<String> = ["A", "B", "C"]
-        let expected = true
+        let expected = (height: 2, balanced: true)
 
-        XCTAssertEqual(input.balanced && input.height == 2, expected)
+        XCTAssertEqual(input.height, expected.height)
+        XCTAssertEqual(input.balanced, expected.balanced)
     }
 
     func testRightRotation() {
         let input: AVLTree<String> = ["C", "B", "A"]
-        let expected = true
+        let expected = (height: 2, balanced: true)
 
-        XCTAssertEqual(input.balanced && input.height == 2, expected)
+        XCTAssertEqual(input.height, expected.height)
+        XCTAssertEqual(input.balanced, expected.balanced)
     }
 
     func testLeftRightRotation() {
         let input: AVLTree<String> = ["C", "A", "B"]
-        let expected = true
+        let expected = (height: 2, balanced: true)
 
-        XCTAssertEqual(input.balanced && input.height == 2, expected)
+        XCTAssertEqual(input.height, expected.height)
+        XCTAssertEqual(input.balanced, expected.balanced)
     }
 
     func testRightLeftRotation() {
         let input: AVLTree<String> = ["A", "C", "B"]
-        let expected = true
+        let expected = (height: 2, balanced: true)
 
-        XCTAssertEqual(input.balanced && input.height == 2, expected)
+        XCTAssertEqual(input.height, expected.height)
+        XCTAssertEqual(input.balanced, expected.balanced)
     }
 
     func testHeightEmptyTree() {
