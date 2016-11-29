@@ -148,7 +148,7 @@ class AVLTreeTests: XCTestCase {
 
         tree.insert(value: input)
 
-        XCTAssertEqual(tree.find(value: input)?.value, expected)
+        XCTAssertEqual(tree.search(value: input)?.value, expected)
     }
 
     func testInsertExisting8() {
@@ -158,7 +158,7 @@ class AVLTreeTests: XCTestCase {
 
         tree.insert(value: input)
 
-        XCTAssertEqual(tree.find(value: input)?.value, expected)
+        XCTAssertEqual(tree.search(value: input)?.value, expected)
     }
 
     func testRemoveNonExisting30() {
@@ -168,7 +168,7 @@ class AVLTreeTests: XCTestCase {
 
         tree.remove(value: input)
 
-        XCTAssertEqual(tree.find(value: input)?.value, expected)
+        XCTAssertEqual(tree.search(value: input)?.value, expected)
     }
 //
 //    func testRemoveExisting8() {
@@ -180,46 +180,46 @@ class AVLTreeTests: XCTestCase {
 //        XCTAssertEqual(input.tree.find(value: input.value)?.value, expected)
 //    }
 
-    func testFindExisting1() {
+    func testSearchExisting1() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 1)
         let expected = 1
 
-        XCTAssertEqual(input.tree.find(value: input.value)?.value, expected)
+        XCTAssertEqual(input.tree.search(value: input.value)?.value, expected)
     }
 
-    func testFindExisting8() {
+    func testSearchExisting8() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 8)
         let expected = 8
 
-        XCTAssertEqual(input.tree.find(value: input.value)?.value, expected)
+        XCTAssertEqual(input.tree.search(value: input.value)?.value, expected)
     }
 
-    func testFindExisting25() {
+    func testSearchExisting25() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 25)
         let expected = 25
 
-        XCTAssertEqual(input.tree.find(value: input.value)?.value, expected)
+        XCTAssertEqual(input.tree.search(value: input.value)?.value, expected)
     }
 
-    func testFindNonExisting0() {
+    func testSearchNonExisting0() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 0)
         let expected: Int? = nil
 
-        XCTAssertEqual(input.tree.find(value: input.value)?.value, expected)
+        XCTAssertEqual(input.tree.search(value: input.value)?.value, expected)
     }
 
-    func testFindNonExisting30() {
+    func testSearchNonExisting30() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 30)
         let expected: Int? = nil
 
-        XCTAssertEqual(input.tree.find(value: input.value)?.value, expected)
+        XCTAssertEqual(input.tree.search(value: input.value)?.value, expected)
     }
 
     func testNextOf1() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 1)
         let expected = 5
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.next(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -230,7 +230,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 7)
         let expected = 8
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.next(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -241,7 +241,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 8)
         let expected = 10
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.next(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -252,7 +252,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 10)
         let expected = 15
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.next(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -263,7 +263,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 15)
         let expected = 17
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.next(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -274,7 +274,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 25)
         let expected: Int? = nil
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.next(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -285,7 +285,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 1)
         let expected: Int? = nil
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.previous(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -296,7 +296,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 8)
         let expected = 7
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.previous(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -307,7 +307,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 10)
         let expected = 8
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.previous(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -318,7 +318,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 15)
         let expected = 10
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.previous(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
@@ -329,7 +329,7 @@ class AVLTreeTests: XCTestCase {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 17)
         let expected = 15
 
-        if let node = input.tree.find(value: input.value) {
+        if let node = input.tree.search(value: input.value) {
             XCTAssertEqual(input.tree.previous(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")

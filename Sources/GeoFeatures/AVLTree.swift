@@ -88,13 +88,18 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     /// - Parameter value: The value to remove from the tree.
     ///
     public func remove(value: ValueType) -> Void {
-        if let node = self.find(value: value) {
+        if let node = self.search(value: value) {
             self.remove(node: node)
         }
     }
 
-    public func find(value: ValueType) -> NodeType? {
-        return self.find(value: value, start: self.root)
+    ///
+    /// Search for a value within the tree
+    ///
+    /// - Parameter value: The value to search for in the tree.
+    ///
+    public func search(value: ValueType) -> NodeType? {
+        return self.search(value: value, start: self.root)
     }
 
     ///
@@ -233,7 +238,7 @@ fileprivate extension AVLTree {
 //        }
     }
 
-    fileprivate func find(value: ValueType, start node: NodeType?) -> NodeType? {
+    fileprivate func search(value: ValueType, start node: NodeType?) -> NodeType? {
         guard let node = node else {
             return nil
         }
@@ -241,9 +246,9 @@ fileprivate extension AVLTree {
         if value == node.value {
             return node
         } else if value < node.value {
-            return find(value: value, start: node.left)
+            return search(value: value, start: node.left)
         } else {
-            return find(value: value, start: node.right)
+            return search(value: value, start: node.right)
         }
     }
 }
@@ -317,7 +322,7 @@ fileprivate extension AVLTree {
 
             /// Note: if this is the root node the parent will never be set by it's
             ///       parent (because it does not have one) so you must nil the parent
-            ///       before assining it to the root pointer
+            ///       before assigning it to the root pointer
             b.parent = nil
             root = b            /// Assign B as the new root
         }
