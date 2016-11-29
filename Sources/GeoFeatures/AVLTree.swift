@@ -124,13 +124,13 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
         /// using parent link keep traveling up till you get the node which is the left child of its parent.
         ///
         var child = node
-        var next  = child.parent            /// Start with the parent of the existing node, if nil this is the root node and there will not be a predecessor so return nil
+        var next  = child.parent           /// Start with the parent of the existing node, if nil this is the root node and there will not be a predecessor so return nil
 
         while let parent = next,            /// While there is a parent
-                  child === parent.right {  /// and the child is the Right node.
+                  child === parent.right {  /// and the child is the right node.
 
             child = parent                  /// If so, make the new child the parent of the current node
-            next  = child.parent            /// The new parent becomes the new child's parent
+            next  = parent.parent           /// The new parent becomes the new child's parent
         }
         return next
     }
@@ -155,11 +155,11 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
         var child = node
         var next  = child.parent            /// Start with the parent of the existing node, if nil this is the root node and there will not be a predecessor so return nil
 
-        while let parent = next,            /// While there is a parent
-                  child === parent.left {   /// and the child is the left node
+        while let parent = next,
+                  child === parent.left {  /// and the child is the left node
 
             child = parent                  /// If so, make the new child the parent of the current node
-            next  = child.parent            /// The new parent becomes the new child's parent
+            next  = parent.parent           /// The new parent becomes the new child's parent
         }
         return next
     }
@@ -262,28 +262,24 @@ fileprivate extension AVLTree {
             ///
             /// Determine how to rotate the nodes if an imbalance is present.
             ///
-            switch node.heightDistribution {
+            if node.balanceFactor > 0 {                    /// Right Heavy
 
-            case .leftHeavy:
+                if node.right?.balanceFactor ?? 0 < 0 {    /// Right subtree is Left heavy
 
-                if node.left?.heightDistribution ?? .equal == .leftHeavy {      /// When a node is inserted in the left subtree of the left subtree. The tree then needs a right rotation.
-                    self.rightRotate(node: &root)
+                    self.rightLeftRotate(node: &root)
                 } else {
-                    self.leftRightRotate(node: &root)                           /// When a node in inserted into the right subtree of the left subtree.  The tree needs a left right rotation.
-                }
-                break
 
-            case .rightHeavy:
-
-                if node.right?.heightDistribution ?? .equal == .rightHeavy {    /// When a node is inserted into the right subtree of the right subtree, then we perform a single left rotation
                     self.leftRotate(node: &root)
-                } else {
-                    self.rightLeftRotate(node: &root)                           /// When a node in inserted into the left subtree of the right subtree.  The tree needs a left right rotation.
                 }
-                break
+            } else if node.balanceFactor < 0 {             /// Left Heavy
 
-            case .equal:
-                break   /// Ignore equals
+                if node.left?.balanceFactor ?? 0 > 0 {     /// Left subtree is Right heavy
+
+                    self.leftRightRotate(node: &root)
+                } else {
+
+                    self.rightRotate(node: &root)
+                }
             }
         }
     }
@@ -291,18 +287,40 @@ fileprivate extension AVLTree {
     ///
     /// Rotate the node tree left if there is a right node otherwise do nothing.
     ///
-    /// - Parameter from: the node to start the rotation at.
+    /// - Parameter root: the node to start the rotation at (A right heavy minimum height 2 subtree
     ///
     /// - Returns: The new root node for this section of the tree.
+    ///
+    /// Example Input:
+    /// ```
+    ///  (A)
+    ///     \   (right)
+    ///     (B)
+    ///       \   (right)
+    ///       (C)
+    /// ```
+    /// Output:
+    /// ```
+    ///
+    ///     (B)
+    ///     /  \
+    ///  (A)    (C)
+    /// ```
     ///
     @discardableResult
     fileprivate func leftRotate(node root: inout NodeType?) {
 
-        if let oldRoot = root {
-            root = oldRoot.right    /// set the new root
-            root?.left = oldRoot    /// Make the old root the left-subtree of the new root
-            oldRoot.right = nil     /// Clear the old roots right node
+        guard let a = root, let b = a.right else {
+            return
         }
+        a.right = b.left    /// A's right becomes B's left
+        b.left  = a         /// B's left becomes A
+
+        /// Note: if this is the root node the parent will never be set by it's
+        ///       parent (because it does not have one) so you must nil the parent
+        ///       before assining it to the root pointer
+        b.parent = nil
+        root = b            /// Assign B as the new root
     }
 
     ///
@@ -310,14 +328,36 @@ fileprivate extension AVLTree {
     ///
     /// - Parameter from: the node to start the rotation at.
     ///
+    /// Example Input:
+    /// ```
+    ///      (C)
+    ///     /    (left)
+    ///    (B)
+    ///   /    (left)
+    /// (A)
+    /// ```
+    /// Output:
+    /// ```
+    ///
+    ///     (B)
+    ///     /  \
+    ///  (A)    (C)
+    /// ```
+    ///
     @discardableResult
     fileprivate func rightRotate(node root: inout NodeType?) {
 
-        if let oldRoot = root {
-            root = oldRoot.left    /// set the new root
-            root?.right = oldRoot  /// Make the old root the left-subtree of the new root
-            oldRoot.left = nil     /// Clear the old roots right node
+        guard let c = root, let b = c.left else {
+            return
         }
+        c.left  = b.right  /// C's left becomes B's right
+        b.right = c        /// B's right becomes C
+
+        /// Note: if this is the root node the parent will never be set by it's
+        ///       parent (because it does not have one) so you must nil the parent
+        ///       before assining it to the root pointer
+        b.parent = nil
+        root = b           /// Assign B as the new root
     }
 
     ///
@@ -325,13 +365,42 @@ fileprivate extension AVLTree {
     ///
     /// - Parameter from: the node to start the rotation at.
     ///
+    /// Example Input:
+    /// ```
+    ///     (C)
+    ///    /    (left)
+    ///  (A)
+    ///    \    (right)
+    ///     (B)
+    /// ```
+    /// Output:
+    /// ```
+    ///
+    ///     (B)
+    ///     /  \
+    ///  (A)    (C)
+    /// ```
+    ///
     @discardableResult
     fileprivate func leftRightRotate(node root: inout NodeType?) {
 
-        if let node = root {
-            self.leftRotate(node: &(node.left))  /// Rotate the left node left
-            self.rightRotate(node: &root)        /// Rotate the from node right
+        guard let c = root, let a = c.left, let b = a.right else {
+            return
         }
+        /// Left rotation
+        a.right = b.left
+        b.left = a
+        c.left = b
+
+        /// Right rotation
+        c.left = b.right
+        b.right = c
+
+        /// Note: if this is the root node the parent will never be set by it's
+        ///       parent (because it does not have one) so you must nil the parent
+        ///       before assining it to the root pointer
+        b.parent = nil
+        root = b
     }
 
     ///
@@ -339,18 +408,43 @@ fileprivate extension AVLTree {
     ///
     /// - Parameter from: the node to start the rotation at.
     ///
+    /// Example Input:
+    /// ```
+    /// (A)
+    ///    \   (right)
+    ///    (C)
+    ///   /    (left)
+    /// (B)
+    /// ```
+    /// Output:
+    /// ```
+    ///
+    ///     (B)
+    ///     /  \
+    ///  (A)    (C)
+    /// ```
+    ///
     @discardableResult
     fileprivate func rightLeftRotate(node root: inout NodeType?) {
 
-        if let node = root {
-            self.rightRotate(node: &(node.right))   /// Rotate the right node right
-            self.leftRotate (node: &root)           /// rotate the from node left
+        guard let a = root, let c = a.right, let b = c.left else {
+            return
         }
-    }
-}
+        /// Right rotate
+        c.left = b.right
+        b.right = c
+        a.right = b
 
-internal enum HeightDistribution {
-    case leftHeavy, equal, rightHeavy
+        /// Left rotate
+        a.right = b.left
+        b.left = a
+
+        /// Note: if this is the root node the parent will never be set by it's 
+        ///       parent (because it does not have one) so you must nil the parent 
+        ///       before assining it to the root pointer
+        b.parent = nil
+        root = b
+    }
 }
 
 ///
@@ -360,46 +454,54 @@ internal class AVLTreeNode<ValueType: Comparable> {
 
     typealias NodeType = AVLTreeNode<ValueType>
 
-    let value: ValueType
-    var left:  NodeType?
-    var right: NodeType?
-
-    weak fileprivate var parent: NodeType?
-
-    init(value: ValueType, parent: NodeType? = nil, left: NodeType? = nil, right: NodeType? = nil) {
+    init(value: ValueType, parent: NodeType? = nil) {
         self.value  = value
         self.parent = parent
-        self.left   = left
-        self.right  = right
+        self.left   = nil
+        self.right  = nil
 
         self.left?.parent = self
         self.right?.parent = self
     }
 
     ///
-    /// Get height of this node.
+    /// The stored value given by the user.
+    ///
+    let value: ValueType
+
+    /// Left subtree
+    var left:  NodeType? {
+        willSet {
+            newValue?.parent = self     /// Maintain the parent link.
+        }
+    }
+
+    /// Right subtree
+    var right: NodeType? {
+        willSet {
+            newValue?.parent = self     /// Maintain the parent link.
+        }
+    }
+
+    /// This nodes parent
+    weak fileprivate var parent: NodeType?
+
+    ///
+    /// Get height of this subtree.
+    ///
+    /// Height of a subtree is the number of nodes on the longest path from the root to a leaf.
     ///
     var height: Int {
         return  1 + Swift.max(self.left?.height ?? 0, self.right?.height ?? 0)
     }
 
     ///
-    /// Get the heightDistribution of the left and right subtrees.
+    /// Positive (+) = Right Heavy
+    /// Negative (-) = Left Heavy
+    /// Zero     (0) = Equal
     ///
-    var heightDistribution: HeightDistribution {
-
-        ///
-        /// Positive = leftHeavy
-        /// Negative = rightHeavy
-        ///
-        let variance  = (self.left?.height ?? 0) - (self.right?.height ?? 0)
-
-        if variance > 0 {
-            return .leftHeavy
-        } else if variance < 0 {
-            return .rightHeavy
-        }
-        return .equal
+    var balanceFactor: Int {
+        return (self.right?.height ?? 0) - (self.left?.height ?? 0)
     }
 
     ///
@@ -408,7 +510,7 @@ internal class AVLTreeNode<ValueType: Comparable> {
     /// - Returns: true if this subtree is balanced for height
     ///
     var balanced: Bool {
-        return  abs((self.left?.height ?? 0) - (self.right?.height ?? 0)) <= 1 &&
+        return  abs(self.balanceFactor) <= 1 &&
                 self.left?.balanced ?? true && self.right?.balanced ?? true
     }
 }

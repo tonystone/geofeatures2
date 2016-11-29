@@ -29,6 +29,10 @@ extension AVLTreeTests {
 
    static var allTests: [(String, (AVLTreeTests) -> () throws -> Void)] {
       return [
+                ("testLeftRotation", testLeftRotation),
+                ("testRightRotation", testRightRotation),
+                ("testLeftRightRotation", testLeftRightRotation),
+                ("testRightLeftRotation", testRightLeftRotation),
                 ("testHeight", testHeight),
                 ("testBalanced9NodeTree", testBalanced9NodeTree),
                 ("testBalanced1NodeTree", testBalanced1NodeTree),
@@ -51,6 +55,8 @@ extension AVLTreeTests {
                 ("testFindNonExisting30", testFindNonExisting30),
                 ("testNextOf1", testNextOf1),
                 ("testNextOf8", testNextOf8),
+                ("testNextOf15_1", testNextOf15_1),
+                ("testNextOf25", testNextOf25),
                 ("testNextOf15", testNextOf15),
                 ("testPreviousOf1", testPreviousOf1),
                 ("testPreviousOf8", testPreviousOf8),
