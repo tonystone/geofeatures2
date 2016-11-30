@@ -75,7 +75,7 @@ extension AVLTreeTests {
                 ("testPreviousOf8", testPreviousOf8),
                 ("testPreviousOf10", testPreviousOf10),
                 ("testPreviousOf15", testPreviousOf15),
-                ("testPreviousOf17", testPreviousOf17),
+                ("testPreviousOf17", testPreviousOf17)
            ]
    }
 }
