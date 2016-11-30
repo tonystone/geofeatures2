@@ -275,7 +275,7 @@ fileprivate extension AVLTree {
             ///
             /// Determine how to rotate the nodes if an imbalance is present.
             ///
-            if node.balanceFactor > 0 {                    /// Right Heavy
+            if node.balanceFactor > 1 {                    /// Right Heavy
 
                 if node.right?.balanceFactor ?? 0 < 0 {    /// Right subtree is Left heavy
 
@@ -284,7 +284,7 @@ fileprivate extension AVLTree {
 
                     self.leftRotate(node: &root)
                 }
-            } else if node.balanceFactor < 0 {             /// Left Heavy
+            } else if node.balanceFactor < -1 {             /// Left Heavy
 
                 if node.left?.balanceFactor ?? 0 > 0 {     /// Left subtree is Right heavy
 
@@ -324,7 +324,7 @@ fileprivate extension AVLTree {
     @discardableResult
     fileprivate func leftRotate(node root: inout NodeType?) {
 
-        if let a = root, let b = a.right {
+        if let a = root, let b = a.right, b.right != nil {
 
             a.right = b.left    /// A's right becomes B's left
             b.left  = a         /// B's left becomes A
@@ -362,7 +362,7 @@ fileprivate extension AVLTree {
     @discardableResult
     fileprivate func rightRotate(node root: inout NodeType?) {
 
-        if let c = root, let b = c.left {
+        if let c = root, let b = c.left, b.left != nil {
 
             c.left  = b.right  /// C's left becomes B's right
             b.right = c        /// B's right becomes C
