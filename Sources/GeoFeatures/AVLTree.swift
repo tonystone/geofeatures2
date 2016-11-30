@@ -37,7 +37,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     ///
     /// The root of the tree if it has any nodes
     ///
-    private(set) var root: NodeType? = nil
+    fileprivate(set) var root: NodeType? = nil
 
     ///
     /// Construct an instance with an Array of ValueTypes
@@ -79,7 +79,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     ///
     @discardableResult
     public func insert(value: ValueType) -> NodeType {
-        return self.insert(value: value, node: &self.root)
+        return self.insert(value: value, node: self.root)
     }
 
     ///
@@ -91,7 +91,6 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
         if let node = self.search(value: value) {
             self.remove(node: node)
         }
-
     }
 
     ///
@@ -107,13 +106,6 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     /// Returns in-order successor (next) of the given node
     ///
     /// In-order successor of a node is the next node in the in-order traversal of the tree. For the last node in a tree, in-order successor will be nil.
-    ///
-    /// ```
-    ///  AVLTree : 3 5 7 10 17 15
-    ///  next of 7 is 10
-    ///  next of 10 is 15
-    ///
-    /// ```
     ///
     public func next(node: NodeType) -> NodeType? {
 
@@ -181,40 +173,34 @@ fileprivate extension AVLTree {
     ///
     @inline(__always)
     @discardableResult
-    fileprivate func insert(value: ValueType, node root: inout NodeType?) -> NodeType {
+    fileprivate func insert(value: ValueType, node root: NodeType?) -> NodeType {
 
         guard let node = root else {
             let newNode = NodeType(value: value)
-            root = newNode
+            self.root = newNode
 
             return newNode
         }
 
         if value < node.value {
             if node.left != nil {
-                let newNode = self.insert(value: value, node: &node.left)
-
-                // Note: we check balance and re-balance on ascent of recursion.
-                self.balance(from: &root)
-
-                return newNode
+                return self.insert(value: value, node: node.left)
             } else {
                 let newNode = NodeType(value: value, parent: node)
                 node.left = newNode
+
+                self.balance(from: root)
 
                 return newNode
             }
         } else {
             if node.right != nil {
-                let newNode = self.insert(value: value, node: &node.right)
-
-                // Note: we check balance and re-balance on ascent of recursion.
-                self.balance(from: &root)
-
-                return newNode
+                return self.insert(value: value, node: node.right)
             } else {
                 let newNode = NodeType(value: value, parent: node)
                 node.right = newNode
+
+                self.balance(from: root)
 
                 return newNode
             }
@@ -227,23 +213,49 @@ fileprivate extension AVLTree {
     @inline(__always)
     fileprivate func remove(node: NodeType) {
 
-//        if node.left == nil && node.right == nil {
-//
-//            if let parent = node.parent {
-//                if let left = parent.left, left === node {
-//                    parent.left = nil
-//                } else if let right = parent.right, right === node {
-//                    parent.right = nil
-//                }
-//                self.balance(from: &node)
-//            } else {
-//                self.root = nil
-//            }
-//        } else {
-//
-//        }
+        /// This is a leaf node so we can just remove it
+        if node.left == nil && node.right == nil {
+
+            if let parent = node.parent {
+                if let left = parent.left, left === node {              /// We are the left node of our parent
+                    parent.left = nil
+                } else if let right = parent.right, right === node {    /// We are the right node of our parent
+                    parent.right = nil
+                }
+
+                self.balance(from: node.parent)
+
+            } else {
+                /// This is the root node with no children so simply remove it.
+                self.root = nil
+            }
+
+        } else {
+            /// In this case we are an inner node.
+            if let predecessor = self.previous(node: node) {
+
+                /// Replace this node with the replacement found
+                node.value = predecessor.value
+
+                /// Now remove the old one.
+                self.remove(node: predecessor)
+
+            } else if let successor = self.next(node: node) {
+
+                /// Replace this node with the replacement found
+                node.value = successor.value
+
+                /// Now remove the old one.
+                self.remove(node: successor)
+            }
+        }
     }
 
+    ///
+    /// Search for a specific value in the tree.
+    ///
+    /// - Returns: The node containing the value if found, nil otherwise.
+    ///
     @inline(__always)
     fileprivate func search(value: ValueType, start node: NodeType?) -> NodeType? {
         guard let node = node else {
@@ -269,9 +281,19 @@ fileprivate extension AVLTree {
     /// Balance the tree from the node given.
     ///
     @inline(__always)
-    fileprivate func balance(from root: inout NodeType?) {
+    fileprivate func balance(from root: NodeType?) {
 
         if let node = root {
+
+            // Determine which node this was before potentially modifying it
+            let isRoot = node === self.root
+            let isLeft = node === node.parent?.left
+
+            /// Also get its parent
+            let parent = node.parent
+
+            var subtree: NodeType? = nil
+
             ///
             /// Determine how to rotate the nodes if an imbalance is present.
             ///
@@ -279,21 +301,35 @@ fileprivate extension AVLTree {
 
                 if node.right?.balanceFactor ?? 0 < 0 {    /// Right subtree is Left heavy
 
-                    self.rightLeftRotate(node: &root)
+                    subtree = self.rightLeftRotate(node: node)
                 } else {
 
-                    self.leftRotate(node: &root)
+                    subtree = self.leftRotate(node: node)
                 }
             } else if node.balanceFactor < -1 {             /// Left Heavy
 
                 if node.left?.balanceFactor ?? 0 > 0 {     /// Left subtree is Right heavy
 
-                    self.leftRightRotate(node: &root)
+                    subtree = self.leftRightRotate(node: node)
                 } else {
 
-                    self.rightRotate(node: &root)
+                    subtree = self.rightRotate(node: node)
                 }
+            } else {
+                self.balance(from: node.parent)
+
+                return
             }
+
+            if isRoot {
+                self.root = subtree
+            } else if isLeft {
+                parent?.left = subtree
+            } else {
+                parent?.right = subtree
+            }
+
+            self.balance(from: subtree?.parent)
         }
     }
 
@@ -322,9 +358,11 @@ fileprivate extension AVLTree {
     ///
     @inline(__always)
     @discardableResult
-    fileprivate func leftRotate(node root: inout NodeType?) {
+    fileprivate func leftRotate(node a: NodeType) -> NodeType? {
 
-        if let a = root, let b = a.right, b.right != nil {
+        var newRoot: NodeType? = nil
+
+        if let b = a.right, b.right != nil {
 
             a.right = b.left    /// A's right becomes B's left
             b.left  = a         /// B's left becomes A
@@ -333,8 +371,11 @@ fileprivate extension AVLTree {
             ///       parent (because it does not have one) so you must nil the parent
             ///       before assigning it to the root pointer
             b.parent = nil
-            root = b            /// Assign B as the new root
+            newRoot = b
         }
+        assert(newRoot != nil)
+
+        return newRoot
     }
 
     ///
@@ -360,9 +401,11 @@ fileprivate extension AVLTree {
     ///
     @inline(__always)
     @discardableResult
-    fileprivate func rightRotate(node root: inout NodeType?) {
+    fileprivate func rightRotate(node c: NodeType) -> NodeType? {
 
-        if let c = root, let b = c.left, b.left != nil {
+        var newRoot: NodeType? = nil
+
+        if let b = c.left, b.left != nil {
 
             c.left  = b.right  /// C's left becomes B's right
             b.right = c        /// B's right becomes C
@@ -371,8 +414,11 @@ fileprivate extension AVLTree {
             ///       parent (because it does not have one) so you must nil the parent
             ///       before assigning it to the root pointer
             b.parent = nil
-            root = b           /// Assign B as the new root
+            newRoot = b
         }
+        assert(newRoot != nil)
+
+        return newRoot
     }
 
     ///
@@ -398,9 +444,11 @@ fileprivate extension AVLTree {
     ///
     @inline(__always)
     @discardableResult
-    fileprivate func leftRightRotate(node root: inout NodeType?) {
+    fileprivate func leftRightRotate(node c: NodeType) -> NodeType? {
 
-        if let c = root, let a = c.left, let b = a.right {
+        var newRoot: NodeType? = nil
+
+        if let a = c.left, let b = a.right {
 
             /// Left rotation
             a.right = b.left
@@ -415,8 +463,11 @@ fileprivate extension AVLTree {
             ///       parent (because it does not have one) so you must nil the parent
             ///       before assigning it to the root pointer
             b.parent = nil
-            root = b
+            newRoot = b
         }
+        assert(newRoot != nil)
+
+        return newRoot
     }
 
     ///
@@ -442,9 +493,11 @@ fileprivate extension AVLTree {
     ///
     @inline(__always)
     @discardableResult
-    fileprivate func rightLeftRotate(node root: inout NodeType?) {
+    fileprivate func rightLeftRotate(node a: NodeType) -> NodeType? {
 
-        if let a = root, let c = a.right, let b = c.left {
+        var newRoot: NodeType? = nil
+
+        if let c = a.right, let b = c.left {
 
             /// Right rotate
             c.left = b.right
@@ -459,8 +512,11 @@ fileprivate extension AVLTree {
             ///       parent (because it does not have one) so you must nil the parent
             ///       before assigning it to the root pointer
             b.parent = nil
-            root = b
+            newRoot = b
         }
+        assert(newRoot != nil)
+
+        return newRoot
     }
 }
 
@@ -484,11 +540,13 @@ internal class AVLTreeNode<ValueType: Comparable> {
     ///
     /// The stored value given by the user.
     ///
-    let value: ValueType
+    fileprivate(set) var value: ValueType
 
     /// Left subtree
     var left:  NodeType? {
         willSet {
+            assert(newValue !== self)
+
             newValue?.parent = self     /// Maintain the parent link.
         }
     }
@@ -496,12 +554,18 @@ internal class AVLTreeNode<ValueType: Comparable> {
     /// Right subtree
     var right: NodeType? {
         willSet {
+            assert(newValue !== self)
+
             newValue?.parent = self     /// Maintain the parent link.
         }
     }
 
     /// This nodes parent
-    weak fileprivate var parent: NodeType?
+    weak fileprivate var parent: NodeType? {
+        willSet {
+            assert(newValue !== self)
+        }
+    }
 
     ///
     /// Get height of this subtree.

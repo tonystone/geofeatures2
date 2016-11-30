@@ -20,7 +20,35 @@
 import XCTest
 @testable import GeoFeatures
 
+///
+/// Test AVL Trees
+///
+/// AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25)
+///
+/// 1)         8
+///          /   \
+/// 2)      5     15
+///        / \    / \
+/// 3)    1   7  10  20
+///                 /  \
+/// 4)             17  25
+///
+///
+/// AVLTree<String>(arrayLiteral: "A", "B", "C")
+/// AVLTree<String>(arrayLiteral: "C", "B", "A")
+/// AVLTree<String>(arrayLiteral: "C", "A", "B")
+///
+/// 1)      B
+///        /  \
+/// 2)    A    C
+///
+
+///
+/// Main Test class
+///
 class AVLTreeTests: XCTestCase {
+
+    // MARK: Rotation func Tests
 
     func testLeftRotation() {
         let input: AVLTree<String> = ["A", "B", "C"]
@@ -53,6 +81,8 @@ class AVLTreeTests: XCTestCase {
         XCTAssertEqual(input.height, expected.height)
         XCTAssertEqual(input.balanced, expected.balanced)
     }
+
+    // MARK: Height Tests
 
     func testHeightEmptyTree() {
         let input = AVLTree<Int>()
@@ -174,15 +204,199 @@ class AVLTreeTests: XCTestCase {
 
         XCTAssertEqual(tree.search(value: input)?.value, expected)
     }
-//
-//    func testRemoveExisting8() {
-//        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 8)
-//        let expected: Int? = nil
-//
-//        input.tree.remove(value: input.value)
-//
-//        XCTAssertEqual(input.tree.find(value: input.value)?.value, expected)
-//    }
+
+    func testRemoveRoot1NodeTree() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1), value: 1)
+        let expected: (height: Int, balanced: Bool, value: Int?) = (0, true, nil)
+
+        input.tree.remove(value: input.value)
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+        XCTAssertEqual(input.tree.search(value: input.value)?.value, expected.value)
+    }
+
+    func testRemoveRoot3NodeTree() {
+        let input = (tree: AVLTree<String>(arrayLiteral: "C", "B", "A"), value: "B")
+        let expected: (height: Int, balanced: Bool, value: String?) = (2, true, nil)
+
+        input.tree.remove(value: input.value)
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+        XCTAssertEqual(input.tree.search(value: input.value)?.value, expected.value)
+    }
+
+    func testRemoveExisting1() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [1])
+        let expected = (height: 4, balanced: true, present: [5, 8, 7, 10, 15, 20, 17, 25], missing: [1])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExisting5() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [5])
+        let expected = (height: 4, balanced: true, present: [1, 8, 7, 10, 15, 20, 17, 25], missing: [5])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExisting7() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [7])
+        let expected = (height: 4, balanced: true, present: [1, 5, 8, 10, 15, 20, 17, 25], missing: [7])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExisting8() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [8])
+        let expected = (height: 4, balanced: true, present: [1, 5, 7, 10, 15, 20, 17, 25], missing: [8])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExisting10() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [10])
+        let expected = (height: 4, balanced: true, present: [1, 5, 8, 7, 15, 20, 17, 25], missing: [10])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExisting5And8And20() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [5, 8, 20])
+        let expected = (height: 3, balanced: true, present: [1, 7, 10, 15, 17, 25], missing: [5, 8, 20])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExistingAllBut3() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [5, 8, 7, 15, 20, 17])
+        let expected = (height: 2, balanced: true, present: [1, 10, 25], missing: [5, 8, 7, 15, 20, 17])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExistingAllBut1() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [1, 5, 8, 7, 10, 15, 20, 17])
+        let expected = (height: 1, balanced: true, present: [25], missing: [1, 5, 8, 7, 10, 15, 20, 17])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExistingAll() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [1, 5, 8, 7, 10, 15, 20, 17, 25])
+        let expected = (height: 0, balanced: true, present: [] as [Int], missing: [1, 5, 8, 7, 10, 15, 20, 17, 25])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
 
     func testSearchExisting1() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), value: 1)
