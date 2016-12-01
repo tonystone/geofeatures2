@@ -34,7 +34,7 @@ extension MultiPoint_Geometry_Coordinate2D_FloatingPrecision_Cartesian_Tests {
                 ("testBoundary_Empty", testBoundary_Empty),
                 ("testIsSimple_WithNoEqualPoints", testIsSimple_WithNoEqualPoints),
                 ("testIsSimple_WithNoEqualPointsAfterPrecision", testIsSimple_WithNoEqualPointsAfterPrecision),
-                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision),
+                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -47,7 +47,7 @@ extension MultiPoint_Geometry_Coordinate2DM_FloatingPrecision_Cartesian_Tests {
                 ("testBoundary_Empty", testBoundary_Empty),
                 ("testIsSimple_WithNoEqualPoints", testIsSimple_WithNoEqualPoints),
                 ("testIsSimple_WithNoEqualPointsAfterPrecision", testIsSimple_WithNoEqualPointsAfterPrecision),
-                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision),
+                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -60,7 +60,7 @@ extension MultiPoint_Geometry_Coordinate3D_FloatingPrecision_Cartesian_Tests {
                 ("testBoundary_Empty", testBoundary_Empty),
                 ("testIsSimple_WithNoEqualPoints", testIsSimple_WithNoEqualPoints),
                 ("testIsSimple_WithNoEqualPointsAfterPrecision", testIsSimple_WithNoEqualPointsAfterPrecision),
-                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision),
+                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -73,7 +73,7 @@ extension MultiPoint_Geometry_Coordinate3DM_FloatingPrecision_Cartesian_Tests {
                 ("testBoundary_Empty", testBoundary_Empty),
                 ("testIsSimple_WithNoEqualPoints", testIsSimple_WithNoEqualPoints),
                 ("testIsSimple_WithNoEqualPointsAfterPrecision", testIsSimple_WithNoEqualPointsAfterPrecision),
-                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision),
+                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -86,7 +86,7 @@ extension MultiPoint_Geometry_Coordinate2D_FixedPrecision_Cartesian_Tests {
                 ("testBoundary_Empty", testBoundary_Empty),
                 ("testIsSimple_WithNoEqualPoints", testIsSimple_WithNoEqualPoints),
                 ("testIsSimple_WithNoEqualPointsAfterPrecision", testIsSimple_WithNoEqualPointsAfterPrecision),
-                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision),
+                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -99,7 +99,7 @@ extension MultiPoint_Geometry_Coordinate2DM_FixedPrecision_Cartesian_Tests {
                 ("testBoundary_Empty", testBoundary_Empty),
                 ("testIsSimple_WithNoEqualPoints", testIsSimple_WithNoEqualPoints),
                 ("testIsSimple_WithNoEqualPointsAfterPrecision", testIsSimple_WithNoEqualPointsAfterPrecision),
-                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision),
+                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -114,7 +114,7 @@ extension MultiPoint_Geometry_Coordinate3D_FixedPrecision_Cartesian_Tests {
                 ("testEqual_False", testEqual_False),
                 ("testIsSimple_WithNoEqualPoints", testIsSimple_WithNoEqualPoints),
                 ("testIsSimple_WithNoEqualPointsAfterPrecision", testIsSimple_WithNoEqualPointsAfterPrecision),
-                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision),
+                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -129,7 +129,7 @@ extension MultiPoint_Geometry_Coordinate3DM_FixedPrecision_Cartesian_Tests {
                 ("testEqual_False", testEqual_False),
                 ("testIsSimple_WithNoEqualPoints", testIsSimple_WithNoEqualPoints),
                 ("testIsSimple_WithNoEqualPointsAfterPrecision", testIsSimple_WithNoEqualPointsAfterPrecision),
-                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision),
+                ("testIsSimple_WithEqualPointsAfterPrecision", testIsSimple_WithEqualPointsAfterPrecision)
            ]
    }
 }

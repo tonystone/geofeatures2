@@ -50,7 +50,7 @@ extension LineString_Geometry_Coordinate2D_FloatingPrecision_Cartesian_Tests {
                 ("testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment", testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment),
                 ("testIsSimple_WithFivePoints_SecondLastSame", testIsSimple_WithFivePoints_SecondLastSame),
                 ("testIsSimple_WithFivePoints_FirstFourthSame", testIsSimple_WithFivePoints_FirstFourthSame),
-                ("testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment", testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment),
+                ("testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment", testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment)
            ]
    }
 }
@@ -58,7 +58,7 @@ extension LineString_Geometry_Coordinate2DM_FloatingPrecision_Cartesian_Tests {
 
    static var allTests: [(String, (LineString_Geometry_Coordinate2DM_FloatingPrecision_Cartesian_Tests) -> () throws -> Void)] {
       return [
-                ("testDimension", testDimension),
+                ("testDimension", testDimension)
            ]
    }
 }
@@ -66,7 +66,7 @@ extension LineString_Geometry_Coordinate3D_FloatingPrecision_Cartesian_Tests {
 
    static var allTests: [(String, (LineString_Geometry_Coordinate3D_FloatingPrecision_Cartesian_Tests) -> () throws -> Void)] {
       return [
-                ("testDimension", testDimension),
+                ("testDimension", testDimension)
            ]
    }
 }
@@ -74,7 +74,7 @@ extension LineString_Geometry_Coordinate3DM_FloatingPrecision_Cartesian_Tests {
 
    static var allTests: [(String, (LineString_Geometry_Coordinate3DM_FloatingPrecision_Cartesian_Tests) -> () throws -> Void)] {
       return [
-                ("testDimension", testDimension),
+                ("testDimension", testDimension)
            ]
    }
 }
@@ -96,7 +96,7 @@ extension LineString_Geometry_Coordinate2D_FixedPrecision_Cartesian_Tests {
                 ("testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment", testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment),
                 ("testIsSimple_WithFivePoints_SecondLastSame", testIsSimple_WithFivePoints_SecondLastSame),
                 ("testIsSimple_WithFivePoints_FirstFourthSame", testIsSimple_WithFivePoints_FirstFourthSame),
-                ("testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment", testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment),
+                ("testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment", testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment)
            ]
    }
 }
@@ -104,7 +104,7 @@ extension LineString_Geometry_Coordinate2DM_FixedPrecision_Cartesian_Tests {
 
    static var allTests: [(String, (LineString_Geometry_Coordinate2DM_FixedPrecision_Cartesian_Tests) -> () throws -> Void)] {
       return [
-                ("testDimension", testDimension),
+                ("testDimension", testDimension)
            ]
    }
 }
@@ -112,7 +112,7 @@ extension LineString_Geometry_Coordinate3D_FixedPrecision_Cartesian_Tests {
 
    static var allTests: [(String, (LineString_Geometry_Coordinate3D_FixedPrecision_Cartesian_Tests) -> () throws -> Void)] {
       return [
-                ("testDimension", testDimension),
+                ("testDimension", testDimension)
            ]
    }
 }
@@ -120,7 +120,7 @@ extension LineString_Geometry_Coordinate3DM_FixedPrecision_Cartesian_Tests {
 
    static var allTests: [(String, (LineString_Geometry_Coordinate3DM_FixedPrecision_Cartesian_Tests) -> () throws -> Void)] {
       return [
-                ("testDimension", testDimension),
+                ("testDimension", testDimension)
            ]
    }
 }
