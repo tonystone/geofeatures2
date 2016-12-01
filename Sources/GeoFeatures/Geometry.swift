@@ -63,7 +63,7 @@ public protocol Geometry {
     func boundary() -> Geometry
 
     /**
-     - Returns:  true if this GeometryType instance has no anomalous geometric points, such as self intersection or self tangent.
+     - Returns:  true if this GeometryType instance has no anomalous geometric points, such as self intersection or self tangency.
     */
     func isSimple() -> Bool
 

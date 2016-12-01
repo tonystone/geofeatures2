@@ -37,6 +37,20 @@ extension LineString_Geometry_Coordinate2D_FloatingPrecision_Cartesian_Tests {
                 ("testBoundary_Empty", testBoundary_Empty),
                 ("testEqual_True", testEqual_True),
                 ("testEqual_False", testEqual_False),
+                ("testIsSimple_WithNoPoints", testIsSimple_WithNoPoints),
+                ("testIsSimple_WithOnePoint", testIsSimple_WithOnePoint),
+                ("testIsSimple_WithTwoPoints", testIsSimple_WithTwoPoints),
+                ("testIsSimple_WithThreeIdenticalPoints", testIsSimple_WithThreeIdenticalPoints),
+                ("testIsSimple_WithThreePoints_FirstSecondSame", testIsSimple_WithThreePoints_FirstSecondSame),
+                ("testIsSimple_WithThreePoints_FirstThirdSame", testIsSimple_WithThreePoints_FirstThirdSame),
+                ("testIsSimple_WithThreePoints_SecondThirdSame", testIsSimple_WithThreePoints_SecondThirdSame),
+                ("testIsSimple_WithThreePoints_AllDifferent", testIsSimple_WithThreePoints_AllDifferent),
+                ("testIsSimple_WithFourPoints_FirstLastSame", testIsSimple_WithFourPoints_FirstLastSame),
+                ("testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint", testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint),
+                ("testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment", testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment),
+                ("testIsSimple_WithFivePoints_SecondLastSame", testIsSimple_WithFivePoints_SecondLastSame),
+                ("testIsSimple_WithFivePoints_FirstFourthSame", testIsSimple_WithFivePoints_FirstFourthSame),
+                ("testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment", testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment),
            ]
    }
 }
@@ -69,6 +83,20 @@ extension LineString_Geometry_Coordinate2D_FixedPrecision_Cartesian_Tests {
    static var allTests: [(String, (LineString_Geometry_Coordinate2D_FixedPrecision_Cartesian_Tests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testIsSimple_WithNoPoints", testIsSimple_WithNoPoints),
+                ("testIsSimple_WithOnePoint", testIsSimple_WithOnePoint),
+                ("testIsSimple_WithTwoPoints", testIsSimple_WithTwoPoints),
+                ("testIsSimple_WithThreeIdenticalPoints", testIsSimple_WithThreeIdenticalPoints),
+                ("testIsSimple_WithThreePoints_FirstSecondSame", testIsSimple_WithThreePoints_FirstSecondSame),
+                ("testIsSimple_WithThreePoints_FirstThirdSame", testIsSimple_WithThreePoints_FirstThirdSame),
+                ("testIsSimple_WithThreePoints_SecondThirdSame", testIsSimple_WithThreePoints_SecondThirdSame),
+                ("testIsSimple_WithThreePoints_AllDifferent", testIsSimple_WithThreePoints_AllDifferent),
+                ("testIsSimple_WithFourPoints_FirstLastSame", testIsSimple_WithFourPoints_FirstLastSame),
+                ("testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint", testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint),
+                ("testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment", testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment),
+                ("testIsSimple_WithFivePoints_SecondLastSame", testIsSimple_WithFivePoints_SecondLastSame),
+                ("testIsSimple_WithFivePoints_FirstFourthSame", testIsSimple_WithFivePoints_FirstFourthSame),
+                ("testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment", testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment),
            ]
    }
 }

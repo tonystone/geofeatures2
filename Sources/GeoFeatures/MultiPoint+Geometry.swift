@@ -28,7 +28,7 @@ extension MultiPoint: Geometry {
     }
 
     ///
-    /// Determin whether this MultiPoint is considered simple.
+    /// Determine whether this MultiPoint is considered simple.
     ///
     /// A MultiPoint is simple if it has no duplicate Points.
     ///
