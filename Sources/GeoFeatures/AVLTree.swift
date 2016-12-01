@@ -193,7 +193,7 @@ fileprivate extension AVLTree {
 
                 return newNode
             }
-        } else {
+        } else if value > node.value {
             if node.right != nil {
                 return self.insert(value: value, node: node.right)
             } else {
@@ -205,6 +205,10 @@ fileprivate extension AVLTree {
                 return newNode
             }
         }
+        ///
+        /// If equal the value is already in the tree
+        /// and we ignore it returning the node we are at
+        return node
     }
 
     ///
@@ -322,6 +326,7 @@ fileprivate extension AVLTree {
             }
 
             if isRoot {
+                subtree?.parent = nil
                 self.root = subtree
             } else if isLeft {
                 parent?.left = subtree
@@ -367,10 +372,6 @@ fileprivate extension AVLTree {
             a.right = b.left    /// A's right becomes B's left
             b.left  = a         /// B's left becomes A
 
-            /// Note: if this is the root node the parent will never be set by it's
-            ///       parent (because it does not have one) so you must nil the parent
-            ///       before assigning it to the root pointer
-            b.parent = nil
             newRoot = b
         }
         assert(newRoot != nil)
@@ -410,10 +411,6 @@ fileprivate extension AVLTree {
             c.left  = b.right  /// C's left becomes B's right
             b.right = c        /// B's right becomes C
 
-            /// Note: if this is the root node the parent will never be set by it's
-            ///       parent (because it does not have one) so you must nil the parent
-            ///       before assigning it to the root pointer
-            b.parent = nil
             newRoot = b
         }
         assert(newRoot != nil)
@@ -459,10 +456,6 @@ fileprivate extension AVLTree {
             c.left = b.right
             b.right = c
 
-            /// Note: if this is the root node the parent will never be set by it's
-            ///       parent (because it does not have one) so you must nil the parent
-            ///       before assigning it to the root pointer
-            b.parent = nil
             newRoot = b
         }
         assert(newRoot != nil)
@@ -508,10 +501,6 @@ fileprivate extension AVLTree {
             a.right = b.left
             b.left = a
 
-            /// Note: if this is the root node the parent will never be set by it's
-            ///       parent (because it does not have one) so you must nil the parent
-            ///       before assigning it to the root pointer
-            b.parent = nil
             newRoot = b
         }
         assert(newRoot != nil)
@@ -573,7 +562,7 @@ internal class AVLTreeNode<ValueType: Comparable> {
     /// Height of a subtree is the number of nodes on the longest path from the root to a leaf.
     ///
     var height: Int {
-        return  1 + Swift.max(self.left?.height ?? 0, self.right?.height ?? 0)
+        return 1 + Swift.max(self.left?.height ?? 0, self.right?.height ?? 0)
     }
 
     ///
@@ -591,7 +580,6 @@ internal class AVLTreeNode<ValueType: Comparable> {
     /// - Returns: true if this subtree is balanced for height
     ///
     var balanced: Bool {
-        return  abs(self.balanceFactor) <= 1 &&
-                self.left?.balanced ?? true && self.right?.balanced ?? true
+        return abs((self.right?.height ?? 0) - (self.left?.height ?? 0)) <= 1 && (self.left?.balanced ?? true) && (self.right?.balanced ?? true)
     }
 }

@@ -47,6 +47,8 @@ extension AVLTreeTests {
                 ("testHeight3NodeLeftRightHeavyTree", testHeight3NodeLeftRightHeavyTree),
                 ("testBalanced3NodeOrderedTree", testBalanced3NodeOrderedTree),
                 ("testInsertNonExisting30", testInsertNonExisting30),
+                ("testInsertLeftA", testInsertLeftA),
+                ("testInsertLeftnegative1", testInsertLeftnegative1),
                 ("testInsertExisting8", testInsertExisting8),
                 ("testRemoveNonExisting30", testRemoveNonExisting30),
                 ("testRemoveRoot1NodeTree", testRemoveRoot1NodeTree),
@@ -75,7 +77,10 @@ extension AVLTreeTests {
                 ("testPreviousOf8", testPreviousOf8),
                 ("testPreviousOf10", testPreviousOf10),
                 ("testPreviousOf15", testPreviousOf15),
-                ("testPreviousOf17", testPreviousOf17)
+                ("testPreviousOf17", testPreviousOf17),
+                ("testSearchPerformance", testSearchPerformance),
+                ("testInsertPerformance", testInsertPerformance),
+                ("testRemovePerformance", testRemovePerformance)
            ]
    }
 }

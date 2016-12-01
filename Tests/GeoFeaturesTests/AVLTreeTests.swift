@@ -185,6 +185,32 @@ class AVLTreeTests: XCTestCase {
         XCTAssertEqual(tree.search(value: input)?.value, expected)
     }
 
+    func testInsertLeftA() {
+        let tree: AVLTree<String> = ["X", "Y", "Z"]
+        let input = ["A", "B", "C"]
+        let expected = (height: 3, balanced: true, present: ["A", "B", "C", "X", "Y", "Z"])
+
+        for value in input {
+            tree.insert(value: value)
+        }
+
+        XCTAssertEqual(tree.balanced, expected.balanced)
+        XCTAssertEqual(tree.height, expected.height)
+        for value in expected.present {
+            XCTAssertNotNil(tree.search(value: value))
+        }
+    }
+
+    func testInsertLeftnegative1() {
+        let tree: AVLTree<String> = ["A", "B", "C"]
+        let input = "-1"
+        let expected = "-1"
+
+        tree.insert(value: input)
+
+        XCTAssertEqual(tree.search(value: input)?.value, expected)
+    }
+
     func testInsertExisting8() {
         let tree: AVLTree<Int> = [1, 5, 8, 7, 10, 15, 20, 17, 25]
         let input = 8
@@ -551,6 +577,49 @@ class AVLTreeTests: XCTestCase {
             XCTAssertEqual(input.tree.previous(node: node)?.value, expected)
         } else {
             XCTFail("Expected value '\(expected)' not found in tree \(input.tree).")
+        }
+    }
+
+    // MARK: - Performance measurements
+
+    func testSearchPerformance() {
+        let tree = AVLTree<Int>()
+        let input = 0..<8000
+
+        for i in input {
+            tree.insert(value: i)
+        }
+
+        measure {
+            for i in input {
+                let _ = tree.search(value: i)
+            }
+        }
+    }
+
+    func testInsertPerformance() {
+        let tree = AVLTree<Int>()
+        let input = 0..<8000
+
+        measure {
+            for i in input {
+                tree.insert(value: i)
+            }
+        }
+    }
+
+    func testRemovePerformance() {
+        let tree = AVLTree<Int>()
+        let input = 0..<8000
+
+        for i in input {
+            tree.insert(value: i)
+        }
+
+        measure {
+            for i in input {
+                tree.remove(value: i)
+            }
         }
     }
 }
