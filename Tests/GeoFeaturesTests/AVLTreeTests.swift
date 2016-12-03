@@ -348,7 +348,45 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExisting5And8And20() {
+    func testRemoveExistingLeafNodesForceReBalance() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [1, 7, 10, 17, 25])
+        let expected = (height: 3, balanced: true, present: [5, 8, 15, 20], missing: [1, 7, 10, 17, 25])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExistingLeafNodesNoReBalance() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [25, 17, 10, 7, 1])
+        let expected = (height: 3, balanced: true, present: [5, 8, 15, 20], missing: [25, 17, 10, 7, 1])
+
+        for value in input.values {
+            input.tree.remove(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
+    func testRemoveExistingInnerNodes() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [5, 8, 20])
         let expected = (height: 3, balanced: true, present: [1, 7, 10, 15, 17, 25], missing: [5, 8, 20])
 
