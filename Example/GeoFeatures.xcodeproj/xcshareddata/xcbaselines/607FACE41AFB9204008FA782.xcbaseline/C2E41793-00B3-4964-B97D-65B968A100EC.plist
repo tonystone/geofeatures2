@@ -16,7 +16,7 @@
 					<string>Local Baseline</string>
 				</dict>
 			</dict>
-			<key>testRemovePerformance()</key>
+			<key>testDeletePerformance()</key>
 			<dict>
 				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
 				<dict>

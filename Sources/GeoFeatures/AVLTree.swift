@@ -83,12 +83,12 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     }
 
     ///
-    /// Remove the value from the tree
+    /// Delete the value from the tree
     ///
-    /// - Parameter value: The value to remove from the tree.
+    /// - Parameter value: The value to delete from the tree.
     ///
-    public func remove(value: ValueType) -> Void {
-        self.remove(value: value, node: &self.root)
+    public func delete(value: ValueType) -> Void {
+        self.delete(value: value, node: &self.root)
     }
 
     ///
@@ -210,10 +210,10 @@ fileprivate extension AVLTree {
     }
 
     ///
-    /// Remove the value from the tree
+    /// Delete the value from the tree
     ///
     @inline(__always)
-    fileprivate func remove(value: ValueType, node root: inout NodeType?) {
+    fileprivate func delete(value: ValueType, node root: inout NodeType?) {
 
         guard let node = root else {
             return
@@ -221,11 +221,11 @@ fileprivate extension AVLTree {
 
         if value < node.value {
 
-            self.remove(value: value, node: &node.left)
+            self.delete(value: value, node: &node.left)
 
         } else if value > node.value {
 
-            self.remove(value: value, node: &node.right)
+            self.delete(value: value, node: &node.right)
 
         } else {
 
@@ -246,7 +246,7 @@ fileprivate extension AVLTree {
 
             } else if node.left == nil, let right = node.right {     // Node has single child (right)
 
-                // Unlink the orignal node from it's parent
+                // Unlink the original node from it's parent
                 root?.parent = nil
 
                 // Link the left node to the directly to the root
@@ -262,7 +262,7 @@ fileprivate extension AVLTree {
                     node.value = predecessor.value
 
                     /// Now remove the old one.
-                    self.remove(value: predecessor.value, node: &node.left)
+                    self.delete(value: predecessor.value, node: &node.left)
 
                 } else if let successor = self.next(node: node) {
 
@@ -270,7 +270,7 @@ fileprivate extension AVLTree {
                     node.value = successor.value
 
                     /// Now remove the old one.
-                    self.remove(value: successor.value, node: &node.right)
+                    self.delete(value: successor.value, node: &node.right)
                 }
             }
         }

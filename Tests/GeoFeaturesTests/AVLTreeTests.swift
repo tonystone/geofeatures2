@@ -221,44 +221,44 @@ class AVLTreeTests: XCTestCase {
         XCTAssertEqual(tree.search(value: input)?.value, expected)
     }
 
-    func testRemoveNonExisting30() {
+    func testDeleteNonExisting30() {
         let tree: AVLTree<Int> = [1, 5, 8, 7, 10, 15, 20, 17, 25]
         let input = 30
         let expected: Int? = nil
 
-        tree.remove(value: input)
+        tree.delete(value: input)
 
         XCTAssertEqual(tree.search(value: input)?.value, expected)
     }
 
-    func testRemoveRoot1NodeTree() {
+    func testDeleteRoot1NodeTree() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1), value: 1)
         let expected: (height: Int, balanced: Bool, value: Int?) = (0, true, nil)
 
-        input.tree.remove(value: input.value)
+        input.tree.delete(value: input.value)
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
         XCTAssertEqual(input.tree.height, expected.height)
         XCTAssertEqual(input.tree.search(value: input.value)?.value, expected.value)
     }
 
-    func testRemoveRoot3NodeTree() {
+    func testDeleteRoot3NodeTree() {
         let input = (tree: AVLTree<String>(arrayLiteral: "C", "B", "A"), value: "B")
         let expected: (height: Int, balanced: Bool, value: String?) = (2, true, nil)
 
-        input.tree.remove(value: input.value)
+        input.tree.delete(value: input.value)
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
         XCTAssertEqual(input.tree.height, expected.height)
         XCTAssertEqual(input.tree.search(value: input.value)?.value, expected.value)
     }
 
-    func testRemoveExisting1() {
+    func testDeleteExisting1() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [1])
         let expected = (height: 4, balanced: true, present: [5, 8, 7, 10, 15, 20, 17, 25], missing: [1])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -272,12 +272,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExisting5() {
+    func testDeleteExisting5() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [5])
         let expected = (height: 4, balanced: true, present: [1, 8, 7, 10, 15, 20, 17, 25], missing: [5])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -291,12 +291,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExisting7() {
+    func testDeleteExisting7() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [7])
         let expected = (height: 4, balanced: true, present: [1, 5, 8, 10, 15, 20, 17, 25], missing: [7])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -310,12 +310,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExisting8() {
+    func testDeleteExisting8() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [8])
         let expected = (height: 4, balanced: true, present: [1, 5, 7, 10, 15, 20, 17, 25], missing: [8])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -329,12 +329,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExisting10() {
+    func testDeleteExisting10() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [10])
         let expected = (height: 4, balanced: true, present: [1, 5, 8, 7, 15, 20, 17, 25], missing: [10])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -348,12 +348,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExistingLeafNodesForceReBalance() {
+    func testDeleteExistingLeafNodesForceReBalance() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [1, 7, 10, 17, 25])
         let expected = (height: 3, balanced: true, present: [5, 8, 15, 20], missing: [1, 7, 10, 17, 25])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -367,12 +367,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExistingLeafNodesNoReBalance() {
+    func testDeleteExistingLeafNodesNoReBalance() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [25, 17, 10, 7, 1])
         let expected = (height: 3, balanced: true, present: [5, 8, 15, 20], missing: [25, 17, 10, 7, 1])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -386,12 +386,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExistingInnerNodes() {
+    func testDeleteExistingInnerNodes() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [5, 8, 20])
         let expected = (height: 3, balanced: true, present: [1, 7, 10, 15, 17, 25], missing: [5, 8, 20])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -405,12 +405,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExistingAllBut3() {
+    func testDeleteExistingAllBut3() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [5, 8, 7, 15, 20, 17])
         let expected = (height: 2, balanced: true, present: [1, 10, 25], missing: [5, 8, 7, 15, 20, 17])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -424,12 +424,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExistingAllBut1() {
+    func testDeleteExistingAllBut1() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [1, 5, 8, 7, 10, 15, 20, 17])
         let expected = (height: 1, balanced: true, present: [25], missing: [1, 5, 8, 7, 10, 15, 20, 17])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -443,12 +443,12 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemoveExistingAll() {
+    func testDeleteExistingAll() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [1, 5, 8, 7, 10, 15, 20, 17, 25])
         let expected = (height: 0, balanced: true, present: [] as [Int], missing: [1, 5, 8, 7, 10, 15, 20, 17, 25])
 
         for value in input.values {
-            input.tree.remove(value: value)
+            input.tree.delete(value: value)
         }
 
         XCTAssertEqual(input.tree.balanced, expected.balanced)
@@ -672,7 +672,7 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
-    func testRemovePerformance() {
+    func testDeletePerformance() {
 
         measureMetrics(XCTestCase.defaultPerformanceMetrics(), automaticallyStartMeasuring: false) {
 
@@ -692,7 +692,7 @@ class AVLTreeTests: XCTestCase {
             self.startMeasuring()
 
             for value in input {
-                tree.remove(value: value)
+                tree.delete(value: value)
             }
 
             self.stopMeasuring()
