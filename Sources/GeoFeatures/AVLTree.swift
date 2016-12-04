@@ -32,12 +32,12 @@ import Swift
 ///
 internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
 
-    typealias NodeType = AVLTreeNode<ValueType>
+    public typealias NodeType = AVLTreeNode<ValueType>
 
     ///
     /// The root of the tree if it has any nodes
     ///
-    fileprivate(set) var root: NodeType? = nil
+    fileprivate(set) internal var root: NodeType? = nil
 
     ///
     /// Construct an instance with an Array of ValueTypes
@@ -54,7 +54,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     ///
     /// The current height of this tree
     ///
-    internal var height: Int {
+    public var height: Int {
         return self.root?.height ?? 0
     }
 
@@ -63,7 +63,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     ///
     /// - Returns: true if this tree is balanced for height
     ///
-    internal var balanced: Bool {
+    public var balanced: Bool {
         guard let root = self.root else {
             return true
         }
@@ -187,11 +187,17 @@ fileprivate extension AVLTree {
         if value < node.value {
             let newNode = self.insert(value: value, node: &node.left)
 
+            /// Recalculate the heights as we unwind the stack
+            root?.calculateHeight()
+
             self.balance(from: &root)
 
             return newNode
         } else if value > node.value {
             let newNode = self.insert(value: value, node: &node.right)
+
+            /// Recalculate the heights as we unwind the stack
+            root?.calculateHeight()
 
             self.balance(from: &root)
 
@@ -243,7 +249,7 @@ fileprivate extension AVLTree {
                 // Unlink the orignal node from it's parent
                 root?.parent = nil
 
-                // Link the left nide to the directly to the root
+                // Link the left node to the directly to the root
                 right.parent = nil
                 root = right
 
@@ -268,6 +274,10 @@ fileprivate extension AVLTree {
                 }
             }
         }
+
+        /// Recalculate the heights as we unwind the stack
+        root?.calculateHeight()
+
         self.balance(from: &root)
     }
 
@@ -369,6 +379,10 @@ fileprivate extension AVLTree {
             ///       before assigning it to the root pointer
             b.parent = nil
             newRoot = b
+
+            // Adjust the height of the nodes that changed
+            a.calculateHeight()
+            b.calculateHeight()
         }
         assert(newRoot != nil)
 
@@ -412,6 +426,10 @@ fileprivate extension AVLTree {
             ///       before assigning it to the root pointer
             b.parent = nil
             newRoot = b
+
+            // Adjust the height of the nodes that changed
+            c.calculateHeight()
+            b.calculateHeight()
         }
         assert(newRoot != nil)
 
@@ -461,6 +479,11 @@ fileprivate extension AVLTree {
             ///       before assigning it to the root pointer
             b.parent = nil
             newRoot = b
+
+            // Adjust the height of the nodes that changed
+            a.calculateHeight()
+            c.calculateHeight()
+            b.calculateHeight()
         }
         assert(newRoot != nil)
 
@@ -510,6 +533,11 @@ fileprivate extension AVLTree {
             ///       before assigning it to the root pointer
             b.parent = nil
             newRoot = b
+
+            // Adjust the height of the nodes that changed
+            a.calculateHeight()
+            c.calculateHeight()
+            b.calculateHeight()
         }
         assert(newRoot != nil)
 
@@ -522,9 +550,9 @@ fileprivate extension AVLTree {
 ///
 internal class AVLTreeNode<ValueType: Comparable> {
 
-    typealias NodeType = AVLTreeNode<ValueType>
+    public typealias NodeType = AVLTreeNode<ValueType>
 
-    init(value: ValueType, parent: NodeType? = nil) {
+    public init(value: ValueType, parent: NodeType? = nil) {
         self.value  = value
         self.parent = parent
         self.left   = nil
@@ -537,10 +565,10 @@ internal class AVLTreeNode<ValueType: Comparable> {
     ///
     /// The stored value given by the user.
     ///
-    fileprivate(set) var value: ValueType
+    fileprivate(set) public var value: ValueType
 
     /// Left subtree
-    var left:  NodeType? {
+    public var left:  NodeType? {
         willSet {
             assert(newValue !== self)
 
@@ -549,7 +577,7 @@ internal class AVLTreeNode<ValueType: Comparable> {
     }
 
     /// Right subtree
-    var right: NodeType? {
+    public var right: NodeType? {
         willSet {
             assert(newValue !== self)
 
@@ -569,8 +597,16 @@ internal class AVLTreeNode<ValueType: Comparable> {
     ///
     /// Height of a subtree is the number of nodes on the longest path from the root to a leaf.
     ///
-    var height: Int {
-        return 1 + Swift.max(self.left?.height ?? 0, self.right?.height ?? 0)
+    fileprivate(set) public var height: Int = 1
+
+    ///
+    /// Recalculate the height of this node.
+    ///
+    /// Height of a subtree is the number of nodes on the longest path from the root to a leaf.
+    ///
+    @inline(__always)
+    fileprivate func calculateHeight() {
+        self.height = 1 + Swift.max(self.left?.height ?? 0, self.right?.height ?? 0)
     }
 
     ///
@@ -578,7 +614,7 @@ internal class AVLTreeNode<ValueType: Comparable> {
     /// Negative (-) = Left Heavy
     /// Zero     (0) = Equal
     ///
-    var balanceFactor: Int {
+    public var balanceFactor: Int {
         return (self.right?.height ?? 0) - (self.left?.height ?? 0)
     }
 
@@ -587,7 +623,7 @@ internal class AVLTreeNode<ValueType: Comparable> {
     ///
     /// - Returns: true if this subtree is balanced for height
     ///
-    var balanced: Bool {
+    public var balanced: Bool {
         return abs((self.right?.height ?? 0) - (self.left?.height ?? 0)) <= 1 && (self.left?.balanced ?? true) && (self.right?.balanced ?? true)
     }
 }
