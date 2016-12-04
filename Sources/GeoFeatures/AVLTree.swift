@@ -37,7 +37,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     ///
     /// The root of the tree if it has any nodes
     ///
-    fileprivate(set) internal var root: NodeType? = nil
+    internal fileprivate(set) var root: NodeType? = nil
 
     ///
     /// Construct an instance with an Array of ValueTypes
@@ -565,7 +565,7 @@ internal class AVLTreeNode<ValueType: Comparable> {
     ///
     /// The stored value given by the user.
     ///
-    fileprivate(set) public var value: ValueType
+    public fileprivate(set) var value: ValueType
 
     /// Left subtree
     public var left:  NodeType? {
@@ -586,7 +586,7 @@ internal class AVLTreeNode<ValueType: Comparable> {
     }
 
     /// This nodes parent
-    weak fileprivate var parent: NodeType? {
+    fileprivate weak var parent: NodeType? {
         willSet {
             assert(newValue !== self)
         }
@@ -597,7 +597,7 @@ internal class AVLTreeNode<ValueType: Comparable> {
     ///
     /// Height of a subtree is the number of nodes on the longest path from the root to a leaf.
     ///
-    fileprivate(set) public var height: Int = 1
+    public fileprivate(set) var height: Int = 1
 
     ///
     /// Recalculate the height of this node.
