@@ -405,6 +405,25 @@ class AVLTreeTests: XCTestCase {
         }
     }
 
+    func testDeleteExistingSingleLeftNode() {
+        let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [7, 5])
+        let expected = (height: 3, balanced: true, present: [1, 8, 10, 15, 20, 17, 25], missing: [7, 5])
+
+        for value in input.values {
+            input.tree.delete(value: value)
+        }
+
+        XCTAssertEqual(input.tree.balanced, expected.balanced)
+        XCTAssertEqual(input.tree.height, expected.height)
+
+        for value in expected.present {
+            XCTAssertNotNil(input.tree.search(value: value), "Expected value \(value) to be present but was missing.")
+        }
+        for value in expected.missing {
+            XCTAssertNil(input.tree.search(value: value), "Expected value \(value) to be missing but was present.")
+        }
+    }
+
     func testDeleteExistingAllBut3() {
         let input = (tree: AVLTree<Int>(arrayLiteral: 1, 5, 8, 7, 10, 15, 20, 17, 25), values: [5, 8, 7, 15, 20, 17])
         let expected = (height: 2, balanced: true, present: [1, 10, 25], missing: [5, 8, 7, 15, 20, 17])

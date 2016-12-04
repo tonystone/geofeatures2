@@ -61,6 +61,7 @@ extension AVLTreeTests {
                 ("testDeleteExistingLeafNodesForceReBalance", testDeleteExistingLeafNodesForceReBalance),
                 ("testDeleteExistingLeafNodesNoReBalance", testDeleteExistingLeafNodesNoReBalance),
                 ("testDeleteExistingInnerNodes", testDeleteExistingInnerNodes),
+                ("testDeleteExistingSingleLeftNode", testDeleteExistingSingleLeftNode),
                 ("testDeleteExistingAllBut3", testDeleteExistingAllBut3),
                 ("testDeleteExistingAllBut1", testDeleteExistingAllBut1),
                 ("testDeleteExistingAll", testDeleteExistingAll),
