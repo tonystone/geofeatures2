@@ -256,15 +256,7 @@ fileprivate extension AVLTree {
             } else {                                                /// Node has both left and right children
 
                 /// In this case we are an inner node.
-                if let predecessor = self.previous(node: node) {
-
-                    /// Replace this node with the replacement found
-                    node.value = predecessor.value
-
-                    /// Now remove the old one.
-                    self.delete(value: predecessor.value, node: &node.left)
-
-                } else if let successor = self.next(node: node) {
+                if let successor = self.next(node: node) {
 
                     /// Replace this node with the replacement found
                     node.value = successor.value
