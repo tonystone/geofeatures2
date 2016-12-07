@@ -101,6 +101,32 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     }
 
     ///
+    /// Returns the minimum value stored in the tree.  Nil if the tree if empty
+    ///
+    public func min() -> NodeType? {
+        if var node = self.root {
+            while let left = node.left {
+                node = left
+            }
+            return node
+        }
+        return nil
+    }
+
+    ///
+    /// Returns the maximum value stored in the tree.  Nil if the tree if empty
+    ///
+    public func max() -> NodeType? {
+        if var node = self.root {
+            while let right = node.right {
+                node = right
+            }
+            return node
+        }
+        return nil
+    }
+
+    ///
     /// Returns in-order successor (next) of the given node
     ///
     /// In-order successor of a node is the next node in the in-order traversal of the tree. For the last node in a tree, in-order successor will be nil.

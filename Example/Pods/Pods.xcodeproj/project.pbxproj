@@ -17,6 +17,7 @@
 		2D6686C8B35B5435179DE0CB /* CoordinateSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8422DDEC61CC16DB661E7E2 /* CoordinateSystem.swift */; };
 		2E997CEF8A41C0FF7BE41C42 /* GeometryCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B893A61BED64A42EB7DBBDA /* GeometryCollection.swift */; };
 		343907869216ACCF5BD091CE /* GeoFeatures-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = EA465432339064F4FEDFF3E9 /* GeoFeatures-dummy.m */; };
+		366989CC79D9A004A920DE60 /* IntersectionAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366981E54D777BFF357E94D8 /* IntersectionAnalyzer.swift */; };
 		36698B012BD2B4D2340657D7 /* AVLTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366980459AB4A459BFC2794C /* AVLTree.swift */; };
 		403CAD10DBBEEDBE646BDA92 /* LineString+Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B4B7443587F27DD391B2AB /* LineString+Geometry.swift */; };
 		43AFF87F96C32B98224D9C7E /* MultiLineString+Curve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A7C9ED2B892FA936FD0EB0 /* MultiLineString+Curve.swift */; };
@@ -59,6 +60,8 @@
 		E7A450C2A989252A477B95F2 /* LinearRing+Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41288F255AF93A0186927AA /* LinearRing+Geometry.swift */; };
 		E8322BA39B7B6A191591BDC3 /* Coordinate3DM.swift in Sources */ = {isa = PBXBuildFile; fileRef = D480739D2031C8B4448AEE3F /* Coordinate3DM.swift */; };
 		E8D1D5E77EEA580D711F8CBD /* Coordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720760D314D7E0E175136B1B /* Coordinate2D.swift */; };
+		EAFAA8561DF486D6000AB543 /* SweepLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFAA8551DF486D6000AB543 /* SweepLine.swift */; };
+		EAFAA8581DF48D73000AB543 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFAA8571DF48D73000AB543 /* EventQueue.swift */; };
 		F296A283F62E8A92F1DDB0D2 /* GeometryCollection+Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43BDB6DD53D9B0DF8B5C5165 /* GeometryCollection+Geometry.swift */; };
 		F635E7A82CD1879FD5C0E6A2 /* MultiPolygon+Surface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AE08179A98EA3A22A7DCBC /* MultiPolygon+Surface.swift */; };
 		FC6D220BE073FC76A5D91597 /* GeoJSONReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0328894E9009C88F31681E /* GeoJSONReader.swift */; };
@@ -104,6 +107,7 @@
 		2B893A61BED64A42EB7DBBDA /* GeometryCollection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GeometryCollection.swift; sourceTree = "<group>"; };
 		329D05CEA295E51B827C83A4 /* Coordinate2DM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Coordinate2DM.swift; sourceTree = "<group>"; };
 		366980459AB4A459BFC2794C /* AVLTree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVLTree.swift; sourceTree = "<group>"; };
+		366981E54D777BFF357E94D8 /* IntersectionAnalyzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntersectionAnalyzer.swift; sourceTree = "<group>"; };
 		39941C5AA13495D12162F957 /* Pods-GeoFeatures_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GeoFeatures_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		3F0328894E9009C88F31681E /* GeoJSONReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GeoJSONReader.swift; sourceTree = "<group>"; };
 		3F57DB6F284E6A2FC8EAC345 /* LineString+Curve.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "LineString+Curve.swift"; sourceTree = "<group>"; };
@@ -153,6 +157,8 @@
 		E5BFE51725B6AD2C5DC26080 /* MultiPolygon+Geometry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MultiPolygon+Geometry.swift"; sourceTree = "<group>"; };
 		E95ADF91AF578254BEBF2D22 /* GeoFeatures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GeoFeatures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA465432339064F4FEDFF3E9 /* GeoFeatures-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "GeoFeatures-dummy.m"; sourceTree = "<group>"; };
+		EAFAA8551DF486D6000AB543 /* SweepLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SweepLine.swift; sourceTree = "<group>"; };
+		EAFAA8571DF48D73000AB543 /* EventQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		EC213DCB93EEFDBB06AD6DDD /* GeoFeatures.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GeoFeatures.xcconfig; sourceTree = "<group>"; };
 		F444775DC20AF1618E1A4843 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB576A698FFC14570E988218 /* Pods-GeoFeatures_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-GeoFeatures_Example-frameworks.sh"; sourceTree = "<group>"; };
@@ -237,7 +243,10 @@
 				DD4B4C6B40ED8724284AD15B /* WKTReader.swift */,
 				793FEACC4D9B05269696BAB5 /* WKTWriter.swift */,
 				3F0328894E9009C88F31681E /* GeoJSONReader.swift */,
+				EAFAA8571DF48D73000AB543 /* EventQueue.swift */,
+				EAFAA8551DF486D6000AB543 /* SweepLine.swift */,
 				366980459AB4A459BFC2794C /* AVLTree.swift */,
+				366981E54D777BFF357E94D8 /* IntersectionAnalyzer.swift */,
 			);
 			path = GeoFeatures;
 			sourceTree = "<group>";
@@ -486,6 +495,7 @@
 				D56572502D7A1DAEC978691D /* Coordinate.swift in Sources */,
 				E8D1D5E77EEA580D711F8CBD /* Coordinate2D.swift in Sources */,
 				69485BBF6305A95649F715D0 /* Coordinate2DM.swift in Sources */,
+				EAFAA8561DF486D6000AB543 /* SweepLine.swift in Sources */,
 				6430B7134345D6852C3CAF90 /* Coordinate3D.swift in Sources */,
 				E8322BA39B7B6A191591BDC3 /* Coordinate3DM.swift in Sources */,
 				2D6686C8B35B5435179DE0CB /* CoordinateSystem.swift in Sources */,
@@ -505,6 +515,7 @@
 				4943A0824258381CF8638B9D /* LinearRing+Surface.swift in Sources */,
 				A709491581F3D4B4FE4555FF /* LinearRing.swift in Sources */,
 				8F7F16CA22D038521C1FC6F8 /* LineString+Curve.swift in Sources */,
+				EAFAA8581DF48D73000AB543 /* EventQueue.swift in Sources */,
 				403CAD10DBBEEDBE646BDA92 /* LineString+Geometry.swift in Sources */,
 				985C4194575525CD58328E4B /* LineString.swift in Sources */,
 				43AFF87F96C32B98224D9C7E /* MultiLineString+Curve.swift in Sources */,
@@ -527,6 +538,7 @@
 				61CC6DA3DCA42BFE928840E9 /* WKTReader.swift in Sources */,
 				8834A9AA2528774D0590A8E0 /* WKTWriter.swift in Sources */,
 				36698B012BD2B4D2340657D7 /* AVLTree.swift in Sources */,
+				366989CC79D9A004A920DE60 /* IntersectionAnalyzer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
