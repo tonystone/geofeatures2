@@ -1,7 +1,8 @@
 included:
-  - Example/GeoFeatures
   - Sources
   - Tests
+  - Example/GeoFeatures
+  - Example/GeoFeatures.playground
 
 excluded:
   - Scripts
@@ -9,14 +10,17 @@ excluded:
   - bin
 
 disabled_rules:
-  - comma       # ToDo: Write custom comma rule that allows flexible_right_space
+  - comma       # Note: we replaced this with a custom comma rule that allows flexible_right_space
   - empty_count
   - todo
   - conditional_returns_on_newline
   - switch_case_on_newline
   - overridden_super_call
   - line_length
-  - missing_docs # Development time only, remove when we get closer to production.  Also make this rule an error and not warning.
+  - type_body_length # Until swiftlint allows overriding rules in sub swiftlint.yml files, we're disabling this rule for tests
+  - file_length      # Until swiftlint allows overriding rules in sub swiftlint.yml files, we're disabling this rule for tests
+  - type_name        # Until swiftlint allows overriding rules in sub swiftlint.yml files, we're disabling this rule for tests
+  - missing_docs     # Development time only, remove when we get closer to production.  Also make this rule an error and not warning.
 
 opt_in_rules:
   - closure_spacing
@@ -141,5 +145,66 @@ variable_name:
 
 vertical_whitespace:
   severity: error
+
+custom_rules:
+  func_where_on_newline:
+    regex: "\)[ \t]*(?:->[ \t]*[a-zA-Z0-9]*[ \t]*)?[^\r\n][ \t]*where[ \t]"
+    message: "func definitions must have their where clause on a new line."
+    severity: error # violation severity. optional.
+
+  space_after_comment_mark:
+    regex: "(\/\/\/?[^\s\/:])|(\/\/:[^\s\/])"
+    match_kinds:
+      - comment
+    message: "There must be a space after /// or // comments and before the text."
+    severity: error
+
+  identifier_colon:
+    regex: "(?<!swiftlint|HH|mm|h|\"H|'H|\sH):([^\-\)\s\\\/\]])"
+    match_kinds:
+      - identifier
+    message: "Colons must be next to the identifier when specifying a type."
+    severity: error
+
+  comma_after_identifier:
+    regex: "(\s+,\s+)|([^\s]+,[^\s'\"]+)"
+    match_kinds:
+      - argument
+      - attribute.builtin
+      - attribute.id
+      - buildconfig.id
+      - buildconfig.keyword
+      - identifier
+      - keyword
+      - number
+      - objectliteral
+      - parameter
+      - placeholder
+      - string
+      - string_interpolation_anchor
+      - typeidentifier
+    message: "There should be no space before any comma and at least 1 space after."
+    severity: error
+
+  comma_after_identifier_Comment:
+    regex: "(\/\/\/?[^\r\n]+[a-zA-Z]+,[a-zA-Z]+)"
+    match_kinds:
+      - comment
+      - comment.mark
+      - comment.url
+      - doccomment
+      - doccomment.field
+    message: "There should be no space before any comma and at least 1 space after."
+    severity: error
+
+  bracket:
+    regex: "(\}\n{2,}\}|\{\n{2,}\{)"
+    message: "No empty line between two open or close brackets. "
+    severity: error
+
+  empty_brackets:
+    regex: "(\{\s{1,}\})"
+    message: "Empty brackets must not have white space, use {} instead."
+    severity: error
 
 reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, junit)

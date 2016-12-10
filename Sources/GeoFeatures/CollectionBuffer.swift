@@ -24,7 +24,7 @@ internal struct CollectionBufferHeader {
     var count: Int
 }
 
-internal class CollectionBuffer<E>: ManagedBuffer<CollectionBufferHeader,E> {
+internal class CollectionBuffer<E>: ManagedBuffer<CollectionBufferHeader, E> {
 
     internal typealias Element = E
 
@@ -149,5 +149,4 @@ internal extension CollectionBuffer {
             return elements.advanced(by: header.pointee.count).move()
         }
     }
-
 }
