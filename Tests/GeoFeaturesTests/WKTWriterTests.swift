@@ -201,19 +201,19 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let emptyLineString = LineString<Coordinate2DM>()
 
-        // FIXME: should be LINESTRING M EMPTY
+        /// FIXME: should be LINESTRING M EMPTY
         XCTAssertEqual("LINESTRING EMPTY", writer.write(emptyLineString))
     }
 
     func testWriteLineStringsinglePoint() {
 
-        // FIXME: should be LINESTRING M [..]
+        /// FIXME: should be LINESTRING M [..]
         XCTAssertEqual("LINESTRING (1.0 1.0 2.0)", writer.write(LineString<Coordinate2DM>(elements: [(x:1.0, y:1.0, m:2.0)])))
     }
 
     func testWriteLineStringmultiplePoints() {
 
-        // FIXME: should be LINESTRING M [..]
+        /// FIXME: should be LINESTRING M [..]
         XCTAssertEqual("LINESTRING (1.0 1.0 2.0, 2.0 2.0 4.0, 3.0 3.0 6.0)", writer.write(LineString<Coordinate2DM>(elements: [(x:1.0, y:1.0, m:2.0), (x:2.0, y:2.0, m:4.0), (x:3.0, y:3.0, m:6.0)])))
     }
 
@@ -221,19 +221,19 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let emptyLinearRing = LinearRing<Coordinate2DM>()
 
-        // FIXME: should be LINEARSTRING M EMPTY
+        /// FIXME: should be LINEARSTRING M EMPTY
         XCTAssertEqual("LINEARRING EMPTY", writer.write(emptyLinearRing))
     }
 
     func testWriteLinearRing() {
 
-        // FIXME: should be LINEARSTRING M [..]
+        /// FIXME: should be LINEARSTRING M [..]
         XCTAssertEqual("LINEARRING (1.0 1.0 2.0, 2.0 2.0 4.0, 3.0 3.0 6.0, 1.0 1.0 2.0)", writer.write(LinearRing<Coordinate2DM>(elements: [(x:1.0, y:1.0, m: 2.0), (x:2.0, y:2.0, m:4.0), (x:3.0, y:3.0, m:6.0), (x:1.0, y:1.0, m:2.0)])))
     }
 
     func testWritePolygonEmpty() {
 
-        // FIXME: should be POLYGON M
+        /// FIXME: should be POLYGON M
         XCTAssertEqual("POLYGON EMPTY", writer.write(Polygon<Coordinate2DM>()))
     }
 
@@ -242,7 +242,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
         let outerRing = LinearRing<Coordinate2DM>(elements: [(x:1.0, y:1.0, m:2.0), (x:2.0, y:2.0, m:4.0), (x:3.0, y:3.0, m:6.0), (x:1.0, y:1.0, m:2.0)])
         let innerRing = LinearRing<Coordinate2DM>(elements: [(x:4.0, y:4.0, m:8.0), (x:5.0, y:5.0, m:10.0), (x:6.0, y:6.0, m:12.0), (x:4.0, y:4.0, m:8.0)])
 
-        // FIXME: should be POLYGON M [..]
+        /// FIXME: should be POLYGON M [..]
         XCTAssertEqual("POLYGON ((1.0 1.0 2.0, 2.0 2.0 4.0, 3.0 3.0 6.0, 1.0 1.0 2.0), (4.0 4.0 8.0, 5.0 5.0 10.0, 6.0 6.0 12.0, 4.0 4.0 8.0))", writer.write(Polygon<Coordinate2DM>(outerRing: outerRing, innerRings: [innerRing])))
     }
 
@@ -250,7 +250,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let outerRing = LinearRing<Coordinate2DM>(elements: [(x:1.0, y:1.0, m:2.0), (x:2.0, y:2.0, m:4.0), (x:3.0, y:3.0, m:6.0), (x:1.0, y:1.0, m:2.0)])
 
-        // FIXME: should be POLYGON M [..]
+        /// FIXME: should be POLYGON M [..]
         XCTAssertEqual("POLYGON ((1.0 1.0 2.0, 2.0 2.0 4.0, 3.0 3.0 6.0, 1.0 1.0 2.0))", writer.write(Polygon<Coordinate2DM>(outerRing: outerRing, innerRings: [])))
     }
 
@@ -258,7 +258,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate2DM>(elements: [])
 
-        // FIXME: should be MULTIPOINT M EMPTY
+        /// FIXME: should be MULTIPOINT M EMPTY
         XCTAssertEqual("MULTIPOINT EMPTY", writer.write(multiPoint))
     }
 
@@ -266,7 +266,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate2DM>(elements: [Point<Coordinate2DM>(coordinate: (x:1.0, y:1.0, m: 2.0))])
 
-        // FIXME: should be MULTIPOINT M [..]
+        /// FIXME: should be MULTIPOINT M [..]
         XCTAssertEqual("MULTIPOINT ((1.0 1.0 2.0))", writer.write(multiPoint))
     }
 
@@ -274,7 +274,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate2DM>(elements: [Point<Coordinate2DM>(coordinate: (x:1.0, y:1.0, m:2.0)), Point<Coordinate2DM>(coordinate: (x:2.0, y:2.0, m:4.0))])
 
-        // FIXME: should be MULTIPOINT M
+        /// FIXME: should be MULTIPOINT M
         XCTAssertEqual("MULTIPOINT ((1.0 1.0 2.0), (2.0 2.0 4.0))", writer.write(multiPoint))
     }
 
@@ -282,7 +282,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate2DM>(elements: [])
 
-        // FIXME: should be MULTILINESTRING M EMPTY
+        /// FIXME: should be MULTILINESTRING M EMPTY
         XCTAssertEqual("MULTILINESTRING EMPTY", writer.write(multiLineString))
     }
 
@@ -290,7 +290,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x:1.0, y:1.0, m: 2.0), (x:2.0, y:2.0, m:4.0)])])
 
-        // FIXME: should be MULTILINESTRING M [..]
+        /// FIXME: should be MULTILINESTRING M [..]
         XCTAssertEqual("MULTILINESTRING ((1.0 1.0 2.0, 2.0 2.0 4.0))", writer.write(multiLineString))
     }
 
@@ -298,7 +298,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x:1.0, y:1.0, m:2.0), (x:2.0, y:2.0, m:4.0)]), LineString<Coordinate2DM>(elements: [(x:3.0, y:3.0, m:6.0), (x:4.0, y:4.0, m:8.0)])])
 
-        // FIXME: should be MULTILINESTRING M [..]
+        /// FIXME: should be MULTILINESTRING M [..]
         XCTAssertEqual("MULTILINESTRING ((1.0 1.0 2.0, 2.0 2.0 4.0), (3.0 3.0 6.0, 4.0 4.0 8.0))", writer.write(multiLineString))
     }
 
@@ -306,7 +306,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
 
         let emptyMultiPolygon = MultiPolygon<Coordinate2DM>()
 
-        // FIXME: should be MULTIPOLYGON M EMPTY
+        /// FIXME: should be MULTIPOLYGON M EMPTY
         XCTAssertEqual("MULTIPOLYGON EMPTY", writer.write(emptyMultiPolygon))
     }
 
@@ -314,7 +314,7 @@ class WKTWriterCoordinate2DMTests: XCTestCase {
         let outerRing = LinearRing<Coordinate2DM>(elements: [(x:1.0, y:1.0, m:2.0), (x:2.0, y:2.0, m:4.0), (x:3.0, y:3.0, m:6.0), (x:1.0, y:1.0, m:2.0)])
         let innerRing = LinearRing<Coordinate2DM>(elements: [(x:4.0, y:4.0, m:8.0), (x:5.0, y:5.0, m:10.0), (x:6.0, y:6.0, m:12.0), (x:4.0, y:4.0, m:8.0)])
 
-        // FIXME: should be MULTIPOLYGON M [..]
+        /// FIXME: should be MULTIPOLYGON M [..]
         XCTAssertEqual("MULTIPOLYGON (((1.0 1.0 2.0, 2.0 2.0 4.0, 3.0 3.0 6.0, 1.0 1.0 2.0), (4.0 4.0 8.0, 5.0 5.0 10.0, 6.0 6.0 12.0, 4.0 4.0 8.0)), ((1.0 1.0 2.0, 2.0 2.0 4.0, 3.0 3.0 6.0, 1.0 1.0 2.0), (4.0 4.0 8.0, 5.0 5.0 10.0, 6.0 6.0 12.0, 4.0 4.0 8.0)))", writer.write(MultiPolygon<Coordinate2DM>(elements: [Polygon<Coordinate2DM>(outerRing: outerRing, innerRings: [innerRing]), Polygon<Coordinate2DM>(outerRing: outerRing, innerRings: [innerRing])])))
     }
 }
@@ -334,19 +334,19 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let emptyLineString = LineString<Coordinate3D>()
 
-        // FIXME: should be LINESTRING Z EMPTY
+        /// FIXME: should be LINESTRING Z EMPTY
         XCTAssertEqual("LINESTRING EMPTY", writer.write(emptyLineString))
     }
 
     func testWriteLineStringsinglePoint() {
 
-        // FIXME: should be LINESTRING Z (1.0, 1.0, 1.0)
+        /// FIXME: should be LINESTRING Z (1.0, 1.0, 1.0)
         XCTAssertEqual("LINESTRING (1.0 1.0 1.0)", writer.write(LineString<Coordinate3D>(elements: [(x:1.0, y:1.0, z:1.0)])))
     }
 
     func testWriteLineStringmultiplePoints() {
 
-        // FIXME: should be LINESTRING Z [..]
+        /// FIXME: should be LINESTRING Z [..]
         XCTAssertEqual("LINESTRING (1.0 1.0 1.0, 2.0 2.0 2.0, 3.0 3.0 3.0)", writer.write(LineString<Coordinate3D>(elements: [(x:1.0, y:1.0, z:1.0), (x:2.0, y:2.0, z:2.0), (x:3.0, y:3.0, z:3.0)])))
     }
 
@@ -354,19 +354,19 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let emptyLinearRing = LinearRing<Coordinate3D>()
 
-        // FIXME: should be LINEARRING Z EMPTY
+        /// FIXME: should be LINEARRING Z EMPTY
         XCTAssertEqual("LINEARRING EMPTY", writer.write(emptyLinearRing))
     }
 
     func testWriteLinearRing() {
 
-        // FIXME: should be LINEARRING Z [..]
+        /// FIXME: should be LINEARRING Z [..]
         XCTAssertEqual("LINEARRING (1.0 1.0 1.0, 2.0 2.0 2.0, 3.0 3.0 3.0, 1.0 1.0 1.0)", writer.write(LinearRing<Coordinate3D>(elements: [(x:1.0, y:1.0, z:1.0), (x:2.0, y:2.0, z:2.0), (x:3.0, y:3.0, z:3.0), (x:1.0, y:1.0, z:1.0)])))
     }
 
     func testWritePolygonEmpty() {
 
-        // FIXME: should be POLYGON Z
+        /// FIXME: should be POLYGON Z
         XCTAssertEqual("POLYGON EMPTY", writer.write(Polygon<Coordinate3D>()))
     }
 
@@ -375,7 +375,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
         let outerRing = LinearRing<Coordinate3D>(elements: [(x:1.0, y:1.0, z:1.0), (x:2.0, y:2.0, z:2.0), (x:3.0, y:3.0, z:3.0), (x:1.0, y:1.0, z:1.0)])
         let innerRing = LinearRing<Coordinate3D>(elements: [(x:4.0, y:4.0, z:4.0), (x:5.0, y:5.0, z:5.0), (x:6.0, y:6.0, z:6.0), (x:4.0, y:4.0, z:4.0)])
 
-        // FIXME: should be POLYGON Z [..]
+        /// FIXME: should be POLYGON Z [..]
         XCTAssertEqual("POLYGON ((1.0 1.0 1.0, 2.0 2.0 2.0, 3.0 3.0 3.0, 1.0 1.0 1.0), (4.0 4.0 4.0, 5.0 5.0 5.0, 6.0 6.0 6.0, 4.0 4.0 4.0))", writer.write(Polygon<Coordinate3D>(outerRing: outerRing, innerRings: [innerRing])))
     }
 
@@ -383,7 +383,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let outerRing = LinearRing<Coordinate3D>(elements: [(x:1.0, y:1.0, z:1.0), (x:2.0, y:2.0, z:2.0), (x:3.0, y:3.0, z:3.0), (x:1.0, y:1.0, z:1.0)])
 
-        // FIXME: should be POLYGON Z [..]
+        /// FIXME: should be POLYGON Z [..]
         XCTAssertEqual("POLYGON ((1.0 1.0 1.0, 2.0 2.0 2.0, 3.0 3.0 3.0, 1.0 1.0 1.0))", writer.write(Polygon<Coordinate3D>(outerRing: outerRing, innerRings: [])))
     }
 
@@ -391,7 +391,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate3D>(elements: [])
 
-        // FIXME: should be MULTIPOINT Z EMPTY
+        /// FIXME: should be MULTIPOINT Z EMPTY
         XCTAssertEqual("MULTIPOINT EMPTY", writer.write(multiPoint))
     }
 
@@ -399,7 +399,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate3D>(elements: [Point<Coordinate3D>(coordinate: (x:1.0, y:1.0, z: 2.0))])
 
-        // FIXME: should be MULTIPOINT Z [..]
+        /// FIXME: should be MULTIPOINT Z [..]
         XCTAssertEqual("MULTIPOINT ((1.0 1.0 2.0))", writer.write(multiPoint))
     }
 
@@ -407,7 +407,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate3D>(elements: [Point<Coordinate3D>(coordinate: (x:1.0, y:1.0, z:1.0)), Point<Coordinate3D>(coordinate: (x:2.0, y:2.0, z:2.0))])
 
-        // FIXME: should be MULTIPOINT Z
+        /// FIXME: should be MULTIPOINT Z
         XCTAssertEqual("MULTIPOINT ((1.0 1.0 1.0), (2.0 2.0 2.0))", writer.write(multiPoint))
     }
 
@@ -415,7 +415,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate3D>(elements: [])
 
-        // FIXME: should be MULTILINESTRING Z EMPTY
+        /// FIXME: should be MULTILINESTRING Z EMPTY
         XCTAssertEqual("MULTILINESTRING EMPTY", writer.write(multiLineString))
     }
 
@@ -423,7 +423,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate3D>(elements: [LineString<Coordinate3D>(elements: [(x:1.0, y:1.0, z:1.0), (x:2.0, y:2.0, z:2.0)])])
 
-        // FIXME: should be MULTILINESTRING Z [..]
+        /// FIXME: should be MULTILINESTRING Z [..]
         XCTAssertEqual("MULTILINESTRING ((1.0 1.0 1.0, 2.0 2.0 2.0))", writer.write(multiLineString))
     }
 
@@ -431,7 +431,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate3D>(elements: [LineString<Coordinate3D>(elements: [(x:1.0, y:1.0, z:1.0), (x:2.0, y:2.0, z:2.0)]), LineString<Coordinate3D>(elements: [(x:3.0, y:3.0, z:3.0), (x:4.0, y:4.0, z:4.0)])])
 
-        // FIXME: should be MULTILINESTRING Z [..]
+        /// FIXME: should be MULTILINESTRING Z [..]
         XCTAssertEqual("MULTILINESTRING ((1.0 1.0 1.0, 2.0 2.0 2.0), (3.0 3.0 3.0, 4.0 4.0 4.0))", writer.write(multiLineString))
     }
 
@@ -439,7 +439,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
 
         let emptyMultiPolygon = MultiPolygon<Coordinate3D>()
 
-        // FIXME: should be MULTIPOLYGON Z EMPTY
+        /// FIXME: should be MULTIPOLYGON Z EMPTY
         XCTAssertEqual("MULTIPOLYGON EMPTY", writer.write(emptyMultiPolygon))
     }
 
@@ -447,7 +447,7 @@ class WKTWriterCoordinate3DTests: XCTestCase {
         let outerRing = LinearRing<Coordinate3D>(elements: [(x:1.0, y:1.0, z:1.0), (x:2.0, y:2.0, z:2.0), (x:3.0, y:3.0, z:3.0), (x:1.0, y:1.0, z:1.0)])
         let innerRing = LinearRing<Coordinate3D>(elements: [(x:4.0, y:4.0, z:4.0), (x:5.0, y:5.0, z:5.0), (x:6.0, y:6.0, z:6.0), (x:4.0, y:4.0, z:4.0)])
 
-        // FIXME: should be MULTIPOLYGON Z [..]
+        /// FIXME: should be MULTIPOLYGON Z [..]
         XCTAssertEqual("MULTIPOLYGON (((1.0 1.0 1.0, 2.0 2.0 2.0, 3.0 3.0 3.0, 1.0 1.0 1.0), (4.0 4.0 4.0, 5.0 5.0 5.0, 6.0 6.0 6.0, 4.0 4.0 4.0)), ((1.0 1.0 1.0, 2.0 2.0 2.0, 3.0 3.0 3.0, 1.0 1.0 1.0), (4.0 4.0 4.0, 5.0 5.0 5.0, 6.0 6.0 6.0, 4.0 4.0 4.0)))", writer.write(MultiPolygon<Coordinate3D>(elements: [Polygon<Coordinate3D>(outerRing: outerRing, innerRings: [innerRing]), Polygon<Coordinate3D>(outerRing: outerRing, innerRings: [innerRing])])))
     }
 }
@@ -467,19 +467,19 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let emptyLineString = LineString<Coordinate3DM>()
 
-        // FIXME: should be LINESTRING ZM EMPTY
+        /// FIXME: should be LINESTRING ZM EMPTY
         XCTAssertEqual("LINESTRING EMPTY", writer.write(emptyLineString))
     }
 
     func testWriteLineStringsinglePoint() {
 
-        // FIXME: should be LINESTRING ZM [..]
+        /// FIXME: should be LINESTRING ZM [..]
         XCTAssertEqual("LINESTRING (1.0 1.0 1.0 3.0)", writer.write(LineString<Coordinate3DM>(elements: [(x:1.0, y:1.0, z:1.0, m:3.0)])))
     }
 
     func testWriteLineStringmultiplePoints() {
 
-        // FIXME: should be LINESTRING ZM [..]
+        /// FIXME: should be LINESTRING ZM [..]
         XCTAssertEqual("LINESTRING (1.0 1.0 1.0 3.0, 2.0 2.0 2.0 6.0, 3.0 3.0 3.0 9.0)", writer.write(LineString<Coordinate3DM>(elements: [(x:1.0, y:1.0, z: 1.0, m:3.0), (x:2.0, y:2.0, z:2.0, m:6.0), (x:3.0, y:3.0, z:3.0, m:9.0)])))
     }
 
@@ -487,19 +487,19 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let emptyLinearRing = LinearRing<Coordinate3DM>()
 
-        // FIXME: should be LINEARSTRING ZM EMPTY
+        /// FIXME: should be LINEARSTRING ZM EMPTY
         XCTAssertEqual("LINEARRING EMPTY", writer.write(emptyLinearRing))
     }
 
     func testWriteLinearRing() {
 
-        // FIXME: should be LINEARSTRING ZM [..]
+        /// FIXME: should be LINEARSTRING ZM [..]
         XCTAssertEqual("LINEARRING (1.0 1.0 1.0 3.0, 2.0 2.0 2.0 6.0, 3.0 3.0 3.0 9.0, 1.0 1.0 1.0 3.0)", writer.write(LinearRing<Coordinate3DM>(elements: [(x:1.0, y:1.0, z:1.0, m: 3.0), (x:2.0, y:2.0, z:2.0, m:6.0), (x:3.0, y:3.0, z:3.0, m:9.0), (x:1.0, y:1.0, z:1.0, m:3.0)])))
     }
 
     func testWritePolygonEmpty() {
 
-        // FIXME: should be POLYGON ZM
+        /// FIXME: should be POLYGON ZM
         XCTAssertEqual("POLYGON EMPTY", writer.write(Polygon<Coordinate3DM>()))
     }
 
@@ -508,7 +508,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
         let outerRing = LinearRing<Coordinate3DM>(elements: [(x:1.0, y:1.0, z:1.0, m:3.0), (x:2.0, y:2.0, z:2.0, m:6.0), (x:3.0, y:3.0, z:3.0, m:9.0), (x:1.0, y:1.0, z:1.0, m:3.0)])
         let innerRing = LinearRing<Coordinate3DM>(elements: [(x:4.0, y:4.0, z:4.0, m:12.0), (x:5.0, y:5.0, z:5.0, m:15.0), (x:6.0, y:6.0, z:6.0, m:18.0), (x:4.0, y:4.0, z:4.0, m:12.0)])
 
-        // FIXME: should be POLYGON ZM [..]
+        /// FIXME: should be POLYGON ZM [..]
         XCTAssertEqual("POLYGON ((1.0 1.0 1.0 3.0, 2.0 2.0 2.0 6.0, 3.0 3.0 3.0 9.0, 1.0 1.0 1.0 3.0), (4.0 4.0 4.0 12.0, 5.0 5.0 5.0 15.0, 6.0 6.0 6.0 18.0, 4.0 4.0 4.0 12.0))", writer.write(Polygon<Coordinate3DM>(outerRing: outerRing, innerRings: [innerRing])))
     }
 
@@ -516,7 +516,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let outerRing = LinearRing<Coordinate3DM>(elements: [(x:1.0, y:1.0, z:1.0, m:3.0), (x:2.0, y:2.0, z:2.0, m:6.0), (x:3.0, y:3.0, z:3.0, m:9.0), (x:1.0, y:1.0, z:1.0, m:3.0)])
 
-        // FIXME: should be POLYGON ZM [..]
+        /// FIXME: should be POLYGON ZM [..]
         XCTAssertEqual("POLYGON ((1.0 1.0 1.0 3.0, 2.0 2.0 2.0 6.0, 3.0 3.0 3.0 9.0, 1.0 1.0 1.0 3.0))", writer.write(Polygon<Coordinate3DM>(outerRing: outerRing, innerRings: [])))
     }
 
@@ -524,7 +524,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate3DM>(elements: [])
 
-        // FIXME: should be MULTIPOINT ZM EMPTY
+        /// FIXME: should be MULTIPOINT ZM EMPTY
         XCTAssertEqual("MULTIPOINT EMPTY", writer.write(multiPoint))
     }
 
@@ -532,7 +532,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate3DM>(elements: [Point<Coordinate3DM>(coordinate: (x:1.0, y:1.0, z: 1.0, m: 3.0))])
 
-        // FIXME: should be MULTIPOINT ZM [..]
+        /// FIXME: should be MULTIPOINT ZM [..]
         XCTAssertEqual("MULTIPOINT ((1.0 1.0 1.0 3.0))", writer.write(multiPoint))
     }
 
@@ -540,7 +540,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let multiPoint = MultiPoint<Coordinate3DM>(elements: [Point<Coordinate3DM>(coordinate: (x:1.0, y:1.0, z:1.0, m:3.0)), Point<Coordinate3DM>(coordinate: (x:2.0, y:2.0, z:2.0, m:6.0))])
 
-        // FIXME: should be MULTIPOINT ZM
+        /// FIXME: should be MULTIPOINT ZM
         XCTAssertEqual("MULTIPOINT ((1.0 1.0 1.0 3.0), (2.0 2.0 2.0 6.0))", writer.write(multiPoint))
     }
 
@@ -548,7 +548,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate3DM>(elements: [])
 
-        // FIXME: should be MULTILINESTRING ZM EMPTY
+        /// FIXME: should be MULTILINESTRING ZM EMPTY
         XCTAssertEqual("MULTILINESTRING EMPTY", writer.write(multiLineString))
     }
 
@@ -556,7 +556,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate3DM>(elements: [LineString<Coordinate3DM>(elements: [(x:1.0, y:1.0, z:1.0, m:3.0), (x:2.0, y:2.0, z:2.0, m:6.0)])])
 
-        // FIXME: should be MULTILINESTRING ZM [..]
+        /// FIXME: should be MULTILINESTRING ZM [..]
         XCTAssertEqual("MULTILINESTRING ((1.0 1.0 1.0 3.0, 2.0 2.0 2.0 6.0))", writer.write(multiLineString))
     }
 
@@ -564,7 +564,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let multiLineString = MultiLineString<Coordinate3DM>(elements: [LineString<Coordinate3DM>(elements: [(x:1.0, y:1.0, z:1.0, m:3.0), (x:2.0, y:2.0, z:2.0, m:6.0)]), LineString<Coordinate3DM>(elements: [(x:3.0, y:3.0, z:3.0, m:9.0), (x:4.0, y:4.0, z:4.0, m:12.0)])])
 
-        // FIXME: should be MULTILINESTRING ZM [..]
+        /// FIXME: should be MULTILINESTRING ZM [..]
         XCTAssertEqual("MULTILINESTRING ((1.0 1.0 1.0 3.0, 2.0 2.0 2.0 6.0), (3.0 3.0 3.0 9.0, 4.0 4.0 4.0 12.0))", writer.write(multiLineString))
     }
 
@@ -572,7 +572,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
 
         let emptyMultiPolygon = MultiPolygon<Coordinate3DM>()
 
-        // FIXME: should be MULTIPOLYGON ZM EMPTY
+        /// FIXME: should be MULTIPOLYGON ZM EMPTY
         XCTAssertEqual("MULTIPOLYGON EMPTY", writer.write(emptyMultiPolygon))
     }
 
@@ -580,7 +580,7 @@ class WKTWriterCoordinate3DMTests: XCTestCase {
         let outerRing = LinearRing<Coordinate3DM>(elements: [(x:1.0, y:1.0, z:1.0, m:3.0), (x:2.0, y:2.0, z:2.0, m:6.0), (x:3.0, y:3.0, z:3.0, m:9.0), (x:1.0, y:1.0, z:1.0, m:3.0)])
         let innerRing = LinearRing<Coordinate3DM>(elements: [(x:4.0, y:4.0, z:4.0, m:12.0), (x:5.0, y:5.0, z:5.0, m:15.0), (x:6.0, y:6.0, z:6.0, m:18.0), (x:4.0, y:4.0, z:4.0, m:12.0)])
 
-        // FIXME: should be MULTIPOLYGON ZM [..]
+        /// FIXME: should be MULTIPOLYGON ZM [..]
         XCTAssertEqual("MULTIPOLYGON (((1.0 1.0 1.0 3.0, 2.0 2.0 2.0 6.0, 3.0 3.0 3.0 9.0, 1.0 1.0 1.0 3.0), (4.0 4.0 4.0 12.0, 5.0 5.0 5.0 15.0, 6.0 6.0 6.0 18.0, 4.0 4.0 4.0 12.0)), ((1.0 1.0 1.0 3.0, 2.0 2.0 2.0 6.0, 3.0 3.0 3.0 9.0, 1.0 1.0 1.0 3.0), (4.0 4.0 4.0 12.0, 5.0 5.0 5.0 15.0, 6.0 6.0 6.0 18.0, 4.0 4.0 4.0 12.0)))", writer.write(MultiPolygon<Coordinate3DM>(elements: [Polygon<Coordinate3DM>(outerRing: outerRing, innerRings: [innerRing]), Polygon<Coordinate3DM>(outerRing: outerRing, innerRings: [innerRing])])))
     }
 }

@@ -60,7 +60,7 @@ extension LineString: Geometry {
     func orientation(_ p1: Point<CoordinateType>, _ p2: Point<CoordinateType>, _ p3: Point<CoordinateType>) -> Orientation {
         let difference = (p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)
 
-        // TODO: May want to check if "value" is near 0 because it is a Double
+        /// TODO: May want to check if "value" is near 0 because it is a Double
         if difference == 0 {
             return .collinear
         } else if difference > 0 {
@@ -82,33 +82,33 @@ extension LineString: Geometry {
     internal
     func segmentsIntersect(_ p1: Point<CoordinateType>, _ p2: Point<CoordinateType>, _ p3: Point<CoordinateType>, _ p4: Point<CoordinateType>, _ lastFirstOk: Bool = false, _ firstLastOk: Bool = false) -> Bool {
 
-        // Calculate various orientations
+        /// Calculate various orientations
         let o123 = orientation(p1, p2, p3)    // collinear if p2 = p3 true
         let o124 = orientation(p1, p2, p4)    // collinear if p1 = p4 true
         let o341 = orientation(p3, p4, p1)    // collinear if p1 = p4 true
         let o342 = orientation(p3, p4, p2)    // collinear if p2 = p3 true
 
-        // Points touch cases
-        // p2 and p3 are the same point.
+        /// Points touch cases
+        /// p2 and p3 are the same point.
         if p2 == p3 {
             let lineSegment1 = (o341 == .collinear && inBetween(p3, p1, p4))
             let lineSegment2 = (o124 == .collinear && inBetween(p1, p4, p2))
             return (!lastFirstOk || lineSegment1 || lineSegment2)
         }
 
-        // p1 and p4 are the same point.
+        /// p1 and p4 are the same point.
         if p1 == p4 {
             let lineSegment1 = (o342 == .collinear && inBetween(p3, p2, p4))
             let lineSegment2 = (o123 == .collinear && inBetween(p1, p3, p2))
             return (!firstLastOk || lineSegment1 || lineSegment2)
         }
 
-        // Normal intersection
+        /// Normal intersection
         if o123 != o124 && o341 != o342 {
             return true
         }
 
-        // Collinear cases
+        /// Collinear cases
         if  (o123 == .collinear && inBetween(p1, p3, p2)) ||
             (o124 == .collinear && inBetween(p1, p4, p2)) ||
             (o341 == .collinear && inBetween(p3, p1, p4)) ||
@@ -132,13 +132,13 @@ extension LineString: Geometry {
     func isSimple() -> Bool {
         return buffer.withUnsafeMutablePointers { (header, elements) -> Bool in
 
-            // If there are no more than two coordinates, there can be at most one line segment,
-            // so this line segment cannot self-intersect.
+            /// If there are no more than two coordinates, there can be at most one line segment,
+            /// so this line segment cannot self-intersect.
             guard header.pointee.count > 2 else {
                 return true
             }
 
-            // There must be at least two line segments to get to this point.
+            /// There must be at least two line segments to get to this point.
             for i in 0..<header.pointee.count - 2 {
                 let p1 = Point<CoordinateType>(coordinate: elements[i], precision: self.precision, coordinateSystem: self.coordinateSystem)
                 let p2 = Point<CoordinateType>(coordinate: elements[i+1], precision: self.precision, coordinateSystem: self.coordinateSystem)
@@ -161,12 +161,11 @@ extension LineString: Geometry {
         }
     }
 
-    /**
-     - Returns: the closure of the combinatorial boundary of this Geometry instance.
-
-     - Note: The boundary of a LineString if empty is the empty MultiPoint. If not empty it is the first and last point.
-     */
-
+    ///
+    /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
+    ///
+    /// - Note: The boundary of a LineString if empty is the empty MultiPoint. If not empty it is the first and last point.
+    ///
     public func boundary() -> Geometry {
 
         return self.buffer.withUnsafeMutablePointers { (header, elements) -> Geometry in
@@ -175,7 +174,7 @@ extension LineString: Geometry {
 
             if !self.isClosed() && header.pointee.count >= 2 {
 
-                // Note: direct subscripts protected by self.count >= 2 above.
+                /// Note: direct subscripts protected by self.count >= 2 above.
                 multiPoint.append(Point<CoordinateType>(coordinate: elements[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
                 multiPoint.append(Point<CoordinateType>(coordinate: elements[header.pointee.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
 

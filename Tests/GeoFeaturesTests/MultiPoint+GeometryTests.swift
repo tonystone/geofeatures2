@@ -435,6 +435,7 @@ class MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
      }
 
     func testEqualFalse() {
+
         let input1            = MultiPoint<Coordinate3DM>(elements: [Point<Coordinate3DM>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<Coordinate3DM>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateSystem: cs)
         let input2: Geometry  = Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
 

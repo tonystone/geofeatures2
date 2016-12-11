@@ -32,12 +32,11 @@ extension Point: Geometry {
         return true     // Points are always simple by definition
     }
 
-    /**
-     - Returns: the closure of the combinatorial boundary of this Geometry instance.
-
-     - Note: The boundary of a Point is an empty set.
-     */
-
+    ///
+    /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
+    ///
+    /// - Note: The boundary of a Point is an empty set.
+    ///
     public func boundary() -> Geometry {
         return MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
