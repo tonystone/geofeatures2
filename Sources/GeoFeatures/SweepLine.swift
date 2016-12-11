@@ -1,7 +1,7 @@
 ///
 ///  SweepLine.swift
 ///
-///  
+///  Copyright (c) 2016 Tony Stone
 ///
 ///  Licensed under the Apache License, Version 2.0 (the "License");
 ///  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import Swift
 ///
 /// Implementation of a SweepLine structure
 ///
-internal class SweepLine<CoordinateType: Coordinate & CopyConstructable>: IntersectionAnalyzer {
+internal class SweepLine<CoordinateType: Coordinate & CopyConstructable>: Intersector {
 
     func intersects(coordinates: [CoordinateType]) -> Bool {
         return false
@@ -33,7 +33,6 @@ internal class SweepLine<CoordinateType: Coordinate & CopyConstructable>: Inters
     }
 
     func intersectionMatrix(coordinates: [CoordinateType]) -> IntersectionMatrix {
-        return nil
+        return IntersectionMatrix()
     }
-
 }

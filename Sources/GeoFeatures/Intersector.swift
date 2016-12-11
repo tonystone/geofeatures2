@@ -1,6 +1,7 @@
 ///
-///  IntersectionAnalyzer
+///  Intersector.swift
 ///
+///  Copyright (c) 2016 Tony Stone
 ///
 ///  Licensed under the Apache License, Version 2.0 (the "License");
 ///  you may not use this file except in compliance with the License.
@@ -16,10 +17,9 @@
 ///
 ///  Created by Tony Stone on 12/6/16.
 ///
-
 import Foundation
 
-internal protocol IntersectionAnalyzer {
+internal protocol Intersector {
 
     associatedtype CoordinateType: Coordinate, CopyConstructable
 
