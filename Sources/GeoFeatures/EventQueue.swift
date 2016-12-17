@@ -52,19 +52,19 @@ internal class Event<CoordinateType: Coordinate & CopyConstructable>: Comparable
         self.coordinate = coordinate
     }
 }
-internal func == <CoordinateType: Coordinate & CopyConstructable>(rhs: Event<CoordinateType>, lhs: Event<CoordinateType>) -> Bool {
-    return rhs.coordinate == lhs.coordinate
+internal func == <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
+    return lhs.coordinate == rhs.coordinate
 }
-internal func < <CoordinateType: Coordinate & CopyConstructable>(rhs: Event<CoordinateType>, lhs: Event<CoordinateType>) -> Bool {
+internal func < <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
     ///
     /// if p and q are two event points then we
     /// have p ≺ q if and only if py > qy holds
     /// or py = qy and px < qx holds.
     ///
-    if rhs.coordinate.y > lhs.coordinate.y {
+    if lhs.coordinate.y > rhs.coordinate.y {
         return true
     }
-    return rhs.coordinate.y == lhs.coordinate.y && rhs.coordinate.x < lhs.coordinate.x
+    return lhs.coordinate.y == rhs.coordinate.y && lhs.coordinate.x < rhs.coordinate.x
 }
 
 ///
