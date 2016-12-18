@@ -19,42 +19,65 @@
 ///
 import Swift
 
-///
-/// Implementation of an EventQueue
-///
-internal class Event<CoordinateType: Coordinate & CopyConstructable>: Comparable {
-
-    ///
-    /// Left Edge will contain the left edge event that makes up
-    /// the start and end coordinates in a segment.  If left
-    /// edge is nil, this is the first coordinate in the geometry.
-    ///
-    /// If neither left or right edge is set, this is an intersection
-    /// event.
-    ///
-    public internal(set) var leftEdge: Event<CoordinateType>?   = nil
+internal class LeftEvent<CoordinateType: Coordinate & CopyConstructable>: Event<CoordinateType> {
     ///
     /// Right edge will contain the right edge event that makes up
     /// the start (left) and end (right) coordinates in a segment.
-    /// If right is nil, this is the last coordinate in the geometry.
     ///
-    /// If neither left or right edge is set, this is an intersection
-    /// event.
+    public internal(set) var rightEvent: RightEvent<CoordinateType>
+
+    public init(coordinate: CoordinateType, rightEvent: RightEvent<CoordinateType>) {
+
+        self.rightEvent = rightEvent
+
+        super.init(coordinate: coordinate)
+
+        rightEvent.leftEvent = self
+    }
+}
+
+internal class RightEvent<CoordinateType: Coordinate & CopyConstructable>: Event<CoordinateType> {
+
     ///
-    public internal(set) weak var rightEdge: Event<CoordinateType>?  = nil
+    /// Left Edge will contain the left edge event that makes up
+    /// the start and end coordinates in a segment.
+    ///
+    public internal(set) weak var leftEvent: Event<CoordinateType>? = nil
+
+    public override init(coordinate: CoordinateType) {
+        super.init(coordinate: coordinate)
+    }
+}
+
+internal class IntersectionEvent<CoordinateType: Coordinate & CopyConstructable>: Event<CoordinateType> {
+
+    public override init(coordinate: CoordinateType) {
+        super.init(coordinate: coordinate)
+    }
+}
+
+///
+/// Sudo abstract base class implemented by Event types
+///
+internal class Event<CoordinateType: Coordinate & CopyConstructable>: Comparable {
 
     ///
     /// The coordinate for this event.
     ///
     public internal(set) var coordinate: CoordinateType
 
-    init(coordinate: CoordinateType) {
+    ///
+    ///
+    ///
+    fileprivate init(coordinate: CoordinateType) {
         self.coordinate = coordinate
     }
 }
+
 internal func == <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
     return lhs.coordinate == rhs.coordinate
 }
+
 internal func < <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
     ///
     /// if p and q are two event points then we
@@ -77,6 +100,11 @@ internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
     private var events = AVLTree<EventType>()
     private var nextNode: AVLTree<EventType>.NodeType? = nil
 
+    ///
+    /// Initialize a new instance of `EventQueue` with a collection of `CoordinateType`.
+    ///
+    /// - Parameter coordinates: Any Swift.Collection including Array as long as it has an Element type equal the `CoordinateType`.
+    ///
     public init<C: Swift.Collection>(coordinates: C)
             where C.Iterator.Element == CoordinateType {
 
@@ -88,23 +116,18 @@ internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
         var iterator = coordinates.makeIterator()
 
         /// Get the first left edge coordinate
-        if let leftCoordinate = iterator.next() {
-
-            /// Create an event from it
-            var leftEvent = EventType(coordinate: leftCoordinate)
-            self.events.insert(value: leftEvent)
+        if var leftCoordinate = iterator.next() {
 
             while let rightCoordinate = iterator.next() {
-                let rightEvent = EventType(coordinate: rightCoordinate)
 
-                /// Set the edge pointers
-                leftEvent.rightEdge = rightEvent
-                rightEvent.leftEdge = leftEvent
+                let rightEvent = RightEvent(coordinate: rightCoordinate)
+                var leftEvent  = LeftEvent (coordinate: leftCoordinate, rightEvent: rightEvent)
+
+                self.events.insert(value: leftEvent)
+                self.events.insert(value: rightEvent)
 
                 /// old right becomes new left
-                leftEvent = rightEvent
-
-                self.events.insert(value: rightEvent)
+                leftCoordinate = rightCoordinate
             }
         }
     }
@@ -115,6 +138,14 @@ internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
     public func insert(event: EventType) {
         self.events.insert(value: event)
     }
+
+    ///
+    /// Delete an event from the queue
+    ///
+    public func delete(event: EventType) {
+        self.events.delete(value: event)
+    }
+
     ///
     /// Returns the next event on the queue
     ///
