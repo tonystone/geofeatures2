@@ -35,6 +35,7 @@ import XCTest
          testCase(Coordinate3DMTests.allTests),
          testCase(Coordinate3DTests.allTests),
          testCase(CoordinateReferenceSystemTests.allTests),
+         testCase(EventQueueTests.allTests),
          testCase(FixedPrecisionTests.allTests),
          testCase(FloatingPrecisionTests.allTests),
          testCase(GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests.allTests),
