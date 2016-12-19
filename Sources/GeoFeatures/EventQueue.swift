@@ -19,9 +19,32 @@
 ///
 import Swift
 
+///
+/// In order to allow for a `LeftEvent`, `RightEvent` and
+/// `IntersectionEvent` with the same Coordinate value to be
+/// stored the types order is considered in the comparison.
+///
+/// These defines determine the final sort order when the 
+/// Coordinate values are equal.
+///
+/// `LeftEvent`s come before `RightEvent`s which come before
+/// `IntsersectionEvent`s in the sort order.
+///
+fileprivate enum EventTypeOrder: Int {
+    case right = 1
+    case left  = 2
+    case intersection = 3
+}
+
+///
+/// Left `Event` type.
+///
+/// - Parameter CoordinateType: The coordinate type that is stored in this `'Event` type.
+///
 internal class LeftEvent<CoordinateType: Coordinate & CopyConstructable>: Event<CoordinateType> {
+
     ///
-    /// Right edge will contain the right edge event that makes up
+    /// rightEvent will contain the right edge event that makes up
     /// the start (left) and end (right) coordinates in a segment.
     ///
     public internal(set) var rightEvent: RightEvent<CoordinateType>
@@ -34,21 +57,35 @@ internal class LeftEvent<CoordinateType: Coordinate & CopyConstructable>: Event<
 
         rightEvent.leftEvent = self
     }
+
+    fileprivate override var order: Int { return EventTypeOrder.left.rawValue }
 }
 
+///
+/// Right `Event` type.
+///
+/// - Parameter CoordinateType: The coordinate type that is stored in this `'Event` type.
+///
 internal class RightEvent<CoordinateType: Coordinate & CopyConstructable>: Event<CoordinateType> {
 
     ///
-    /// Left Edge will contain the left edge event that makes up
-    /// the start and end coordinates in a segment.
+    /// leftEvent will contain the left edge event that makes up
+    /// the start (left) and end (right) coordinates in a segment.
     ///
     public internal(set) weak var leftEvent: Event<CoordinateType>? = nil
 
     public override init(coordinate: CoordinateType) {
         super.init(coordinate: coordinate)
     }
+
+    fileprivate override var order: Int { return EventTypeOrder.right.rawValue }
 }
 
+///
+/// Intersection `Event` type.
+///
+/// - Parameter CoordinateType: The coordinate type that is stored in this `'Event` type.
+///
 internal class IntersectionEvent<CoordinateType: Coordinate & CopyConstructable>: Event<CoordinateType> {
 
     public override init(coordinate: CoordinateType) {
@@ -59,7 +96,9 @@ internal class IntersectionEvent<CoordinateType: Coordinate & CopyConstructable>
 ///
 /// Sudo abstract base class implemented by Event types
 ///
-internal class Event<CoordinateType: Coordinate & CopyConstructable>: Comparable {
+/// - Parameter CoordinateType: The coordinate type that is stored in this `'Event` type.
+///
+internal class Event<CoordinateType: Coordinate & CopyConstructable> {
 
     ///
     /// The coordinate for this event.
@@ -67,15 +106,23 @@ internal class Event<CoordinateType: Coordinate & CopyConstructable>: Comparable
     public internal(set) var coordinate: CoordinateType
 
     ///
-    ///
+    /// This is an abstract class so this method can only be called from a super class.
     ///
     fileprivate init(coordinate: CoordinateType) {
         self.coordinate = coordinate
     }
+
+    fileprivate var order: Int { return EventTypeOrder.intersection.rawValue }
 }
 
+///
+/// `Event` types must be comparable so they can be sorted or stored in the proper 
+///  order and that order is determined by the `==` and `<` below.
+///
+extension Event: Comparable {}
+
 internal func == <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
-    return lhs.coordinate == rhs.coordinate
+    return lhs.coordinate == rhs.coordinate && lhs.order == rhs.order
 }
 
 internal func < <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
@@ -87,11 +134,24 @@ internal func < <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<Coor
     if lhs.coordinate.y > rhs.coordinate.y {
         return true
     }
-    return lhs.coordinate.y == rhs.coordinate.y && lhs.coordinate.x < rhs.coordinate.x
+
+    if lhs.coordinate.y == rhs.coordinate.y {
+        if lhs.coordinate.x == rhs.coordinate.x {
+
+            return lhs.order < rhs.order
+
+        } else if lhs.coordinate.x < rhs.coordinate.x {
+
+            return true
+        }
+    }
+    return false
 }
 
 ///
-/// A queue for Coordinate events.
+/// A queue for Coordinate `Event`s.
+///
+/// - Parameter CoordinateType: The coordinate type that is stored in the `'Event` types stored in this `EventQueue`.
 ///
 internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
 
@@ -129,25 +189,32 @@ internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
                 /// old right becomes new left
                 leftCoordinate = rightCoordinate
             }
+            self.nextNode = self.events.min()   /// Prime the next event with the minimum value stored in the AVLTree
         }
     }
 
     ///
-    /// Insert a new Event
+    /// Insert a new `Event`
+    ///
+    /// - Parameter event: The `Event` to insert into the queue.
     ///
     public func insert(event: EventType) {
         self.events.insert(value: event)
     }
 
     ///
-    /// Delete an event from the queue
+    /// Delete an `Event` from the queue
+    ///
+    /// - Parameter event: The `Event` to delete from the queue.
     ///
     public func delete(event: EventType) {
         self.events.delete(value: event)
     }
 
     ///
-    /// Returns the next event on the queue
+    /// Get the next `Event` from the queue
+    ///
+    /// - Returns: returns the next `Event` on the queue
     ///
     public func next() -> EventType? {
 
