@@ -29,7 +29,9 @@ extension EventQueueTests {
 
    static var allTests: [(String, (EventQueueTests) -> () throws -> Void)] {
       return [
-                ("testInit", testInit)
+                ("testInit", testInit),
+                ("testInsertToEmptyQueue", testInsertToEmptyQueue),
+                ("testInsertToEmptyQueueReverseInsert", testInsertToEmptyQueueReverseInsert)
            ]
    }
 }
