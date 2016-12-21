@@ -24,11 +24,11 @@ import Swift
 /// `IntersectionEvent` with the same Coordinate value to be
 /// stored the types order is considered in the comparison.
 ///
-/// These defines determine the final sort order when the 
+/// These defines determine the final sort order when the
 /// Coordinate values are equal.
 ///
 /// `LeftEvent`s come before `RightEvent`s which come before
-/// `IntsersectionEvent`s in the sort order.
+/// `IntersectionEvent`s in the sort order.
 ///
 fileprivate enum EventTypeOrder: Int {
     case right = 1
@@ -116,7 +116,7 @@ internal class Event<CoordinateType: Coordinate & CopyConstructable> {
 }
 
 ///
-/// `Event` types must be comparable so they can be sorted or stored in the proper 
+/// `Event` types must be comparable so they can be sorted or stored in the proper
 ///  order and that order is determined by the `==` and `<` below.
 ///
 extension Event: Comparable {}
@@ -149,7 +149,7 @@ internal func < <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<Coor
 }
 
 ///
-/// A queue for Coordinate `Event`s.
+/// An `EventQueue` is an ordered queue for Coordinate `Event`s.  `Event`s are inserted into the queue in sorted order and pulled off the queue from the min value to max value order.
 ///
 /// - Parameter CoordinateType: The coordinate type that is stored in the `'Event` types stored in this `EventQueue`.
 ///
@@ -158,7 +158,6 @@ internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
     public typealias EventType = Event<CoordinateType>
 
     private var events = AVLTree<EventType>()
-    private var nextNode: AVLTree<EventType>.NodeType? = nil
 
     ///
     /// Initialize a new instance of `EventQueue` with a collection of `CoordinateType`.
@@ -181,7 +180,7 @@ internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
             while let rightCoordinate = iterator.next() {
 
                 let rightEvent = RightEvent(coordinate: rightCoordinate)
-                var leftEvent  = LeftEvent (coordinate: leftCoordinate, rightEvent: rightEvent)
+                let leftEvent  = LeftEvent (coordinate: leftCoordinate, rightEvent: rightEvent)
 
                 self.events.insert(value: leftEvent)
                 self.events.insert(value: rightEvent)
@@ -189,7 +188,6 @@ internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
                 /// old right becomes new left
                 leftCoordinate = rightCoordinate
             }
-            self.nextNode = self.events.min()   /// Prime the next event with the minimum value stored in the AVLTree
         }
     }
 
@@ -212,17 +210,18 @@ internal class EventQueue<CoordinateType: Coordinate & CopyConstructable> {
     }
 
     ///
-    /// Get the next `Event` from the queue
+    /// Remove the next `Event` from the queue and return it.
     ///
     /// - Returns: returns the next `Event` on the queue
     ///
     public func next() -> EventType? {
 
-        if let next = self.nextNode {
+        let next = self.events.min()
 
-            self.nextNode = self.events.next(node: next)
+        if let value = next?.value {
+            self.events.delete(value: value)
 
-            return next.value
+            return value
         }
         return nil
     }
