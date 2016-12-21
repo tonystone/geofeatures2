@@ -36,7 +36,7 @@ fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructabl
 ///
 /// SweepLineSegment is Comparable so it can be added to a b-tree and searched.
 ///
-extension SweepLineSegment: Comparable {} /// TODO: Siwft 4: where CoordinateType: Equatable
+extension SweepLineSegment: Comparable {} /// TODO: Swift 4: where CoordinateType: Equatable
 
 fileprivate func == <CoordinateType: Coordinate & CopyConstructable>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
     return lhs.leftCoordinate == rhs.leftCoordinate && lhs.rightCoordinate == rhs.rightCoordinate
