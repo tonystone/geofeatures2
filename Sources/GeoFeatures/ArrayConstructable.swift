@@ -19,7 +19,7 @@
 ///
 import Swift
 
-// Internal use only
+/// Internal use only
 public protocol _ArrayConstructable {
     init(array: [Double])
 }

@@ -79,7 +79,7 @@ class Coordinate3DMTests: XCTestCase {
     }
 
     func testInit_Array_Invalid () {
-        // TODO: Can't test precondition at this point due to lack of official support in Swift.
+        /// TODO: Can't test precondition at this point due to lack of official support in Swift.
     }
 
     // MARK: CopyConstructable
