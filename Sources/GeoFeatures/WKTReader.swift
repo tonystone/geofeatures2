@@ -578,12 +578,11 @@ public class WKTReader<CoordinateType: Coordinate & CopyConstructable & _ArrayCo
         }
 
         ///
-        ///  Note, since we don't know the actual type of the target we
-        ///  want to make sure we have an array the size of the largest
-        ///  possible coorinate type.
+        /// Since `CoordinateType.init(array:)` does not throw, we need to determine if the proper
+        /// number of coordinates were passed to construct it.
         ///
-        for _ in coordinates.count..<4 {
-            coordinates.append(Double.nan)
+        guard 2 + (CoordinateType.self is Measured.Type ? 1 : 0) + (CoordinateType.self is ThreeDimensional.Type ? 1 : 0) == coordinates.count else {
+            throw WKTReaderError.invalidNumberOfCoordinates("Invalid number of coordinates (\(coordinates.count)) supplied for type \(String(reflecting: CoordinateType.self)).")
         }
         return try CoordinateType(array: coordinates)
     }
