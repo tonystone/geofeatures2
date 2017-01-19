@@ -149,6 +149,7 @@ import XCTest
          testCase(PolygonSurfaceCoordinate2DFixedPrecisionCartesianTests.allTests),
          testCase(PolygonCoordinate2DFloatingPrecisionCartesianTests.allTests),
          testCase(PolygonCoordinate2DFixedPrecisionCartesianTests.allTests),
+         testCase(SweepLineIntersectorTests.allTests),
          testCase(TokenizerTests.allTests),
          testCase(WKTReaderCoordinate2DFloatingPrecisionCartesianTests.allTests),
          testCase(WKTReaderCoordinate2DMFloatingPrecisionCartesianTests.allTests),

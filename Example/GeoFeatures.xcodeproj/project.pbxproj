@@ -23,6 +23,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0729A2B31E2D958800A29E1A /* SweepLineIntersectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0729A2B21E2D958800A29E1A /* SweepLineIntersectorTests.swift */; };
 		150B3974ACAF9C9F32A906B2 /* Pods_GeoFeatures_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F56601FAE47CDB9C5EFC43 /* Pods_GeoFeatures_Tests.framework */; };
 		366988F1665A1275A6250DDE /* AVLTreeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3669862165B76D440C670997 /* AVLTreeTests.swift */; };
 		44E29733FD59AEADF8848759 /* Pods_GeoFeatures_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A9A080E0173D715C8FC58BE /* Pods_GeoFeatures_Example.framework */; };
@@ -81,6 +82,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0729A2B21E2D958800A29E1A /* SweepLineIntersectorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SweepLineIntersectorTests.swift; sourceTree = "<group>"; };
 		0F243D2FCE8800EAB521DC72 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		2E8E8258ACE5267DDF6D0D4E /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		3570807BEA12508BC5987DDB /* Pods-GeoFeatures_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeoFeatures_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GeoFeatures_Tests/Pods-GeoFeatures_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 				EA87EB851DDCD60500E679FA /* GeoJSONReaderTests.swift */,
 				EA93CF201E072B5800DACC4E /* EventQueueTests.swift */,
 				3669862165B76D440C670997 /* AVLTreeTests.swift */,
+				0729A2B21E2D958800A29E1A /* SweepLineIntersectorTests.swift */,
 			);
 			path = GeoFeaturesTests;
 			sourceTree = "<group>";
@@ -693,6 +696,7 @@
 				EA8D58F61DB7E34C00713261 /* LinearRing+GeometryTests.swift in Sources */,
 				EA8D59181DB7E34C00713261 /* WKTReaderTests.swift in Sources */,
 				EAD9F3961DD77BAD0059122C /* GeometryCollectionTests.swift in Sources */,
+				0729A2B31E2D958800A29E1A /* SweepLineIntersectorTests.swift in Sources */,
 				EA8D58FA1DB7E34C00713261 /* LinearRingTests.swift in Sources */,
 				EA8D59141DB7E34C00713261 /* Polygon+GeometryTests.swift in Sources */,
 				EA93CF211E072B5800DACC4E /* EventQueueTests.swift in Sources */,
