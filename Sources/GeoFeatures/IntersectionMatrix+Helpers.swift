@@ -234,7 +234,5 @@ extension IntersectionMatrix {
         case (true, true):
             return (multiPointIntersection, .none)
         }
-
     }
-
 }
