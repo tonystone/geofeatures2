@@ -136,6 +136,10 @@ extension IntersectionMatrix {
         return (nil, IntersectionMatrix())
     }
 
+    ///
+    /// Dimension .zero and dimesion .zero
+    ///
+
     fileprivate static func generateIntersection(_ point1: Point<CoordinateType>, _ point2: Point<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
         /// Identical
@@ -188,7 +192,7 @@ extension IntersectionMatrix {
     }
 
     fileprivate func generateIntersection(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
-        
+
         /// Identical
         var identical = IntersectionMatrix()
         identical[.exterior, .exterior] = .two
@@ -204,7 +208,7 @@ extension IntersectionMatrix {
         secondInFirst[.interior, .interior] = .zero
         secondInFirst[.interior, .exterior] = .zero
         secondInFirst[.exterior, .exterior] = .two
-        
+
         /// Disjoint
         var disjoint = IntersectionMatrix()
         disjoint[.interior, .exterior] = .zero
@@ -253,6 +257,10 @@ extension IntersectionMatrix {
         }
     }
 
+    ///
+    /// Dimension .zero and dimesion .one
+    ///
+
     /// Returns true if the first point is on the line segment defined by the next two points.
     fileprivate static func pointIsOnLineSegment(_ point: Point<CoordinateType>, point1: Point<CoordinateType>, point2: Point<CoordinateType>) -> Bool {
 
@@ -300,7 +308,7 @@ extension IntersectionMatrix {
         /// Disjoint
         var disjoint = IntersectionMatrix()
         disjoint[.interior, .exterior] = .zero
-        disjoint[.exterior, .interior] = .zero
+        disjoint[.exterior, .interior] = .one
         disjoint[.exterior, .exterior] = .two
 
         /// Check if the point equals either of the two endpoints of the line string.
@@ -321,6 +329,86 @@ extension IntersectionMatrix {
 
             if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
                 return (point, pointOnInterior)
+            }
+        }
+
+        /// No intersection
+        return (nil, disjoint)
+    }
+
+    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Point on interior
+        var pointOnInterior = IntersectionMatrix()
+        pointOnInterior[.interior, .interior] = .zero
+        pointOnInterior[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .zero
+        disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .exterior] = .two
+
+        /// Check if the point is on any of the line segments in the line string.
+        for firstPointIndex in 0..<linearRing.count - 1 {
+            guard let firstPoint  = linearRing[firstPointIndex] as? Point<CoordinateType>,
+                let secondPoint = linearRing[firstPointIndex + 1] as? Point<CoordinateType> else {
+                    /// No intersection
+                    return (nil, disjoint)
+            }
+
+            if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+                return (point, pointOnInterior)
+            }
+        }
+
+        /// No intersection
+        return (nil, disjoint)
+    }
+
+    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Point matches endpoint
+        var matchesEndPoint = IntersectionMatrix()
+        matchesEndPoint[.interior, .boundary] = .zero
+        matchesEndPoint[.exterior, .interior] = .one
+        matchesEndPoint[.exterior, .boundary] = .zero
+        matchesEndPoint[.exterior, .exterior] = .two
+
+        /// Point on interior
+        var pointOnInterior = IntersectionMatrix()
+        pointOnInterior[.interior, .interior] = .zero
+        pointOnInterior[.exterior, .boundary] = .zero
+        pointOnInterior[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .zero
+        disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .exterior] = .two
+
+        /// Check if the point equals any of the endpoints of any line string.
+        for lineString in multiLineString {
+            let firstPoint = lineString.first as? Point<CoordinateType>
+            let lastPoint  = lineString.first as? Point<CoordinateType>
+
+            if point == firstPoint || point == lastPoint {
+                return (point, matchesEndPoint)
+            }
+        }
+
+        /// Check if the point is on any of the line segments in any of the line strings.
+        for lineString in multiLineString {
+            for firstPointIndex in 0..<lineString.count - 1 {
+                guard let firstPoint  = lineString[firstPointIndex] as? Point<CoordinateType>,
+                    let secondPoint = lineString[firstPointIndex + 1] as? Point<CoordinateType> else {
+                        /// No intersection
+                        return (nil, disjoint)
+                }
+
+                if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+                    return (point, pointOnInterior)
+                }
             }
         }
 
