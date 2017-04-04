@@ -13,11 +13,13 @@ import struct GeoFeatures.Point
 private typealias CoordinateType = Coordinate2D
 
 enum Subset: Int {
-    case none = 0,
-    firstInSecond,
-    secondInFirst,
-    identical,
-    matchesEndPoint
+    case
+    overlap = 0,            /// Indicates some parts of each geometry intersect the other and are outside the other
+    firstInSecondInterior,  /// Indicates the first geometry is completely contained within the second geometry
+    secondInFirstInterior,  /// Indicates the second geometry is completely contained within the first geometry
+    identical,              /// Indicates the geometries are the same
+    firstInSecondBoundary,  /// Indicates the first geometry exists
+    secondInFirstBoundary
 }
 
 extension IntersectionMatrix {
@@ -37,107 +39,16 @@ extension IntersectionMatrix {
 
             case .zero:
 
-                /// The IM for the two disjoint geometries of dimension .zero is FF0FFF0F2.
-                /// The IM for two dimension .zero geometries intersecting at a set of points is either 0F0FFF0F2,
-                /// if neither geometry is a subset of the other, 0FFFFF0F2, if the first geometry is a proper subset of the second,
-                /// 0F0FFFFF2, if the second geometry is a proper subset of the first, and FFFFFFFF2, if the two sets of points are identical.
+                let (_, resultIntersectionMatrix) = intersectionGeometry(geometry1, geometry2)
 
-                let (resultGeometry, resultSubset) = intersectionGeometry(geometry1, geometry2)
-
-                if intersectionGeometry != nil {
-
-                    switch resultSubset {
-                    case .none:
-                        /// 0F0FFF0F2
-                        return IntersectionMatrix(arrayLiteral: [
-                            [.zero,  .empty, .zero],
-                            [.empty, .empty, .empty],
-                            [.zero,  .empty, .two]
-                            ])
-                    case .firstInSecond:
-                        /// 0FFFFF0F2
-                        return IntersectionMatrix(arrayLiteral: [
-                            [.zero,  .empty, .empty],
-                            [.empty, .empty, .empty],
-                            [.zero,  .empty, .two]
-                            ])
-                    case .secondInFirst:
-                        /// 0F0FFFFF2
-                        return IntersectionMatrix(arrayLiteral: [
-                            [.zero,  .empty, .zero],
-                            [.empty, .empty, .empty],
-                            [.empty, .empty, .two]
-                            ])
-                    case .identical:
-                        /// FFFFFFFF2
-                        return IntersectionMatrix(arrayLiteral: [
-                            [.empty, .empty, .empty],
-                            [.empty, .empty, .empty],
-                            [.empty, .empty, .two]
-                            ])
-                    default:
-                        /// This case should not happen.  Return dummy matrix.
-                        return IntersectionMatrix()
-                    }
-
-                } else {
-                    /// Disjoint geometries, FF0FFF0F2
-                    return IntersectionMatrix(arrayLiteral: [
-                        [.empty, .empty, .zero],
-                        [.empty, .empty, .empty],
-                        [.zero,  .empty, .two]
-                        ])
-                }
+                return resultIntersectionMatrix
 
             case .one:
-                /// The IM for the two disjoint geometries of dimension .one and .zero, in that order, is FF0FFF0F2.
+                /// The IM for the two disjoint geometries of dimension .one and .zero, in either order, is FF0FFF0F2.
 
-                let (resultGeometry, resultSubset) = intersectionGeometry(geometry1, geometry2)
+                let (_, resultIntersectionMatrix) = intersectionGeometry(geometry1, geometry2)
 
-                if intersectionGeometry != nil {
-
-                    switch resultSubset {
-                    case .none:
-                        /// 0F0FFF0F2
-                        return IntersectionMatrix(arrayLiteral: [
-                            [.zero,  .empty, .zero],
-                            [.empty, .empty, .empty],
-                            [.zero,  .empty, .two]
-                            ])
-                    case .firstInSecond:
-                        /// 0FFFFF0F2
-                        return IntersectionMatrix(arrayLiteral: [
-                            [.zero,  .empty, .empty],
-                            [.empty, .empty, .empty],
-                            [.zero,  .empty, .two]
-                            ])
-                    case .secondInFirst:
-                        /// 0F0FFFFF2
-                        return IntersectionMatrix(arrayLiteral: [
-                            [.zero,  .empty, .zero],
-                            [.empty, .empty, .empty],
-                            [.empty, .empty, .two]
-                            ])
-                    case .identical:
-                        /// FFFFFFFF2
-                        return IntersectionMatrix(arrayLiteral: [
-                            [.empty, .empty, .empty],
-                            [.empty, .empty, .empty],
-                            [.empty, .empty, .two]
-                            ])
-                    default:
-                        /// This case should not happen.  Return dummy matrix.
-                        return IntersectionMatrix()
-                    }
-
-                } else {
-                    /// Disjoint geometries, FF1FF00F2
-                    return IntersectionMatrix(arrayLiteral: [
-                        [.empty, .empty, .one],
-                        [.empty, .empty, .zero],
-                        [.zero,  .empty, .two]
-                        ])
-                }
+                return resultIntersectionMatrix
 
             case .two: break
             default: break
@@ -170,7 +81,7 @@ extension IntersectionMatrix {
 
     /// Returns the intersection geometry and a boolean indicating whether the two geometries match.
     /// Note that in general the intersection of two geometries will result in a set of geometries, not just one.
-    fileprivate static func intersectionGeometry(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, Subset) {
+    fileprivate static func intersectionGeometry(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
         switch geometry1.dimension {
 
@@ -195,7 +106,7 @@ extension IntersectionMatrix {
                 }
             case .one:
                 if let point = self as? Point<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
-                    generateIntersection(point, lineString)
+                    return generateIntersection(point, lineString)
                 }
             case .two: break
             default: break
@@ -222,38 +133,85 @@ extension IntersectionMatrix {
         default: break
         }
 
-        return (nil, .none)
+        return (nil, IntersectionMatrix())
     }
 
-    fileprivate static func generateIntersection(_ point1: Point<CoordinateType>, _ point2: Point<CoordinateType>) -> (Geometry?, Subset) {
+    fileprivate static func generateIntersection(_ point1: Point<CoordinateType>, _ point2: Point<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Identical
+        var identical = IntersectionMatrix()
+        identical[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = identical
+        disjoint[.interior, .exterior] = .zero
+        disjoint[.exterior, .interior] = .zero
 
         if point1 == point2 {
-            return (point1, .identical)
+            return (point1, identical)
         }
-        return (nil, .none)
+        return (nil, disjoint)
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ point: Point<CoordinateType>) -> (Geometry?, Subset) {
+    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ point: Point<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Identical
+        var identical = IntersectionMatrix()
+        identical[.exterior, .exterior] = .two
+
+        /// Second in first
+        var secondInFirst = IntersectionMatrix()
+        secondInFirst[.interior, .interior] = .zero
+        secondInFirst[.interior, .exterior] = .zero
+        secondInFirst[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .zero
+        disjoint[.exterior, .interior] = .zero
+        disjoint[.exterior, .exterior] = .two
 
         for tempPoint in points {
 
             if tempPoint == point {
 
                 if points.count > 1 {
-                    return (point, .secondInFirst)
+                    return (point, secondInFirst)
                 } else {
-                    return (point, .identical)
+                    return (point, identical)
                 }
 
             }
 
         }
-        return (nil, .none)
+        return (nil, disjoint)
     }
 
-    fileprivate func generateIntersection(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> (Geometry?, Subset) {
+    fileprivate func generateIntersection(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+        
+        /// Identical
+        var identical = IntersectionMatrix()
+        identical[.exterior, .exterior] = .two
 
-        /// Should use Set here, if possible.
+        /// First in second
+        var firstInSecond = IntersectionMatrix()
+        firstInSecond[.interior, .interior] = .zero
+        firstInSecond[.exterior, .interior] = .zero
+        firstInSecond[.exterior, .exterior] = .two
+
+        /// Second in first
+        var secondInFirst = IntersectionMatrix()
+        secondInFirst[.interior, .interior] = .zero
+        secondInFirst[.interior, .exterior] = .zero
+        secondInFirst[.exterior, .exterior] = .two
+        
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .zero
+        disjoint[.exterior, .interior] = .zero
+        disjoint[.exterior, .exterior] = .two
+
+        /// Should use Set here, if possible.  That would simplify a lot of the calculations.
         /// Let's assume points1 and points2 are both a unique set of points.
 
         var pointInGeometry1NotMatched = false
@@ -285,13 +243,13 @@ extension IntersectionMatrix {
 
         switch (pointInGeometry1NotMatched, pointInGeometry2NotMatched) {
         case (false, false):
-            return (multiPointIntersection, .identical)
+            return (multiPointIntersection, identical)
         case (false, true):
-            return (multiPointIntersection, .firstInSecond)
+            return (multiPointIntersection, firstInSecond)
         case (true, false):
-            return (multiPointIntersection, .secondInFirst)
+            return (multiPointIntersection, secondInFirst)
         case (true, true):
-            return (multiPointIntersection, .none)
+            return (multiPointIntersection, disjoint)
         }
     }
 
@@ -324,14 +282,33 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ lineString: LineString<CoordinateType>) -> (Geometry?, Subset) {
+    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ lineString: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Point matches endpoint
+        var matchesEndPoint = IntersectionMatrix()
+        matchesEndPoint[.interior, .boundary] = .zero
+        matchesEndPoint[.exterior, .interior] = .one
+        matchesEndPoint[.exterior, .boundary] = .zero /// Assuming the two endpoints of the line string are different
+        matchesEndPoint[.exterior, .exterior] = .two
+
+        /// Point on interior
+        var pointOnInterior = IntersectionMatrix()
+        pointOnInterior[.interior, .interior] = .zero
+        pointOnInterior[.exterior, .boundary] = .zero /// Assuming the two endpoints of the line string are different
+        pointOnInterior[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .zero
+        disjoint[.exterior, .interior] = .zero
+        disjoint[.exterior, .exterior] = .two
 
         /// Check if the point equals either of the two endpoints of the line string.
         let firstPoint = lineString.first as? Point<CoordinateType>
         let lastPoint  = lineString.first as? Point<CoordinateType>
 
         if point == firstPoint || point == lastPoint {
-            return (point, .matchesEndPoint)
+            return (point, matchesEndPoint)
         }
 
         /// Check if the point is on any of the line segments in the line string.
@@ -339,15 +316,15 @@ extension IntersectionMatrix {
             guard let firstPoint  = lineString[firstPointIndex] as? Point<CoordinateType>,
                 let secondPoint = lineString[firstPointIndex + 1] as? Point<CoordinateType> else {
                     /// No intersection
-                    return (nil, .none)
+                    return (nil, disjoint)
             }
 
             if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
-                return (point, .firstInSecond)
+                return (point, pointOnInterior)
             }
         }
 
         /// No intersection
-        return (nil, .none)
+        return (nil, disjoint)
     }
 }
