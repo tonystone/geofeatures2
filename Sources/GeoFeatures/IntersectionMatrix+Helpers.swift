@@ -453,12 +453,33 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
+    fileprivate static func subset(_ point: Point<CoordinateType>, _ points: MultiPoint<CoordinateType>) -> Bool {
+
+        for tempPoint in points {
+            if point == tempPoint {
+                return true
+            }
+        }
+        return false
+    }
+
+    fileprivate static func subset(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
+
+        for tempPoint in points1 {
+            if subset(tempPoint, points2) {
+                continue
+            } else {
+                return false
+            }
+        }
+        return true
+    }
+
     fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ lineString: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
         /// Point matches endpoint
         var matrixIntersects = IntersectionMatrix()
         matrixIntersects[.exterior, .interior] = .one
-        matrixIntersects[.exterior, .boundary] = .zero /// Assuming the two endpoints of the line string are different
         matrixIntersects[.exterior, .exterior] = .two
 
         /// Disjoint
@@ -471,11 +492,18 @@ extension IntersectionMatrix {
         var resultGeometry = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
         /// Check if the any of the points equals either of the two endpoints of the line string.
-        let firstPoint = lineString.first as? Point<CoordinateType>
-        let lastPoint  = lineString.first as? Point<CoordinateType>
+        var linearStringBoundary = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        guard let firstPoint = lineString.first as? Point<CoordinateType>,
+            let lastPoint  = lineString.first as? Point<CoordinateType> else {
+                /// One of the two boundary points on the line string is invalid.  No intersection.
+                return (nil, disjoint)
+        }
+        linearStringBoundary.append(firstPoint)
+        linearStringBoundary.append(lastPoint)
 
         var pointOnBoundary = false
         var pointOnInterior = false
+        var pointOnExterior = false
 
         for point in points {
             if point == firstPoint || point == lastPoint {
@@ -486,6 +514,13 @@ extension IntersectionMatrix {
 
         /// Check if any of the points is on any of the line segments in the line string.
         for point in points {
+            /// Ignore points that intersect the boundary of the line string.
+            /// These were just calculated.
+            if subset(point, resultGeometry) {
+                continue
+            }
+
+            /// Any intersection from here on is guaranteed to be in the interior.
             for firstPointIndex in 0..<lineString.count - 1 {
                 guard let firstPoint  = lineString[firstPointIndex] as? Point<CoordinateType>,
                     let secondPoint = lineString[firstPointIndex + 1] as? Point<CoordinateType> else {
@@ -500,16 +535,94 @@ extension IntersectionMatrix {
             }
         }
 
-        /// Complete the matrix as needed and return the geometry and matrix if an intersection exists
-        if pointOnBoundary {
-            matrixIntersects[.interior, .boundary] = .zero
+        /// Check if any of the points is not on the line string.
+        for point in points {
+            if !subset(point, resultGeometry) {
+                pointOnExterior = true
+                break
+            }
         }
 
+        /// Complete the matrix as needed and return the geometry and matrix if an intersection exists
         if pointOnInterior {
             matrixIntersects[.interior, .interior] = .zero
         }
 
+        if pointOnBoundary {
+            matrixIntersects[.interior, .boundary] = .zero
+        }
+
+        if pointOnExterior {
+            matrixIntersects[.interior, .exterior] = .zero
+        }
+
+        if !subset(linearStringBoundary, points) {
+            matrixIntersects[.exterior, .boundary] = .zero
+        }
+
         if pointOnBoundary || pointOnInterior {
+            return (resultGeometry, matrixIntersects)
+        }
+
+        /// No intersection
+        return (nil, disjoint)
+    }
+
+    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Point matches endpoint
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .interior] = .one
+        matrixIntersects[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .zero
+        disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .exterior] = .two
+
+        /// Define the MultiPoint geometry that might be returned
+        var resultGeometry = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+        /// Check for points on the interior or exterior of the linear ring.  There is no boundary.
+        var pointOnInterior = false
+        var pointOnExterior = false
+
+        /// Check if any of the points is on any of the line segments in the linear ring.
+        for point in points {
+            /// Any intersection from here is guaranteed to be in the interior.
+            for firstPointIndex in 0..<linearRing.count - 1 {
+                guard let firstPoint  = linearRing[firstPointIndex] as? Point<CoordinateType>,
+                    let secondPoint = linearRing[firstPointIndex + 1] as? Point<CoordinateType> else {
+                        /// One of the two points on the line string is invalid.  No intersection.
+                        return (nil, disjoint)
+                }
+
+                if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+                    pointOnInterior = true
+                    resultGeometry.append(point)
+                }
+            }
+        }
+
+        /// Check if any of the points is not on the linear ring.
+        for point in points {
+            if !subset(point, resultGeometry) {
+                pointOnExterior = true
+                break
+            }
+        }
+
+        /// Complete the matrix as needed and return the geometry and matrix if an intersection exists
+        if pointOnInterior {
+            matrixIntersects[.interior, .interior] = .zero
+        }
+
+        if pointOnExterior {
+            matrixIntersects[.interior, .exterior] = .zero
+        }
+
+        if pointOnInterior {
             return (resultGeometry, matrixIntersects)
         }
 
