@@ -492,14 +492,14 @@ extension IntersectionMatrix {
         var resultGeometry = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
         /// Check if the any of the points equals either of the two endpoints of the line string.
-        var linearStringBoundary = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var lineStringBoundary = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
         guard let firstPoint = lineString.first as? Point<CoordinateType>,
             let lastPoint  = lineString.first as? Point<CoordinateType> else {
                 /// One of the two boundary points on the line string is invalid.  No intersection.
                 return (nil, disjoint)
         }
-        linearStringBoundary.append(firstPoint)
-        linearStringBoundary.append(lastPoint)
+        lineStringBoundary.append(firstPoint)
+        lineStringBoundary.append(lastPoint)
 
         var pointOnBoundary = false
         var pointOnInterior = false
@@ -556,7 +556,7 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        if !subset(linearStringBoundary, points) {
+        if !subset(lineStringBoundary, points) {
             matrixIntersects[.exterior, .boundary] = .zero
         }
 
@@ -623,6 +623,103 @@ extension IntersectionMatrix {
         }
 
         if pointOnInterior {
+            return (resultGeometry, matrixIntersects)
+        }
+
+        /// No intersection
+        return (nil, disjoint)
+    }
+
+    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Point matches endpoint
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .interior] = .one
+        matrixIntersects[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .zero
+        disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .exterior] = .two
+
+        /// Define the MultiPoint geometry that might be returned
+        var resultGeometry = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+        /// Check if the any of the points equals any of the endpoints of the multiline string.
+        var multiLineStringBoundary = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        for lineString in multiLineString {
+            guard let firstPoint = lineString.first as? Point<CoordinateType>,
+                let lastPoint  = lineString.first as? Point<CoordinateType> else {
+                    /// One of the two boundary points on the line string is invalid.  No intersection.
+                    return (nil, disjoint)
+            }
+            multiLineStringBoundary.append(firstPoint)
+            multiLineStringBoundary.append(lastPoint)
+        }
+
+        var pointOnBoundary = false
+        var pointOnInterior = false
+        var pointOnExterior = false
+
+        for point in points {
+            if subset(point, multiLineStringBoundary) {
+                pointOnBoundary = true
+                resultGeometry.append(point)
+            }
+        }
+
+        /// Check if any of the points is on any of the line segments in the multiline string.
+        for point in points {
+            /// Ignore points that intersect the boundary of the multiline string.
+            /// These were just calculated.
+            if subset(point, resultGeometry) {
+                continue
+            }
+
+            /// Any intersection here is guaranteed to be in the interior.
+            for lineString in multiLineString {
+                for firstPointIndex in 0..<lineString.count - 1 {
+                    guard let firstPoint  = lineString[firstPointIndex] as? Point<CoordinateType>,
+                        let secondPoint = lineString[firstPointIndex + 1] as? Point<CoordinateType> else {
+                            /// One of the two points on the line string is invalid.  No intersection.
+                            return (nil, disjoint)
+                    }
+
+                    if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+                        pointOnInterior = true
+                        resultGeometry.append(point)
+                    }
+                }
+            }
+        }
+
+        /// Check if any of the points is not on the multiline string.
+        for point in points {
+            if !subset(point, resultGeometry) {
+                pointOnExterior = true
+                break
+            }
+        }
+
+        /// Complete the matrix as needed and return the geometry and matrix if an intersection exists
+        if pointOnInterior {
+            matrixIntersects[.interior, .interior] = .zero
+        }
+
+        if pointOnBoundary {
+            matrixIntersects[.interior, .boundary] = .zero
+        }
+
+        if pointOnExterior {
+            matrixIntersects[.interior, .exterior] = .zero
+        }
+
+        if !subset(multiLineStringBoundary, points) {
+            matrixIntersects[.exterior, .boundary] = .zero
+        }
+
+        if pointOnBoundary || pointOnInterior {
             return (resultGeometry, matrixIntersects)
         }
 
