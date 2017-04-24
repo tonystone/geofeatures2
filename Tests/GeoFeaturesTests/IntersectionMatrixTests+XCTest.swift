@@ -31,6 +31,8 @@ extension IntersectionMatrixTests {
       return [
                 ("testInit", testInit),
                 ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testTranspose", testTranspose),
+                ("testTransposed", testTransposed),
                 ("testMakeIterator", testMakeIterator),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
