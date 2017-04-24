@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0708D56B1E7EFF0100AD1D73 /* IntersectionMatrix+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0708D56A1E7EFF0000AD1D73 /* IntersectionMatrix+Helpers.swift */; };
 		0C1C7B590D841FF3F84997B7 /* Polygon+Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9790073548BA92875328701A /* Polygon+Geometry.swift */; };
 		198AF363C6B2ECC74A2C1911 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05549309886141E8FF37B25D /* Foundation.framework */; };
 		19B8CE8E6A5A044E7C862B0F /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2333C76B6A110FEEC1C62323 /* Dimension.swift */; };
@@ -91,6 +92,7 @@
 		04A64E3A9FFA2D77258E6A80 /* Tokenizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Tokenizer.swift; sourceTree = "<group>"; };
 		05549309886141E8FF37B25D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		058BDCA2ECAFC665D07C8B94 /* Pods_GeoFeatures_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GeoFeatures_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0708D56A1E7EFF0000AD1D73 /* IntersectionMatrix+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IntersectionMatrix+Helpers.swift"; sourceTree = "<group>"; };
 		07981CBA9828F76301EE2066 /* GeoFeatures-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "GeoFeatures-umbrella.h"; sourceTree = "<group>"; };
 		07B7DC16406B3EF7E744C004 /* LinearRing+Surface.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "LinearRing+Surface.swift"; sourceTree = "<group>"; };
 		08BB58639A05E9F39D25D026 /* MultiPoint.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MultiPoint.swift; sourceTree = "<group>"; };
@@ -240,16 +242,17 @@
 				DEF5EAA16F8CB925DB4E4D15 /* Polygon+Surface.swift */,
 				6C66C8677B748E2B2E29ABE2 /* Precision.swift */,
 				FC25DABBFD02D0CEBBD9DD82 /* Surface.swift */,
+				793FEACC4D9B05269696BAB5 /* WKTWriter.swift */,
 				04A64E3A9FFA2D77258E6A80 /* Tokenizer.swift */,
 				D4DFB5DA09E9B37E106AB070 /* TupleConvertible.swift */,
 				DD4B4C6B40ED8724284AD15B /* WKTReader.swift */,
-				793FEACC4D9B05269696BAB5 /* WKTWriter.swift */,
 				3F0328894E9009C88F31681E /* GeoJSONReader.swift */,
 				EA780D071EAE9674000E0105 /* Segement.swift */,
 				366981E54D777BFF357E94D8 /* Intersector.swift */,
 				EA93CF1C1E0621DE00DACC4E /* SweepLineIntersector.swift */,
 				EAFAA8571DF48D73000AB543 /* EventQueue.swift */,
 				366980459AB4A459BFC2794C /* AVLTree.swift */,
+				0708D56A1E7EFF0000AD1D73 /* IntersectionMatrix+Helpers.swift */,
 			);
 			path = GeoFeatures;
 			sourceTree = "<group>";
@@ -502,6 +505,7 @@
 				E8D1D5E77EEA580D711F8CBD /* Coordinate2D.swift in Sources */,
 				69485BBF6305A95649F715D0 /* Coordinate2DM.swift in Sources */,
 				6430B7134345D6852C3CAF90 /* Coordinate3D.swift in Sources */,
+				0708D56B1E7EFF0100AD1D73 /* IntersectionMatrix+Helpers.swift in Sources */,
 				E8322BA39B7B6A191591BDC3 /* Coordinate3DM.swift in Sources */,
 				2D6686C8B35B5435179DE0CB /* CoordinateSystem.swift in Sources */,
 				BBFFB31BAE52415C4D204990 /* CopyConstructable.swift in Sources */,
