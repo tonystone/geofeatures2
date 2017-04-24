@@ -13,7 +13,6 @@ database:
 
 dependencies:
   override:
-    - brew unlink swiftlint
     - brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/498e8046cc166d1c7043de66735f1a5567f8f0ef/Formula/swiftlint.rb
 
 test:
