@@ -119,19 +119,15 @@ fileprivate extension SweepLineIntersector {
 }
 
 ///
-/// Low level type to represent a segment of a line used in geometric computations.
+/// Low level type to represent a segment of a line used in computation of the Sweepline
 ///
-fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructable> {
-
-    public var leftCoordinate:  CoordinateType
-    public var rightCoordinate: CoordinateType
+fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructable>: Segment<CoordinateType> {
 
     public var above: SweepLineSegment<CoordinateType>? = nil
     public var below: SweepLineSegment<CoordinateType>? = nil
 
     init(leftEvent: LeftEvent<CoordinateType>) {
-        self.leftCoordinate  = leftEvent.coordinate
-        self.rightCoordinate = leftEvent.rightEvent.coordinate
+        super.init(left: leftEvent.coordinate, right: leftEvent.rightEvent.coordinate)
     }
 }
 
