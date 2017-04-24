@@ -311,7 +311,7 @@ class IntersectionMatrixTests: XCTestCase {
                                                           [.zero, .empty, .empty]
                                                           ]
         )
-        XCTAssertEqual(matrix.description, "2, -1, 1, 0, 1, 2, 0, -1, -1")
+        XCTAssertEqual(matrix.description, "two, empty, one, zero, one, two, zero, empty, empty")
     }
 
     func testEqual () {

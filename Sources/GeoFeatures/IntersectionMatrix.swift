@@ -263,7 +263,7 @@ extension IntersectionMatrix: CustomStringConvertible {
             if string.characters.count > 0 {
                 string += ", "
             }
-            string += "\(dimension.rawValue)"
+            string += "\(dimension)"
         }
         return string
     }
