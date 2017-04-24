@@ -20,33 +20,6 @@
 import Swift
 
 ///
-/// Low level type to represent a segment of a line used in geometric computations.
-///
-fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructable> {
-
-    internal var leftCoordinate:  CoordinateType
-    internal var rightCoordinate: CoordinateType
-
-    init(leftEvent: LeftEvent<CoordinateType>) {
-        self.leftCoordinate  = leftEvent.coordinate
-        self.rightCoordinate = leftEvent.rightEvent.coordinate
-    }
-}
-
-///
-/// SweepLineSegment is Comparable so it can be added to a b-tree and searched.
-///
-extension SweepLineSegment: Comparable {} /// TODO: Swift 4: where CoordinateType: Equatable
-
-fileprivate func == <CoordinateType: Coordinate & CopyConstructable>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
-    return lhs.leftCoordinate == rhs.leftCoordinate && lhs.rightCoordinate == rhs.rightCoordinate
-}
-
-fileprivate func < <CoordinateType: Coordinate & CopyConstructable>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
-    return false /// TODO implement
-}
-
-///
 /// Implementation of a SweepLine structure
 ///
 internal class SweepLineIntersector<CoordinateType: Coordinate & CopyConstructable>: Intersector {
@@ -62,12 +35,12 @@ internal class SweepLineIntersector<CoordinateType: Coordinate & CopyConstructab
         ///
         /// Create an EventQueue from the coordinates which will be sorted  by increasing x and y
         ///
-        var events: EventQueue<CoordinateType>   = EventQueue(coordinates: coordinates)
+        var events = EventQueue<CoordinateType>(coordinates: coordinates)
 
         ///
         /// The SweepLine will keep track of our position
         ///
-        var sweepLine: AVLTree<SegmentType> = AVLTree()
+        var sweepLine = SweepLine<CoordinateType>()
 
         ///
         /// Intersections will contain all the intersection points found
@@ -81,38 +54,43 @@ internal class SweepLineIntersector<CoordinateType: Coordinate & CopyConstructab
         while let event = events.next() {
 
             if let event = event as? LeftEvent {
-                ///
-                /// Create a segment from the left and right edges of this event
-                ///
-                let segmentEvent = SweepLineSegment(leftEvent: event)
 
                 /// Add it to the `SweepLine`
-                let segmentEventNode = sweepLine.insert(value: segmentEvent)
-
-                ///
-                /// Find the segment above and below this one in the `SweepLine`
-                ///
-                let segmentAbove = sweepLine.previous(node: segmentEventNode)?.value
-                let segmentBelow = sweepLine.next    (node: segmentEventNode)?.value
+                let segment = sweepLine.insert(event: event)
 
                 ///
                 /// If the  event segment intersects with the segment above or below the event,
                 /// add the new intersection event to the event queue.
                 ///
-                if let intersectionEvent = self.intersection(segment: segmentEvent, other: segmentAbove) {
+                if let intersectionEvent = self.intersection(segment: segment, other: segment.above) {
                     events.insert(event: intersectionEvent)
                 }
-                if let intersectionEvent = self.intersection(segment: segmentEvent, other: segmentBelow) {
+                if let intersectionEvent = self.intersection(segment: segment, other: segment.below) {
                     events.insert(event: intersectionEvent)
                 }
 
             } else if let event = event as? RightEvent {
 
-                /// TODO
+                ///
+                /// Find the segment in the Sweepline based on the LeftEvent of this RightEvent
+                ///
+                if let segment = sweepLine.search(event: event) {
 
+                    ///
+                    /// Check for intersection between above and below segments
+                    /// and add an intersection Event if they intersect
+                    ///
+                    if let intersectionEvent = self.intersection(segment: segment.above, other: segment.below) {
+                        events.insert(event: intersectionEvent)
+                    }
+
+                    /// Delete segment event from the sweepline
+                    sweepLine.delete(segment: segment)
+                }
             } else if let event = event as? IntersectionEvent {
 
-                /// TODO
+                /// Add the events coordinate to the intersection list results
+                intersections.append(event.coordinate)
 
             }
             events.delete(event: event)
@@ -138,4 +116,72 @@ fileprivate extension SweepLineIntersector {
 
         return nil
     }
+}
+
+///
+/// Low level type to represent a segment of a line used in geometric computations.
+///
+fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructable> {
+
+    public var leftCoordinate:  CoordinateType
+    public var rightCoordinate: CoordinateType
+
+    public var above: SweepLineSegment<CoordinateType>? = nil
+    public var below: SweepLineSegment<CoordinateType>? = nil
+
+    init(leftEvent: LeftEvent<CoordinateType>) {
+        self.leftCoordinate  = leftEvent.coordinate
+        self.rightCoordinate = leftEvent.rightEvent.coordinate
+    }
+}
+
+///
+/// SweepLineSegment is Comparable so it can be added to a b-tree and searched.
+///
+extension SweepLineSegment: Comparable {} /// TODO: Swift 4: where CoordinateType: Equatable
+
+fileprivate func == <CoordinateType: Coordinate & CopyConstructable>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
+    return lhs.leftCoordinate == rhs.leftCoordinate && lhs.rightCoordinate == rhs.rightCoordinate
+}
+
+fileprivate func < <CoordinateType: Coordinate & CopyConstructable>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
+    return false /// TODO implement
+}
+
+///
+/// SweepLine Implementation
+///
+fileprivate class SweepLine<CoordinateType: Coordinate & CopyConstructable> {
+
+    private let segments: AVLTree<SweepLineSegment<CoordinateType>> = AVLTree()
+
+    public func insert(event: LeftEvent<CoordinateType>) ->SweepLineSegment<CoordinateType> {
+        ///
+        /// Create a segment from the left and right edges of this event
+        ///
+        let segment = SweepLineSegment(leftEvent: event)
+
+        let node = segments.insert(value: segment)
+
+        ///
+        /// Maintain the current above and below segment links
+        /// for all three segments involved, the current segment
+        /// we just created and the above and below segments
+        /// which the current segment will be placed in the
+        /// middle of.
+        ///
+        segment.above = segments.previous(node: node)?.value
+        segment.above?.below = segment
+
+        segment.below = segments.next(node: node)?.value
+        segment.below?.above = segment
+
+        return segment
+    }
+
+    public func search(event: RightEvent<CoordinateType>) -> SweepLineSegment<CoordinateType>? {
+        return nil
+    }
+
+    public func delete(segment: SweepLineSegment<CoordinateType>) {}
 }
