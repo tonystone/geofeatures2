@@ -1,5 +1,5 @@
 ///
-///  Segement.swift
+///  Segment.swift
 ///
 ///  Copyright 2017 Tony Stone
 ///

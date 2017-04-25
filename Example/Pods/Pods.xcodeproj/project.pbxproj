@@ -61,7 +61,7 @@
 		E8D1D5E77EEA580D711F8CBD /* Coordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720760D314D7E0E175136B1B /* Coordinate2D.swift */; };
 		EA6E9AFC1DFC724400F38B24 /* GeometryCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B893A61BED64A42EB7DBBDA /* GeometryCollection.swift */; };
 		EA6E9AFD1DFC724B00F38B24 /* MultiLineString.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7942A8DE1B799381112AD0 /* MultiLineString.swift */; };
-		EA780D081EAE9674000E0105 /* Segement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA780D071EAE9674000E0105 /* Segement.swift */; };
+		EA780D081EAE9674000E0105 /* Segment.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA780D071EAE9674000E0105 /* Segment.swift */; };
 		EA93CF1D1E0621DE00DACC4E /* SweepLineIntersector.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA93CF1C1E0621DE00DACC4E /* SweepLineIntersector.swift */; };
 		EAFAA8581DF48D73000AB543 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFAA8571DF48D73000AB543 /* EventQueue.swift */; };
 		F296A283F62E8A92F1DDB0D2 /* GeometryCollection+Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43BDB6DD53D9B0DF8B5C5165 /* GeometryCollection+Geometry.swift */; };
@@ -160,7 +160,7 @@
 		E5BFE51725B6AD2C5DC26080 /* MultiPolygon+Geometry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MultiPolygon+Geometry.swift"; sourceTree = "<group>"; };
 		E95ADF91AF578254BEBF2D22 /* GeoFeatures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GeoFeatures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA465432339064F4FEDFF3E9 /* GeoFeatures-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "GeoFeatures-dummy.m"; sourceTree = "<group>"; };
-		EA780D071EAE9674000E0105 /* Segement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segement.swift; sourceTree = "<group>"; };
+		EA780D071EAE9674000E0105 /* Segment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segment.swift; sourceTree = "<group>"; };
 		EA93CF1C1E0621DE00DACC4E /* SweepLineIntersector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SweepLineIntersector.swift; sourceTree = "<group>"; };
 		EAFAA8571DF48D73000AB543 /* EventQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		EC213DCB93EEFDBB06AD6DDD /* GeoFeatures.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GeoFeatures.xcconfig; sourceTree = "<group>"; };
@@ -247,7 +247,7 @@
 				D4DFB5DA09E9B37E106AB070 /* TupleConvertible.swift */,
 				DD4B4C6B40ED8724284AD15B /* WKTReader.swift */,
 				3F0328894E9009C88F31681E /* GeoJSONReader.swift */,
-				EA780D071EAE9674000E0105 /* Segement.swift */,
+				EA780D071EAE9674000E0105 /* Segment.swift */,
 				366981E54D777BFF357E94D8 /* Intersector.swift */,
 				EA93CF1C1E0621DE00DACC4E /* SweepLineIntersector.swift */,
 				EAFAA8571DF48D73000AB543 /* EventQueue.swift */,
@@ -496,7 +496,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA6E9AFD1DFC724B00F38B24 /* MultiLineString.swift in Sources */,
-				EA780D081EAE9674000E0105 /* Segement.swift in Sources */,
+				EA780D081EAE9674000E0105 /* Segment.swift in Sources */,
 				43E45A9C48D800530BF41E9F /* ArrayConstructable.swift in Sources */,
 				A53E8BED1F445E365FE30A10 /* Collection.swift in Sources */,
 				EA6E9AFC1DFC724400F38B24 /* GeometryCollection.swift in Sources */,
