@@ -22,6 +22,28 @@ enum Subset: Int {
     secondInFirstBoundary
 }
 
+/// Describes the relationship between the first and second geometries
+struct RelatedTo {
+
+    var firstTouchesSecondBoundary: Bool = false
+    var firstTouchesSecondInterior: Bool = false
+    var firstTouchesSecondExterior: Bool = false
+}
+
+///
+/// Low level type to represent a segment of a line used in geometric computations.
+///
+fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructable> {
+
+    internal var leftCoordinate:  CoordinateType
+    internal var rightCoordinate: CoordinateType
+
+    init(leftEvent: LeftEvent<CoordinateType>) {
+        self.leftCoordinate  = leftEvent.coordinate
+        self.rightCoordinate = leftEvent.rightEvent.coordinate
+    }
+}
+
 extension IntersectionMatrix {
 
     static func generateMatrix(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
@@ -295,33 +317,42 @@ extension IntersectionMatrix {
     /// Dimension .zero and dimesion .one
     ///
 
+    enum LocationType {
+        case onBoundary, onInterior, onExterior
+    }
+
     /// Returns true if the first point is on the line segment defined by the next two points.
-    fileprivate static func pointIsOnLineSegment(_ point: Point<CoordinateType>, point1: Point<CoordinateType>, point2: Point<CoordinateType>) -> Bool {
+    fileprivate static func pointIsOnLineSegment(_ point: Point<CoordinateType>, segment: Segment<CoordinateType>) -> LocationType {
 
         /// Will likely use precision later, but use EPSILON for now.
         let EPSILON = 0.01
 
         /// Check if the point is in between the other two points in both x and y.
-        if  (point.x < point1.x && point.x < point2.x) ||
-            (point.x > point1.x && point.x > point2.x) ||
-            (point.y < point1.y && point.y < point2.y) ||
-            (point.y > point1.y && point.y > point2.y) {
-            return false
+        if  (point.x < segment.leftCoordinate.x && point.x < segment.rightCoordinate.x) ||
+            (point.x > segment.leftCoordinate.x && point.x > segment.rightCoordinate.x) ||
+            (point.y < segment.leftCoordinate.y && point.y < segment.rightCoordinate.y) ||
+            (point.y > segment.leftCoordinate.y && point.y > segment.rightCoordinate.y) {
+            return .onExterior
+        }
+
+        /// Check if the point is on the boundary of the line segment
+        if (point == Point(coordinate: segment.leftCoordinate)) || (point ==  Point(coordinate: segment.rightCoordinate)) {
+            return .onBoundary
         }
 
         /// Check for the cases where the line segment is horizontal or vertical
-        if (point.x == point1.x && point.x == point2.x) || (point.y == point1.y && point.y == point2.y) {
-            return true
+        if (point.x == segment.leftCoordinate.x && point.x == segment.rightCoordinate.x) || (point.y == segment.leftCoordinate.y && point.y == segment.rightCoordinate.y) {
+            return .onInterior
         }
 
         /// General case
-        let slope = (point2.y - point1.y) / (point2.x - point1.x)
-        let value = point1.y - slope * point1.x
+        let slope = (segment.rightCoordinate.y - segment.leftCoordinate.y) / (segment.rightCoordinate.x - segment.leftCoordinate.x)
+        let value = segment.leftCoordinate.y - slope * segment.leftCoordinate.x
         if abs(point.y - (slope * point.x + value)) < EPSILON {
-            return true
+            return .onInterior
         }
 
-        return false
+        return .onExterior
     }
 
     fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ lineString: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
@@ -355,14 +386,15 @@ extension IntersectionMatrix {
         }
 
         /// Check if the point is on any of the line segments in the line string.
-        for firstPointIndex in 0..<lineString.count - 1 {
-            guard let firstPoint  = lineString[firstPointIndex] as? Point<CoordinateType>,
-                let secondPoint = lineString[firstPointIndex + 1] as? Point<CoordinateType> else {
+        for firstCoordIndex in 0..<lineString.count - 1 {
+            guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
+                let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
                     /// No intersection
                     return (nil, disjoint)
             }
 
-            if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                 return (point, pointOnInterior)
             }
         }
@@ -386,14 +418,15 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Check if the point is on any of the line segments in the line string.
-        for firstPointIndex in 0..<linearRing.count - 1 {
-            guard let firstPoint  = linearRing[firstPointIndex] as? Point<CoordinateType>,
-                let secondPoint = linearRing[firstPointIndex + 1] as? Point<CoordinateType> else {
+        for firstCoordIndex in 0..<linearRing.count - 1 {
+            guard let firstCoord  = linearRing[firstCoordIndex] as? CoordinateType,
+                let secondCoord = linearRing[firstCoordIndex + 1] as? CoordinateType else {
                     /// No intersection
                     return (nil, disjoint)
             }
 
-            if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                 return (point, pointOnInterior)
             }
         }
@@ -436,14 +469,15 @@ extension IntersectionMatrix {
 
         /// Check if the point is on any of the line segments in any of the line strings.
         for lineString in multiLineString {
-            for firstPointIndex in 0..<lineString.count - 1 {
-                guard let firstPoint  = lineString[firstPointIndex] as? Point<CoordinateType>,
-                    let secondPoint = lineString[firstPointIndex + 1] as? Point<CoordinateType> else {
+            for firstCoordIndex in 0..<lineString.count - 1 {
+                guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
+                    let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
                         /// No intersection
                         return (nil, disjoint)
                 }
 
-                if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                     return (point, pointOnInterior)
                 }
             }
@@ -475,6 +509,41 @@ extension IntersectionMatrix {
         return true
     }
 
+    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ lineString: LineString<CoordinateType>) -> RelatedTo {
+
+        var relatedTo = RelatedTo()
+        for tempPoint in points {
+            for firstCoordIndex in 0..<lineString.count - 1 {
+                guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
+                      let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
+                        /// One of the two points on the line string is invalid.  Return the default relationship.
+                        return relatedTo
+                }
+
+                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let location = pointIsOnLineSegment(tempPoint, segment: segment)
+                if location == .onInterior {
+                    relatedTo.firstTouchesSecondInterior = true
+                } else if location == .onBoundary {
+                    relatedTo.firstTouchesSecondBoundary = true
+                } else {
+                    relatedTo.firstTouchesSecondExterior = true
+                }
+            }
+        }
+        return relatedTo
+    }
+
+    fileprivate static func intersect(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
+
+        for tempPoint in points1 {
+            if subset(tempPoint, points2) {
+                return true
+            }
+        }
+        return false
+    }
+
     fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ lineString: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
         /// Point matches endpoint
@@ -491,7 +560,7 @@ extension IntersectionMatrix {
         /// Define the MultiPoint geometry that might be returned
         var resultGeometry = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
-        /// Check if the any of the points equals either of the two endpoints of the line string.
+        /// Check if any of the points equals either of the two endpoints of the line string.
         var lineStringBoundary = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
         guard let firstPoint = lineString.first as? Point<CoordinateType>,
             let lastPoint  = lineString.first as? Point<CoordinateType> else {
@@ -521,14 +590,15 @@ extension IntersectionMatrix {
             }
 
             /// Any intersection from here on is guaranteed to be in the interior.
-            for firstPointIndex in 0..<lineString.count - 1 {
-                guard let firstPoint  = lineString[firstPointIndex] as? Point<CoordinateType>,
-                    let secondPoint = lineString[firstPointIndex + 1] as? Point<CoordinateType> else {
+            for firstCoordIndex in 0..<lineString.count - 1 {
+                guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
+                    let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
                         /// One of the two points on the line string is invalid.  No intersection.
                         return (nil, disjoint)
                 }
 
-                if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                     pointOnInterior = true
                     resultGeometry.append(point)
                 }
@@ -591,14 +661,15 @@ extension IntersectionMatrix {
         /// Check if any of the points is on any of the line segments in the linear ring.
         for point in points {
             /// Any intersection from here is guaranteed to be in the interior.
-            for firstPointIndex in 0..<linearRing.count - 1 {
-                guard let firstPoint  = linearRing[firstPointIndex] as? Point<CoordinateType>,
-                    let secondPoint = linearRing[firstPointIndex + 1] as? Point<CoordinateType> else {
+            for firstCoordIndex in 0..<linearRing.count - 1 {
+                guard let firstCoord  = linearRing[firstCoordIndex] as? CoordinateType,
+                    let secondCoord = linearRing[firstCoordIndex + 1] as? CoordinateType else {
                         /// One of the two points on the line string is invalid.  No intersection.
                         return (nil, disjoint)
                 }
 
-                if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                     pointOnInterior = true
                     resultGeometry.append(point)
                 }
@@ -646,16 +717,9 @@ extension IntersectionMatrix {
         /// Define the MultiPoint geometry that might be returned
         var resultGeometry = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
-        /// Check if the any of the points equals any of the endpoints of the multiline string.
-        var multiLineStringBoundary = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-        for lineString in multiLineString {
-            guard let firstPoint = lineString.first as? Point<CoordinateType>,
-                let lastPoint  = lineString.first as? Point<CoordinateType> else {
-                    /// One of the two boundary points on the line string is invalid.  No intersection.
-                    return (nil, disjoint)
-            }
-            multiLineStringBoundary.append(firstPoint)
-            multiLineStringBoundary.append(lastPoint)
+        /// Check if any of the points equals any of the endpoints of the multiline string.
+        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+            return (nil, disjoint)
         }
 
         var pointOnBoundary = false
@@ -679,14 +743,15 @@ extension IntersectionMatrix {
 
             /// Any intersection here is guaranteed to be in the interior.
             for lineString in multiLineString {
-                for firstPointIndex in 0..<lineString.count - 1 {
-                    guard let firstPoint  = lineString[firstPointIndex] as? Point<CoordinateType>,
-                        let secondPoint = lineString[firstPointIndex + 1] as? Point<CoordinateType> else {
+                for firstCoordIndex in 0..<lineString.count - 1 {
+                    guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
+                          let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
                             /// One of the two points on the line string is invalid.  No intersection.
                             return (nil, disjoint)
                     }
 
-                    if pointIsOnLineSegment(point, point1: firstPoint, point2: secondPoint) {
+                    let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                    if pointIsOnLineSegment(point, segment: segment)  == .onInterior {
                         pointOnInterior = true
                         resultGeometry.append(point)
                     }
@@ -725,5 +790,445 @@ extension IntersectionMatrix {
 
         /// No intersection
         return (nil, disjoint)
+    }
+
+    ///
+    /// Dimension .one and dimesion .one
+    ///
+
+///    The IM for the two disjoint geometries of dimension .one is
+///    (1) FF1FF0102, if both geometries are not LinearRings, or
+///    (2) FF1FFF102, if the first geometry is a LinearRing,
+///    (3) FF1FF01F2, if the second geometry is a LinearRing, or
+///    (4) FF1FFF1F2, if both geometries are LinearRings.
+
+    struct LineSegmentIntersection {
+
+        var firstSegmentfirstBoundaryLocation: LocationType     // The location of the first boundary point of the first segment relative to the second segment
+        var firstSegmentSecondBoundaryLocation: LocationType    // The location of the second boundary point of the first segment relative to the second segment
+        var secondSegmentfirstBoundaryLocation: LocationType    // The location of the first boundary point of the second segment relative to the first segment
+        var secondSegmentSecondBoundaryLocation: LocationType   // The location of the second boundary point of the second segment relative to the first segment
+        var interiorsTouchAtPoint: Bool
+
+        var segmentsIntersect: Bool {
+            return  firstSegmentfirstBoundaryLocation   != .onExterior ||
+                    firstSegmentSecondBoundaryLocation  != .onExterior ||
+                    secondSegmentfirstBoundaryLocation  != .onExterior ||
+                    secondSegmentSecondBoundaryLocation != .onExterior ||
+                    interiorsTouchAtPoint
+        }
+
+        var geometry: Geometry?
+
+        init(sb11: LocationType = .onExterior, sb12: LocationType = .onExterior, sb21: LocationType = .onExterior, sb22: LocationType = .onExterior, interiors: Bool = false, theGeometry: Geometry? = nil) {
+            firstSegmentfirstBoundaryLocation   = sb11          /// Position of first boundary point of first segment relative to the second segment
+            firstSegmentSecondBoundaryLocation  = sb12          /// Position of second boundary point of first segment relative to the second segment
+            secondSegmentfirstBoundaryLocation  = sb21          /// Position of first boundary point of second segment relative to the first segment
+            secondSegmentSecondBoundaryLocation = sb22          /// Position of second boundary point of first segment relative to the first segment
+            interiorsTouchAtPoint               = interiors
+            geometry                            = theGeometry
+        }
+    }
+
+    ///
+    /// Check if the bounding boxes overlap for two line segments
+    ///
+    fileprivate static func boundingBoxesOverlap(segment: Segment<CoordinateType>, other: Segment<CoordinateType>) -> Bool {
+        if  (segment.leftCoordinate.x >= other.leftCoordinate.x && segment.leftCoordinate.x <= other.rightCoordinate.x) ||
+            (segment.leftCoordinate.x >= other.rightCoordinate.x && segment.leftCoordinate.x <= other.leftCoordinate.x) ||
+            (segment.rightCoordinate.x >= other.leftCoordinate.x && segment.rightCoordinate.x <= other.rightCoordinate.x) ||
+            (segment.rightCoordinate.x >= other.rightCoordinate.x && segment.rightCoordinate.x <= other.leftCoordinate.x) ||
+            (segment.leftCoordinate.y >= other.leftCoordinate.y && segment.leftCoordinate.y <= other.rightCoordinate.y) ||
+            (segment.leftCoordinate.y >= other.rightCoordinate.y && segment.leftCoordinate.y <= other.leftCoordinate.y) ||
+            (segment.rightCoordinate.y >= other.leftCoordinate.y && segment.rightCoordinate.y <= other.rightCoordinate.y) ||
+            (segment.rightCoordinate.y >= other.rightCoordinate.y && segment.rightCoordinate.y <= other.leftCoordinate.y) {
+            return true
+        }
+        return false
+    }
+
+    ///
+    /// 2x2 Determinant
+    ///
+    /// | a b |
+    /// | c d |
+    ///
+    /// Returns a value of ad - bc
+    ///
+    fileprivate static func det2d(a: Double, b: Double, c: Double, d: Double) -> Double {
+        return a*d - b*c
+    }
+
+    ///
+    /// Returns a numeric value indicating where point p2 is relative to the line determined by p0 and p1.
+    /// value > 0 implies p2 is on the left
+    /// value = 0 implies p2 is on the line
+    /// value < 0 implies p2 is to the right
+    ///
+    fileprivate static func isLeft(p0: CoordinateType, p1: CoordinateType, p2: CoordinateType) -> Double {
+        return (p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y -  p0.y)
+    }
+
+    fileprivate typealias SegmentType = SweepLineSegment<CoordinateType>
+
+    fileprivate static func intersection(segment: Segment<CoordinateType>, other: Segment<CoordinateType>) -> LineSegmentIntersection {
+
+        let precsion = FloatingPrecision()
+        let csystem  = Cartesian()
+
+        ///
+        /// Check the bounding boxes.  They must overlap if there is an intersection.
+        ///
+        guard boundingBoxesOverlap(segment: segment, other: other) else {
+            return LineSegmentIntersection()
+        }
+
+        ///
+        /// Get location of endpoints
+        ///
+        var segment1Boundary1Location = pointIsOnLineSegment(Point<CoordinateType>(coordinate: segment.leftCoordinate), segment: other)
+        var segment1Boundary2Location = pointIsOnLineSegment(Point<CoordinateType>(coordinate: segment.rightCoordinate), segment: other)
+        var segment2Boundary1Location = pointIsOnLineSegment(Point<CoordinateType>(coordinate: other.leftCoordinate), segment: segment)
+        var segment2Boundary2Location = pointIsOnLineSegment(Point<CoordinateType>(coordinate: other.rightCoordinate), segment: segment)
+
+        ///
+        /// Check cases where at least one boundary point of one segment touches the other line segment
+        ///
+        var leftSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
+        var rightSign = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
+        let oneLine   = leftSign == 0 && rightSign == 0 /// Both line segments lie on one line
+        if  (segment1Boundary1Location != .onExterior) ||  (segment1Boundary2Location != .onExterior) ||
+            (segment2Boundary1Location != .onExterior) ||  (segment2Boundary2Location != .onExterior) {
+
+            if (segment1Boundary1Location != .onExterior) &&  (segment1Boundary2Location != .onExterior) {
+                /// Segment is completely contained in other
+                return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem))
+            } else if (segment2Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
+                /// Other is completely contained in segment
+                return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem))
+            } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
+                      (segment1Boundary1Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
+                /// Two segments meet at a single boundary point
+                return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem))
+            } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
+                      (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
+                /// Two segments meet at a single boundary point
+                return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem))
+            } else if oneLine {
+                /// If you reach here, the two line segments overlap by an amount > 0, but neither line segment is contained in the other.
+                if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {
+                    /// Line segments overlap from segment left to other left
+                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.leftCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem))
+                } else if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
+                    /// Line segments overlap from segment left to other right
+                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.leftCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem))
+                } else if (segment1Boundary2Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {
+                    /// Line segments overlap from segment left to other left
+                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.rightCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem))
+                } else if (segment1Boundary2Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
+                    /// Line segments overlap from segment left to other right
+                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.rightCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem))
+                }
+            } else {
+                /// If you reach here, the two line segments touch at a single point that is on the boundary of one segment and the interior of the other.
+                if segment1Boundary1Location == .onInterior {
+                    /// Segment boundary point 1 is on the interior of other
+                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem))
+                } else if segment1Boundary2Location == .onInterior {
+                    /// Segment boundary point 1 is on the interior of other
+                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem))
+                } else if segment2Boundary1Location == .onInterior {
+                    /// Segment boundary point 1 is on the interior of other
+                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: other.leftCoordinate, precision: precsion, coordinateSystem: csystem))
+                } else if segment2Boundary2Location == .onInterior {
+                    /// Segment boundary point 1 is on the interior of other
+                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: other.rightCoordinate, precision: precsion, coordinateSystem: csystem))
+                }
+            }
+        }
+
+        ///
+        /// Check whether the two segments intersect at an interior point of each.
+        /// Since the cases where the segments touch at a boundary point have all been handled, intersecting here is guaranteed to be in segments' interior.
+        ///
+        /// The two segments will intersect if and only if the signs of the isLeft function are non-zero and are different for both segments.
+        /// This means one segment cannot be completely on one side of the other.
+        ///
+        /// TODO: We will need to separate out the = 0 cases below because these imply the segments fall on the same line.
+        ///
+        /// The line segments must intersect at a single point.  Calculate and return the point of intersection.
+        ///
+        let x1 = segment.leftCoordinate.x
+        let y1 = segment.leftCoordinate.y
+        let x2 = segment.rightCoordinate.x
+        let y2 = segment.rightCoordinate.y
+        let x3 = other.leftCoordinate.x
+        let y3 = other.leftCoordinate.y
+        let x4 = other.rightCoordinate.x
+        let y4 = other.rightCoordinate.y
+
+        let det1 = det2d(a: x1, b: y1, c: x2, d: y2)
+        let det2 = det2d(a: x3, b: y3, c: x4, d: y4)
+        let det3 = det2d(a: x1, b: 1, c: x2, d: 1)
+        let det4 = det2d(a: x3, b: 1, c: x4, d: 1)
+        let det5 = det2d(a: y1, b: 1, c: y2, d: 1)
+        let det6 = det2d(a: y3, b: 1, c: y4, d: 1)
+
+        let numx = det2d(a: det1, b: det3, c: det2, d: det4)
+        let numy = det2d(a: det1, b: det5, c: det2, d: det6)
+        let den  = det2d(a: det3, b: det5, c: det4, d: det6) // The denominator
+
+        ///
+        /// TODO: Add check for den = 0.
+        /// The den is 0 when (x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4) = 0
+        /// For now we will add guard statement to make sure the den is not zero.
+        /// Note that if den is zero, it implies the two line segments are either parallel or
+        /// fall on the same line and may or may not overlap.
+        /// These cases must be addressed separately.
+        ///
+        guard den != 0 else {
+            /// TODO: Might also have to check for near zero.
+            return LineSegmentIntersection()
+        }
+
+        let x = numx / den
+        let y = numy / den
+
+        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: try CoordinateType(array: [x, y]), precision: precsion, coordinateSystem: csystem))
+    }
+
+    fileprivate static func intersects(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
+
+        for tempPoint in points1 {
+            if subset(tempPoint, points2) {
+                return true
+            }
+        }
+        return false
+    }
+
+    /// Calculate the slope as a tuple.
+    /// The first value is the slope, if the line is not vertical.
+    /// The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
+    fileprivate static func slope(_ coordinate1: CoordinateType, _ coordinate2: CoordinateType) -> (Double, Bool) {
+
+        /// Check for the vertical case
+        guard coordinate1.x != coordinate2.x else {
+            return (0, true)
+        }
+
+        /// Normal case
+        return ((coordinate2.y - coordinate1.y) / (coordinate2.x - coordinate1.x), false)
+    }
+
+    fileprivate static func slope(_ segment: Segment<CoordinateType>) -> (Double, Bool) {
+
+        return slope(segment.leftCoordinate, segment.rightCoordinate)
+    }
+
+    /// Reduces a line string to a sequence of points such that each consecutive line segment will have a different slope
+    fileprivate static func reduce(_ lineString: LineString<CoordinateType>) -> LineString<CoordinateType> {
+
+        /// Must have at least 3 points or two lines segments for this algorithm to apply
+        guard lineString.count >= 3 else {
+            return lineString
+        }
+
+        var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
+        var secondSlope: (Double, Bool)
+        var newLineString = LineString<CoordinateType>()
+        newLineString.append(lineString[0])
+        for lsFirstCoordIndex in 0..<lineString.count - 2 {
+            guard let lsFirstCoord  = lineString[lsFirstCoordIndex] as? CoordinateType,
+                  let lsSecondCoord = lineString[lsFirstCoordIndex + 1] as? CoordinateType,
+                  let lsThirdCoord  = lineString[lsFirstCoordIndex + 2] as? CoordinateType else {
+                    /// One of the three points on the line string is invalid.  No reduction.
+                    return lineString
+            }
+
+            firstSlope = slope(lsFirstCoord, lsSecondCoord)
+            secondSlope = slope(lsSecondCoord, lsThirdCoord)
+
+            if firstSlope != secondSlope {
+                newLineString.append(lineString[lsFirstCoordIndex + 1])
+            }
+        }
+
+        /// Add the last coordinate
+        newLineString.append(lineString[lineString.count - 1])
+
+        return newLineString
+    }
+
+    /// Is segment1 contained in or a subset of segment2?
+    fileprivate static func subset(_ segment1: Segment<CoordinateType>, _ segment2: Segment<CoordinateType>) -> Bool {
+
+        /// If the slopes are not the same one segment being contained in another is not possible
+        let slope1 = slope(segment1)
+        let slope2 = slope(segment2)
+        guard slope1 == slope2 else {
+            return false
+        }
+
+        /// Slopes are the same.  Check if both coordinates of the first segment lie on the second
+        let point1 = Point<CoordinateType>(coordinate: segment1.leftCoordinate)
+        let point2 = Point<CoordinateType>(coordinate: segment1.rightCoordinate)
+        let location1 = pointIsOnLineSegment(point1, segment: segment2)
+        let location2 = pointIsOnLineSegment(point2, segment: segment2)
+        if location1 != .onExterior && location2 != .onExterior {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    /// Is line string 1 contained in or a subset of line string 2?
+    /// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ lineString1: LineString<CoordinateType>, _ lineString2: LineString<CoordinateType>) -> Bool {
+
+        for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
+            guard let ls1FirstCoord  = lineString1[ls1FirstCoordIndex] as? CoordinateType,
+                  let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1] as? CoordinateType else {
+                    /// One of the two points on the line string is invalid.  No subset.
+                    return false
+            }
+
+            let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+
+            var segment1IsSubsetOfOtherSegment = false
+            for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
+                guard let ls2FirstCoord  = lineString2[ls2FirstCoordIndex] as? CoordinateType,
+                      let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1] as? CoordinateType else {
+                        /// One of the two points on the line string is invalid.  No subset.
+                        return false
+                }
+
+                let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+
+                if subset(segment1, segment2) {
+                    segment1IsSubsetOfOtherSegment = true
+                    break
+                }
+            }
+
+            if !segment1IsSubsetOfOtherSegment {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    fileprivate static func generateIntersection(_ lineString1: LineString<CoordinateType>, _ lineString2: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Default intersection matrix
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .one
+        disjoint[.boundary, .exterior] = .zero
+        disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .interior] = .zero
+        disjoint[.exterior, .exterior] = .two
+
+        /// Define the MultiPoint geometry that might be returned
+        var resultGeometryMultiPoint = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+        /// Define the LineString geometry that might be returned
+        var resultGeometryLineString = LineString<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+        /// Check if any of the endpoints of the first line string equals either of the two endpoints of the second line string.
+        guard let lineStringBoundary1 = lineString1.boundary() as? MultiPoint<CoordinateType>,
+              let lineStringBoundary2 = lineString2.boundary() as? MultiPoint<CoordinateType> else {
+                return (nil, disjoint)
+        }
+        var geometriesIntersect = intersects(lineStringBoundary1, lineStringBoundary2)
+        if geometriesIntersect {
+            matrixIntersects[.boundary, .boundary] = .zero
+        }
+
+        ///
+        /// Need to know the following:
+        /// - Should the intersection function above return an IntersectionEvent or LineSegmentIntersection or?
+        /// - Should there be a LineSegment object other than a SweepLineSegment, or should I just use points?
+        /// - Should I be worrying about the geometries now?
+        /// - Intersection of two geometries can return a geometry collection in general.  Do that or what?
+        /// - Does "Set" work with sets of geometries, points, or other objects?
+        ///
+
+        /// Interior, interior
+        for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
+            guard let ls1FirstCoord  = lineString1[ls1FirstCoordIndex] as? CoordinateType,
+                  let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1] as? CoordinateType else {
+                    /// One of the two points on the line string is invalid.  No intersection.
+                    return (nil, disjoint)
+            }
+
+            let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+
+            /// Any intersection from here on is guaranteed to be in the interior.
+            for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
+                guard let ls2FirstCoord  = lineString2[ls2FirstCoordIndex] as? CoordinateType,
+                      let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1] as? CoordinateType else {
+                        /// One of the two points on the line string is invalid.  No intersection.
+                        return (nil, disjoint)
+                }
+
+                let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
+
+                /// Interior, interior
+                if lineSegmentIntersection.geometry?.dimension == .one {
+                    matrixIntersects[.interior, .interior] = .one
+                } else if matrixIntersects[.interior, .interior] != .one && lineSegmentIntersection.interiorsTouchAtPoint {
+                    matrixIntersects[.interior, .interior] = .zero
+                }
+            }
+        }
+
+        /// Interior, boundary
+        let relatedB2Ls1 = relatedTo(lineStringBoundary2, lineString1)
+        if relatedB2Ls1.firstTouchesSecondInterior {
+            matrixIntersects[.interior, .boundary] = .zero
+        }
+
+        /// Interior, exterior
+        let reducedLs1 = reduce(lineString1)
+        let reducedLs2 = reduce(lineString2)
+        if !subset(reducedLs1, reducedLs2) {
+            matrixIntersects[.interior, .exterior] = .one
+        }
+
+        /// Boundary, interior
+        let relatedB1Ls2 = relatedTo(lineStringBoundary1, lineString2)
+        if relatedB1Ls2.firstTouchesSecondInterior {
+            matrixIntersects[.boundary, .interior] = .zero
+        }
+
+        /// Boundary, boundary
+        if relatedB1Ls2.firstTouchesSecondBoundary {
+            matrixIntersects[.boundary, .boundary] = .zero
+        }
+
+        /// Boundary, exterior
+        if relatedB1Ls2.firstTouchesSecondExterior {
+            matrixIntersects[.boundary, .exterior] = .zero
+        }
+
+        /// Exterior, interior
+        if !subset(reducedLs2, reducedLs1) {
+            matrixIntersects[.exterior, .interior] = .one
+        }
+
+        /// Exterior, boundary
+        if relatedB2Ls1.firstTouchesSecondExterior {
+            matrixIntersects[.exterior, .boundary] = .zero
+        }
+
+        /// Return the matrix.
+        /// We will not calculate and return the geometry now.
+        return (nil, matrixIntersects)
     }
 }
