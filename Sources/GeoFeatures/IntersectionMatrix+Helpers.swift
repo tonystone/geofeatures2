@@ -322,37 +322,47 @@ extension IntersectionMatrix {
     }
 
     /// Returns true if the first point is on the line segment defined by the next two points.
-    fileprivate static func pointIsOnLineSegment(_ point: Point<CoordinateType>, segment: Segment<CoordinateType>) -> LocationType {
+    fileprivate static func coordinateIsOnLineSegment(_ coordinate: CoordinateType, segment: Segment<CoordinateType>) -> LocationType {
 
         /// Will likely use precision later, but use EPSILON for now.
         let EPSILON = 0.01
 
         /// Check if the point is in between the other two points in both x and y.
-        if  (point.x < segment.leftCoordinate.x && point.x < segment.rightCoordinate.x) ||
-            (point.x > segment.leftCoordinate.x && point.x > segment.rightCoordinate.x) ||
-            (point.y < segment.leftCoordinate.y && point.y < segment.rightCoordinate.y) ||
-            (point.y > segment.leftCoordinate.y && point.y > segment.rightCoordinate.y) {
+        let segmentLeft     = segment.leftCoordinate
+        let segmentRight    = segment.rightCoordinate
+        let leftX           = segmentLeft.x
+        let leftY           = segmentLeft.y
+        let rightX          = segmentRight.x
+        let rightY          = segmentRight.y
+        if  (coordinate.x < leftX && coordinate.x < rightX) ||
+            (coordinate.x > leftX && coordinate.x > rightX) ||
+            (coordinate.y < leftY && coordinate.y < rightY) ||
+            (coordinate.y > leftY && coordinate.y > rightY) {
             return .onExterior
         }
 
         /// Check if the point is on the boundary of the line segment
-        if (point == Point(coordinate: segment.leftCoordinate)) || (point ==  Point(coordinate: segment.rightCoordinate)) {
+        if (coordinate == segmentLeft) || (coordinate == segmentRight) {
             return .onBoundary
         }
 
         /// Check for the cases where the line segment is horizontal or vertical
-        if (point.x == segment.leftCoordinate.x && point.x == segment.rightCoordinate.x) || (point.y == segment.leftCoordinate.y && point.y == segment.rightCoordinate.y) {
+        if (coordinate.x == leftX && coordinate.x == rightX) || (coordinate.y == leftY && coordinate.y == rightY) {
             return .onInterior
         }
 
         /// General case
-        let slope = (segment.rightCoordinate.y - segment.leftCoordinate.y) / (segment.rightCoordinate.x - segment.leftCoordinate.x)
-        let value = segment.leftCoordinate.y - slope * segment.leftCoordinate.x
-        if abs(point.y - (slope * point.x + value)) < EPSILON {
+        let slope = (rightY - leftY) / (rightX - leftX)
+        let value = leftY - slope * leftX
+        if abs(coordinate.y - (slope * coordinate.x + value)) < EPSILON {
             return .onInterior
         }
 
         return .onExterior
+    }
+
+    fileprivate static func pointIsOnLineSegment(_ point: Point<CoordinateType>, segment: Segment<CoordinateType>) -> LocationType {
+        return coordinateIsOnLineSegment(point.coordinate, segment: segment)
     }
 
     fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ lineString: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
@@ -379,7 +389,7 @@ extension IntersectionMatrix {
 
         /// Check if the point equals either of the two endpoints of the line string.
         let firstPoint = lineString.first as? Point<CoordinateType>
-        let lastPoint  = lineString.first as? Point<CoordinateType>
+        let lastPoint  = lineString[lineString.count - 1] as? Point<CoordinateType>
 
         if point == firstPoint || point == lastPoint {
             return (point, matchesEndPoint)
@@ -460,7 +470,7 @@ extension IntersectionMatrix {
         /// Check if the point equals any of the endpoints of any line string.
         for lineString in multiLineString {
             let firstPoint = lineString.first as? Point<CoordinateType>
-            let lastPoint  = lineString.first as? Point<CoordinateType>
+            let lastPoint  = lineString[lineString.count - 1] as? Point<CoordinateType>
 
             if point == firstPoint || point == lastPoint {
                 return (point, matchesEndPoint)
@@ -886,10 +896,10 @@ extension IntersectionMatrix {
         ///
         /// Get location of endpoints
         ///
-        var segment1Boundary1Location = pointIsOnLineSegment(Point<CoordinateType>(coordinate: segment.leftCoordinate), segment: other)
-        var segment1Boundary2Location = pointIsOnLineSegment(Point<CoordinateType>(coordinate: segment.rightCoordinate), segment: other)
-        var segment2Boundary1Location = pointIsOnLineSegment(Point<CoordinateType>(coordinate: other.leftCoordinate), segment: segment)
-        var segment2Boundary2Location = pointIsOnLineSegment(Point<CoordinateType>(coordinate: other.rightCoordinate), segment: segment)
+        var segment1Boundary1Location = coordinateIsOnLineSegment(segment.leftCoordinate, segment: other)
+        var segment1Boundary2Location = coordinateIsOnLineSegment(segment.rightCoordinate, segment: other)
+        var segment2Boundary1Location = coordinateIsOnLineSegment(other.leftCoordinate, segment: segment)
+        var segment2Boundary2Location = coordinateIsOnLineSegment(other.rightCoordinate, segment: segment)
 
         ///
         /// Check cases where at least one boundary point of one segment touches the other line segment
@@ -1071,10 +1081,8 @@ extension IntersectionMatrix {
         }
 
         /// Slopes are the same.  Check if both coordinates of the first segment lie on the second
-        let point1 = Point<CoordinateType>(coordinate: segment1.leftCoordinate)
-        let point2 = Point<CoordinateType>(coordinate: segment1.rightCoordinate)
-        let location1 = pointIsOnLineSegment(point1, segment: segment2)
-        let location2 = pointIsOnLineSegment(point2, segment: segment2)
+        let location1 = coordinateIsOnLineSegment(segment1.leftCoordinate, segment: segment2)
+        let location2 = coordinateIsOnLineSegment(segment1.rightCoordinate, segment: segment2)
         if location1 != .onExterior && location2 != .onExterior {
             return true
         } else {
