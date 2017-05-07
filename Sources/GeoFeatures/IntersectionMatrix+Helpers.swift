@@ -910,51 +910,54 @@ extension IntersectionMatrix {
         if  (segment1Boundary1Location != .onExterior) ||  (segment1Boundary2Location != .onExterior) ||
             (segment2Boundary1Location != .onExterior) ||  (segment2Boundary2Location != .onExterior) {
 
+            var lineSegmentIntersection = LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location)
+
             if (segment1Boundary1Location != .onExterior) &&  (segment1Boundary2Location != .onExterior) {
                 /// Segment is completely contained in other
-                return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem))
+                lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem)
             } else if (segment2Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                 /// Other is completely contained in segment
-                return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem))
+                lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem)
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
                       (segment1Boundary1Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem))
+                lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
                       (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem))
+                lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
             } else if oneLine {
                 /// If you reach here, the two line segments overlap by an amount > 0, but neither line segment is contained in the other.
                 if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {
                     /// Line segments overlap from segment left to other left
-                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.leftCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem))
+                    lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.leftCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem)
                 } else if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                     /// Line segments overlap from segment left to other right
-                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.leftCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem))
+                    lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.leftCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem)
                 } else if (segment1Boundary2Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {
                     /// Line segments overlap from segment left to other left
-                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.rightCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem))
+                    lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.rightCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem)
                 } else if (segment1Boundary2Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                     /// Line segments overlap from segment left to other right
-                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: LineString<CoordinateType>(elements: [segment.rightCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem))
+                    lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.rightCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem)
                 }
             } else {
                 /// If you reach here, the two line segments touch at a single point that is on the boundary of one segment and the interior of the other.
                 if segment1Boundary1Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem))
+                    lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
                 } else if segment1Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem))
+                    lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
                 } else if segment2Boundary1Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: other.leftCoordinate, precision: precsion, coordinateSystem: csystem))
+                    lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: other.leftCoordinate, precision: precsion, coordinateSystem: csystem)
                 } else if segment2Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: other.rightCoordinate, precision: precsion, coordinateSystem: csystem))
+                    lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: other.rightCoordinate, precision: precsion, coordinateSystem: csystem)
                 }
             }
+            return lineSegmentIntersection
         }
 
         ///
@@ -1004,7 +1007,7 @@ extension IntersectionMatrix {
         let x = numx / den
         let y = numy / den
 
-        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, theGeometry: Point<CoordinateType>(coordinate: try CoordinateType(array: [x, y]), precision: precsion, coordinateSystem: csystem))
+        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: true, theGeometry: Point<CoordinateType>(coordinate: try CoordinateType(array: [x, y]), precision: precsion, coordinateSystem: csystem))
     }
 
     fileprivate static func intersects(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
