@@ -8,8 +8,6 @@
 
 import Foundation
 
-import struct GeoFeatures.Point
-
 private typealias CoordinateType = Coordinate2D
 
 enum Subset: Int {
@@ -48,9 +46,9 @@ extension IntersectionMatrix {
 
     static func generateMatrix(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
-        let interior = IntersectionMatrix.Index.interior.rawValue
-        let boundary = IntersectionMatrix.Index.boundary.rawValue
-        let exterior = IntersectionMatrix.Index.exterior.rawValue
+        let _ = IntersectionMatrix.Index.interior.rawValue
+        let _ = IntersectionMatrix.Index.boundary.rawValue
+        let _ = IntersectionMatrix.Index.exterior.rawValue
 
         switch geometry1.dimension {
 
@@ -117,7 +115,7 @@ extension IntersectionMatrix {
                 /// it would be nice to use a Set here, then we could use the built-in Swift functions to simplify the code.
                 /// We may need to make Point and MultiPoint hashable to do that.
 
-                if let point1 = self as? Point<CoordinateType>, let point2 = geometry2 as? Point<CoordinateType> {
+                if let point1 = geometry1 as? Point<CoordinateType>, let point2 = geometry2 as? Point<CoordinateType> {
                     return generateIntersection(point1, point2)
                 } else if let point = geometry1 as? Point<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType> {
                     return generateIntersection(points, point)
@@ -127,7 +125,7 @@ extension IntersectionMatrix {
                     return generateIntersection(points1, points2)
                 }
             case .one:
-                if let point = self as? Point<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
+                if let point = geometry1 as? Point<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
                     return generateIntersection(point, lineString)
                 }
             case .two: break
@@ -388,21 +386,17 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Check if the point equals either of the two endpoints of the line string.
-        let firstPoint = lineString.first as? Point<CoordinateType>
-        let lastPoint  = lineString[lineString.count - 1] as? Point<CoordinateType>
+        let firstCoord = lineString.first
+        let secondCoord  = lineString[lineString.count - 1]
 
-        if point == firstPoint || point == lastPoint {
+        if point.coordinate == firstCoord || point.coordinate == secondCoord {
             return (point, matchesEndPoint)
         }
 
         /// Check if the point is on any of the line segments in the line string.
         for firstCoordIndex in 0..<lineString.count - 1 {
-            guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
-                let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
-                    /// No intersection
-                    return (nil, disjoint)
-            }
-
+            let firstCoord  = lineString[firstCoordIndex]
+            let secondCoord = lineString[firstCoordIndex + 1]
             let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
             if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                 return (point, pointOnInterior)
@@ -429,12 +423,8 @@ extension IntersectionMatrix {
 
         /// Check if the point is on any of the line segments in the line string.
         for firstCoordIndex in 0..<linearRing.count - 1 {
-            guard let firstCoord  = linearRing[firstCoordIndex] as? CoordinateType,
-                let secondCoord = linearRing[firstCoordIndex + 1] as? CoordinateType else {
-                    /// No intersection
-                    return (nil, disjoint)
-            }
-
+            let firstCoord  = linearRing[firstCoordIndex]
+            let secondCoord = linearRing[firstCoordIndex + 1]
             let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
             if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                 return (point, pointOnInterior)
@@ -469,10 +459,10 @@ extension IntersectionMatrix {
 
         /// Check if the point equals any of the endpoints of any line string.
         for lineString in multiLineString {
-            let firstPoint = lineString.first as? Point<CoordinateType>
-            let lastPoint  = lineString[lineString.count - 1] as? Point<CoordinateType>
+            let firstCoord = lineString.first
+            let secondCoord  = lineString[lineString.count - 1]
 
-            if point == firstPoint || point == lastPoint {
+            if point.coordinate == firstCoord || point.coordinate == secondCoord {
                 return (point, matchesEndPoint)
             }
         }
@@ -480,12 +470,8 @@ extension IntersectionMatrix {
         /// Check if the point is on any of the line segments in any of the line strings.
         for lineString in multiLineString {
             for firstCoordIndex in 0..<lineString.count - 1 {
-                guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
-                    let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
-                        /// No intersection
-                        return (nil, disjoint)
-                }
-
+                let firstCoord  = lineString[firstCoordIndex]
+                let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
                 if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                     return (point, pointOnInterior)
@@ -536,12 +522,8 @@ extension IntersectionMatrix {
 
             /// If this point is reached, a point that touches the boundary of the line string has been removed
             for firstCoordIndex in 0..<lineString.count - 1 {
-                guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
-                      let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
-                        /// One of the two points on the line string is invalid.  Return the default relationship.
-                        return relatedTo
-                }
-
+                let firstCoord  = lineString[firstCoordIndex]
+                let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
                 let location = pointIsOnLineSegment(tempPoint, segment: segment)
                 if location == .onInterior {
@@ -562,12 +544,8 @@ extension IntersectionMatrix {
         var relatedTo = RelatedTo()
         for tempPoint in points {
             for firstCoordIndex in 0..<linearRing.count - 1 {
-                guard let firstCoord  = linearRing[firstCoordIndex] as? CoordinateType,
-                    let secondCoord = linearRing[firstCoordIndex + 1] as? CoordinateType else {
-                        /// One of the two points on the line string is invalid.  Return the default relationship.
-                        return relatedTo
-                }
-
+                let firstCoord  = linearRing[firstCoordIndex]
+                let secondCoord = linearRing[firstCoordIndex + 1]
                 let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
                 let location = pointIsOnLineSegment(tempPoint, segment: segment)
                 if location == .onInterior {
@@ -601,12 +579,8 @@ extension IntersectionMatrix {
             /// If this point is reached, any point that touches the boundary of the multi line string has been removed
             for lineString in multiLineString {
                 for firstCoordIndex in 0..<lineString.count - 1 {
-                    guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
-                        let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
-                            /// One of the two points on the line string is invalid.  Return the default relationship.
-                            return relatedTo
-                    }
-
+                    let firstCoord  = lineString[firstCoordIndex]
+                    let secondCoord = lineString[firstCoordIndex + 1]
                     let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
                     let location = pointIsOnLineSegment(tempPoint, segment: segment)
                     if location == .onInterior {
@@ -650,21 +624,16 @@ extension IntersectionMatrix {
         var resultGeometry = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
         /// Check if any of the points equals either of the two endpoints of the line string.
-        var lineStringBoundary = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-        guard let firstPoint = lineString.first as? Point<CoordinateType>,
-            let lastPoint  = lineString.first as? Point<CoordinateType> else {
-                /// One of the two boundary points on the line string is invalid.  No intersection.
-                return (nil, disjoint)
+        guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
+            return (nil, disjoint)
         }
-        lineStringBoundary.append(firstPoint)
-        lineStringBoundary.append(lastPoint)
 
         var pointOnBoundary = false
         var pointOnInterior = false
         var pointOnExterior = false
 
         for point in points {
-            if point == firstPoint || point == lastPoint {
+            if subset(point, lineStringBoundary) {
                 pointOnBoundary = true
                 resultGeometry.append(point)
             }
@@ -680,12 +649,8 @@ extension IntersectionMatrix {
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for firstCoordIndex in 0..<lineString.count - 1 {
-                guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
-                    let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
-                        /// One of the two points on the line string is invalid.  No intersection.
-                        return (nil, disjoint)
-                }
-
+                let firstCoord  = lineString[firstCoordIndex]
+                let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
                 if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                     pointOnInterior = true
@@ -751,12 +716,8 @@ extension IntersectionMatrix {
         for point in points {
             /// Any intersection from here is guaranteed to be in the interior.
             for firstCoordIndex in 0..<linearRing.count - 1 {
-                guard let firstCoord  = linearRing[firstCoordIndex] as? CoordinateType,
-                    let secondCoord = linearRing[firstCoordIndex + 1] as? CoordinateType else {
-                        /// One of the two points on the line string is invalid.  No intersection.
-                        return (nil, disjoint)
-                }
-
+                let firstCoord  = linearRing[firstCoordIndex]
+                let secondCoord = linearRing[firstCoordIndex + 1]
                 let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
                 if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                     pointOnInterior = true
@@ -833,12 +794,8 @@ extension IntersectionMatrix {
             /// Any intersection here is guaranteed to be in the interior.
             for lineString in multiLineString {
                 for firstCoordIndex in 0..<lineString.count - 1 {
-                    guard let firstCoord  = lineString[firstCoordIndex] as? CoordinateType,
-                          let secondCoord = lineString[firstCoordIndex + 1] as? CoordinateType else {
-                            /// One of the two points on the line string is invalid.  No intersection.
-                            return (nil, disjoint)
-                    }
-
+                    let firstCoord  = lineString[firstCoordIndex]
+                    let secondCoord = lineString[firstCoordIndex + 1]
                     let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
                     if pointIsOnLineSegment(point, segment: segment)  == .onInterior {
                         pointOnInterior = true
@@ -975,16 +932,16 @@ extension IntersectionMatrix {
         ///
         /// Get location of endpoints
         ///
-        var segment1Boundary1Location = coordinateIsOnLineSegment(segment.leftCoordinate, segment: other)
-        var segment1Boundary2Location = coordinateIsOnLineSegment(segment.rightCoordinate, segment: other)
-        var segment2Boundary1Location = coordinateIsOnLineSegment(other.leftCoordinate, segment: segment)
-        var segment2Boundary2Location = coordinateIsOnLineSegment(other.rightCoordinate, segment: segment)
+        let segment1Boundary1Location = coordinateIsOnLineSegment(segment.leftCoordinate, segment: other)
+        let segment1Boundary2Location = coordinateIsOnLineSegment(segment.rightCoordinate, segment: other)
+        let segment2Boundary1Location = coordinateIsOnLineSegment(other.leftCoordinate, segment: segment)
+        let segment2Boundary2Location = coordinateIsOnLineSegment(other.rightCoordinate, segment: segment)
 
         ///
         /// Check cases where at least one boundary point of one segment touches the other line segment
         ///
-        var leftSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
-        var rightSign = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
+        let leftSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
+        let rightSign = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
         let oneLine   = leftSign == 0 && rightSign == 0 /// Both line segments lie on one line
         if  (segment1Boundary1Location != .onExterior) ||  (segment1Boundary2Location != .onExterior) ||
             (segment2Boundary1Location != .onExterior) ||  (segment2Boundary2Location != .onExterior) {
@@ -1086,7 +1043,7 @@ extension IntersectionMatrix {
         let x = numx / den
         let y = numy / den
 
-        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: true, theGeometry: Point<CoordinateType>(coordinate: try CoordinateType(array: [x, y]), precision: precsion, coordinateSystem: csystem))
+        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: true, theGeometry: Point<CoordinateType>(coordinate: CoordinateType(array: [x, y]), precision: precsion, coordinateSystem: csystem))
     }
 
     fileprivate static func intersects(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
@@ -1131,13 +1088,9 @@ extension IntersectionMatrix {
         var newLineString = LineString<CoordinateType>()
         newLineString.append(lineString[0])
         for lsFirstCoordIndex in 0..<lineString.count - 2 {
-            guard let lsFirstCoord  = lineString[lsFirstCoordIndex] as? CoordinateType,
-                  let lsSecondCoord = lineString[lsFirstCoordIndex + 1] as? CoordinateType,
-                  let lsThirdCoord  = lineString[lsFirstCoordIndex + 2] as? CoordinateType else {
-                    /// One of the three points on the line string is invalid.  No reduction.
-                    return lineString
-            }
-
+            let lsFirstCoord  = lineString[lsFirstCoordIndex]
+            let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
+            let lsThirdCoord  = lineString[lsFirstCoordIndex + 2]
             firstSlope = slope(lsFirstCoord, lsSecondCoord)
             secondSlope = slope(lsSecondCoord, lsThirdCoord)
 
@@ -1152,22 +1105,20 @@ extension IntersectionMatrix {
         return newLineString
     }
 
+    /// Creates a new linear ring from an original linear ring that starts and ends at the second to last point of the original
     fileprivate static func moveStartBackOne(_ linearRing: LinearRing<CoordinateType>) -> LinearRing<CoordinateType> {
 
         var newLinearRing = LinearRing<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-
-        guard let lrFirstCoord  = linearRing[linearRing.count - 2] as? CoordinateType else {
-            /// Point not valid
+        
+        guard linearRing.count >= 2 else {
             return linearRing
         }
+
+        let lrFirstCoord  = linearRing[linearRing.count - 2]
         newLinearRing.append(lrFirstCoord)
 
         for lrCoordIndex in 0..<linearRing.count - 1 {
-            guard let coord  = linearRing[lrCoordIndex] as? CoordinateType else {
-                    /// One of the points on the linear ring is invalid.  No update.
-                    return linearRing
-            }
-
+            let coord  = linearRing[lrCoordIndex]
             newLinearRing.append(coord)
         }
 
@@ -1188,13 +1139,9 @@ extension IntersectionMatrix {
         var newLinearRing = LinearRing<CoordinateType>()
         newLinearRing.append(linearRing[0])
         for lrFirstCoordIndex in 0..<linearRing.count - 2 {
-            guard let lrFirstCoord  = linearRing[lrFirstCoordIndex] as? CoordinateType,
-                let lrSecondCoord = linearRing[lrFirstCoordIndex + 1] as? CoordinateType,
-                let lrThirdCoord  = linearRing[lrFirstCoordIndex + 2] as? CoordinateType else {
-                    /// One of the three points on the linear ring is invalid.  No reduction.
-                    return linearRing
-            }
-
+            let lrFirstCoord  = linearRing[lrFirstCoordIndex]
+            let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
+            let lrThirdCoord  = linearRing[lrFirstCoordIndex + 2]
             firstSlope = slope(lrFirstCoord, lrSecondCoord)
             secondSlope = slope(lrSecondCoord, lrThirdCoord)
 
@@ -1208,13 +1155,10 @@ extension IntersectionMatrix {
 
         /// Now check whether the first and last segments of the new linear ring are on a straight line.
         /// If they are, change the first point of the linear ring to be the second to last point of the new linear ring.
-        guard let lrFirstCoord  = newLinearRing[0] as? CoordinateType,
-            let lrSecondCoord = newLinearRing[1] as? CoordinateType,
-            let lrThirdCoord  = newLinearRing[newLinearRing.count - 2] as? CoordinateType,
-            let lrFourthCoord = newLinearRing[newLinearRing.count - 1] as? CoordinateType else {
-                return linearRing
-        }
-
+        let lrFirstCoord  = newLinearRing[0]
+        let lrSecondCoord = newLinearRing[1]
+        let lrThirdCoord  = newLinearRing[newLinearRing.count - 2]
+        let lrFourthCoord = newLinearRing[newLinearRing.count - 1]
         firstSlope = slope(lrFirstCoord, lrSecondCoord)
         secondSlope = slope(lrThirdCoord, lrFourthCoord)
 
@@ -1247,13 +1191,9 @@ extension IntersectionMatrix {
             var newLineString = LineString<CoordinateType>()
             newLineString.append(lineString[0])
             for lsFirstCoordIndex in 0..<lineString.count - 2 {
-                guard let lsFirstCoord  = lineString[lsFirstCoordIndex] as? CoordinateType,
-                    let lsSecondCoord = lineString[lsFirstCoordIndex + 1] as? CoordinateType,
-                    let lsThirdCoord  = lineString[lsFirstCoordIndex + 2] as? CoordinateType else {
-                        /// One of the three points on the line string is invalid.  No reduction.
-                        return multiLineString
-                }
-
+                let lsFirstCoord  = lineString[lsFirstCoordIndex]
+                let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
+                let lsThirdCoord  = lineString[lsFirstCoordIndex + 2]
                 firstSlope = slope(lsFirstCoord, lsSecondCoord)
                 secondSlope = slope(lsSecondCoord, lsThirdCoord)
 
@@ -1297,22 +1237,14 @@ extension IntersectionMatrix {
     fileprivate static func subset(_ lineString1: LineString<CoordinateType>, _ lineString2: LineString<CoordinateType>) -> Bool {
 
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
-            guard let ls1FirstCoord  = lineString1[ls1FirstCoordIndex] as? CoordinateType,
-                  let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1] as? CoordinateType else {
-                    /// One of the two points on the line string is invalid.  No subset.
-                    return false
-            }
-
+            let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
+            let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
 
             var segment1IsSubsetOfOtherSegment = false
             for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
-                guard let ls2FirstCoord  = lineString2[ls2FirstCoordIndex] as? CoordinateType,
-                      let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1] as? CoordinateType else {
-                        /// One of the two points on the line string is invalid.  No subset.
-                        return false
-                }
-
+                let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
+                let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
                 let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
 
                 if subset(segment1, segment2) {
@@ -1334,22 +1266,14 @@ extension IntersectionMatrix {
     fileprivate static func subset(_ lineString: LineString<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> Bool {
 
         for lsFirstCoordIndex in 0..<lineString.count - 1 {
-            guard let lsFirstCoord  = lineString[lsFirstCoordIndex] as? CoordinateType,
-                let lsSecondCoord = lineString[lsFirstCoordIndex + 1] as? CoordinateType else {
-                    /// One of the two points on the line string is invalid.  No subset.
-                    return false
-            }
-
+            let lsFirstCoord  = lineString[lsFirstCoordIndex]
+            let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: lsFirstCoord, right: lsSecondCoord)
 
             var segment1IsSubsetOfOtherSegment = false
             for lrFirstCoordIndex in 0..<linearRing.count - 1 {
-                guard let lrFirstCoord  = linearRing[lrFirstCoordIndex] as? CoordinateType,
-                    let lrSecondCoord = linearRing[lrFirstCoordIndex + 1] as? CoordinateType else {
-                        /// One of the two points on the line ring is invalid.  No subset.
-                        return false
-                }
-
+                let lrFirstCoord  = linearRing[lrFirstCoordIndex]
+                let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
                 let segment2 = Segment<CoordinateType>(left: lrFirstCoord, right: lrSecondCoord)
 
                 if subset(segment1, segment2) {
@@ -1372,24 +1296,16 @@ extension IntersectionMatrix {
     fileprivate static func subset(_ lineString1: LineString<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> Bool {
 
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
-            guard let ls1FirstCoord  = lineString1[ls1FirstCoordIndex] as? CoordinateType,
-                let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1] as? CoordinateType else {
-                    /// One of the two points on the line string is invalid.  No subset.
-                    return false
-            }
-
+            let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
+            let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
 
             var segment1IsSubsetOfOtherSegment = false
 
             for lineString2 in multiLineString {
                 for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
-                    guard let ls2FirstCoord  = lineString2[ls2FirstCoordIndex] as? CoordinateType,
-                        let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1] as? CoordinateType else {
-                            /// One of the two points on the line string is invalid.  No subset.
-                            return false
-                    }
-
+                    let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
+                    let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
                     let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
 
                     if subset(segment1, segment2) {
@@ -1425,18 +1341,12 @@ extension IntersectionMatrix {
         disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
-        /// Define the MultiPoint geometry that might be returned
-        var resultGeometryMultiPoint = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-
-        /// Define the LineString geometry that might be returned
-        var resultGeometryLineString = LineString<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-
         /// Check if any of the endpoints of the first line string equals either of the two endpoints of the second line string.
         guard let lineStringBoundary1 = lineString1.boundary() as? MultiPoint<CoordinateType>,
               let lineStringBoundary2 = lineString2.boundary() as? MultiPoint<CoordinateType> else {
                 return (nil, disjoint)
         }
-        var geometriesIntersect = intersects(lineStringBoundary1, lineStringBoundary2)
+        let geometriesIntersect = intersects(lineStringBoundary1, lineStringBoundary2)
         if geometriesIntersect {
             matrixIntersects[.boundary, .boundary] = .zero
         }
@@ -1452,22 +1362,14 @@ extension IntersectionMatrix {
 
         /// Interior, interior
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
-            guard let ls1FirstCoord  = lineString1[ls1FirstCoordIndex] as? CoordinateType,
-                  let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1] as? CoordinateType else {
-                    /// One of the two points on the line string is invalid.  No intersection.
-                    return (nil, disjoint)
-            }
-
+            let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
+            let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
-                guard let ls2FirstCoord  = lineString2[ls2FirstCoordIndex] as? CoordinateType,
-                      let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1] as? CoordinateType else {
-                        /// One of the two points on the line string is invalid.  No intersection.
-                        return (nil, disjoint)
-                }
-
+                let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
+                let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
                 let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
                 let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
 
@@ -1539,12 +1441,6 @@ extension IntersectionMatrix {
         disjoint[.exterior, .interior] = .one
         disjoint[.exterior, .exterior] = .two
 
-        /// Define the MultiPoint geometry that might be returned
-        var resultGeometryMultiPoint = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-
-        /// Define the LineString geometry that might be returned
-        var resultGeometryLineString = LineString<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-
         /// Get the line string boundary
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
                 return (nil, disjoint)
@@ -1558,22 +1454,14 @@ extension IntersectionMatrix {
 
         /// Interior, interior
         for ls1FirstCoordIndex in 0..<lineString.count - 1 {
-            guard let ls1FirstCoord  = lineString[ls1FirstCoordIndex] as? CoordinateType,
-                let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1] as? CoordinateType else {
-                    /// One of the two points on the line string is invalid.  No intersection.
-                    return (nil, disjoint)
-            }
-
+            let ls1FirstCoord  = lineString[ls1FirstCoordIndex]
+            let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for ls2FirstCoordIndex in 0..<linearRing.count - 1 {
-                guard let ls2FirstCoord  = linearRing[ls2FirstCoordIndex] as? CoordinateType,
-                    let ls2SecondCoord = linearRing[ls2FirstCoordIndex + 1] as? CoordinateType else {
-                        /// One of the two points on the line string is invalid.  No intersection.
-                        return (nil, disjoint)
-                }
-
+                let ls2FirstCoord  = linearRing[ls2FirstCoordIndex]
+                let ls2SecondCoord = linearRing[ls2FirstCoordIndex + 1]
                 let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
                 let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
 
@@ -1625,19 +1513,13 @@ extension IntersectionMatrix {
         disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
-        /// Define the MultiPoint geometry that might be returned
-        var resultGeometryMultiPoint = MultiPoint<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-
-        /// Define the LineString geometry that might be returned
-        var resultGeometryLineString = LineString<Coordinate2D>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-
         /// Check if any of the endpoints of the first line string equals either of the two endpoints of the second line string.
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType>,
             let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
                 return (nil, disjoint)
         }
 
-        var geometriesIntersect = intersects(lineStringBoundary, multiLineStringBoundary)
+        let geometriesIntersect = intersects(lineStringBoundary, multiLineStringBoundary)
         if geometriesIntersect {
             matrixIntersects[.boundary, .boundary] = .zero
         }
@@ -1650,23 +1532,15 @@ extension IntersectionMatrix {
 
         /// Interior, interior
         for ls1FirstCoordIndex in 0..<lineString.count - 1 {
-            guard let ls1FirstCoord  = lineString[ls1FirstCoordIndex] as? CoordinateType,
-                let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1] as? CoordinateType else {
-                    /// One of the two points on the line string is invalid.  No intersection.
-                    return (nil, disjoint)
-            }
-
+            let ls1FirstCoord  = lineString[ls1FirstCoordIndex]
+            let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for lineString2 in multiLineString {
                 for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
-                    guard let ls2FirstCoord  = lineString2[ls2FirstCoordIndex] as? CoordinateType,
-                        let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1] as? CoordinateType else {
-                            /// One of the two points on the line string is invalid.  No intersection.
-                            return (nil, disjoint)
-                    }
-
+                    let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
+                    let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
                     let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
                     let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
 
