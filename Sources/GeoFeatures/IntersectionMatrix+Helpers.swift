@@ -1393,6 +1393,45 @@ extension IntersectionMatrix {
         return true
     }
 
+    /// Is the frist multi line string contained in or a subset of the second multi line string?
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    /// TODO:
+    fileprivate static func subset(_ multiLineString1: MultiLineString<CoordinateType>, _ multiLineString2: MultiLineString<CoordinateType>) -> Bool {
+
+        for lineString1 in multiLineString1 {
+            for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
+                let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
+                let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
+                let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+
+                var segment1IsSubsetOfOtherSegment = false
+
+                for lineString2 in multiLineString2 {
+                    for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
+                        let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
+                        let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
+                        let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                        
+                        if subset(segment1, segment2) {
+                            segment1IsSubsetOfOtherSegment = true
+                            break
+                        }
+                    }
+
+                    if segment1IsSubsetOfOtherSegment {
+                        break
+                    }
+                }
+
+                if !segment1IsSubsetOfOtherSegment {
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+
     fileprivate static func generateIntersection(_ lineString1: LineString<CoordinateType>, _ lineString2: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
@@ -1579,7 +1618,7 @@ extension IntersectionMatrix {
         disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
-        /// Check if any of the endpoints of the first line string equals either of the two endpoints of the second line string.
+        /// Check if any of the endpoints of the line string equals any of the endpoints of the multi line string.
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType>,
             let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
                 return (nil, disjoint)
@@ -1735,7 +1774,7 @@ extension IntersectionMatrix {
         disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
-        /// Check if any of the endpoints of the first line string equals either of the two endpoints of the second line string.
+        /// Get the multi line string boundary
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
                 return (nil, disjoint)
         }
@@ -1790,6 +1829,107 @@ extension IntersectionMatrix {
 
         /// Exterior, boundary
         if relatedBmlsLr.firstTouchesSecondExterior {
+            matrixIntersects[.exterior, .boundary] = .zero
+        }
+
+        /// Return the matrix.
+        /// We will not calculate and return the geometry now.
+        return (nil, matrixIntersects)
+    }
+
+    fileprivate static func generateIntersection(_ multiLineString1: MultiLineString<CoordinateType>, _ multiLineString2: MultiLineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Default intersection matrix
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .exterior] = .two
+
+        /// Disjoint
+        var disjoint = IntersectionMatrix()
+        disjoint[.interior, .exterior] = .one
+        disjoint[.boundary, .exterior] = .zero
+        disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .boundary] = .zero
+        disjoint[.exterior, .exterior] = .two
+
+        /// Check if any of the endpoints of the first multi line string equals any of the endpoints of the second multi line string.
+        guard let multiLineStringBoundary1 = multiLineString1.boundary() as? MultiPoint<CoordinateType>,
+            let multiLineStringBoundary2 = multiLineString2.boundary() as? MultiPoint<CoordinateType> else {
+                return (nil, disjoint)
+        }
+
+        let geometriesIntersect = intersects(multiLineStringBoundary1, multiLineStringBoundary2)
+        if geometriesIntersect {
+            matrixIntersects[.boundary, .boundary] = .zero
+        }
+
+        ///
+        /// Need to know the following:
+        /// - Should the intersection function above return an IntersectionEvent or LineSegmentIntersection or?
+        /// - Does "Set" work with sets of geometries, points, or other objects?
+        ///
+
+        /// Interior, interior
+        for lineString1 in multiLineString1 {
+            for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
+                let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
+                let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
+                let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+
+                /// Any intersection from here on is guaranteed to be in the interior.
+                for lineString2 in multiLineString2 {
+                    for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
+                        let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
+                        let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
+                        let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                        let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
+
+                        /// Interior, interior
+                        if lineSegmentIntersection.geometry?.dimension == .one {
+                            matrixIntersects[.interior, .interior] = .one
+                        } else if matrixIntersects[.interior, .interior] != .one && lineSegmentIntersection.interiorsTouchAtPoint {
+                            matrixIntersects[.interior, .interior] = .zero
+                        }
+                    }
+                }
+            }
+        }
+
+        /// Interior, boundary
+        let relatedBmls2MLs1 = relatedTo(multiLineStringBoundary2, multiLineString1)
+        if relatedBmls2MLs1.firstTouchesSecondInterior {
+            matrixIntersects[.interior, .boundary] = .zero
+        }
+
+        /// Interior, exterior
+        let reducedMLs1 = reduce(multiLineString1)
+        let reducedMls2 = reduce(multiLineString2)
+        if !subset(reducedMLs1, reducedMls2) {
+            matrixIntersects[.interior, .exterior] = .one
+        }
+
+        /// Boundary, interior
+        let relatedBmls1Mls2 = relatedTo(multiLineStringBoundary1, multiLineString2)
+        if relatedBmls1Mls2.firstTouchesSecondInterior {
+            matrixIntersects[.boundary, .interior] = .zero
+        }
+
+        /// Boundary, boundary
+        if relatedBmls1Mls2.firstTouchesSecondBoundary {
+            matrixIntersects[.boundary, .boundary] = .zero
+        }
+
+        /// Boundary, exterior
+        if relatedBmls1Mls2.firstTouchesSecondExterior {
+            matrixIntersects[.boundary, .exterior] = .zero
+        }
+
+        /// Exterior, interior
+        if !subset(reducedMLs1, reducedMls2) {
+            matrixIntersects[.exterior, .interior] = .one
+        }
+
+        /// Exterior, boundary
+        if relatedBmls2MLs1.firstTouchesSecondExterior {
             matrixIntersects[.exterior, .boundary] = .zero
         }
 
