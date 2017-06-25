@@ -157,7 +157,7 @@ extension IntersectionMatrix {
     }
 
     ///
-    /// Dimension .zero and dimesion .zero
+    /// Dimension .zero and dimension .zero
     ///
 
     fileprivate static func generateIntersection(_ point1: Point<CoordinateType>, _ point2: Point<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
@@ -504,6 +504,20 @@ extension IntersectionMatrix {
         }
         return true
     }
+    
+    fileprivate static func subset(_ point: Point<CoordinateType>, _ lineString: LineString<CoordinateType>) -> Bool {
+        
+        for firstCoordIndex in 0..<lineString.count - 1 {
+            let firstCoord  = lineString[firstCoordIndex]
+            let secondCoord = lineString[firstCoordIndex + 1]
+            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let location = pointIsOnLineSegment(point, segment: segment)
+            if location == .onInterior || location == .onBoundary {
+                return true
+            }
+        }
+        return false
+    }
 
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ lineString: LineString<CoordinateType>) -> RelatedTo {
 
@@ -595,6 +609,110 @@ extension IntersectionMatrix {
             }
         }
         return relatedTo
+    }
+
+    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
+    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
+    fileprivate static func relatedTo(_ point: Point<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        guard let polygonBoundary = simplePolygon.boundary() as? MultiLineString<CoordinateType>,
+            polygonBoundary.count > 0,
+            let lineString = polygonBoundary.first,
+            lineString.count > 0 else {
+                return relatedToResult
+        }
+
+        /// Check if the point is on the boundary of the polygon
+        var points = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        points.append(point)
+        let tempRelatedToResult = relatedTo(points, lineString)
+        if tempRelatedToResult.firstTouchesSecondInterior || tempRelatedToResult.firstTouchesSecondBoundary {
+            relatedToResult.firstTouchesSecondBoundary = true
+            return relatedToResult
+        }
+
+        let pointCoord = point.coordinate
+
+        var secondCoord = lineString[lineString.count + 1]
+
+        var isSubset = false
+
+        for firstCoordIndex in 0..<lineString.count - 1 {
+            let firstCoord  = lineString[firstCoordIndex]
+
+            if ((firstCoord.y >= pointCoord.y) != (secondCoord.y >= pointCoord.y)) &&
+                (pointCoord.x <= (secondCoord.x - firstCoord.x) * (pointCoord.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
+                isSubset = !isSubset
+            }
+
+            secondCoord = firstCoord
+        }
+
+        relatedToResult = RelatedTo() /// Resets to default values
+
+        if isSubset {
+            relatedToResult.firstTouchesSecondInterior = true
+        } else {
+            relatedToResult.firstTouchesSecondExterior = true
+        }
+
+        return relatedToResult
+    }
+
+    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// It is assumed that the polygon boundary is a collection of LinearRings with the first 
+        /// being the main polygon boundary and the rest being the holes inside the polygon.
+        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+            polygonBoundary.count > 0 else {
+            return relatedToResult
+        }
+
+        /// Check if any of the points are on the boundary
+        let pointsRelatedToBoundary = relatedTo(points, polygonBoundary)
+        if pointsRelatedToBoundary.firstTouchesSecondInterior || pointsRelatedToBoundary.firstTouchesSecondBoundary {
+            relatedToResult.firstTouchesSecondBoundary = true
+        }
+
+        for tempPoint in points {
+
+            var firstTime = true
+
+            for lineString in polygonBoundary {
+
+                let tempPolygon = Polygon<CoordinateType>(outerRing: lineString, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+                let tempRelatedToResult = relatedTo(tempPoint, tempPolygon)
+
+                /// The first lineString is the outer boundary of the polygon
+                if firstTime {
+                    if tempRelatedToResult.firstTouchesSecondExterior {
+                        relatedToResult.firstTouchesSecondExterior = true
+                        break
+                    } else if tempRelatedToResult.firstTouchesSecondBoundary {
+                        relatedToResult.firstTouchesSecondBoundary = true
+                        break
+                    } else {
+                        relatedToResult.firstTouchesSecondInterior = true
+                    }
+                    firstTime = false
+
+                } else {
+                    /// The algorithm will only reach this point if the point is on the interior of the main polygon.
+                    /// Note, too, that the tempPolygon above now refers to one of the main polygon's holes.
+                    /// If the point is on the interior of a hole, it is on the exterior of the main polygon.
+                    if tempRelatedToResult.firstTouchesSecondInterior {
+                        relatedToResult.firstTouchesSecondExterior = true
+                        break
+                    }
+                }
+            }
+        }
+        return relatedToResult
     }
 
     fileprivate static func intersect(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
@@ -839,14 +957,37 @@ extension IntersectionMatrix {
     }
 
     ///
-    /// Dimension .one and dimesion .one
+    /// Dimension .zero and dimension .two
     ///
 
-///    The IM for the two disjoint geometries of dimension .one is
-///    (1) FF1FF0102, if both geometries are not LinearRings, or
-///    (2) FF1FFF102, if the first geometry is a LinearRing,
-///    (3) FF1FF01F2, if the second geometry is a LinearRing, or
-///    (4) FF1FFF1F2, if both geometries are LinearRings.
+    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Default intersection matrix
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .interior] = .two
+        matrixIntersects[.exterior, .boundary] = .one
+        matrixIntersects[.exterior, .exterior] = .two
+
+        var points = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        points.append(point)
+
+        let tempRelatedToResult = relatedTo(points, polygon)
+
+        if tempRelatedToResult.firstTouchesSecondInterior {
+            matrixIntersects[.interior, .interior] = .zero
+        } else if tempRelatedToResult.firstTouchesSecondBoundary {
+            matrixIntersects[.interior, .boundary] = .zero
+        } else if tempRelatedToResult.firstTouchesSecondExterior {
+            matrixIntersects[.interior, .exterior] = .zero
+        }
+
+        /// No intersection
+        return (nil, matrixIntersects)
+    }
+
+    ///
+    /// Dimension .one and dimesion .one
+    ///
 
     struct LineSegmentIntersection {
 
@@ -1937,4 +2078,12 @@ extension IntersectionMatrix {
         /// We will not calculate and return the geometry now.
         return (nil, matrixIntersects)
     }
+
+    ///
+    /// Dimension .one and dimension .two
+    ///
+
+    ///
+    /// Dimension .two and dimension .two
+    ///
 }
