@@ -985,6 +985,32 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
+    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Default intersection matrix
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .interior] = .two
+        matrixIntersects[.exterior, .boundary] = .one
+        matrixIntersects[.exterior, .exterior] = .two
+
+        let tempRelatedToResult = relatedTo(points, polygon)
+
+        if tempRelatedToResult.firstTouchesSecondInterior {
+            matrixIntersects[.interior, .interior] = .zero
+        }
+
+        if tempRelatedToResult.firstTouchesSecondBoundary {
+            matrixIntersects[.interior, .boundary] = .zero
+        }
+
+        if tempRelatedToResult.firstTouchesSecondExterior {
+            matrixIntersects[.interior, .exterior] = .zero
+        }
+
+        /// No intersection
+        return (nil, matrixIntersects)
+    }
+
     ///
     /// Dimension .one and dimesion .one
     ///
