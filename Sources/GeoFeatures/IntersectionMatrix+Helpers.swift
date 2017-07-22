@@ -918,7 +918,6 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
     fileprivate static func relatedTo(_ lineString: LineString<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -954,6 +953,45 @@ extension IntersectionMatrix {
 
             if segmentRelatedToResult.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
                 relatedToResult.firstBoundaryTouchesSecondBoundary = segmentRelatedToResult.firstBoundaryTouchesSecondBoundary
+            }
+
+            if segmentRelatedToResult.firstTouchesSecondExterior > relatedToResult.firstTouchesSecondExterior {
+                relatedToResult.firstTouchesSecondExterior = segmentRelatedToResult.firstTouchesSecondExterior
+            }
+
+        }
+
+        return relatedToResult
+    }
+
+    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
+    fileprivate static func relatedTo(_ linearRing: LinearRing<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        guard let polygonBoundary = simplePolygon.boundary() as? MultiLineString<CoordinateType>,
+            polygonBoundary.count > 0,
+            let mainPolygon = polygonBoundary.first,
+            mainPolygon.count > 0 else {
+                return relatedToResult
+        }
+
+        /// Check the relationships between each line segment of the linear ring and the simple polygon
+
+        for firstCoordIndex in 0..<linearRing.count - 1 {
+
+            let firstCoord  = linearRing[firstCoordIndex]
+            let secondCoord = linearRing[firstCoordIndex + 1]
+            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+
+            let segmentRelatedToResult = relatedTo(segment, simplePolygon)
+
+            if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
+            }
+
+            if segmentRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
+                relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
             }
 
             if segmentRelatedToResult.firstTouchesSecondExterior > relatedToResult.firstTouchesSecondExterior {
@@ -2483,13 +2521,16 @@ extension IntersectionMatrix {
 
                 isMainPolygon = false
 
+                /// If the line string does not touch the interior of the main polygon, we're done.
+                if !lineStringInsideMainPolygon {
+                    return (nil, matrixIntersects)
+                }
+
             } else {
 
                 /// We will only consider cases here where the line string is inside the main polygon.
                 /// If the line string touches only the main polygon boundary or is outside the main polygon, 
                 /// those cases have already been addressed.
-
-                if !lineStringInsideMainPolygon { continue }
 
                 if lineStringRelatedToResult.firstTouchesSecondExterior > matrixIntersects[.interior, .interior] {
                     matrixIntersects[.interior, .interior] = lineStringRelatedToResult.firstTouchesSecondExterior
@@ -2533,6 +2574,89 @@ extension IntersectionMatrix {
         /// before we know about the value of the boundary, interior entry.
         if (!boundaryPoint1OnPolygonBoundary && !boundaryPoint1OutsidePolygon) || (!boundaryPoint2OnPolygonBoundary && !boundaryPoint2OutsidePolygon) {
             matrixIntersects[.boundary, .interior] = .zero
+        }
+
+        /// No intersection
+        return (nil, matrixIntersects)
+    }
+
+    fileprivate static func generateIntersection(_ linearRing: LinearRing<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Default intersection matrix
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .interior] = .two
+        matrixIntersects[.exterior, .exterior] = .two
+
+        /// Get the polygon boundary
+        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+            polygonBoundary.count > 0,
+            let mainPolygon = polygonBoundary.first,
+            mainPolygon.count > 0 else {
+                return (nil, matrixIntersects)
+        }
+
+        /// Check whether the linear ring is completely contained in the polygon boundary.
+        /// If not, the exterior of the linear ring must intersect with the polygon boundary.
+        let reducedLr  = reduce(linearRing)
+        let reducedPB = reduce(polygonBoundary)
+        if subset(reducedLr, reducedPB) {
+            matrixIntersects[.interior, .boundary] = .one
+            return (nil, matrixIntersects)
+        } else {
+            matrixIntersects[.exterior, .boundary] = .one
+        }
+
+        /// From here on we know the linear ring is not completely contained in the polygon boundary
+
+        var linearRingInsideMainPolygon     = false /// Implies part of the linear ring lies inside the polygon
+
+        /// Relate the linear ring to the main polygon and each of its holes
+        var isMainPolygon = true
+        for lineStringSimplePolygon in polygonBoundary {
+
+            let tempPolygon = Polygon<CoordinateType>(outerRing: lineStringSimplePolygon, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+            let linearRingRelatedToResult = relatedTo(linearRing, tempPolygon)
+
+            if isMainPolygon {
+
+                if linearRingRelatedToResult.firstTouchesSecondInterior > .empty {
+                    linearRingInsideMainPolygon = true
+                }
+
+                if linearRingRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
+                    matrixIntersects[.interior, .boundary] = linearRingRelatedToResult.firstInteriorTouchesSecondBoundary
+                }
+
+                if linearRingRelatedToResult.firstTouchesSecondExterior == .one {
+                    matrixIntersects[.interior, .exterior] = .one
+                }
+
+                isMainPolygon = false
+
+                /// If the linear ring does not touch the interior of the main polygon, we're done.
+                if !linearRingInsideMainPolygon {
+                    return (nil, matrixIntersects)
+                }
+
+            } else {
+
+                /// We will only consider cases here where the linear ring is inside the main polygon.
+                /// If the linear ring touches only the main polygon boundary or is outside the main polygon,
+                /// those cases have already been addressed.
+
+                if linearRingRelatedToResult.firstTouchesSecondExterior > matrixIntersects[.interior, .interior] {
+                    matrixIntersects[.interior, .interior] = linearRingRelatedToResult.firstTouchesSecondExterior
+                }
+
+                if linearRingRelatedToResult.firstTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
+                    matrixIntersects[.interior, .boundary] = linearRingRelatedToResult.firstTouchesSecondBoundary
+                }
+
+                if linearRingRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
+                    matrixIntersects[.interior, .exterior] = linearRingRelatedToResult.firstTouchesSecondInterior
+                }
+            }
         }
 
         /// No intersection
