@@ -691,6 +691,61 @@ extension IntersectionMatrix {
         return relatedTo(point, simplePolygon)
     }
 
+    /// Assume here that the polygon is a general polygon with holes.
+    /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
+    fileprivate static func relatedToGeneral(_ point: Point<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+            polygonBoundary.count > 0,
+            let lineString = polygonBoundary.first,
+            lineString.count > 0 else {
+                return relatedToResult
+        }
+
+        /// Get the relationship between the point and the main polygon
+        let tempPolygon = Polygon<CoordinateType>(outerRing: polygonBoundary[0], precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        let pointRelatedToResult = relatedTo(point, tempPolygon)
+
+        /// Check if the point is on the exterior of the main polygon
+        if pointRelatedToResult.firstTouchesSecondExterior > .empty {
+            return pointRelatedToResult
+        }
+
+        /// Check if the point is on the boundary of the main polygon
+        if pointRelatedToResult.firstTouchesSecondBoundary > .empty {
+            return pointRelatedToResult
+        }
+
+        /// From this point on, the point must be on the interior of the main polygon.
+        /// Now we have to check to see if the point is on the boundary or interior of any holes.
+
+        for index in 1..<polygonBoundary.count {
+
+            /// Get the relationship between the point and the hole
+            let tempPolygon = Polygon<CoordinateType>(outerRing: polygonBoundary[index], precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            let pointRelatedToResult = relatedTo(point, tempPolygon)
+
+            /// Check if the point is on the interior of the hole
+            if pointRelatedToResult.firstTouchesSecondInterior > .empty {
+                relatedToResult.firstTouchesSecondExterior = .zero
+                return relatedToResult
+            }
+
+            /// Check if the point is on the boundary of the hole
+            if pointRelatedToResult.firstTouchesSecondBoundary > .empty {
+                return pointRelatedToResult
+            }
+
+        }
+
+        /// If we've gotten this far, the point must on the interior of the polygon
+        relatedToResult.firstInteriorTouchesSecondInterior = .zero
+
+        return relatedToResult
+    }
+
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -742,6 +797,44 @@ extension IntersectionMatrix {
                 }
             }
         }
+        return relatedToResult
+    }
+
+    /// Assume here that the polygon is a general polygon with holes.
+    /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
+    fileprivate static func relatedToGeneral(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+            polygonBoundary.count > 0,
+            let lineString = polygonBoundary.first,
+            lineString.count > 0 else {
+                return relatedToResult
+        }
+
+        for point in points {
+
+            /// Get the relationships between each point and the general polygon
+            let pointRelatedToResult = relatedToGeneral(point, polygon)
+
+            /// Check if the point is on the interior of the polygon
+            if pointRelatedToResult.firstTouchesSecondInterior > .empty {
+                relatedToResult.firstInteriorTouchesSecondInterior = .zero
+            }
+
+            /// Check if the point is on the boundary of the polygon
+            if pointRelatedToResult.firstTouchesSecondBoundary > .empty {
+                relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+            }
+
+            /// Check if the point is on the exterior of the polygon
+            if pointRelatedToResult.firstTouchesSecondInterior > .empty {
+                relatedToResult.firstTouchesSecondExterior = .zero
+            }
+
+        }
+
         return relatedToResult
     }
 
@@ -998,6 +1091,55 @@ extension IntersectionMatrix {
                 relatedToResult.firstTouchesSecondExterior = segmentRelatedToResult.firstTouchesSecondExterior
             }
 
+        }
+
+        return relatedToResult
+    }
+
+    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
+    fileprivate static func relatedTo(_ multiLineString: MultiLineString<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        guard let polygonBoundary = simplePolygon.boundary() as? MultiLineString<CoordinateType>,
+            polygonBoundary.count > 0,
+            let mainPolygon = polygonBoundary.first,
+            mainPolygon.count > 0 else {
+                return relatedToResult
+        }
+
+        /// Check the relationships between each line segment of the line string and the simple polygon
+
+        for lineString in multiLineString {
+            for firstCoordIndex in 0..<lineString.count - 1 {
+
+                let firstCoord  = lineString[firstCoordIndex]
+                let secondCoord = lineString[firstCoordIndex + 1]
+                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+
+                let segmentRelatedToResult = relatedTo(segment, simplePolygon)
+
+                if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                    relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
+                }
+
+                if segmentRelatedToResult.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
+                    relatedToResult.firstBoundaryTouchesSecondInterior = segmentRelatedToResult.firstBoundaryTouchesSecondInterior
+                }
+
+                if segmentRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
+                    relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
+                }
+
+                if segmentRelatedToResult.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
+                    relatedToResult.firstBoundaryTouchesSecondBoundary = segmentRelatedToResult.firstBoundaryTouchesSecondBoundary
+                }
+
+                if segmentRelatedToResult.firstTouchesSecondExterior > relatedToResult.firstTouchesSecondExterior {
+                    relatedToResult.firstTouchesSecondExterior = segmentRelatedToResult.firstTouchesSecondExterior
+                }
+
+            }
         }
 
         return relatedToResult
@@ -2656,6 +2798,127 @@ extension IntersectionMatrix {
                 if linearRingRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
                     matrixIntersects[.interior, .exterior] = linearRingRelatedToResult.firstTouchesSecondInterior
                 }
+            }
+        }
+
+        /// No intersection
+        return (nil, matrixIntersects)
+    }
+
+    fileprivate static func generateIntersection(_ multiLineString: MultiLineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        /// Default intersection matrix
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .interior] = .two
+        matrixIntersects[.exterior, .exterior] = .two
+
+        /// Get the polygon boundary
+        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+            polygonBoundary.count > 0,
+            let mainPolygon = polygonBoundary.first,
+            mainPolygon.count > 0 else {
+                return (nil, matrixIntersects)
+        }
+
+        /// Check whether the multi line string is completely contained in the polygon boundary
+        let reducedMls  = reduce(multiLineString)
+        let reducedPB = reduce(polygonBoundary)
+        if subset(reducedMls, reducedPB) {
+            matrixIntersects[.interior, .boundary] = .one
+            matrixIntersects[.boundary, .boundary] = .zero
+            return (nil, matrixIntersects)
+        }
+
+        /// Check whether the polygon boundary is completely contained in the multi line string.
+        /// If it is, this guarantees matrixIntersects[.exterior, .boundary] = .empty
+        matrixIntersects[.exterior, .boundary] = .one
+        if subset(reducedPB, reducedMls) {
+            matrixIntersects[.exterior, .boundary] = .empty
+        }
+
+        /// From here on we know the multi line string is not completely contained in the polygon boundary,
+        /// and we know whether the polygon boundary is completely contained in the multi line string.
+
+        /// Get the endpoints of the multi line string (the multi line string boundary) and their relationship to the polygon.
+        /// Set some intersection matrix values depending on the result.
+
+        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+            return (nil, matrixIntersects)
+        }
+
+        let boundaryPointsRelatedToResult = relatedToGeneral(multiLineStringBoundary, polygon)
+
+        if boundaryPointsRelatedToResult.firstBoundaryTouchesSecondInterior > .empty {
+            matrixIntersects[.boundary, .interior] = boundaryPointsRelatedToResult.firstBoundaryTouchesSecondInterior
+        }
+
+        if boundaryPointsRelatedToResult.firstBoundaryTouchesSecondBoundary > .empty {
+            matrixIntersects[.boundary, .boundary] = boundaryPointsRelatedToResult.firstBoundaryTouchesSecondBoundary
+        }
+
+        if boundaryPointsRelatedToResult.firstTouchesSecondExterior > .empty {
+            matrixIntersects[.boundary, .exterior] = boundaryPointsRelatedToResult.firstTouchesSecondExterior
+        }
+
+        var multiLineStringInsideMainPolygon    = false /// Implies part of the multi line string lies inside the polygon
+
+        /// Relate the multi line string to the main polygon and each of its holes
+        var isMainPolygon = true
+        var multiLineStringCompletelyContainedInHole = false
+        for lineStringSimplePolygon in polygonBoundary {
+
+            let tempPolygon = Polygon<CoordinateType>(outerRing: lineStringSimplePolygon, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+            let multiLineStringRelatedToResult = relatedTo(multiLineString, tempPolygon)
+
+            if isMainPolygon {
+
+                if multiLineStringRelatedToResult.firstTouchesSecondInterior > .empty {
+                    multiLineStringInsideMainPolygon = true
+                }
+
+                if multiLineStringRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
+                    matrixIntersects[.interior, .boundary] = multiLineStringRelatedToResult.firstInteriorTouchesSecondBoundary
+                }
+
+                if multiLineStringRelatedToResult.firstTouchesSecondExterior == .one {
+                    matrixIntersects[.interior, .exterior] = .one
+                }
+
+                isMainPolygon = false
+
+                /// If the multi line string does not touch the interior of the main polygon, we're done.
+                if !multiLineStringInsideMainPolygon {
+                    return (nil, matrixIntersects)
+                }
+
+            } else {
+
+                /// We will only consider cases here where the multi line string is inside the main polygon
+                /// and not completely contained in the polygon boundary.
+                /// If the multi line string touches only the polygon boundary or is outside the main polygon,
+                /// those cases have already been addressed.
+
+                if multiLineStringRelatedToResult.firstInteriorTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
+                    matrixIntersects[.interior, .boundary] = multiLineStringRelatedToResult.firstInteriorTouchesSecondBoundary
+                }
+
+                if multiLineStringRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
+                    matrixIntersects[.interior, .exterior] = multiLineStringRelatedToResult.firstTouchesSecondInterior
+                }
+
+                if multiLineStringRelatedToResult.firstTouchesSecondExterior == .empty {
+                    multiLineStringCompletelyContainedInHole = true
+                }
+            }
+        }
+
+        /// We have to check whether the multi line string is completely contained in the main polygon and in a hole
+        /// in order to set the interior, interior entry.
+        if multiLineStringInsideMainPolygon {
+            matrixIntersects[.interior, .interior] = .one
+            if multiLineStringCompletelyContainedInHole {
+                matrixIntersects[.interior, .interior] = .empty
             }
         }
 
