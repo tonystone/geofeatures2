@@ -121,11 +121,11 @@ internal class Event<CoordinateType: Coordinate & CopyConstructable> {
 ///
 extension Event: Comparable {}
 
-internal func == <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
+internal func == <CoordinateType>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
     return lhs.coordinate == rhs.coordinate && lhs.order == rhs.order
 }
 
-internal func < <CoordinateType: Coordinate & CopyConstructable>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
+internal func < <CoordinateType>(lhs: Event<CoordinateType>, rhs: Event<CoordinateType>) -> Bool {
     ///
     /// if p and q are two event points then we
     /// have p ≺ q if and only if py > qy holds

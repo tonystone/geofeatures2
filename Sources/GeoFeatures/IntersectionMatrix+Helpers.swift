@@ -1033,7 +1033,7 @@ extension IntersectionMatrix {
             if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
                 relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
             }
-            
+
             if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
                 relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
             }
@@ -1400,7 +1400,7 @@ extension IntersectionMatrix {
             if segmentRelatedToResult.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
                 relatedToResult.firstExteriorTouchesSecondInterior = segmentRelatedToResult.firstExteriorTouchesSecondInterior
             }
-            
+
             if segmentRelatedToResult.firstExteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
                 relatedToResult.firstExteriorTouchesSecondBoundary = segmentRelatedToResult.firstExteriorTouchesSecondBoundary
             }
@@ -1663,7 +1663,7 @@ extension IntersectionMatrix {
                 relatedToResult.firstInteriorTouchesSecondBoundary = .one
                 relatedToResult.firstInteriorTouchesSecondExterior = .two
                 return relatedToResult
-            }  else if innerRings1.count > 0 && innerRings2.count == 0 {
+            } else if innerRings1.count > 0 && innerRings2.count == 0 {
                 relatedToResult.firstBoundaryTouchesSecondInterior = .one
                 return relatedToResult
             }
@@ -1778,12 +1778,11 @@ extension IntersectionMatrix {
         let relatedToPolygons = relatedTo(simplePolygon1, simplePolygon2)
         return areMainPolygonBoundariesIdentical(relatedToPolygons)
     }
-    
+
     fileprivate static func countIdentical(_ linearRingArray1: [LinearRing<CoordinateType>], _ linearRingArray2: [LinearRing<CoordinateType>]) -> Bool {
 
         return linearRingArray1.count == linearRingArray2.count
     }
-
 
     fileprivate static func holeCountIdentical(_ polygon1: Polygon<CoordinateType>, _ polygon2: Polygon<CoordinateType>) -> Bool {
 
@@ -1829,31 +1828,31 @@ extension IntersectionMatrix {
 
         return true
     }
-    
-    /// Using a RelateTo structure which compares two sets of linear ring arrays, 
+
+    /// Using a RelateTo structure which compares two sets of linear ring arrays,
     /// does the first array of linear rings match a subset of the linear rings in the second array?
     fileprivate static func matchesSubset(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
-        
+
         return relatedToLinearRingArrays.firstBoundaryTouchesSecondBoundary > .empty &&
             relatedToLinearRingArrays.firstTouchesSecondInterior == .empty &&
             relatedToLinearRingArrays.firstTouchesSecondExterior == .empty
     }
-    
+
     /// Using a RelateTo structure which compares two sets of linear ring arrays,
     /// is the first array of linear rings completely inside a subset of the linear rings in the second array?
     /// This means the two sets do not touch on a boundary.
     fileprivate static func firstInsideSecond(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
-        
+
         return relatedToLinearRingArrays.firstBoundaryTouchesSecondBoundary == .empty &&
             relatedToLinearRingArrays.firstTouchesSecondInterior > .empty &&
             relatedToLinearRingArrays.firstTouchesSecondExterior == .empty
     }
-    
+
     /// Using a RelateTo structure which compares two sets of linear ring arrays,
     /// is the first array of linear rings completely outside of the linear rings in the second array?
     /// This means the two sets do not touch on a boundary.
     fileprivate static func firstOutsideSecond(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
-        
+
         return relatedToLinearRingArrays.firstBoundaryTouchesSecondBoundary == .empty &&
             relatedToLinearRingArrays.firstTouchesSecondInterior == .empty &&
             relatedToLinearRingArrays.firstTouchesSecondExterior > .empty
@@ -3732,7 +3731,7 @@ extension IntersectionMatrix {
         if mulitpolygon.buffer.header.count > 1 {
             return mulitpolygon.buffer.withUnsafeMutablePointers { header, elements in
                 var rings = [LinearRing<CoordinateType>]()
-                
+
                 for i in stride(from: 1, to: header.pointee.count, by: 1) {
                     rings.append(elements[i].outerRing)
                 }
@@ -3751,7 +3750,7 @@ extension IntersectionMatrix {
         if mulitpolygon.buffer.header.count > 1 {
             return mulitpolygon.buffer.withUnsafeMutablePointers { header, elements in
                 var rings = [[LinearRing<CoordinateType>]]()
-                
+
                 for i in stride(from: 1, to: header.pointee.count, by: 1) {
                     rings.append(elements[i].innerRings)
                 }

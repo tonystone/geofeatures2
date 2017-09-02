@@ -21,7 +21,7 @@ import Foundation
 
 internal protocol Intersector {
 
-    associatedtype CoordinateType: Coordinate, CopyConstructable
+    associatedtype CoordinateType: Coordinate
 
     ///
     ///

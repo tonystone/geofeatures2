@@ -35,12 +35,12 @@ internal class SweepLineIntersector<CoordinateType: Coordinate & CopyConstructab
         ///
         /// Create an EventQueue from the coordinates which will be sorted  by increasing x and y
         ///
-        var events = EventQueue<CoordinateType>(coordinates: coordinates)
+        let events = EventQueue<CoordinateType>(coordinates: coordinates)
 
         ///
         /// The SweepLine will keep track of our position
         ///
-        var sweepLine = SweepLine<CoordinateType>()
+        let sweepLine = SweepLine<CoordinateType>()
 
         ///
         /// Intersections will contain all the intersection points found
@@ -205,7 +205,7 @@ fileprivate extension SweepLineIntersector {
         let x = numx / den
         let y = numy / den
 
-        return IntersectionEvent(coordinate: try CoordinateType(array: [x, y]))
+        return IntersectionEvent(coordinate: CoordinateType(array: [x, y]))
     }
 }
 
@@ -227,11 +227,11 @@ fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructabl
 ///
 extension SweepLineSegment: Comparable {} /// TODO: Swift 4: where CoordinateType: Equatable
 
-fileprivate func == <CoordinateType: Coordinate & CopyConstructable>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
+fileprivate func == <CoordinateType>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
     return lhs.leftCoordinate == rhs.leftCoordinate && lhs.rightCoordinate == rhs.rightCoordinate
 }
 
-fileprivate func < <CoordinateType: Coordinate & CopyConstructable>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
+fileprivate func < <CoordinateType>(lhs: SweepLineSegment<CoordinateType>, rhs: SweepLineSegment<CoordinateType>) -> Bool {
     return false /// TODO implement
 }
 
