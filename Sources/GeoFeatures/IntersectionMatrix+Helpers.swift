@@ -876,6 +876,7 @@ extension IntersectionMatrix {
         }
     }
 
+    /// The polygon here is essentially a LinearRing.  This polygon has no holes.
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -962,6 +963,26 @@ extension IntersectionMatrix {
             if pointRelatedToResult.firstTouchesSecondInterior > .empty {
                 relatedToResult.firstInteriorTouchesSecondExterior = .zero
             }
+
+        }
+
+        return relatedToResult
+    }
+
+    /// Assume here that the multi polygon is a general multi polygon with holes.
+    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Loop over the polygons and update the relatedToResult struct as needed on each pass.
+
+        for point in points {
+
+            /// Get the relationships between each point and the general multipolygon
+            let pointRelatedToResult = relatedTo(point, multipolygon)
+
+            /// Update the relatedToResult as needed
+            update(relatedToBase: &relatedToResult, relatedToNew: pointRelatedToResult)
 
         }
 
@@ -2183,6 +2204,26 @@ extension IntersectionMatrix {
     /// Dimension .zero and dimension .two
     ///
 
+    fileprivate static func intersectionMatrix(from relatedTo: RelatedTo) -> IntersectionMatrix {
+
+        /// Default intersection matrix
+        var matrixIntersects = IntersectionMatrix()
+
+        matrixIntersects[.interior, .interior] = relatedTo.firstInteriorTouchesSecondInterior
+        matrixIntersects[.interior, .boundary] = relatedTo.firstInteriorTouchesSecondBoundary
+        matrixIntersects[.interior, .exterior] = relatedTo.firstInteriorTouchesSecondExterior
+
+        matrixIntersects[.boundary, .interior] = relatedTo.firstBoundaryTouchesSecondInterior
+        matrixIntersects[.boundary, .boundary] = relatedTo.firstBoundaryTouchesSecondBoundary
+        matrixIntersects[.boundary, .exterior] = relatedTo.firstBoundaryTouchesSecondExterior
+
+        matrixIntersects[.exterior, .interior] = relatedTo.firstExteriorTouchesSecondInterior
+        matrixIntersects[.exterior, .boundary] = relatedTo.firstExteriorTouchesSecondBoundary
+        matrixIntersects[.exterior, .exterior] = relatedTo.firstExteriorTouchesSecondExterior
+
+        return matrixIntersects
+    }
+
     fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
@@ -2203,6 +2244,16 @@ extension IntersectionMatrix {
         } else if tempRelatedToResult.firstTouchesSecondExterior != .empty {
             matrixIntersects[.interior, .exterior] = .zero
         }
+
+        /// No intersection
+        return (nil, matrixIntersects)
+    }
+
+    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        let relatedToPointMP = relatedTo(point, multipolygon)
+
+        let matrixIntersects = intersectionMatrix(from: relatedToPointMP)
 
         /// No intersection
         return (nil, matrixIntersects)
@@ -2230,6 +2281,16 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
+        /// No intersection
+        return (nil, matrixIntersects)
+    }
+    
+    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+        
+        let relatedToPointsMP = relatedTo(points, multipolygon)
+        
+        let matrixIntersects = intersectionMatrix(from: relatedToPointsMP)
+        
         /// No intersection
         return (nil, matrixIntersects)
     }
@@ -3727,9 +3788,9 @@ extension IntersectionMatrix {
     ///
     /// - see also: `LinearRing`
     ///
-    fileprivate static func outerRings(mulitpolygon: MultiPolygon<CoordinateType>) -> [LinearRing<CoordinateType>] {
-        if mulitpolygon.buffer.header.count > 1 {
-            return mulitpolygon.buffer.withUnsafeMutablePointers { header, elements in
+    fileprivate static func outerRings(multipolygon: MultiPolygon<CoordinateType>) -> [LinearRing<CoordinateType>] {
+        if multipolygon.buffer.header.count > 1 {
+            return multipolygon.buffer.withUnsafeMutablePointers { header, elements in
                 var rings = [LinearRing<CoordinateType>]()
 
                 for i in stride(from: 1, to: header.pointee.count, by: 1) {
@@ -3746,9 +3807,9 @@ extension IntersectionMatrix {
     ///
     /// - see also: `LinearRing`
     ///
-    fileprivate static func innerRings(mulitpolygon: MultiPolygon<CoordinateType>) -> [[LinearRing<CoordinateType>]] {
-        if mulitpolygon.buffer.header.count > 1 {
-            return mulitpolygon.buffer.withUnsafeMutablePointers { header, elements in
+    fileprivate static func innerRings(multipolygon: MultiPolygon<CoordinateType>) -> [[LinearRing<CoordinateType>]] {
+        if multipolygon.buffer.header.count > 1 {
+            return multipolygon.buffer.withUnsafeMutablePointers { header, elements in
                 var rings = [[LinearRing<CoordinateType>]]()
 
                 for i in stride(from: 1, to: header.pointee.count, by: 1) {
