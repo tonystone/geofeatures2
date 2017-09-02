@@ -76,18 +76,6 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
 
-    func testInitWithTuple() {
-
-        let input = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))], precision: precision, coordinateSystem: cs)
-        let expected = [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]
-
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPolygon.Element, rhs: MultiPolygon.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
-    }
-
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
@@ -118,18 +106,6 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.capacity, expected)
     }
 
-    func testAppend() {
-
-        var input    = MultiPolygon<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]
-
-        input.append(Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPolygon.Element, rhs: MultiPolygon.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
-    }
-
     func testAppendContentsOf() {
 
         let input1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))], precision: precision, coordinateSystem: cs)
@@ -138,30 +114,6 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         input2.append(contentsOf: input1)
 
         XCTAssertEqual(input1, input2)
-    }
-
-    func testInsert2ExistingElements() {
-
-        var input = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))], precision: precision, coordinateSystem: cs)
-        let expected = [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]
-
-        input.insert(Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPolygon.Element, rhs: MultiPolygon.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    func testInsert1ExistingElements() {
-
-        var input = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))], precision: precision, coordinateSystem: cs)
-        let expected = [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]
-
-        input.insert(Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPolygon.Element, rhs: MultiPolygon.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
     }
 
     func testRemove() {

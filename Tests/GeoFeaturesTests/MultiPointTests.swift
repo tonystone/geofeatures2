@@ -75,17 +75,12 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
-
     func testInitWithTuple() {
 
         let input = MultiPoint<Coordinate2D>(elements: [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
         let expected = [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0))]
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -117,7 +112,6 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
     func testAppend() {
 
         var input    = MultiPoint<Coordinate2D>(precision: precision, coordinateSystem: cs)
@@ -125,9 +119,7 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.append(Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)))
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
@@ -139,7 +131,6 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
     func testInsert2ExistingElements() {
 
         var input = MultiPoint<Coordinate2D>(elements: [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
@@ -147,9 +138,7 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -159,9 +148,7 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testRemove() {
@@ -326,17 +313,12 @@ class MultiPointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
-
     func testInitWithTuple() {
 
         let input = MultiPoint<Coordinate2DM>(elements: [Point<Coordinate2DM>(coordinate: (x: 1.0, y: 1.0, m: 1.0)), Point<Coordinate2DM>(coordinate: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
         let expected = [Point<Coordinate2DM>(coordinate: (x: 1.0, y: 1.0, m: 1.0)), Point<Coordinate2DM>(coordinate: (x: 2.0, y: 2.0, m: 2.0))]
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -368,7 +350,6 @@ class MultiPointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
     func testAppend() {
 
         var input    = MultiPoint<Coordinate2DM>(precision: precision, coordinateSystem: cs)
@@ -376,9 +357,7 @@ class MultiPointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
         input.append(Point<Coordinate2DM>(coordinate: (x: 1.0, y: 1.0, m: 1.0)))
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
@@ -390,7 +369,6 @@ class MultiPointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
     func testInsert2ExistingElements() {
 
         var input = MultiPoint<Coordinate2DM>(elements: [Point<Coordinate2DM>(coordinate: (x: 1.0, y: 1.0, m: 1.0)), Point<Coordinate2DM>(coordinate: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
@@ -398,9 +376,7 @@ class MultiPointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate2DM>(coordinate: (x: 2.0, y: 2.0, m: 2.0)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -410,9 +386,7 @@ class MultiPointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate2DM>(coordinate: (x: 2.0, y: 2.0, m: 2.0)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testRemove() {
@@ -577,17 +551,12 @@ class MultiPointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
-
     func testInitWithTuple() {
 
         let input = MultiPoint<Coordinate3D>(elements: [Point<Coordinate3D>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<Coordinate3D>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
         let expected = [Point<Coordinate3D>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<Coordinate3D>(coordinate: (x: 2.0, y: 2.0, z: 2.0))]
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -619,7 +588,6 @@ class MultiPointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
     func testAppend() {
 
         var input    = MultiPoint<Coordinate3D>(precision: precision, coordinateSystem: cs)
@@ -627,9 +595,7 @@ class MultiPointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.append(Point<Coordinate3D>(coordinate: (x: 1.0, y: 1.0, z: 1.0)))
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
@@ -641,7 +607,6 @@ class MultiPointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
     func testInsert2ExistingElements() {
 
         var input = MultiPoint<Coordinate3D>(elements: [Point<Coordinate3D>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<Coordinate3D>(coordinate: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
@@ -649,9 +614,7 @@ class MultiPointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate3D>(coordinate: (x: 2.0, y: 2.0, z: 2.0)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -661,9 +624,7 @@ class MultiPointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate3D>(coordinate: (x: 2.0, y: 2.0, z: 2.0)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testRemove() {
@@ -828,17 +789,12 @@ class MultiPointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
-
     func testInitWithTuple() {
 
         let input = MultiPoint<Coordinate3DM>(elements: [Point<Coordinate3DM>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<Coordinate3DM>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
         let expected = [Point<Coordinate3DM>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<Coordinate3DM>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))]
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -870,7 +826,6 @@ class MultiPointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
     func testAppend() {
 
         var input    = MultiPoint<Coordinate3DM>(precision: precision, coordinateSystem: cs)
@@ -878,9 +833,7 @@ class MultiPointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
         input.append(Point<Coordinate3DM>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)))
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
@@ -892,7 +845,6 @@ class MultiPointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
     func testInsert2ExistingElements() {
 
         var input = MultiPoint<Coordinate3DM>(elements: [Point<Coordinate3DM>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<Coordinate3DM>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
@@ -900,9 +852,7 @@ class MultiPointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate3DM>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 2.0)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -912,9 +862,7 @@ class MultiPointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate3DM>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 2.0)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testRemove() {
@@ -1079,17 +1027,12 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
-
     func testInitWithTuple() {
 
         let input = MultiPoint<Coordinate2D>(elements: [Point<Coordinate2D>(coordinate: (x: 1.001, y: 1.001)), Point<Coordinate2D>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0))]
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -1121,7 +1064,6 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
     func testAppend() {
 
         var input    = MultiPoint<Coordinate2D>(precision: precision, coordinateSystem: cs)
@@ -1129,9 +1071,7 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
         input.append(Point<Coordinate2D>(coordinate: (x: 1.001, y: 1.001)))
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
@@ -1143,7 +1083,6 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
     func testInsert2ExistingElements() {
 
         var input = MultiPoint<Coordinate2D>(elements: [Point<Coordinate2D>(coordinate: (x: 1.001, y: 1.001)), Point<Coordinate2D>(coordinate: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
@@ -1151,9 +1090,7 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate2D>(coordinate: (x: 2.002, y: 2.002)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -1163,9 +1100,7 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate2D>(coordinate: (x: 2.002, y: 2.002)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testRemove() {
@@ -1330,17 +1265,12 @@ class MultiPointCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
-
     func testInitWithTuple() {
 
         let input = MultiPoint<Coordinate2DM>(elements: [Point<Coordinate2DM>(coordinate: (x: 1.001, y: 1.001, m: 1.001)), Point<Coordinate2DM>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = [Point<Coordinate2DM>(coordinate: (x: 1.0, y: 1.0, m: 1.0)), Point<Coordinate2DM>(coordinate: (x: 2.0, y: 2.0, m: 2.0))]
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -1372,7 +1302,6 @@ class MultiPointCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
     func testAppend() {
 
         var input    = MultiPoint<Coordinate2DM>(precision: precision, coordinateSystem: cs)
@@ -1380,9 +1309,7 @@ class MultiPointCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
 
         input.append(Point<Coordinate2DM>(coordinate: (x: 1.001, y: 1.001, m: 1.001)))
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
@@ -1394,7 +1321,6 @@ class MultiPointCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
     func testInsert2ExistingElements() {
 
         var input = MultiPoint<Coordinate2DM>(elements: [Point<Coordinate2DM>(coordinate: (x: 1.001, y: 1.001, m: 1.001)), Point<Coordinate2DM>(coordinate: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
@@ -1402,9 +1328,7 @@ class MultiPointCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate2DM>(coordinate: (x: 2.002, y: 2.002, m: 2.002)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -1414,9 +1338,7 @@ class MultiPointCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate2DM>(coordinate: (x: 2.002, y: 2.002, m: 2.002)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testRemove() {
@@ -1581,17 +1503,12 @@ class MultiPointCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
-
     func testInitWithTuple() {
 
         let input = MultiPoint<Coordinate3D>(elements: [Point<Coordinate3D>(coordinate: (x: 1.001, y: 1.001, z: 1.001)), Point<Coordinate3D>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = [Point<Coordinate3D>(coordinate: (x: 1.0, y: 1.0, z: 1.0)), Point<Coordinate3D>(coordinate: (x: 2.0, y: 2.0, z: 2.0))]
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -1623,7 +1540,6 @@ class MultiPointCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
     func testAppend() {
 
         var input    = MultiPoint<Coordinate3D>(precision: precision, coordinateSystem: cs)
@@ -1631,9 +1547,7 @@ class MultiPointCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
 
         input.append(Point<Coordinate3D>(coordinate: (x: 1.001, y: 1.001, z: 1.001)))
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
@@ -1645,7 +1559,6 @@ class MultiPointCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
     func testInsert2ExistingElements() {
 
         var input = MultiPoint<Coordinate3D>(elements: [Point<Coordinate3D>(coordinate: (x: 1.001, y: 1.001, z: 1.001)), Point<Coordinate3D>(coordinate: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
@@ -1653,9 +1566,7 @@ class MultiPointCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate3D>(coordinate: (x: 2.002, y: 2.002, z: 2.002)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -1665,9 +1576,7 @@ class MultiPointCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate3D>(coordinate: (x: 2.002, y: 2.002, z: 2.002)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testRemove() {
@@ -1832,17 +1741,12 @@ class MultiPointCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
-
     func testInitWithTuple() {
 
         let input = MultiPoint<Coordinate3DM>(elements: [Point<Coordinate3DM>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Point<Coordinate3DM>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
         let expected = [Point<Coordinate3DM>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point<Coordinate3DM>(coordinate: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))]
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -1874,7 +1778,6 @@ class MultiPointCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
     func testAppend() {
 
         var input    = MultiPoint<Coordinate3DM>(precision: precision, coordinateSystem: cs)
@@ -1882,9 +1785,7 @@ class MultiPointCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
         input.append(Point<Coordinate3DM>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)))
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
@@ -1896,7 +1797,6 @@ class MultiPointCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
     func testInsert2ExistingElements() {
 
         var input = MultiPoint<Coordinate3DM>(elements: [Point<Coordinate3DM>(coordinate: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Point<Coordinate3DM>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
@@ -1904,9 +1804,7 @@ class MultiPointCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate3DM>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -1916,9 +1814,7 @@ class MultiPointCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
         input.insert(Point<Coordinate3DM>(coordinate: (x: 2.002, y: 2.002, z: 2.002, m: 2.002)), at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: MultiPoint.Element, rhs: MultiPoint.Element) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testRemove() {
