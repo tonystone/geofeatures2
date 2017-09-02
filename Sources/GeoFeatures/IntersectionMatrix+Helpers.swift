@@ -25,6 +25,7 @@ struct RelatedTo {
 
     var firstInteriorTouchesSecondBoundary: Dimension           = .empty
     var firstBoundaryTouchesSecondBoundary: Dimension           = .empty
+    var firstExteriorTouchesSecondBoundary: Dimension           = .empty
     var firstTouchesSecondBoundary: Dimension {
         var tempDimension: Dimension = .empty
         if firstInteriorTouchesSecondBoundary > tempDimension {
@@ -38,6 +39,7 @@ struct RelatedTo {
 
     var firstInteriorTouchesSecondInterior: Dimension   = .empty
     var firstBoundaryTouchesSecondInterior: Dimension   = .empty
+    var firstExteriorTouchesSecondInterior: Dimension   = .empty
     var firstTouchesSecondInterior: Dimension {
         var tempDimension: Dimension = .empty
         if firstInteriorTouchesSecondInterior > tempDimension {
@@ -570,7 +572,7 @@ extension IntersectionMatrix {
                     /// Touching the boundary of any line segment is necessarily on the interior
                     relatedTo.firstInteriorTouchesSecondInterior = .zero
                 } else {
-                    relatedTo.firstTouchesSecondExterior = .zero
+                    relatedTo.firstInteriorTouchesSecondExterior = .zero
                 }
             }
         }
@@ -592,7 +594,7 @@ extension IntersectionMatrix {
                      /// The boundary of any line segment on the linear ring is necessarily on the interior of the linear ring
                     relatedTo.firstInteriorTouchesSecondInterior = .zero
                 } else {
-                    relatedTo.firstTouchesSecondExterior = .zero
+                    relatedTo.firstInteriorTouchesSecondExterior = .zero
                 }
             }
         }
@@ -627,12 +629,55 @@ extension IntersectionMatrix {
                         /// Touching the boundary of any line segment is necessarily on the interior
                         relatedTo.firstInteriorTouchesSecondInterior = .zero
                     } else {
-                        relatedTo.firstTouchesSecondExterior = .zero
+                        relatedTo.firstInteriorTouchesSecondExterior = .zero
                     }
                 }
             }
         }
         return relatedTo
+    }
+
+    /// This code parallels that of a point and a simple polygon.
+    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
+    fileprivate static func relatedTo(_ point: Point<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Check if the point is on the boundary of the linear ring
+        var points = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        points.append(point)
+        let tempRelatedToResult = relatedTo(points, linearRing)
+        if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
+            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+            return relatedToResult
+        }
+
+        let pointCoord = point.coordinate
+
+        var secondCoord = linearRing[linearRing.count + 1]
+
+        var isSubset = false
+
+        for firstCoordIndex in 0..<linearRing.count - 1 {
+            let firstCoord  = linearRing[firstCoordIndex]
+
+            if ((firstCoord.y >= pointCoord.y) != (secondCoord.y >= pointCoord.y)) &&
+                (pointCoord.x <= (secondCoord.x - firstCoord.x) * (pointCoord.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
+                isSubset = !isSubset
+            }
+
+            secondCoord = firstCoord
+        }
+
+        relatedToResult = RelatedTo() /// Resets to default values
+
+        if isSubset {
+            relatedToResult.firstInteriorTouchesSecondInterior = .zero
+        } else {
+            relatedToResult.firstInteriorTouchesSecondExterior = .zero
+        }
+
+        return relatedToResult
     }
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
@@ -679,7 +724,7 @@ extension IntersectionMatrix {
         if isSubset {
             relatedToResult.firstInteriorTouchesSecondInterior = .zero
         } else {
-            relatedToResult.firstTouchesSecondExterior = .zero
+            relatedToResult.firstInteriorTouchesSecondExterior = .zero
         }
 
         return relatedToResult
@@ -689,6 +734,12 @@ extension IntersectionMatrix {
 
         let point = Point<CoordinateType>(coordinate: coordinate, precision: FloatingPrecision(), coordinateSystem: Cartesian())
         return relatedTo(point, simplePolygon)
+    }
+
+    fileprivate static func relatedTo(_ coordinate: CoordinateType, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+
+        let point = Point<CoordinateType>(coordinate: coordinate, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        return relatedTo(point, linearRing)
     }
 
     /// Assume here that the polygon is a general polygon with holes.
@@ -729,7 +780,7 @@ extension IntersectionMatrix {
 
             /// Check if the point is on the interior of the hole
             if pointRelatedToResult.firstTouchesSecondInterior > .empty {
-                relatedToResult.firstTouchesSecondExterior = .zero
+                relatedToResult.firstInteriorTouchesSecondExterior = .zero
                 return relatedToResult
             }
 
@@ -744,6 +795,67 @@ extension IntersectionMatrix {
         relatedToResult.firstInteriorTouchesSecondInterior = .zero
 
         return relatedToResult
+    }
+
+    /// Assume here that the multi polygon is a general multi polygon with a collection of non-intersecting general polygons.
+    fileprivate static func relatedTo(_ point: Point<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Loop over the polygons and update the relatedToResult struct as needed on each pass.
+
+        for polygon in multipolygon {
+
+            /// Get the relationship between the point and the polygon
+            let pointRelatedToResult = relatedTo(point, polygon)
+
+            /// Update the relatedToResult as needed
+            update(relatedToBase: &relatedToResult, relatedToNew: pointRelatedToResult)
+
+        }
+
+        return relatedToResult
+    }
+
+    /// This function takes one RelatedTo struct, the base struct, and compares a new RelatedTo struct to it.
+    /// If the values of the new RelatedTo struct are greater than the base struct, the base struct is updated with the new values.
+    fileprivate static func update(relatedToBase: inout RelatedTo, relatedToNew: RelatedTo) {
+
+        if relatedToNew.firstInteriorTouchesSecondInterior > relatedToBase.firstInteriorTouchesSecondInterior {
+            relatedToBase.firstInteriorTouchesSecondInterior = relatedToNew.firstInteriorTouchesSecondInterior
+        }
+
+        if relatedToNew.firstInteriorTouchesSecondBoundary > relatedToBase.firstInteriorTouchesSecondBoundary {
+            relatedToBase.firstInteriorTouchesSecondBoundary = relatedToNew.firstInteriorTouchesSecondBoundary
+        }
+
+        if relatedToNew.firstInteriorTouchesSecondExterior > relatedToBase.firstInteriorTouchesSecondExterior {
+            relatedToBase.firstInteriorTouchesSecondExterior = relatedToNew.firstInteriorTouchesSecondExterior
+        }
+
+        if relatedToNew.firstBoundaryTouchesSecondInterior > relatedToBase.firstBoundaryTouchesSecondInterior {
+            relatedToBase.firstBoundaryTouchesSecondInterior = relatedToNew.firstBoundaryTouchesSecondInterior
+        }
+
+        if relatedToNew.firstBoundaryTouchesSecondBoundary > relatedToBase.firstBoundaryTouchesSecondBoundary {
+            relatedToBase.firstBoundaryTouchesSecondBoundary = relatedToNew.firstBoundaryTouchesSecondBoundary
+        }
+
+        if relatedToNew.firstBoundaryTouchesSecondExterior > relatedToBase.firstBoundaryTouchesSecondExterior {
+            relatedToBase.firstBoundaryTouchesSecondExterior = relatedToNew.firstBoundaryTouchesSecondExterior
+        }
+
+        if relatedToNew.firstExteriorTouchesSecondInterior > relatedToBase.firstExteriorTouchesSecondInterior {
+            relatedToBase.firstExteriorTouchesSecondInterior = relatedToNew.firstExteriorTouchesSecondInterior
+        }
+
+        if relatedToNew.firstExteriorTouchesSecondBoundary > relatedToBase.firstExteriorTouchesSecondBoundary {
+            relatedToBase.firstExteriorTouchesSecondBoundary = relatedToNew.firstExteriorTouchesSecondBoundary
+        }
+
+        if relatedToNew.firstExteriorTouchesSecondExterior > relatedToBase.firstExteriorTouchesSecondExterior {
+            relatedToBase.firstExteriorTouchesSecondExterior = relatedToNew.firstExteriorTouchesSecondExterior
+        }
     }
 
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
@@ -776,7 +888,7 @@ extension IntersectionMatrix {
                 /// The first lineString is the outer boundary of the polygon
                 if firstTime {
                     if tempRelatedToResult.firstTouchesSecondExterior > .empty {
-                        relatedToResult.firstTouchesSecondExterior = .zero
+                        relatedToResult.firstInteriorTouchesSecondExterior = .zero
                         break
                     } else if tempRelatedToResult.firstTouchesSecondBoundary > .empty {
                         relatedToResult.firstInteriorTouchesSecondBoundary = .zero
@@ -830,7 +942,7 @@ extension IntersectionMatrix {
 
             /// Check if the point is on the exterior of the polygon
             if pointRelatedToResult.firstTouchesSecondInterior > .empty {
-                relatedToResult.firstTouchesSecondExterior = .zero
+                relatedToResult.firstInteriorTouchesSecondExterior = .zero
             }
 
         }
@@ -842,6 +954,177 @@ extension IntersectionMatrix {
 
         return CoordinateType(x: (coord1.x + coord2.x) / 2.0, y: (coord1.y + coord2.y) / 2.0)
 
+    }
+
+    /// This code parallels that where the second geometry is a simple polygon.
+    fileprivate static func relatedTo(_ segment: Segment<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// For each line segment in the line string, check the following:
+        /// - Is all the line segment in the boundary of the linear ring?  If so, set the firstTouchesSecondBoundary to .one.
+        /// - Is a > 0 length proper subset of the line segment in the boundary of the linear ring?  If so, set the firstTouchesSecondBoundary to .one.
+        ///   Also, generate an ordered array of points at which the line segment touches the boundary.  (The line segment could touch the linear ring boundary at
+        ///   more than one sub line segment.)  This array will include the end points of sub line segments.  From this array generate a second array of the
+        ///   midpoints.  Check whether each point in that array is inside or outside of the linear ring.  If inside, set the firstTouchesSecondInterior to .one.
+        ///   If outside, set firstTouchesSecondExterior to .one.
+        /// - Does the line segment touch the linear ring boundary at one or more points?  If so, set the firstTouchesSecondBoundary to .zero.
+        /// - Does either line segment endpoint touch inside the linear ring?  If so, set the firstTouchesSecondInterior to .one.
+        /// - Does either line segment endpoint touch outside the linear ring?  If so, set the firstTouchesSecondExterior to .one.
+        /// - If at any point firstTouchesSecondBoundary, firstTouchesSecondInterior, and firstTouchesSecondExterior are all .one, then stop and return.
+        ///
+        /// Also, add functions to RelatedTo like isInside, isOutside, isInBoundary.
+
+        /// Array of geometries at which the segment intersects the linear ring boundary
+        var intersectionGeometries = [Geometry]()
+
+        /// Do a first pass to get the basic relationship of the line segment to the linear ring
+        for firstCoordIndex in 0..<linearRing.count - 1 {
+            let firstCoord  = linearRing[firstCoordIndex]
+            let secondCoord = linearRing[firstCoordIndex + 1]
+            let segment2 = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+
+            let lineSegmentIntersection = intersection(segment: segment, other: segment2)
+
+            if let intersectionGeometry = lineSegmentIntersection.geometry {
+                intersectionGeometries.append(intersectionGeometry)
+
+                if intersectionGeometry.dimension == .one {
+                    relatedToResult.firstInteriorTouchesSecondBoundary = .one
+                } else if intersectionGeometry.dimension != .one && intersectionGeometry.dimension == .zero {
+                    if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior {
+                        relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                    }
+                }
+
+                if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary {
+                    relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+                }
+            }
+
+            let relatedToResultCoordinate = relatedTo(firstCoord, linearRing)
+
+            if relatedToResultCoordinate.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                relatedToResult.firstInteriorTouchesSecondInterior = relatedToResultCoordinate.firstInteriorTouchesSecondInterior
+            }
+
+            if relatedToResultCoordinate.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
+                relatedToResult.firstBoundaryTouchesSecondInterior = relatedToResultCoordinate.firstBoundaryTouchesSecondInterior
+            }
+
+            if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
+            }
+            
+            if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
+                relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
+            }
+
+            /// Check the very last coordinate of the linear ring boundary
+            if firstCoordIndex == linearRing.count - 2 {
+                let relatedToResultCoordinate = relatedTo(firstCoord, linearRing)
+
+                if relatedToResultCoordinate.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                    relatedToResult.firstInteriorTouchesSecondInterior = relatedToResultCoordinate.firstInteriorTouchesSecondInterior
+                }
+
+                if relatedToResultCoordinate.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
+                    relatedToResult.firstBoundaryTouchesSecondInterior = relatedToResultCoordinate.firstBoundaryTouchesSecondInterior
+                }
+
+                if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                    relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
+                }
+
+                if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
+                    relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
+                }
+            }
+        }
+
+        /// Check the cases where no further work is needed.
+        if (relatedToResult.firstTouchesSecondBoundary == .one && relatedToResult.firstTouchesSecondInterior == .one && relatedToResult.firstTouchesSecondExterior == .one) ||
+            (relatedToResult.firstTouchesSecondBoundary == .empty) ||
+            (intersectionGeometries.count <= 1) {
+            return relatedToResult
+        }
+
+        /// Check the case where the line segment interior lies on the interior or exterior of the linear ring.  This is why we have been collecting the geometries.
+        /// Do the following:
+        /// - Generate an array of the midpoints of the consecutive geometries.
+        /// - Check whether each point in that array is inside or outside of the linear ring.
+        ///   If inside, set the firstTouchesSecondInterior to .one.
+        ///   If outside, set firstTouchesSecondExterior to .one.
+        ///
+        /// Note that this algorithm can likely be made better in the cases where two midpoints are created rather than just one.
+
+        guard intersectionGeometries.count >= 2 else { return relatedToResult }
+
+        var midpointCoordinates = [CoordinateType]()
+
+        for firstGeometryIndex in 0..<intersectionGeometries.count - 1 {
+            let intersectionGeometry1 = intersectionGeometries[firstGeometryIndex]
+            let intersectionGeometry2 = intersectionGeometries[firstGeometryIndex + 1]
+
+            var midpointCoord1: CoordinateType?
+            var midpointCoord2: CoordinateType?
+            if let point1 = intersectionGeometry1 as? Point<CoordinateType>, let point2 = intersectionGeometry2 as? Point<CoordinateType> {
+
+                midpointCoord1 = midpoint(point1.coordinate, point2.coordinate)
+
+            } else if let point = intersectionGeometry1 as? Point<CoordinateType>, let segment = intersectionGeometry2 as? Segment<CoordinateType> {
+
+                /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
+                midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
+                midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
+
+            } else if let point = intersectionGeometry2 as? Point<CoordinateType>, let segment = intersectionGeometry1 as? Segment<CoordinateType> {
+
+                /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
+                midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
+                midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
+
+            } else if let segment1 = intersectionGeometry1 as? Segment<CoordinateType>, let segment2 = intersectionGeometry2 as? Segment<CoordinateType> {
+
+                /// Both line segments lie on a straight line.
+                /// The midpoint of interest lies either (1) between the leftCoordinate of the first and the rightCoordinate of the second or
+                /// (2) the rightCoordinate of the first and the leftCoordinate of the second.  We add both midpoints.
+                midpointCoord1 = midpoint(segment1.leftCoordinate, segment2.rightCoordinate)
+                midpointCoord2 = midpoint(segment1.rightCoordinate, segment2.leftCoordinate)
+
+            }
+
+            if midpointCoord1 != nil { midpointCoordinates.append(midpointCoord1!) }
+            if midpointCoord2 != nil { midpointCoordinates.append(midpointCoord2!) }
+        }
+
+        /// The midpoints have all been generated.  Check whether each is inside or outside of the linear ring.
+
+        for coord in midpointCoordinates {
+
+            let pointRelatedToResult = relatedTo(coord, linearRing)
+
+            if pointRelatedToResult.firstInteriorTouchesSecondInterior > .empty {
+                relatedToResult.firstInteriorTouchesSecondInterior = pointRelatedToResult.firstInteriorTouchesSecondInterior
+            }
+
+            if pointRelatedToResult.firstBoundaryTouchesSecondInterior > .empty {
+                relatedToResult.firstBoundaryTouchesSecondInterior = pointRelatedToResult.firstBoundaryTouchesSecondInterior
+            }
+
+            if pointRelatedToResult.firstInteriorTouchesSecondExterior > .empty {
+                relatedToResult.firstInteriorTouchesSecondExterior = pointRelatedToResult.firstInteriorTouchesSecondExterior
+            }
+
+            if pointRelatedToResult.firstBoundaryTouchesSecondExterior > .empty {
+                relatedToResult.firstBoundaryTouchesSecondExterior = pointRelatedToResult.firstBoundaryTouchesSecondExterior
+            }
+
+        }
+
+        /// Return
+
+        return relatedToResult
     }
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
@@ -907,8 +1190,12 @@ extension IntersectionMatrix {
                 relatedToResult.firstBoundaryTouchesSecondInterior = relatedToResultCoordinate.firstBoundaryTouchesSecondInterior
             }
 
-            if relatedToResultCoordinate.firstTouchesSecondExterior > relatedToResult.firstTouchesSecondExterior {
-                relatedToResult.firstTouchesSecondExterior = relatedToResultCoordinate.firstTouchesSecondExterior
+            if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
+            }
+
+            if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
+                relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
             }
 
             /// Check the very last coordinate of the polygon boundary
@@ -923,8 +1210,12 @@ extension IntersectionMatrix {
                     relatedToResult.firstBoundaryTouchesSecondInterior = relatedToResultCoordinate.firstBoundaryTouchesSecondInterior
                 }
 
-                if relatedToResultCoordinate.firstTouchesSecondExterior > relatedToResult.firstTouchesSecondExterior {
-                    relatedToResult.firstTouchesSecondExterior = relatedToResultCoordinate.firstTouchesSecondExterior
+                if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                    relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
+                }
+
+                if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
+                    relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
                 }
             }
         }
@@ -999,8 +1290,12 @@ extension IntersectionMatrix {
                 relatedToResult.firstBoundaryTouchesSecondInterior = pointRelatedToResult.firstBoundaryTouchesSecondInterior
             }
 
-            if pointRelatedToResult.firstTouchesSecondExterior != .empty {
-                relatedToResult.firstTouchesSecondExterior = .one
+            if pointRelatedToResult.firstInteriorTouchesSecondExterior > .empty {
+                relatedToResult.firstInteriorTouchesSecondExterior = pointRelatedToResult.firstInteriorTouchesSecondExterior
+            }
+
+            if pointRelatedToResult.firstBoundaryTouchesSecondExterior > .empty {
+                relatedToResult.firstBoundaryTouchesSecondExterior = pointRelatedToResult.firstBoundaryTouchesSecondExterior
             }
 
         }
@@ -1048,8 +1343,48 @@ extension IntersectionMatrix {
                 relatedToResult.firstBoundaryTouchesSecondBoundary = segmentRelatedToResult.firstBoundaryTouchesSecondBoundary
             }
 
-            if segmentRelatedToResult.firstTouchesSecondExterior > relatedToResult.firstTouchesSecondExterior {
-                relatedToResult.firstTouchesSecondExterior = segmentRelatedToResult.firstTouchesSecondExterior
+            if segmentRelatedToResult.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                relatedToResult.firstInteriorTouchesSecondExterior = segmentRelatedToResult.firstInteriorTouchesSecondExterior
+            }
+
+            if segmentRelatedToResult.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
+                relatedToResult.firstBoundaryTouchesSecondExterior = segmentRelatedToResult.firstBoundaryTouchesSecondExterior
+            }
+
+        }
+
+        return relatedToResult
+    }
+
+    /// These relationships will most often be used when relating parts of a polygon to one another.
+    fileprivate static func relatedTo(_ linearRing1: LinearRing<CoordinateType>, _ linearRing2: LinearRing<CoordinateType>) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Check the relationships between each line segment of the linear rings
+
+        for firstCoordIndex in 0..<linearRing1.count - 1 {
+
+            let firstCoord  = linearRing1[firstCoordIndex]
+            let secondCoord = linearRing1[firstCoordIndex + 1]
+            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+
+            let segmentRelatedToResult = relatedTo(segment, linearRing2)
+
+            if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
+            }
+
+            if segmentRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
+                relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
+            }
+
+            if segmentRelatedToResult.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
+                relatedToResult.firstExteriorTouchesSecondInterior = segmentRelatedToResult.firstExteriorTouchesSecondInterior
+            }
+            
+            if segmentRelatedToResult.firstExteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
+                relatedToResult.firstExteriorTouchesSecondBoundary = segmentRelatedToResult.firstExteriorTouchesSecondBoundary
             }
 
         }
@@ -1087,8 +1422,76 @@ extension IntersectionMatrix {
                 relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
             }
 
-            if segmentRelatedToResult.firstTouchesSecondExterior > relatedToResult.firstTouchesSecondExterior {
-                relatedToResult.firstTouchesSecondExterior = segmentRelatedToResult.firstTouchesSecondExterior
+            if segmentRelatedToResult.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
+                relatedToResult.firstExteriorTouchesSecondInterior = segmentRelatedToResult.firstExteriorTouchesSecondInterior
+            }
+
+            if segmentRelatedToResult.firstExteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
+                relatedToResult.firstExteriorTouchesSecondBoundary = segmentRelatedToResult.firstExteriorTouchesSecondBoundary
+            }
+
+        }
+
+        return relatedToResult
+    }
+
+    /// These relationships will most often be used when relating parts of a polygon to one another.
+    fileprivate static func relatedTo(_ linearRing1: LinearRing<CoordinateType>, _ linearRingArray: [LinearRing<CoordinateType>]) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Check the relationships between the linear ring and each linear ring of the array
+
+        for linearRing2 in linearRingArray {
+
+            let relatedToRings = relatedTo(linearRing1, linearRing2)
+
+            if relatedToRings.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                relatedToResult.firstInteriorTouchesSecondInterior = relatedToRings.firstInteriorTouchesSecondInterior
+            }
+
+            if relatedToRings.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
+                relatedToResult.firstInteriorTouchesSecondBoundary = relatedToRings.firstInteriorTouchesSecondBoundary
+            }
+
+            if relatedToRings.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
+                relatedToResult.firstExteriorTouchesSecondInterior = relatedToRings.firstExteriorTouchesSecondInterior
+            }
+
+            if relatedToRings.firstExteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
+                relatedToResult.firstExteriorTouchesSecondBoundary = relatedToRings.firstExteriorTouchesSecondBoundary
+            }
+
+        }
+
+        return relatedToResult
+    }
+
+    /// These relationships will most often be used when relating parts of a polygon to one another.
+    fileprivate static func relatedTo(_ linearRingArray1: [LinearRing<CoordinateType>], _ linearRingArray2: [LinearRing<CoordinateType>]) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Check the relationships between the linear ring and each linear ring of the array
+
+        for linearRing1 in linearRingArray1 {
+
+            let relatedToRings = relatedTo(linearRing1, linearRingArray2)
+
+            if relatedToRings.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                relatedToResult.firstInteriorTouchesSecondInterior = relatedToRings.firstInteriorTouchesSecondInterior
+            }
+
+            if relatedToRings.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
+                relatedToResult.firstInteriorTouchesSecondBoundary = relatedToRings.firstInteriorTouchesSecondBoundary
+            }
+
+            if relatedToRings.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
+                relatedToResult.firstExteriorTouchesSecondInterior = relatedToRings.firstExteriorTouchesSecondInterior
+            }
+
+            if relatedToRings.firstExteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
+                relatedToResult.firstExteriorTouchesSecondBoundary = relatedToRings.firstExteriorTouchesSecondBoundary
             }
 
         }
@@ -1135,8 +1538,12 @@ extension IntersectionMatrix {
                     relatedToResult.firstBoundaryTouchesSecondBoundary = segmentRelatedToResult.firstBoundaryTouchesSecondBoundary
                 }
 
-                if segmentRelatedToResult.firstTouchesSecondExterior > relatedToResult.firstTouchesSecondExterior {
-                    relatedToResult.firstTouchesSecondExterior = segmentRelatedToResult.firstTouchesSecondExterior
+                if segmentRelatedToResult.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                    relatedToResult.firstInteriorTouchesSecondExterior = segmentRelatedToResult.firstInteriorTouchesSecondExterior
+                }
+
+                if segmentRelatedToResult.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
+                    relatedToResult.firstBoundaryTouchesSecondExterior = segmentRelatedToResult.firstBoundaryTouchesSecondExterior
                 }
 
             }
