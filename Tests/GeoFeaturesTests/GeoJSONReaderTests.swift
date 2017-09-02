@@ -18,7 +18,7 @@
 ///  Created by Tony Stone on 11/16/2016.
 ///
 import XCTest
-import GeoFeatures
+@testable import GeoFeatures
 
 #if (os(OSX) || os(iOS) || os(tvOS) || os(watchOS)) && SWIFT_PACKAGE
     /// TODO: Remove this after figuring out why there seems to be a symbol conflict (error: cannot specialize a non-generic definition) with another Polygon on Swift PM on Apple platforms only.
@@ -39,12 +39,12 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadWithInvalidJSON() {
 
         let input = ":&*** This is not JSON"
-        let expected = "The data couldn’t be read because it isn’t in the correct format."
+        let expected = "^The data couldn’t be read because it isn’t in the correct format.*"
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
             if case GeoJSONReaderError.invalidJSON(let message) = error {
-                XCTAssertEqual(message, expected)
+                XCTAssert(message.range(of: expected, options: .regularExpression) != nil)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
             }
@@ -366,5 +366,85 @@ class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
                 ] as [Geometry])
 
         XCTAssertEqual(try reader.read(string: input) as? GeometryCollection, expected)
+    }
+}
+
+// MARK: - Test internal methods
+
+class GeoJSONReaderInternal: XCTestCase {
+
+    private typealias CoordinateType = Coordinate2D
+    private typealias GeoJSONReaderType = GeoJSONReader<CoordinateType>
+
+    private var reader = GeoJSONReaderType(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+    func testCoordinateWithDouble() {
+
+        let input = [Double(1.0), Double(1.0)]
+        let expected = CoordinateType(array: [1.0, 1.0])
+
+        XCTAssertEqual(try reader.coordinate(array: input), expected)
+    }
+
+    func testCoordinateWithNSNumber() {
+
+        let input = [NSNumber(value: 1.0), NSNumber(value: 1.0)]
+        let expected = CoordinateType(array: [1.0, 1.0])
+
+        XCTAssertEqual(try reader.coordinate(array: input), expected)
+    }
+
+    func testCoordinateWithInt() {
+
+        let input = [Int(1), Int(1)]
+        let expected = CoordinateType(array: [1.0, 1.0])
+
+        XCTAssertEqual(try reader.coordinate(array: input), expected)
+    }
+
+    func testCoordinateWithFloat() {
+
+        let input = [Float(1.0), Float(1.0)]
+        let expected = CoordinateType(array: [1.0, 1.0])
+
+        XCTAssertEqual(try reader.coordinate(array: input), expected)
+    }
+
+    func testCoordinateWithString() {
+
+        let input = ["1.0", "1.0"]
+        let expected = CoordinateType(array: [1.0, 1.0])
+
+        XCTAssertEqual(try reader.coordinate(array: input), expected)
+    }
+
+    func testCoordinateWithInvalidString() {
+
+        let input: [Any] = ["1.0.0.2.1"]
+        let expected = "Invalid structure for \"coordinates\" attribute."
+
+        XCTAssertThrowsError(try reader.coordinate(array: input)) { error in
+
+            if case GeoJSONReaderError.invalidJSON(let message) = error {
+                XCTAssertEqual(message, expected)
+            } else {
+                XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
+            }
+        }
+    }
+
+    func testCoordinatesWithInvalidStructure() {
+
+        let input = ["coordinates": [1.0, 1.0, 1.0, 1.0] ]
+        let expected = "Invalid structure for \"coordinates\" attribute."
+
+        XCTAssertThrowsError(try Coordinates<String>.coordinates(json: input)) { error in
+
+            if case GeoJSONReaderError.invalidJSON(let message) = error {
+                XCTAssertEqual(message, expected)
+            } else {
+                XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
+            }
+        }
     }
 }
