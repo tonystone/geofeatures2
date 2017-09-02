@@ -63,3 +63,17 @@ extension GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests {
            ]
    }
 }
+extension GeoJSONReaderInternal {
+
+   static var allTests: [(String, (GeoJSONReaderInternal) -> () throws -> Void)] {
+      return [
+                ("testCoordinateWithDouble", testCoordinateWithDouble),
+                ("testCoordinateWithNSNumber", testCoordinateWithNSNumber),
+                ("testCoordinateWithInt", testCoordinateWithInt),
+                ("testCoordinateWithFloat", testCoordinateWithFloat),
+                ("testCoordinateWithString", testCoordinateWithString),
+                ("testCoordinateWithInvalidString", testCoordinateWithInvalidString),
+                ("testCoordinatesWithInvalidStructure", testCoordinatesWithInvalidStructure)
+           ]
+   }
+}

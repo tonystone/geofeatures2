@@ -69,9 +69,9 @@ GeometryType = GeometryClass
 if GeometryIsGeneric:
     GeometryType = GeometryType + '<' + CoordinateType + '>'
 
-Precision                 = PrecisionType + PrecisionParameters
+Precision        = PrecisionType + PrecisionParameters
 CoordinateSystem = ReferenceSystemType + ReferenceSystemParameters
-ClassQualifier            = CoordinateType + PrecisionType + ReferenceSystemType
+ClassQualifier   = CoordinateType + PrecisionType + ReferenceSystemType
 
 }%
 // MARK: - ${CoordinateType}, ${PrecisionType}, ${ReferenceSystemType} -
@@ -117,18 +117,15 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
         XCTAssertEqual(input.coordinateSystem as? ${ReferenceSystemType}, expected)
     }
-
+% if GeometryClass not in ['GeometryCollection', 'MultiPolygon']:
     func testInitWithTuple() {
 
         let input = ${GeometryType}(elements: [${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
         let expected = [${ExpectedElement1}, ${ExpectedElement2}]${ElementArrayCast}
 
-        XCTAssertTrue(
-            (input.elementsEqual(expected) { (lhs: ${GeometryElementType}, rhs: ${GeometryElementType}) -> Bool in
-                    return lhs == rhs
-            }
-        ), "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
+% end
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
@@ -159,7 +156,7 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
         XCTAssertEqual(input.capacity, expected)
     }
-
+% if GeometryClass not in ['GeometryCollection', 'MultiPolygon']:
     func testAppend() {
 
         var input    = ${GeometryType}(precision: precision, coordinateSystem: cs)
@@ -167,10 +164,9 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
         input.append(${TestElement1})
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: ${GeometryElementType}, rhs: ${GeometryElementType}) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
+% end
 
     func testAppendContentsOf() {
 
@@ -181,7 +177,7 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
         XCTAssertEqual(input1, input2)
     }
-
+% if GeometryClass not in ['GeometryCollection', 'MultiPolygon']:
     func testInsert2ExistingElements() {
 
         var input = ${GeometryType}(elements: [${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
@@ -189,9 +185,7 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
         input.insert(${TestElement2}, at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: ${GeometryElementType}, rhs: ${GeometryElementType}) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
@@ -201,10 +195,9 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
         input.insert(${TestElement2}, at: 0)
 
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: ${GeometryElementType}, rhs: ${GeometryElementType}) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected))
     }
+% end
 
     func testRemove() {
 
