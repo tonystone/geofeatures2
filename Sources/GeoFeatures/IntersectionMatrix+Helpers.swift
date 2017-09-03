@@ -875,6 +875,49 @@ extension IntersectionMatrix {
             relatedToBase.firstExteriorTouchesSecondExterior = relatedToNew.firstExteriorTouchesSecondExterior
         }
     }
+    
+    /// This function takes one IntersectionMatrix struct, the base struct, and compares a new IntersectionMatrix struct to it.
+    /// If the values of the new IntersectionMatrix struct are greater than the base struct, the base struct is updated with the new values.
+    /// Note the RelatedTo struct has evolved into an IntersectionMatrix equivalent.
+    /// We may use both or simply replace RelatedTo with IntersectionMatric everywhere.
+    fileprivate static func update(intersectionMatrixBase: inout IntersectionMatrix, intersectionMatrixNew: IntersectionMatrix) {
+        
+        if intersectionMatrixNew[.interior, .interior] > intersectionMatrixBase[.interior, .interior] {
+            intersectionMatrixBase[.interior, .interior] = intersectionMatrixNew[.interior, .interior]
+        }
+        
+        if intersectionMatrixNew[.interior, .boundary] > intersectionMatrixBase[.interior, .boundary] {
+            intersectionMatrixBase[.interior, .boundary] = intersectionMatrixNew[.interior, .boundary]
+        }
+        
+        if intersectionMatrixNew[.interior, .exterior] > intersectionMatrixBase[.interior, .exterior] {
+            intersectionMatrixBase[.interior, .exterior] = intersectionMatrixNew[.interior, .exterior]
+        }
+        
+        if intersectionMatrixNew[.boundary, .interior] > intersectionMatrixBase[.boundary, .interior] {
+            intersectionMatrixBase[.boundary, .interior] = intersectionMatrixNew[.boundary, .interior]
+        }
+        
+        if intersectionMatrixNew[.boundary, .boundary] > intersectionMatrixBase[.boundary, .boundary] {
+            intersectionMatrixBase[.boundary, .boundary] = intersectionMatrixNew[.boundary, .boundary]
+        }
+        
+        if intersectionMatrixNew[.boundary, .exterior] > intersectionMatrixBase[.boundary, .exterior] {
+            intersectionMatrixBase[.boundary, .exterior] = intersectionMatrixNew[.boundary, .exterior]
+        }
+        
+        if intersectionMatrixNew[.exterior, .interior] > intersectionMatrixBase[.exterior, .interior] {
+            intersectionMatrixBase[.exterior, .interior] = intersectionMatrixNew[.exterior, .interior]
+        }
+        
+        if intersectionMatrixNew[.exterior, .boundary] > intersectionMatrixBase[.exterior, .boundary] {
+            intersectionMatrixBase[.exterior, .boundary] = intersectionMatrixNew[.exterior, .boundary]
+        }
+        
+        if intersectionMatrixNew[.exterior, .exterior] > intersectionMatrixBase[.exterior, .exterior] {
+            intersectionMatrixBase[.exterior, .exterior] = intersectionMatrixNew[.exterior, .exterior]
+        }
+    }
 
     /// The polygon here is essentially a LinearRing.  This polygon has no holes.
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
@@ -3393,6 +3436,7 @@ extension IntersectionMatrix {
     /// Dimension .one and dimension .two
     ///
 
+    /// The polygon here is a full polygon with holes
     fileprivate static func generateIntersection(_ lineString: LineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
@@ -3549,6 +3593,25 @@ extension IntersectionMatrix {
         }
 
         /// No intersection
+        return (nil, matrixIntersects)
+    }
+
+    fileprivate static func generateIntersection(_ lineString: LineString<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        var matrixIntersects = IntersectionMatrix()
+
+        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
+
+        for polygon in multipolygon {
+
+            /// Get the relationship between the point and the polygon
+            let (_, intersectionMatrixResult) = generateIntersection(lineString, polygon)
+
+            /// Update the intersection matrix as needed
+            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+
+        }
+
         return (nil, matrixIntersects)
     }
 
