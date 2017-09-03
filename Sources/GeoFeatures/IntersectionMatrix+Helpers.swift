@@ -3698,6 +3698,25 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
+    fileprivate static func generateIntersection(_ linearRing: LinearRing<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        var matrixIntersects = IntersectionMatrix()
+
+        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
+
+        for polygon in multipolygon {
+
+            /// Get the relationship between the point and the polygon
+            let (_, intersectionMatrixResult) = generateIntersection(linearRing, polygon)
+
+            /// Update the intersection matrix as needed
+            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+
+        }
+
+        return (nil, matrixIntersects)
+    }
+
     fileprivate static func generateIntersection(_ multiLineString: MultiLineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
@@ -3816,6 +3835,25 @@ extension IntersectionMatrix {
         }
 
         /// No intersection
+        return (nil, matrixIntersects)
+    }
+
+    fileprivate static func generateIntersection(_ multiLineString: MultiLineString<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        var matrixIntersects = IntersectionMatrix()
+
+        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
+
+        for polygon in multipolygon {
+
+            /// Get the relationship between the point and the polygon
+            let (_, intersectionMatrixResult) = generateIntersection(multiLineString, polygon)
+
+            /// Update the intersection matrix as needed
+            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+
+        }
+
         return (nil, matrixIntersects)
     }
 
