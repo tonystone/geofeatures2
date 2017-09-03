@@ -3884,6 +3884,44 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
+    fileprivate static func generateIntersection(_ polygon: Polygon<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        var matrixIntersects = IntersectionMatrix()
+
+        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
+
+        for polygonFromMP in multipolygon {
+
+            /// Get the relationship between the point and the polygon
+            let (_, intersectionMatrixResult) = generateIntersection(polygon, polygonFromMP)
+
+            /// Update the intersection matrix as needed
+            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+
+        }
+
+        return (nil, matrixIntersects)
+    }
+
+    fileprivate static func generateIntersection(_ multipolygon1: MultiPolygon<CoordinateType>, _ multipolygon2: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+
+        var matrixIntersects = IntersectionMatrix()
+
+        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
+
+        for polygonFromMP in multipolygon1 {
+
+            /// Get the relationship between the point and the polygon
+            let (_, intersectionMatrixResult) = generateIntersection(polygonFromMP, multipolygon2)
+
+            /// Update the intersection matrix as needed
+            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+
+        }
+
+        return (nil, matrixIntersects)
+    }
+
     ///
     /// - returns: An Array of `LinearRing`s representing the outerRings of this MultiPolygon
     ///
