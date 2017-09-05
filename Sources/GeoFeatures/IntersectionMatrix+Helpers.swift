@@ -89,7 +89,7 @@ fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructabl
 extension IntersectionMatrix {
 
     static func generateMatrix(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
-        
+
         let (_, resultIntersectionMatrix) = intersectionGeometry(geometry1, geometry2)
 
         let _ = IntersectionMatrix.Index.interior.rawValue
@@ -195,8 +195,7 @@ extension IntersectionMatrix {
                 } else if let points = geometry1 as? MultiPoint<CoordinateType>, let multipolygon = geometry2 as? MultiPolygon<CoordinateType> {
                     return generateIntersection(points, multipolygon)
                 }
-            default:
-                break
+            default: break
             }
 
         case .one:
@@ -265,9 +264,51 @@ extension IntersectionMatrix {
         case .two:
             /// TODO
             switch geometry2.dimension {
-            case .zero: break
-            case .one: break
-            case .two: break
+            case .zero:
+                if let polgyon = geometry1 as? Polygon<CoordinateType>, let point = geometry2 as? Point<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(point, polgyon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let polgyon = geometry1 as? Polygon<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(points, polgyon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let point = geometry2 as? Point<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(point, multipolygon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(points, multipolygon)
+                    return (geometry, intersectionMatrix.transposed())
+                }
+            case .one:
+                if let polgyon = geometry1 as? Polygon<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(lineString, polgyon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let polgyon = geometry1 as? Polygon<CoordinateType>, let multilineString = geometry2 as? MultiLineString<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(multilineString, polgyon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let polgyon = geometry1 as? Polygon<CoordinateType>, let linearRing = geometry2 as? LinearRing<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(linearRing, polgyon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(lineString, multipolygon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let multilineString = geometry2 as? MultiLineString<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(multilineString, multipolygon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let linearRing = geometry2 as? LinearRing<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(linearRing, multipolygon)
+                    return (geometry, intersectionMatrix.transposed())
+                }
+            case .two:
+                if let polgyon1 = geometry1 as? Polygon<CoordinateType>, let polygon2 = geometry2 as? Polygon<CoordinateType>  {
+                    return generateIntersection(polgyon1, polygon2)
+                } else if let polgyon = geometry1 as? Polygon<CoordinateType>, let multipolygon = geometry2 as? MultiPolygon<CoordinateType>  {
+                    return generateIntersection(polgyon, multipolygon)
+                } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let polgyon = geometry2 as? Polygon<CoordinateType>  {
+                    let (geometry, intersectionMatrix) = generateIntersection(polgyon, multipolygon)
+                    return (geometry, intersectionMatrix.transposed())
+                } else if let multipolygon1 = geometry1 as? MultiPolygon<CoordinateType>, let multipolygon2 = geometry2 as? MultiPolygon<CoordinateType>  {
+                    return generateIntersection(multipolygon1, multipolygon2)
+                }
             default: break
             }
 
