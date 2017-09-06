@@ -44,6 +44,7 @@ import XCTest
          testCase(GeometryCollectionGeometryFloatingPrecisionCartesianTests.allTests),
          testCase(GeometryCollectionGeometryFixedPrecisionCartesianTests.allTests),
          testCase(GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests.allTests),
+         testCase(IntersectionMatrixHelperTests.allTests),
          testCase(IntersectionMatrixTests.allTests),
          testCase(LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
          testCase(LinearRingCurveCoordinate3DFloatingPrecisionCartesianTests.allTests),
