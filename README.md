@@ -55,7 +55,13 @@ You can find the latest sources and binaries on [github](https://github.com/tony
    - Push to the branch: `git push origin my-new-feature`
    - Submit a pull request :-)
 
-## Installation
+## Installation (Swift Package Manager)
+
+GeoFeatures  supports dependency management via Swift Package Manager on OSX and Linux.
+
+Please see [Swift Package Manager](https://swift.org/package-manager/#conceptual-overview) for further information.
+
+## Installation (CocoaPods)
 
 GeoFeatures is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
@@ -63,7 +69,6 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "GeoFeatures"
 ```
-
 See the ["Using CocoaPods"](https://guides.cocoapods.org/using/using-cocoapods.html) guide for more information.
 
 ## Minimum Requirements
@@ -80,6 +85,10 @@ Minimum Runtime Version
 | iOS |  OS X | Linux |
 |:---:|:-----:|:------------:|
 | 8.0 | 10.10 | Ubuntu 14.04, 16.04, 16.10 |
+
+> Note:
+>
+> To build and run on **Linux** we have a a preconfigure **Vagrant** file located at [https://github.com/tonystone/vagrant-swift](https://github.com/tonystone/vagrant-swift)
 
 ## License
 
