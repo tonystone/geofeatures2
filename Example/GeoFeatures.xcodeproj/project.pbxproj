@@ -152,7 +152,6 @@
 		EAD9F3931DD76B6E0059122C /* MultiPolygonTestInput.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = MultiPolygonTestInput.py; path = Tests/GeoFeaturesTests/MultiPolygonTestInput.py; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.python; };
 		EAD9F3941DD77AFE0059122C /* GeometryCollectionTests.swift.gyb */ = {isa = PBXFileReference; lastKnownFileType = text; name = GeometryCollectionTests.swift.gyb; path = Tests/GeoFeaturesTests/GeometryCollectionTests.swift.gyb; sourceTree = "<group>"; };
 		EAD9F3951DD77BAD0059122C /* GeometryCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryCollectionTests.swift; sourceTree = "<group>"; };
-		EAE2CF5E1CD43D500050BC30 /* Vagrantfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; name = Vagrantfile; path = ../Vagrantfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		EAE591A11DD8BD430022BB86 /* GeometryCollectionTestInput.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = GeometryCollectionTestInput.py; path = Tests/GeoFeaturesTests/GeometryCollectionTestInput.py; sourceTree = "<group>"; };
 		EAE6C76D1DB7CDD200E2E492 /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Gemfile; path = ../Gemfile; sourceTree = "<group>"; };
 		EAEE789D1DB5A0B8002D984E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -260,7 +259,6 @@
 				EA475C2F1CD9083A0013AFA1 /* Package.swift */,
 				0F243D2FCE8800EAB521DC72 /* README.md */,
 				2E8E8258ACE5267DDF6D0D4E /* LICENSE */,
-				EAE2CF5E1CD43D500050BC30 /* Vagrantfile */,
 				EAE6C76D1DB7CDD200E2E492 /* Gemfile */,
 				EAB0DF091F352BFB00B596CB /* .travis.yml */,
 				EA634EFE1DCE481C00AC93E7 /* codecov.yml */,
