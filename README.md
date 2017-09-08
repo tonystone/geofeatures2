@@ -89,6 +89,12 @@ Minimum Runtime Version
 > Note:
 >
 > To build and run on **Linux** we have a a preconfigure **Vagrant** file located at [https://github.com/tonystone/vagrant-swift](https://github.com/tonystone/vagrant-swift)
+>
+> Use:
+> ```
+> > vagrant --build-type=SNAPSHOT --swift-version=2017-08-03-a up`
+> ```
+> 
 
 ## License
 
