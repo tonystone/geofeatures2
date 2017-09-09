@@ -92,7 +92,7 @@ Minimum Runtime Version
 >
 > Use:
 > ```
-> > vagrant --build-type=SNAPSHOT --swift-version=2017-08-03-a up`
+> > vagrant --swift-version=2017-08-03 up
 > ```
 > 
 
