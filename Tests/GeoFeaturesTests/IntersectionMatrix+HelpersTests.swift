@@ -22,22 +22,54 @@ import XCTest
 
 // MARK: - All
 
+private typealias CoordinateType = Coordinate2D
+
 class IntersectionMatrixHelperTests: XCTestCase {
 
-    /// This is a dummy for now.  It will be replaced soon.
-    func testInit() {
-        let matrix = IntersectionMatrix()
+    let precision = FloatingPrecision()
+    let cs        = Cartesian()
+
+    func testPointPoint_noIntersection() {
+
+        let emptyMatrix = IntersectionMatrix()
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 0.00, y: 0.00), precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.00, y: 1.00), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
 
         XCTAssertEqual(matrix[.interior, .interior], Dimension.empty)
         XCTAssertEqual(matrix[.interior, .boundary], Dimension.empty)
-        XCTAssertEqual(matrix[.interior, .exterior], Dimension.empty)
+        XCTAssertEqual(matrix[.interior, .exterior], Dimension.zero)
 
         XCTAssertEqual(matrix[.boundary, .interior], Dimension.empty)
         XCTAssertEqual(matrix[.boundary, .boundary], Dimension.empty)
         XCTAssertEqual(matrix[.boundary, .exterior], Dimension.empty)
 
+        XCTAssertEqual(matrix[.exterior, .interior], Dimension.zero)
+        XCTAssertEqual(matrix[.exterior, .boundary], Dimension.empty)
+        XCTAssertEqual(matrix[.exterior, .exterior], Dimension.two)
+    }
+    
+    func testPointPoint_identicalPoints() {
+        
+        let emptyMatrix = IntersectionMatrix()
+        
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 1.00, y: 1.00), precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.00, y: 1.00), precision: precision, coordinateSystem: cs)
+        
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+        
+        XCTAssertEqual(matrix[.interior, .interior], Dimension.zero)
+        XCTAssertEqual(matrix[.interior, .boundary], Dimension.empty)
+        XCTAssertEqual(matrix[.interior, .exterior], Dimension.empty)
+        
+        XCTAssertEqual(matrix[.boundary, .interior], Dimension.empty)
+        XCTAssertEqual(matrix[.boundary, .boundary], Dimension.empty)
+        XCTAssertEqual(matrix[.boundary, .exterior], Dimension.empty)
+        
         XCTAssertEqual(matrix[.exterior, .interior], Dimension.empty)
         XCTAssertEqual(matrix[.exterior, .boundary], Dimension.empty)
-        XCTAssertEqual(matrix[.exterior, .exterior], Dimension.empty)
+        XCTAssertEqual(matrix[.exterior, .exterior], Dimension.two)
     }
 }

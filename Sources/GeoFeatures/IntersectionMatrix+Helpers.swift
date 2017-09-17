@@ -90,7 +90,7 @@ extension IntersectionMatrix {
 
     static func generateMatrix(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
-        let (_, resultIntersectionMatrix) = intersectionGeometry(geometry1, geometry2)
+        let (_, resultIntersectionMatrix) = IntersectionMatrix.intersectionGeometry(geometry1, geometry2)
 
         return resultIntersectionMatrix
     }
@@ -180,7 +180,7 @@ extension IntersectionMatrix {
         return (nil, IntersectionMatrix())
     }
 
-    /// For the intersection of two geometries of dimension .zero and .twp, respectively.
+    /// For the intersection of two geometries of dimension .zero and .two, respectively.
     fileprivate static func intersectionGeometryZeroTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
         if let point = geometry1 as? Point<CoordinateType>, let polygon = geometry2 as? Polygon<CoordinateType> {
@@ -333,19 +333,17 @@ extension IntersectionMatrix {
 
     fileprivate static func generateIntersection(_ point1: Point<CoordinateType>, _ point2: Point<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
-        /// Identical
-        var identical = IntersectionMatrix()
-        identical[.exterior, .exterior] = .two
-
-        /// Disjoint
-        var disjoint = identical
-        disjoint[.interior, .exterior] = .zero
-        disjoint[.exterior, .interior] = .zero
+        var matrixIntersects = IntersectionMatrix()
+        matrixIntersects[.exterior, .exterior] = .two
 
         if point1 == point2 {
-            return (point1, identical)
+            matrixIntersects[.interior, .interior] = .zero
+            return (point1, matrixIntersects)
         }
-        return (nil, disjoint)
+
+        matrixIntersects[.interior, .exterior] = .zero
+        matrixIntersects[.exterior, .interior] = .zero
+        return (nil, matrixIntersects)
     }
 
     fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ points: MultiPoint<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
