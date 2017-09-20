@@ -350,6 +350,7 @@ extension IntersectionMatrix {
 
         /// Identical
         var identical = IntersectionMatrix()
+        identical[.interior, .interior] = .zero
         identical[.exterior, .exterior] = .two
 
         /// First in second
@@ -418,7 +419,15 @@ extension IntersectionMatrix {
 
         /// Identical
         var identical = IntersectionMatrix()
+        identical[.interior, .interior] = .zero
         identical[.exterior, .exterior] = .two
+        
+        /// Intersect but neither is a subset of the other
+        var overlap = IntersectionMatrix()
+        overlap[.interior, .interior] = .zero
+        overlap[.interior, .exterior] = .zero
+        overlap[.exterior, .interior] = .zero
+        overlap[.exterior, .exterior] = .two
 
         /// First in second
         var firstInSecond = IntersectionMatrix()
@@ -441,6 +450,7 @@ extension IntersectionMatrix {
         /// Should use Set here, if possible.  That would simplify a lot of the calculations.
         /// Let's assume points1 and points2 are both a unique set of points.
 
+        var pointsMatched = false
         var pointInGeometry1NotMatched = false
         var pointInGeometry2NotMatched = false
         var multiPointIntersection = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
@@ -454,6 +464,7 @@ extension IntersectionMatrix {
                     multiPointIntersection.append(tempPoint1)
                     multiPointGeometry2Matched.append(tempPoint2)
                     foundMatchingPoint = true
+                    pointsMatched = true
                     break
                 }
 
@@ -476,7 +487,11 @@ extension IntersectionMatrix {
         case (true, false):
             return (multiPointIntersection, secondInFirst)
         case (true, true):
-            return (multiPointIntersection, disjoint)
+            if pointsMatched {
+                return (multiPointIntersection, overlap)
+            } else {
+                return (multiPointIntersection, disjoint)
+            }
         }
     }
 

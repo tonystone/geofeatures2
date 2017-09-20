@@ -29,47 +29,214 @@ class IntersectionMatrixHelperTests: XCTestCase {
     let precision = FloatingPrecision()
     let cs        = Cartesian()
 
+    ///
+    /// Zero Zero tests
+    ///
     func testPointPoint_noIntersection() {
 
-        let emptyMatrix = IntersectionMatrix()
-
-        let geometry1 = Point<CoordinateType>(coordinate: (x: 0.00, y: 0.00), precision: precision, coordinateSystem: cs)
-        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.00, y: 1.00), precision: precision, coordinateSystem: cs)
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
 
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
 
-        XCTAssertEqual(matrix[.interior, .interior], Dimension.empty)
-        XCTAssertEqual(matrix[.interior, .boundary], Dimension.empty)
-        XCTAssertEqual(matrix[.interior, .exterior], Dimension.zero)
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.zero,  .empty, .two]
+            ])
 
-        XCTAssertEqual(matrix[.boundary, .interior], Dimension.empty)
-        XCTAssertEqual(matrix[.boundary, .boundary], Dimension.empty)
-        XCTAssertEqual(matrix[.boundary, .exterior], Dimension.empty)
-
-        XCTAssertEqual(matrix[.exterior, .interior], Dimension.zero)
-        XCTAssertEqual(matrix[.exterior, .boundary], Dimension.empty)
-        XCTAssertEqual(matrix[.exterior, .exterior], Dimension.two)
+        XCTAssertEqual(matrix, expected)
     }
     
     func testPointPoint_identicalPoints() {
-        
-        let emptyMatrix = IntersectionMatrix()
-        
-        let geometry1 = Point<CoordinateType>(coordinate: (x: 1.00, y: 1.00), precision: precision, coordinateSystem: cs)
-        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.00, y: 1.00), precision: precision, coordinateSystem: cs)
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPointMultiPoint_noIntersection() {
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.zero,  .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPointMultiPoint_firstProperSubsetOfSecond() {
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .empty],
+            [.empty, .empty, .empty],
+            [.zero, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPointMultiPoint_firstImproperSubsetOfSecond() {
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPointPoint_noIntersection() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.zero,  .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+    
+    func testMultiPointPoint_secondProperSubsetOfFirst() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
         
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
         
-        XCTAssertEqual(matrix[.interior, .interior], Dimension.zero)
-        XCTAssertEqual(matrix[.interior, .boundary], Dimension.empty)
-        XCTAssertEqual(matrix[.interior, .exterior], Dimension.empty)
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .zero],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
+            ])
         
-        XCTAssertEqual(matrix[.boundary, .interior], Dimension.empty)
-        XCTAssertEqual(matrix[.boundary, .boundary], Dimension.empty)
-        XCTAssertEqual(matrix[.boundary, .exterior], Dimension.empty)
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPointPoint_secondImproperSubsetOfFirst() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPointMultiPoint_noIntersection() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0)), Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.zero,  .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPointMultiPoint_firstIntersectsSecondButNotSubset() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0)), Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .zero],
+            [.empty, .empty, .empty],
+            [.zero, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPointMultiPoint_firstProperSubsetOfSecond() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0)), Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0)), Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0)), Point<CoordinateType>(coordinate: (x: 5.0, y: 5.0))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .empty],
+            [.empty, .empty, .empty],
+            [.zero, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPointMultiPoint_secondProperSubsetOfFirst() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0)), Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0)), Point<CoordinateType>(coordinate: (x: 5.0, y: 5.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0)), Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .zero],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPointMultiPoint_firstImproperSubsetOfSecond() {
         
-        XCTAssertEqual(matrix[.exterior, .interior], Dimension.empty)
-        XCTAssertEqual(matrix[.exterior, .boundary], Dimension.empty)
-        XCTAssertEqual(matrix[.exterior, .exterior], Dimension.two)
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0)), Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 3.0, y: 3.0)), Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+        
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+        
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
+            ])
+        
+        XCTAssertEqual(matrix, expected)
     }
 }

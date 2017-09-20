@@ -30,7 +30,18 @@ extension IntersectionMatrixHelperTests {
    static var allTests: [(String, (IntersectionMatrixHelperTests) -> () throws -> Void)] {
       return [
                 ("testPointPoint_noIntersection", testPointPoint_noIntersection),
-                ("testPointPoint_identicalPoints", testPointPoint_identicalPoints)
+                ("testPointPoint_identicalPoints", testPointPoint_identicalPoints),
+                ("testPointMultiPoint_noIntersection", testPointMultiPoint_noIntersection),
+                ("testPointMultiPoint_firstProperSubsetOfSecond", testPointMultiPoint_firstProperSubsetOfSecond),
+                ("testPointMultiPoint_firstImproperSubsetOfSecond", testPointMultiPoint_firstImproperSubsetOfSecond),
+                ("testMultiPointPoint_noIntersection", testMultiPointPoint_noIntersection),
+                ("testMultiPointPoint_secondProperSubsetOfFirst", testMultiPointPoint_secondProperSubsetOfFirst),
+                ("testMultiPointPoint_secondImproperSubsetOfFirst", testMultiPointPoint_secondImproperSubsetOfFirst),
+                ("testMultiPointMultiPoint_noIntersection", testMultiPointMultiPoint_noIntersection),
+                ("testMultiPointMultiPoint_firstIntersectsSecondButNotSubset", testMultiPointMultiPoint_firstIntersectsSecondButNotSubset),
+                ("testMultiPointMultiPoint_firstProperSubsetOfSecond", testMultiPointMultiPoint_firstProperSubsetOfSecond),
+                ("testMultiPointMultiPoint_secondProperSubsetOfFirst", testMultiPointMultiPoint_secondProperSubsetOfFirst),
+                ("testMultiPointMultiPoint_firstImproperSubsetOfSecond", testMultiPointMultiPoint_firstImproperSubsetOfSecond)
            ]
    }
 }
