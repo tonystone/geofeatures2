@@ -70,8 +70,8 @@ class IntersectionMatrixTests: XCTestCase {
 
         let expected  = IntersectionMatrix(arrayLiteral: [
             [.empty, .two,  .one],
-            [.two,   .empty, .two],
-            [.one,   .two,   .empty]
+            [.zero,  .empty, .two],
+            [.one,   .zero,   .empty]
             ])
 
         input.transpose()

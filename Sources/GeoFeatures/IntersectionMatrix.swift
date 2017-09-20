@@ -98,11 +98,13 @@ extension IntersectionMatrix {
         ///
         /// This is a simple transpose of a square matrix
         ///
+        var transposedMatrix = IntersectionMatrix()
         for row in 0...Index.exterior.rawValue {
-            for col in row...Index.exterior.rawValue {
-                self.matrix[row][col] = self.matrix[col][row]
+            for col in 0...Index.exterior.rawValue {
+                transposedMatrix.matrix[row][col] = self.matrix[col][row]
             }
         }
+        self = transposedMatrix
     }
 
     ///
