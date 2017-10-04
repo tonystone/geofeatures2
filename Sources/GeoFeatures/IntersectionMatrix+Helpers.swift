@@ -567,6 +567,7 @@ extension IntersectionMatrix {
         var disjoint = IntersectionMatrix()
         disjoint[.interior, .exterior] = .zero
         disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
         /// Check if the point equals either of the two endpoints of the line string.

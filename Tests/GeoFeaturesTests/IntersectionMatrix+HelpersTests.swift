@@ -239,4 +239,56 @@ class IntersectionMatrixHelperTests: XCTestCase {
         
         XCTAssertEqual(matrix, expected)
     }
+    
+    ///
+    /// Zero One tests
+    ///
+    
+    func testPointLineString_noIntersection() {
+        
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 1.0, y: 2.0), (x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+        
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.one,   .zero,  .two]
+            ])
+        
+        XCTAssertEqual(matrix, expected)
+    }
+    
+    func testPointLineString_firstSubsetOfSecondInterior() {
+        
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.5), precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 1.0, y: 2.0), (x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+        
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .empty],
+            [.empty, .empty, .empty],
+            [.one,   .zero,  .two]
+            ])
+        
+        XCTAssertEqual(matrix, expected)
+    }
+    
+    func testPointLineString_firstSubsetOfSecondBoundary() {
+        
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 1.0, y: 2.0), (x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+        
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .zero,  .empty],
+            [.empty, .empty, .empty],
+            [.one,   .zero,  .two]
+            ])
+        
+        XCTAssertEqual(matrix, expected)
+    }
 }

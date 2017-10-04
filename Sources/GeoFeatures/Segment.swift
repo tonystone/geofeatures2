@@ -29,6 +29,6 @@ internal class Segment<CoordinateType: Coordinate & CopyConstructable> {
 
     init(left: CoordinateType, right: CoordinateType) {
         self.leftCoordinate  = left
-        self.rightCoordinate = left
+        self.rightCoordinate = right
     }
 }

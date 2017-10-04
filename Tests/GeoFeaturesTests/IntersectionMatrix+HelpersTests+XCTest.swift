@@ -41,7 +41,10 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPointMultiPoint_firstIntersectsSecondButNotSubset", testMultiPointMultiPoint_firstIntersectsSecondButNotSubset),
                 ("testMultiPointMultiPoint_firstProperSubsetOfSecond", testMultiPointMultiPoint_firstProperSubsetOfSecond),
                 ("testMultiPointMultiPoint_secondProperSubsetOfFirst", testMultiPointMultiPoint_secondProperSubsetOfFirst),
-                ("testMultiPointMultiPoint_firstImproperSubsetOfSecond", testMultiPointMultiPoint_firstImproperSubsetOfSecond)
+                ("testMultiPointMultiPoint_firstImproperSubsetOfSecond", testMultiPointMultiPoint_firstImproperSubsetOfSecond),
+                ("testPointLineString_noIntersection", testPointLineString_noIntersection),
+                ("testPointLineString_firstSubsetOfSecondInterior", testPointLineString_firstSubsetOfSecondInterior),
+                ("testPointLineString_firstSubsetOfSecondBoundary", testPointLineString_firstSubsetOfSecondBoundary)
            ]
    }
 }
