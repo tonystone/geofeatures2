@@ -50,7 +50,14 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPoint_LineString_noIntersection", testMultiPoint_LineString_noIntersection),
                 ("testMultiPoint_LineString_firstSubsetOfSecondInterior", testMultiPoint_LineString_firstSubsetOfSecondInterior),
                 ("testMultiPoint_LineString_firstProperSubsetOfSecondBoundary", testMultiPoint_LineString_firstProperSubsetOfSecondBoundary),
-                ("testMultiPoint_LineString_firstImproperSubsetOfSecondBoundary", testMultiPoint_LineString_firstImproperSubsetOfSecondBoundary)
+                ("testMultiPoint_LineString_firstImproperSubsetOfSecondBoundary", testMultiPoint_LineString_firstImproperSubsetOfSecondBoundary),
+                ("testMultiPoint_LineString_firstTouchesSecondInteriorAndBoundary", testMultiPoint_LineString_firstTouchesSecondInteriorAndBoundary),
+                ("testMultiPoint_LineString_firstTouchesSecondInteriorAndCoversBoundary", testMultiPoint_LineString_firstTouchesSecondInteriorAndCoversBoundary),
+                ("testMultiPoint_LineString_firstTouchesSecondInteriorAndExterior", testMultiPoint_LineString_firstTouchesSecondInteriorAndExterior),
+                ("testMultiPoint_LineString_firstTouchesSecondBoundaryAndExterior", testMultiPoint_LineString_firstTouchesSecondBoundaryAndExterior),
+                ("testMultiPoint_LineString_firstCoversSecondBoundaryAndTouchesExterior", testMultiPoint_LineString_firstCoversSecondBoundaryAndTouchesExterior),
+                ("testMultiPoint_LineString_firstTouchesSecondInteriorAndBoundaryAndExterior", testMultiPoint_LineString_firstTouchesSecondInteriorAndBoundaryAndExterior),
+                ("testMultiPoint_LineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary", testMultiPoint_LineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary)
            ]
    }
 }
