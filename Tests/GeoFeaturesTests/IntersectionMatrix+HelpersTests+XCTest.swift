@@ -57,7 +57,10 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPoint_LineString_firstTouchesSecondBoundaryAndExterior", testMultiPoint_LineString_firstTouchesSecondBoundaryAndExterior),
                 ("testMultiPoint_LineString_firstCoversSecondBoundaryAndTouchesExterior", testMultiPoint_LineString_firstCoversSecondBoundaryAndTouchesExterior),
                 ("testMultiPoint_LineString_firstTouchesSecondInteriorAndBoundaryAndExterior", testMultiPoint_LineString_firstTouchesSecondInteriorAndBoundaryAndExterior),
-                ("testMultiPoint_LineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary", testMultiPoint_LineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary)
+                ("testMultiPoint_LineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary", testMultiPoint_LineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary),
+                ("testMultiPoint_LinearRing_noIntersection", testMultiPoint_LinearRing_noIntersection),
+                ("testMultiPoint_LinearRing_firstSubsetOfSecondInterior", testMultiPoint_LinearRing_firstSubsetOfSecondInterior),
+                ("testMultiPoint_LinearRing_firstTouchesSecondInteriorAndExterior", testMultiPoint_LinearRing_firstTouchesSecondInteriorAndExterior)
            ]
    }
 }

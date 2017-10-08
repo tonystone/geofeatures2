@@ -746,6 +746,20 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
+    fileprivate static func subset(_ point: Point<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> Bool {
+
+        for firstCoordIndex in 0..<linearRing.count - 1 {
+            let firstCoord  = linearRing[firstCoordIndex]
+            let secondCoord = linearRing[firstCoordIndex + 1]
+            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let location = pointIsOnLineSegment(point, segment: segment)
+            if location == .onInterior || location == .onBoundary {
+                return true
+            }
+        }
+        return false
+    }
+
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
 
         var relatedTo = RelatedTo()
@@ -2274,7 +2288,8 @@ extension IntersectionMatrix {
                 let firstCoord  = linearRing[firstCoordIndex]
                 let secondCoord = linearRing[firstCoordIndex + 1]
                 let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
-                if pointIsOnLineSegment(point, segment: segment) == .onInterior {
+                let location = pointIsOnLineSegment(point, segment: segment)
+                if location == .onInterior || location == .onBoundary {
                     pointOnInterior = true
                     resultGeometry.append(point)
                 }
@@ -2283,7 +2298,7 @@ extension IntersectionMatrix {
 
         /// Check if any of the points is not on the linear ring.
         for point in points {
-            if !subset(point, resultGeometry) {
+            if !subset(point, linearRing) {
                 pointOnExterior = true
                 break
             }
