@@ -711,6 +711,14 @@ extension IntersectionMatrix {
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
                 return relatedTo
         }
+        
+        relatedTo.firstExteriorTouchesSecondInterior = .one
+        
+        if subset(lineStringBoundary, points) {
+            relatedTo.firstExteriorTouchesSecondBoundary = .empty
+        } else {
+            relatedTo.firstExteriorTouchesSecondBoundary = .zero
+        }
 
         for tempPoint in points {
 
@@ -2164,6 +2172,7 @@ extension IntersectionMatrix {
         var disjoint = IntersectionMatrix()
         disjoint[.interior, .exterior] = .zero
         disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
         /// Define the MultiPoint geometry that might be returned
@@ -2207,7 +2216,7 @@ extension IntersectionMatrix {
 
         /// Check if any of the points is not on the line string.
         for point in points {
-            if !subset(point, resultGeometry) {
+            if !subset(point, lineString) {
                 pointOnExterior = true
                 break
             }

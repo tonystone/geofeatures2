@@ -29,22 +29,28 @@ extension IntersectionMatrixHelperTests {
 
    static var allTests: [(String, (IntersectionMatrixHelperTests) -> () throws -> Void)] {
       return [
-                ("testPointPoint_noIntersection", testPointPoint_noIntersection),
-                ("testPointPoint_identicalPoints", testPointPoint_identicalPoints),
-                ("testPointMultiPoint_noIntersection", testPointMultiPoint_noIntersection),
-                ("testPointMultiPoint_firstProperSubsetOfSecond", testPointMultiPoint_firstProperSubsetOfSecond),
-                ("testPointMultiPoint_firstImproperSubsetOfSecond", testPointMultiPoint_firstImproperSubsetOfSecond),
-                ("testMultiPointPoint_noIntersection", testMultiPointPoint_noIntersection),
-                ("testMultiPointPoint_secondProperSubsetOfFirst", testMultiPointPoint_secondProperSubsetOfFirst),
-                ("testMultiPointPoint_secondImproperSubsetOfFirst", testMultiPointPoint_secondImproperSubsetOfFirst),
-                ("testMultiPointMultiPoint_noIntersection", testMultiPointMultiPoint_noIntersection),
-                ("testMultiPointMultiPoint_firstIntersectsSecondButNotSubset", testMultiPointMultiPoint_firstIntersectsSecondButNotSubset),
-                ("testMultiPointMultiPoint_firstProperSubsetOfSecond", testMultiPointMultiPoint_firstProperSubsetOfSecond),
-                ("testMultiPointMultiPoint_secondProperSubsetOfFirst", testMultiPointMultiPoint_secondProperSubsetOfFirst),
-                ("testMultiPointMultiPoint_firstImproperSubsetOfSecond", testMultiPointMultiPoint_firstImproperSubsetOfSecond),
-                ("testPointLineString_noIntersection", testPointLineString_noIntersection),
-                ("testPointLineString_firstSubsetOfSecondInterior", testPointLineString_firstSubsetOfSecondInterior),
-                ("testPointLineString_firstSubsetOfSecondBoundary", testPointLineString_firstSubsetOfSecondBoundary)
+                ("testPoint_Point_noIntersection", testPoint_Point_noIntersection),
+                ("testPoint_Point_identicalPoints", testPoint_Point_identicalPoints),
+                ("testPoint_MultiPoint_noIntersection", testPoint_MultiPoint_noIntersection),
+                ("testPoint_MultiPoint_firstProperSubsetOfSecond", testPoint_MultiPoint_firstProperSubsetOfSecond),
+                ("testPoint_MultiPoint_firstImproperSubsetOfSecond", testPoint_MultiPoint_firstImproperSubsetOfSecond),
+                ("testMultiPoint_Point_noIntersection", testMultiPoint_Point_noIntersection),
+                ("testMultiPoint_Point_secondProperSubsetOfFirst", testMultiPoint_Point_secondProperSubsetOfFirst),
+                ("testMultiPoint_Point_secondImproperSubsetOfFirst", testMultiPoint_Point_secondImproperSubsetOfFirst),
+                ("testMultiPoint_MultiPoint_noIntersection", testMultiPoint_MultiPoint_noIntersection),
+                ("testMultiPoint_MultiPoint_firstIntersectsSecondButNotSubset", testMultiPoint_MultiPoint_firstIntersectsSecondButNotSubset),
+                ("testMultiPoint_MultiPoint_firstProperSubsetOfSecond", testMultiPoint_MultiPoint_firstProperSubsetOfSecond),
+                ("testMultiPoint_MultiPoint_secondProperSubsetOfFirst", testMultiPoint_MultiPoint_secondProperSubsetOfFirst),
+                ("testMultiPoint_MultiPoint_firstImproperSubsetOfSecond", testMultiPoint_MultiPoint_firstImproperSubsetOfSecond),
+                ("testPoint_LineString_noIntersection", testPoint_LineString_noIntersection),
+                ("testPoint_LineString_firstSubsetOfSecondInterior", testPoint_LineString_firstSubsetOfSecondInterior),
+                ("testPoint_LineString_firstSubsetOfSecondBoundary", testPoint_LineString_firstSubsetOfSecondBoundary),
+                ("testPoint_LinearRing_noIntersection", testPoint_LinearRing_noIntersection),
+                ("testPoint_LinearRing_firstSubsetOfSecondInterior", testPoint_LinearRing_firstSubsetOfSecondInterior),
+                ("testMultiPoint_LineString_noIntersection", testMultiPoint_LineString_noIntersection),
+                ("testMultiPoint_LineString_firstSubsetOfSecondInterior", testMultiPoint_LineString_firstSubsetOfSecondInterior),
+                ("testMultiPoint_LineString_firstProperSubsetOfSecondBoundary", testMultiPoint_LineString_firstProperSubsetOfSecondBoundary),
+                ("testMultiPoint_LineString_firstImproperSubsetOfSecondBoundary", testMultiPoint_LineString_firstImproperSubsetOfSecondBoundary)
            ]
    }
 }
