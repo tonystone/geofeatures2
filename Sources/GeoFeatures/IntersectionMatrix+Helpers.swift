@@ -705,6 +705,22 @@ extension IntersectionMatrix {
         return false
     }
 
+    fileprivate static func subset(_ point: Point<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> Bool {
+
+        for lineString in multiLineString {
+            for firstCoordIndex in 0..<lineString.count - 1 {
+                let firstCoord  = lineString[firstCoordIndex]
+                let secondCoord = lineString[firstCoordIndex + 1]
+                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let location = pointIsOnLineSegment(point, segment: segment)
+                if location == .onInterior || location == .onBoundary {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ lineString: LineString<CoordinateType>) -> RelatedTo {
 
         var relatedTo = RelatedTo()
@@ -2333,6 +2349,7 @@ extension IntersectionMatrix {
         var disjoint = IntersectionMatrix()
         disjoint[.interior, .exterior] = .zero
         disjoint[.exterior, .interior] = .one
+        disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
         /// Define the MultiPoint geometry that might be returned
@@ -2378,7 +2395,7 @@ extension IntersectionMatrix {
 
         /// Check if any of the points is not on the multiline string.
         for point in points {
-            if !subset(point, resultGeometry) {
+            if !subset(point, multiLineString) {
                 pointOnExterior = true
                 break
             }

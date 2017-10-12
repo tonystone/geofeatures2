@@ -63,7 +63,18 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPoint_LineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary", testMultiPoint_LineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary),
                 ("testMultiPoint_LinearRing_noIntersection", testMultiPoint_LinearRing_noIntersection),
                 ("testMultiPoint_LinearRing_firstSubsetOfSecondInterior", testMultiPoint_LinearRing_firstSubsetOfSecondInterior),
-                ("testMultiPoint_LinearRing_firstTouchesSecondInteriorAndExterior", testMultiPoint_LinearRing_firstTouchesSecondInteriorAndExterior)
+                ("testMultiPoint_LinearRing_firstTouchesSecondInteriorAndExterior", testMultiPoint_LinearRing_firstTouchesSecondInteriorAndExterior),
+                ("testMultiPoint_MultiLineString_noIntersection", testMultiPoint_MultiLineString_noIntersection),
+                ("testMultiPoint_MultiLineString_firstSubsetOfSecondInterior", testMultiPoint_MultiLineString_firstSubsetOfSecondInterior),
+                ("testMultiPoint_MultiLineString_firstProperSubsetOfSecondBoundary", testMultiPoint_MultiLineString_firstProperSubsetOfSecondBoundary),
+                ("testMultiPoint_MultiLineString_firstImproperSubsetOfSecondBoundary", testMultiPoint_MultiLineString_firstImproperSubsetOfSecondBoundary),
+                ("testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundary", testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundary),
+                ("testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndCoversBoundary", testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndCoversBoundary),
+                ("testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExterior", testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExterior),
+                ("testMultiPoint_MultiLineString_firstTouchesSecondBoundaryAndExterior", testMultiPoint_MultiLineString_firstTouchesSecondBoundaryAndExterior),
+                ("testMultiPoint_MultiLineString_firstCoversSecondBoundaryAndTouchesExterior", testMultiPoint_MultiLineString_firstCoversSecondBoundaryAndTouchesExterior),
+                ("testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundaryAndExterior", testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundaryAndExterior),
+                ("testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary", testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary)
            ]
    }
 }
