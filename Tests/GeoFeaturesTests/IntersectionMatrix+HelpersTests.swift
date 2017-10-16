@@ -771,4 +771,24 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// Zero Two tests
+    ///
+
+    func testPoint_Polygon_outerRingOnly_noIntersection() {
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 1.0, y: 2.0), (x: 2.0, y: 1.0), (x: 3.0, y: 1.0), (x: 2.0, y: 4.0), (x: 1.0, y: 2.0)], []), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.two,   .one,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
 }

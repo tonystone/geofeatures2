@@ -799,6 +799,38 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
+    /// This assumes a GeometryCollection where all of the elements are LinearRings.
+    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ geometryCollection: GeometryCollection) -> RelatedTo {
+
+        var relatedTo = RelatedTo()
+
+        for index in 0..<geometryCollection.count {
+
+            guard let linearRing = geometryCollection[index] as? LinearRing<CoordinateType> else {
+                return relatedTo
+            }
+
+            for tempPoint in points {
+                for firstCoordIndex in 0..<linearRing.count - 1 {
+                    let firstCoord  = linearRing[firstCoordIndex]
+                    let secondCoord = linearRing[firstCoordIndex + 1]
+                    let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                    let location = pointIsOnLineSegment(tempPoint, segment: segment)
+                    if location == .onInterior {
+                        relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    } else if location == .onBoundary {
+                        /// The boundary of any line segment on the linear ring is necessarily on the interior of the linear ring
+                        relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    } else {
+                        relatedTo.firstInteriorTouchesSecondExterior = .zero
+                    }
+                }
+            }
+        }
+
+        return relatedTo
+    }
+
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> RelatedTo {
 
         var relatedTo = RelatedTo()
@@ -884,17 +916,17 @@ extension IntersectionMatrix {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary = simplePolygon.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let lineString = polygonBoundary.first,
-            lineString.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return relatedToResult
         }
 
         /// Check if the point is on the boundary of the polygon
         var points = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
         points.append(point)
-        let tempRelatedToResult = relatedTo(points, lineString)
+        let tempRelatedToResult = relatedTo(points, outerLinearRing)
         if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
             relatedToResult.firstInteriorTouchesSecondBoundary = .zero
             return relatedToResult
@@ -902,12 +934,12 @@ extension IntersectionMatrix {
 
         let pointCoord = point.coordinate
 
-        var secondCoord = lineString[lineString.count + 1]
+        var secondCoord = outerLinearRing[outerLinearRing.count - 1]
 
         var isSubset = false
 
-        for firstCoordIndex in 0..<lineString.count - 1 {
-            let firstCoord  = lineString[firstCoordIndex]
+        for firstCoordIndex in 0..<outerLinearRing.count - 1 {
+            let firstCoord  = outerLinearRing[firstCoordIndex]
 
             if ((firstCoord.y >= pointCoord.y) != (secondCoord.y >= pointCoord.y)) &&
                 (pointCoord.x <= (secondCoord.x - firstCoord.x) * (pointCoord.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
@@ -946,15 +978,15 @@ extension IntersectionMatrix {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let lineString = polygonBoundary.first,
-            lineString.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return relatedToResult
         }
 
         /// Get the relationship between the point and the main polygon
-        let tempPolygon = Polygon<CoordinateType>(outerRing: polygonBoundary[0], precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        let tempPolygon = Polygon<CoordinateType>(outerRing: outerLinearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
         let pointRelatedToResult = relatedTo(point, tempPolygon)
 
         /// Check if the point is on the exterior of the main polygon
@@ -971,9 +1003,14 @@ extension IntersectionMatrix {
         /// Now we have to check to see if the point is on the boundary or interior of any holes.
 
         for index in 1..<polygonBoundary.count {
+            
+            guard let innerLinearRing = polygonBoundary[index] as? LinearRing<CoordinateType>,
+                innerLinearRing.count > 0 else {
+                    return pointRelatedToResult
+            }
 
             /// Get the relationship between the point and the hole
-            let tempPolygon = Polygon<CoordinateType>(outerRing: polygonBoundary[index], precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            let tempPolygon = Polygon<CoordinateType>(outerRing: innerLinearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
             let pointRelatedToResult = relatedTo(point, tempPolygon)
 
             /// Check if the point is on the interior of the hole
@@ -1099,14 +1136,15 @@ extension IntersectionMatrix {
         }
     }
 
-    /// The polygon here is essentially a LinearRing.  This polygon has no holes.
+    /// The polygon is a general polygon.  This polygon has holes.
     fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         /// It is assumed that the polygon boundary is a collection of LinearRings with the first
         /// being the main polygon boundary and the rest being the holes inside the polygon.
-        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+        /// In this case, we should have just one LinearRing, which is the outer LinearRing.
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0 else {
             return relatedToResult
         }
@@ -1121,13 +1159,17 @@ extension IntersectionMatrix {
 
             var firstTime = true
 
-            for lineString in polygonBoundary {
+            for element in polygonBoundary {
+                
+                guard let linearRing = element as? LinearRing<CoordinateType> else {
+                    return relatedToResult
+                }
 
-                let tempPolygon = Polygon<CoordinateType>(outerRing: lineString, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+                let tempPolygon = Polygon<CoordinateType>(outerRing: linearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
                 let tempRelatedToResult = relatedTo(tempPoint, tempPolygon)
 
-                /// The first lineString is the outer boundary of the polygon
+                /// The first linear ring is the outer boundary of the polygon
                 if firstTime {
                     if tempRelatedToResult.firstTouchesSecondExterior > .empty {
                         relatedToResult.firstInteriorTouchesSecondExterior = .zero

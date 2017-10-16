@@ -30,18 +30,20 @@ extension Polygon: Geometry {
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
     ///
-    /// - Note: The boundary of a Polygon consists of a set of LinearRings that make up its exterior and interior boundaries
+    /// - Note: The boundary of a Polygon consists of an array of LinearRings that make up its exterior and interior boundaries.
+    ///         The first element of the array is the outer ring.
+    ///         The rest of the elements of the array are the inner rings, in no particular order.
     ///
     public func boundary() -> Geometry {
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> MultiLineString<CoordinateType> in
+        return buffer.withUnsafeMutablePointers { (header, elements) -> Geometry in
 
-            var multiLineString = MultiLineString<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+            var linearRingCollection = GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
             for i in 0..<header.pointee.count {
-                multiLineString.append(LineString<CoordinateType>(elements: elements[i], precision: self.precision, coordinateSystem: self.coordinateSystem))
+                linearRingCollection.append(LinearRing<CoordinateType>(elements: elements[i], precision: self.precision, coordinateSystem: self.coordinateSystem))
             }
-            return multiLineString
+            return linearRingCollection
         }
     }
 
