@@ -912,6 +912,7 @@ extension IntersectionMatrix {
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
     /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
+    /// The algorithm was modified because we assume the polygon is defined as a LinearRing, whose first and last points are the same.
     fileprivate static func relatedTo(_ point: Point<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -934,19 +935,19 @@ extension IntersectionMatrix {
 
         let pointCoord = point.coordinate
 
-        var secondCoord = outerLinearRing[outerLinearRing.count - 1]
-
         var isSubset = false
 
-        for firstCoordIndex in 0..<outerLinearRing.count - 1 {
-            let firstCoord  = outerLinearRing[firstCoordIndex]
+        var firstCoord  = outerLinearRing[0]
 
-            if ((firstCoord.y >= pointCoord.y) != (secondCoord.y >= pointCoord.y)) &&
-                (pointCoord.x <= (secondCoord.x - firstCoord.x) * (pointCoord.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
+        for firstCoordIndex in 1..<outerLinearRing.count - 1 {
+            let secondCoord = outerLinearRing[firstCoordIndex]
+
+            if ((secondCoord.y >= pointCoord.y) != (firstCoord.y >= pointCoord.y)) &&
+                (pointCoord.x <= (firstCoord.x - secondCoord.x) * (pointCoord.y - secondCoord.y) / (firstCoord.y - secondCoord.y) + secondCoord.x) {
                 isSubset = !isSubset
             }
-
-            secondCoord = firstCoord
+            
+            firstCoord = secondCoord
         }
 
         relatedToResult = RelatedTo() /// Resets to default values
@@ -1155,12 +1156,15 @@ extension IntersectionMatrix {
             relatedToResult.firstInteriorTouchesSecondBoundary = .zero
         }
 
+        var pointsOnInteriorOfMainRing      = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var pointsOnInteriorOfInnerRings    = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
         for tempPoint in points {
 
             var firstTime = true
 
             for element in polygonBoundary {
-                
+
                 guard let linearRing = element as? LinearRing<CoordinateType> else {
                     return relatedToResult
                 }
@@ -1178,7 +1182,7 @@ extension IntersectionMatrix {
                         relatedToResult.firstInteriorTouchesSecondBoundary = .zero
                         break
                     } else {
-                        relatedToResult.firstInteriorTouchesSecondInterior = .zero
+                        pointsOnInteriorOfMainRing.append(tempPoint)
                     }
                     firstTime = false
 
@@ -1186,13 +1190,19 @@ extension IntersectionMatrix {
                     /// The algorithm will only reach this point if the point is on the interior of the main polygon.
                     /// Note, too, that the tempPolygon above now refers to one of the main polygon's holes.
                     /// If the point is on the interior of a hole, it is on the exterior of the main polygon.
-                    if tempRelatedToResult.firstTouchesSecondInterior != .empty {
+                    if tempRelatedToResult.firstTouchesSecondInterior > .empty {
+                        pointsOnInteriorOfInnerRings.append(tempPoint)
                         relatedToResult.firstInteriorTouchesSecondExterior = .zero
                         break
                     }
                 }
             }
         }
+
+        if pointsOnInteriorOfMainRing.count > pointsOnInteriorOfInnerRings.count {
+            relatedToResult.firstInteriorTouchesSecondInterior = .zero
+        }
+
         return relatedToResult
     }
 
