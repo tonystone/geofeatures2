@@ -550,7 +550,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
     func testMultiPoint_LinearRing_noIntersection() {
 
-        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 0.0, y: 0.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 0.0, y: 0.0)), Point<Coordinate2D>(coordinate: (x: 3.0, y: 3.0))], precision: precision, coordinateSystem: cs)
         let geometry2 = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 1.0), (x: 2.0, y: 2.0), (x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
 
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
@@ -766,7 +766,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
         let expected  = IntersectionMatrix(arrayLiteral: [
             [.zero,  .zero,  .zero],
             [.empty, .empty, .empty],
-            [.one,   .empty,  .two]
+            [.one,   .empty, .two]
             ])
 
         XCTAssertEqual(matrix, expected)
@@ -786,7 +786,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
         let expected  = IntersectionMatrix(arrayLiteral: [
             [.empty, .empty, .zero],
             [.empty, .empty, .empty],
-            [.two,   .one,  .two]
+            [.two,   .one,   .two]
             ])
 
         XCTAssertEqual(matrix, expected)
@@ -802,7 +802,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
         let expected  = IntersectionMatrix(arrayLiteral: [
             [.empty, .empty, .zero],
             [.empty, .empty, .empty],
-            [.two,   .one,  .two]
+            [.two,   .one,   .two]
             ])
 
         XCTAssertEqual(matrix, expected)
@@ -818,7 +818,55 @@ class IntersectionMatrixHelperTests: XCTestCase {
         let expected  = IntersectionMatrix(arrayLiteral: [
             [.empty, .empty, .zero],
             [.empty, .empty, .empty],
-            [.two,   .one,  .two]
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPoint_Polygon_outerRingOnly_intersectsBoundary() {
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 1.0, y: 3.0), (x: 3.0, y: 5.0), (x: 5.0, y: 3.0), (x: 3.0, y: 1.0), (x: 1.0, y: 3.0)], []), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .zero,  .empty],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary() {
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: -10.0, y: 5.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -10.0), (x: -10.0, y: 10.0), (x: 10.0, y: 10.0), (x: 10.0, y: -10.0), (x: -10.0, y: -10.0)], [[(x: 1.0, y: 3.0), (x: 3.0, y: 1.0), (x: 5.0, y: 3.0), (x: 3.0, y: 5.0), (x: 1.0, y: 3.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .zero,  .empty],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary() {
+
+        let geometry1 = Point<CoordinateType>(coordinate: (x: 4.0, y: 4.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -10.0), (x: -10.0, y: 10.0), (x: 10.0, y: 10.0), (x: 10.0, y: -10.0), (x: -10.0, y: -10.0)], [[(x: 1.0, y: 3.0), (x: 3.0, y: 1.0), (x: 5.0, y: 3.0), (x: 3.0, y: 5.0), (x: 1.0, y: 3.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .zero,  .empty],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
             ])
 
         XCTAssertEqual(matrix, expected)

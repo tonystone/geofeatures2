@@ -77,7 +77,10 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary", testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary),
                 ("testPoint_Polygon_outerRingOnly_noIntersection", testPoint_Polygon_outerRingOnly_noIntersection),
                 ("testPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection", testPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection),
-                ("testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection", testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection)
+                ("testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection", testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection),
+                ("testPoint_Polygon_outerRingOnly_intersectsBoundary", testPoint_Polygon_outerRingOnly_intersectsBoundary),
+                ("testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary),
+                ("testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary)
            ]
    }
 }

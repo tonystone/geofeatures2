@@ -1158,6 +1158,7 @@ extension IntersectionMatrix {
 
         var pointsOnInteriorOfMainRing      = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
         var pointsOnInteriorOfInnerRings    = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var pointsOnBoundaryOfInnerRings    = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
         for tempPoint in points {
 
@@ -1195,11 +1196,17 @@ extension IntersectionMatrix {
                         relatedToResult.firstInteriorTouchesSecondExterior = .zero
                         break
                     }
+
+                    if tempRelatedToResult.firstTouchesSecondBoundary > .empty {
+                        pointsOnBoundaryOfInnerRings.append(tempPoint)
+                        relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                        break
+                    }
                 }
             }
         }
 
-        if pointsOnInteriorOfMainRing.count > pointsOnInteriorOfInnerRings.count {
+        if pointsOnInteriorOfMainRing.count > pointsOnInteriorOfInnerRings.count + pointsOnBoundaryOfInnerRings.count {
             relatedToResult.firstInteriorTouchesSecondInterior = .zero
         }
 
