@@ -903,4 +903,68 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    func testMultiPoint_Polygon_outerRingOnly_noIntersection() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 10.0, y: 2.0)), Point<Coordinate2D>(coordinate: (x: 0.5, y: 4.0)), Point<Coordinate2D>(coordinate: (x: 1.0, y: 5.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 1.0, y: 3.0), (x: 3.0, y: 5.0), (x: 5.0, y: 3.0), (x: 3.0, y: 1.0), (x: 1.0, y: 3.0)], []), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 11.0, y: 2.0)), Point<Coordinate2D>(coordinate: (x: 0.5, y: 14.0)), Point<Coordinate2D>(coordinate: (x: -11.0, y: -5.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -10.0), (x: -10.0, y: 10.0), (x: 10.0, y: 10.0), (x: 10.0, y: -10.0), (x: -10.0, y: -10.0)], [[(x: 1.0, y: 3.0), (x: 3.0, y: 1.0), (x: 5.0, y: 3.0), (x: 3.0, y: 5.0), (x: 1.0, y: 3.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: -0.5, y: 0.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -10.0), (x: -10.0, y: 10.0), (x: 10.0, y: 10.0), (x: 10.0, y: -10.0), (x: -10.0, y: -10.0)], [[(x: -3.0, y: 0.0), (x: 0.0, y: -3.0), (x: 3.0, y: 0.0), (x: 0.0, y: 3.0), (x: -3.0, y: 0.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_outsideMainRingAndInsideInnerRings_noIntersection() {
+
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 11.0, y: 11.0)), Point<Coordinate2D>(coordinate: (x: 2.5, y: 2.5)), Point<Coordinate2D>(coordinate: (x: -5.0, y: -3.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -10.0), (x: -10.0, y: 10.0), (x: 10.0, y: 10.0), (x: 10.0, y: -10.0), (x: -10.0, y: -10.0)], [[(x: 1.0, y: 3.0), (x: 3.0, y: 1.0), (x: 5.0, y: 3.0), (x: 3.0, y: 5.0), (x: 1.0, y: 3.0)], [(x: -6.0, y: -1.0), (x: -6.0, y: -5.0), (x: -2.0, y: -5.0), (x: -2.0, y: -1.0), (x: -6.0, y: -1.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .zero],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
 }
