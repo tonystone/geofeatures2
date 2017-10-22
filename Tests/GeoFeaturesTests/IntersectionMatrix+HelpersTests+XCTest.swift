@@ -80,7 +80,9 @@ extension IntersectionMatrixHelperTests {
                 ("testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection", testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection),
                 ("testPoint_Polygon_outerRingOnly_intersectsBoundary", testPoint_Polygon_outerRingOnly_intersectsBoundary),
                 ("testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary),
-                ("testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary)
+                ("testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary),
+                ("testPoint_Polygon_outerRingOnly_intersectsInterior", testPoint_Polygon_outerRingOnly_intersectsInterior),
+                ("testPoint_Polygon_outerRingAndInnerRing_intersectsInterior", testPoint_Polygon_outerRingAndInnerRing_intersectsInterior)
            ]
    }
 }

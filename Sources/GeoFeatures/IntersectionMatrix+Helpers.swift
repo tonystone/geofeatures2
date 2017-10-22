@@ -939,7 +939,7 @@ extension IntersectionMatrix {
 
         var firstCoord  = outerLinearRing[0]
 
-        for firstCoordIndex in 1..<outerLinearRing.count - 1 {
+        for firstCoordIndex in 1..<outerLinearRing.count {
             let secondCoord = outerLinearRing[firstCoordIndex]
 
             if ((secondCoord.y >= pointCoord.y) != (firstCoord.y >= pointCoord.y)) &&
