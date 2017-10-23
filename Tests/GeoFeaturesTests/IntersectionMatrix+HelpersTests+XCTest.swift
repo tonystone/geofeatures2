@@ -91,7 +91,10 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundaryOnly", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundaryOnly),
                 ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundaryOnly", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundaryOnly),
                 ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsOuterAndInnerBoundaries", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsOuterAndInnerBoundaries),
-                ("testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries", testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries)
+                ("testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries", testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries),
+                ("testMultiPoint_Polygon_outerRingOnly_intersectsInteriorOnly", testMultiPoint_Polygon_outerRingOnly_intersectsInteriorOnly),
+                ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorOnly", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorOnly),
+                ("testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorOnly", testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorOnly)
            ]
    }
 }
