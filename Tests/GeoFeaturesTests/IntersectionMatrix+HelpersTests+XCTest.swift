@@ -99,7 +99,11 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndOuterBoundary", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndOuterBoundary),
                 ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndInnerBoundary", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndInnerBoundary),
                 ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndOuterAndInnerBoundaries", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndOuterAndInnerBoundaries),
-                ("testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries", testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries)
+                ("testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries", testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries),
+                ("testMultiPoint_Polygon_outerRingOnly_intersectsInteriorAndExterior", testMultiPoint_Polygon_outerRingOnly_intersectsInteriorAndExterior),
+                ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndExteriorOfMainRing", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndExteriorOfMainRing),
+                ("testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndExteriorWithinInnerRing", testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndExteriorWithinInnerRing),
+                ("testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndExteriorOfMainRingAndWithinInnerRings", testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndExteriorOfMainRingAndWithinInnerRings)
            ]
    }
 }
