@@ -30,8 +30,9 @@ class IntersectionMatrixHelperTests: XCTestCase {
     let cs        = Cartesian()
 
     ///
-    /// Zero Zero tests
+    /// Point Point tests
     ///
+
     func testPoint_Point_noIntersection() {
 
         let geometry1 = Point<CoordinateType>(coordinate: (x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
@@ -63,6 +64,10 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// Point MultiPoint tests
+    ///
 
     func testPoint_MultiPoint_noIntersection() {
 
@@ -112,6 +117,10 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    ///
+    /// MultiPoint Point tests
+    ///
+
     func testMultiPoint_Point_noIntersection() {
 
         let geometry1 = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0)), Point<CoordinateType>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
@@ -159,6 +168,10 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// MultiPoint MultiPoint tests
+    ///
 
     func testMultiPoint_MultiPoint_noIntersection() {
 
@@ -241,7 +254,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
     }
 
     ///
-    /// Zero One tests
+    /// Point LineString tests
     ///
 
     func testPoint_LineString_noIntersection() {
@@ -292,6 +305,10 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    ///
+    /// Point LinearRing tests
+    ///
+
     func testPoint_LinearRing_noIntersection() {
 
         let geometry1 = Point<CoordinateType>(coordinate: (x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
@@ -323,6 +340,10 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// Point MultiLineString tests
+    ///
 
     func testPoint_MultiLineString_noIntersection() {
 
@@ -371,6 +392,10 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// MultiPoint LineString tests
+    ///
 
     func testMultiPoint_LineString_noIntersection() {
 
@@ -548,6 +573,10 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    ///
+    /// MultiPoint LinearRing tests
+    ///
+
     func testMultiPoint_LinearRing_noIntersection() {
 
         let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 0.0, y: 0.0)), Point<Coordinate2D>(coordinate: (x: 3.0, y: 3.0))], precision: precision, coordinateSystem: cs)
@@ -595,6 +624,10 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// MutliPoint MultiLineString tests
+    ///
 
     func testMultiPoint_MultiLineString_noIntersection() {
 
@@ -773,7 +806,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
     }
 
     ///
-    /// Zero Two tests
+    /// Point Polygon tests
     ///
 
     func testPoint_Polygon_outerRingOnly_noIntersection() {
@@ -903,6 +936,14 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// Point MultiPolygon tests
+    ///
+
+    ///
+    /// MultiPoint Polygon tests
+    ///
 
     func testMultiPoint_Polygon_outerRingOnly_noIntersection() {
 
@@ -1367,4 +1408,8 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// MultiPoint MultiPolygon tests
+    ///
 }
