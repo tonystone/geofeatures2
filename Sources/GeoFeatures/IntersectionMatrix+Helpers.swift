@@ -930,6 +930,8 @@ extension IntersectionMatrix {
         let tempRelatedToResult = relatedTo(points, outerLinearRing)
         if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
             relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+            relatedToResult.firstExteriorTouchesSecondInterior = .two
+            relatedToResult.firstExteriorTouchesSecondBoundary = .one
             return relatedToResult
         }
 
@@ -951,6 +953,8 @@ extension IntersectionMatrix {
         }
 
         relatedToResult = RelatedTo() /// Resets to default values
+        relatedToResult.firstExteriorTouchesSecondInterior = .two
+        relatedToResult.firstExteriorTouchesSecondBoundary = .one
 
         if isSubset {
             relatedToResult.firstInteriorTouchesSecondInterior = .zero
