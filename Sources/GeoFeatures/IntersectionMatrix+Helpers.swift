@@ -978,7 +978,7 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that the polygon is a general polygon with holes.
-    /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
+    /// Note we've changed the name so as not to conflict with the simple polygon case.  This may change later.
     fileprivate static func relatedToGeneral(_ point: Point<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1047,7 +1047,7 @@ extension IntersectionMatrix {
         for polygon in multipolygon {
 
             /// Get the relationship between the point and the polygon
-            let pointRelatedToResult = relatedTo(point, polygon)
+            let pointRelatedToResult = relatedToGeneral(point, polygon)
 
             /// Update the relatedToResult as needed
             update(relatedToBase: &relatedToResult, relatedToNew: pointRelatedToResult)
@@ -2534,7 +2534,6 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        /// No intersection
         return (nil, matrixIntersects)
     }
 
@@ -2544,7 +2543,6 @@ extension IntersectionMatrix {
 
         let matrixIntersects = intersectionMatrix(from: relatedToPointMP)
 
-        /// No intersection
         return (nil, matrixIntersects)
     }
 
@@ -2570,7 +2568,6 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        /// No intersection
         return (nil, matrixIntersects)
     }
 
