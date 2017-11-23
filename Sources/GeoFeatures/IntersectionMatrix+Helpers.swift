@@ -1276,11 +1276,6 @@ extension IntersectionMatrix {
 
         var relatedToResult = RelatedTo()
 
-        /// There is a special case where a MultiPoint touches the exterior of a MultiPolygon only when each
-        /// Point touches the exterior of the MultiPolygon.  Therefore, we will track the total number of
-        /// times each Point touches the exterior of the MultiPolygon.
-        var pointTouchesExteriorOfMultiPolygonCount = 0
-
         /// Loop over the points and update the relatedToResult struct as needed on each pass.
 
         for point in points {
@@ -1288,19 +1283,8 @@ extension IntersectionMatrix {
             /// Get the relationships between each point and the general multipolygon
             let pointRelatedToResult = relatedTo(point, multipolygon)
 
-            /// Update the exterior count
-            if pointRelatedToResult.firstTouchesSecondExterior > .empty {
-                pointTouchesExteriorOfMultiPolygonCount += 1
-            }
-
             /// Update the relatedToResult as needed
             update(relatedToBase: &relatedToResult, relatedToNew: pointRelatedToResult)
-        }
-
-        /// Update the interior, exterior parameter
-        relatedToResult.firstInteriorTouchesSecondExterior = .empty
-        if pointTouchesExteriorOfMultiPolygonCount == points.count {
-            relatedToResult.firstInteriorTouchesSecondExterior = .zero
         }
 
         return relatedToResult
