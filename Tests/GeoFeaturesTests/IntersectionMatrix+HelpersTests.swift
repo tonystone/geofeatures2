@@ -2004,4 +2004,56 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// LineString Point tests
+    ///
+
+    func testLineString_Point_noIntersection() {
+
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 1.0, y: 2.0), (x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .one],
+            [.empty, .empty, .zero],
+            [.zero,  .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testLineString_Point_firstSubsetOfSecondInterior() {
+
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 1.0, y: 2.0), (x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.5), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .one],
+            [.empty, .empty, .zero],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testLineString_Point_firstSubsetOfSecondBoundary() {
+
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 1.0, y: 2.0), (x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point<CoordinateType>(coordinate: (x: 1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .one],
+            [.zero,  .empty, .zero],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
 }

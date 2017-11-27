@@ -148,7 +148,10 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPoint_MultiPolygon_outerRingOnly_intersectsInteriorAndBoundaryAndExterior", testMultiPoint_MultiPolygon_outerRingOnly_intersectsInteriorAndBoundaryAndExterior),
                 ("testMultiPoint_MultiPolygon_outerRingAndInnerRing_intersectsInteriorAndMainBoundaryAndExteriorOfMainRing", testMultiPoint_MultiPolygon_outerRingAndInnerRing_intersectsInteriorAndMainBoundaryAndExteriorOfMainRing),
                 ("testMultiPoint_MultiPolygon_outerRingAndInnerRing_intersectsInteriorAndBothMainAndInnerBoundaryAndExteriorWithinInnerRingAndOutsideMainRing", testMultiPoint_MultiPolygon_outerRingAndInnerRing_intersectsInteriorAndBothMainAndInnerBoundaryAndExteriorWithinInnerRingAndOutsideMainRing),
-                ("testMultiPoint_MultiPolygon_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings", testMultiPoint_MultiPolygon_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings)
+                ("testMultiPoint_MultiPolygon_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings", testMultiPoint_MultiPolygon_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings),
+                ("testLineString_Point_noIntersection", testLineString_Point_noIntersection),
+                ("testLineString_Point_firstSubsetOfSecondInterior", testLineString_Point_firstSubsetOfSecondInterior),
+                ("testLineString_Point_firstSubsetOfSecondBoundary", testLineString_Point_firstSubsetOfSecondBoundary)
            ]
    }
 }
