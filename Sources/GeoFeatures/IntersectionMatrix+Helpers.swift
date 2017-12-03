@@ -2795,7 +2795,12 @@ extension IntersectionMatrix {
         let x = numx / den
         let y = numy / den
 
-        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: true, theGeometry: Point<CoordinateType>(coordinate: CoordinateType(array: [x, y]), precision: precsion, coordinateSystem: csystem))
+        var interiorsIntersect = false
+        if (leftSign < 0 && rightSign > 0) || (leftSign > 0 && rightSign < 0) {
+            interiorsIntersect = true
+        }
+
+        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: interiorsIntersect, theGeometry: Point<CoordinateType>(coordinate: CoordinateType(array: [x, y]), precision: precsion, coordinateSystem: csystem))
     }
 
     fileprivate static func intersects(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
