@@ -728,9 +728,9 @@ extension IntersectionMatrix {
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
                 return relatedTo
         }
-        
+
         relatedTo.firstExteriorTouchesSecondInterior = .one
-        
+
         if subset(lineStringBoundary, points) {
             relatedTo.firstExteriorTouchesSecondBoundary = .empty
         } else {
@@ -752,10 +752,14 @@ extension IntersectionMatrix {
                 let location = pointIsOnLineSegment(tempPoint, segment: segment)
                 if location == .onInterior {
                     relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    break
                 } else if location == .onBoundary {
                     /// Touching the boundary of any line segment is necessarily on the interior
                     relatedTo.firstInteriorTouchesSecondInterior = .zero
-                } else {
+                    break
+                }
+                
+                if firstCoordIndex == lineString.count - 2 {
                     relatedTo.firstInteriorTouchesSecondExterior = .zero
                 }
             }
@@ -3279,7 +3283,7 @@ extension IntersectionMatrix {
         }
 
         /// Exterior, boundary
-        if relatedB2Ls1.firstTouchesSecondExterior != .empty {
+        if relatedB2Ls1.firstInteriorTouchesSecondExterior != .empty {
             matrixIntersects[.exterior, .boundary] = .zero
         }
 

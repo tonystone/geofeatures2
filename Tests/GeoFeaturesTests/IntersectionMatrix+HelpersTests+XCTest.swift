@@ -166,7 +166,11 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_LineString_noIntersection", testLineString_LineString_noIntersection),
                 ("testLineString_LineString_interiorsIntersectAtOnePointFirstSegments", testLineString_LineString_interiorsIntersectAtOnePointFirstSegments),
                 ("testLineString_LineString_interiorsIntersectAtOnePointSecondSegments", testLineString_LineString_interiorsIntersectAtOnePointSecondSegments),
-                ("testLineString_LineString_interiorsIntersectAtTwoPointsBothSegments", testLineString_LineString_interiorsIntersectAtTwoPointsBothSegments)
+                ("testLineString_LineString_interiorsIntersectAtTwoPointsBothSegments", testLineString_LineString_interiorsIntersectAtTwoPointsBothSegments),
+                ("testLineString_LineString_firstInteriorIntersectsSecondBoundary", testLineString_LineString_firstInteriorIntersectsSecondBoundary),
+                ("testLineString_LineString_firstInteriorIntersectsSecondBoundary_FirstBoundaryPoint", testLineString_LineString_firstInteriorIntersectsSecondBoundary_FirstBoundaryPoint),
+                ("testLineString_LineString_firstInteriorIntersectsSecondBoundary_SecondBoundaryPoint", testLineString_LineString_firstInteriorIntersectsSecondBoundary_SecondBoundaryPoint),
+                ("testLineString_LineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints", testLineString_LineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints)
            ]
    }
 }
