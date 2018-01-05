@@ -170,7 +170,11 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_LineString_firstInteriorIntersectsSecondBoundary", testLineString_LineString_firstInteriorIntersectsSecondBoundary),
                 ("testLineString_LineString_firstInteriorIntersectsSecondBoundary_FirstBoundaryPoint", testLineString_LineString_firstInteriorIntersectsSecondBoundary_FirstBoundaryPoint),
                 ("testLineString_LineString_firstInteriorIntersectsSecondBoundary_SecondBoundaryPoint", testLineString_LineString_firstInteriorIntersectsSecondBoundary_SecondBoundaryPoint),
-                ("testLineString_LineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints", testLineString_LineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints)
+                ("testLineString_LineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints", testLineString_LineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints),
+                ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_IdenticalLineStrings", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_IdenticalLineStrings),
+                ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesFirstBoundaryPoint", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesFirstBoundaryPoint),
+                ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesSecondBoundaryPoint", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesSecondBoundaryPoint),
+                ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint)
            ]
    }
 }
