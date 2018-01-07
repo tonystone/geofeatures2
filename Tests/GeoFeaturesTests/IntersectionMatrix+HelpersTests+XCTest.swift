@@ -174,7 +174,10 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_IdenticalLineStrings", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_IdenticalLineStrings),
                 ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesFirstBoundaryPoint", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesFirstBoundaryPoint),
                 ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesSecondBoundaryPoint", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesSecondBoundaryPoint),
-                ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint)
+                ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint),
+                ("testLineString_LineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap", testLineString_LineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap),
+                ("testLineString_LineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap", testLineString_LineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap),
+                ("testLineString_LineString_secondProperSubsetOfFirst", testLineString_LineString_secondProperSubsetOfFirst)
            ]
    }
 }
