@@ -2631,22 +2631,27 @@ extension IntersectionMatrix {
             geometry                            = theGeometry
         }
     }
+    
+    ///
+    /// Check if the bounding boxes overlap for two one dimensional line ranges.
+    /// The first value for each range is the minimum value and the second is the maximum value.
+    ///
+    fileprivate static func boundingBoxesOverlap1D(range1: (Double, Double), range2: (Double, Double)) -> Bool {
+        return range1.1 >= range2.0 && range2.1 >= range1.0
+    }
 
     ///
     /// Check if the bounding boxes overlap for two line segments
     ///
-    fileprivate static func boundingBoxesOverlap(segment: Segment<CoordinateType>, other: Segment<CoordinateType>) -> Bool {
-        if  (segment.leftCoordinate.x >= other.leftCoordinate.x && segment.leftCoordinate.x <= other.rightCoordinate.x) ||
-            (segment.leftCoordinate.x >= other.rightCoordinate.x && segment.leftCoordinate.x <= other.leftCoordinate.x) ||
-            (segment.rightCoordinate.x >= other.leftCoordinate.x && segment.rightCoordinate.x <= other.rightCoordinate.x) ||
-            (segment.rightCoordinate.x >= other.rightCoordinate.x && segment.rightCoordinate.x <= other.leftCoordinate.x) ||
-            (segment.leftCoordinate.y >= other.leftCoordinate.y && segment.leftCoordinate.y <= other.rightCoordinate.y) ||
-            (segment.leftCoordinate.y >= other.rightCoordinate.y && segment.leftCoordinate.y <= other.leftCoordinate.y) ||
-            (segment.rightCoordinate.y >= other.leftCoordinate.y && segment.rightCoordinate.y <= other.rightCoordinate.y) ||
-            (segment.rightCoordinate.y >= other.rightCoordinate.y && segment.rightCoordinate.y <= other.leftCoordinate.y) {
-            return true
-        }
-        return false
+    fileprivate static func boundingBoxesOverlap2D(segment: Segment<CoordinateType>, other: Segment<CoordinateType>) -> Bool {
+        let range1x = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
+        let range1y = (Swift.min(segment.leftCoordinate.y, segment.rightCoordinate.y), Swift.max(segment.leftCoordinate.y, segment.rightCoordinate.y))
+        let range2x = (Swift.min(other.leftCoordinate.x, other.rightCoordinate.x), Swift.max(other.leftCoordinate.x, other.rightCoordinate.x))
+        let range2y = (Swift.min(other.leftCoordinate.y, other.rightCoordinate.y), Swift.max(other.leftCoordinate.y, other.rightCoordinate.y))
+        let box1 = (range1x, range1y)
+        let box2 = (range2x, range2y)
+
+        return boundingBoxesOverlap1D(range1: box1.0, range2: box2.0) && boundingBoxesOverlap1D(range1: box1.1, range2: box2.1)
     }
 
     ///
@@ -2673,7 +2678,12 @@ extension IntersectionMatrix {
 
     fileprivate typealias SegmentType = SweepLineSegment<CoordinateType>
 
-    fileprivate static func intersection(segment: Segment<CoordinateType>, other: Segment<CoordinateType>) -> LineSegmentIntersection {
+    ///
+    /// Two line segments are passed in.
+    /// If the first coordinate of the first segment, "segment", is a boundary point, firstCoordinateFirstSegmentBoundary should be true.
+    /// If the second coordinate of the second segment, "other", is a boundary point, secondCoordinateSecondSegmentBoundary should be true.
+    ///
+    fileprivate static func intersection(segment: Segment<CoordinateType>, other: Segment<CoordinateType>, firstCoordinateFirstSegmentBoundary: Bool = false, secondCoordinateSecondSegmentBoundary: Bool = false) -> LineSegmentIntersection {
 
         let precsion = FloatingPrecision()
         let csystem  = Cartesian()
@@ -2681,7 +2691,7 @@ extension IntersectionMatrix {
         ///
         /// Check the bounding boxes.  They must overlap if there is an intersection.
         ///
-        guard boundingBoxesOverlap(segment: segment, other: other) else {
+        guard boundingBoxesOverlap2D(segment: segment, other: other) else {
             return LineSegmentIntersection()
         }
 
@@ -2738,6 +2748,9 @@ extension IntersectionMatrix {
                 if segment1Boundary1Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
                     lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                    if !firstCoordinateFirstSegmentBoundary {
+                        lineSegmentIntersection.interiorsTouchAtPoint = true
+                    }
                 } else if segment1Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
                     lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
@@ -2747,6 +2760,9 @@ extension IntersectionMatrix {
                 } else if segment2Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
                     lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: other.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                    if !secondCoordinateSecondSegmentBoundary {
+                        lineSegmentIntersection.interiorsTouchAtPoint = true
+                    }
                 }
             }
             return lineSegmentIntersection
@@ -3231,13 +3247,15 @@ extension IntersectionMatrix {
             let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+            let firstBoundary = (ls1FirstCoordIndex == 0)
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
                 let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                 let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
                 let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
-                let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
+                let secondBoundary = (ls2FirstCoordIndex == lineString2.count - 2)
+                let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
 
                 /// Interior, interior
                 if lineSegmentIntersection.geometry?.dimension == .one {
@@ -3323,13 +3341,14 @@ extension IntersectionMatrix {
             let ls1FirstCoord  = lineString[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+            let firstBoundary = (ls1FirstCoordIndex == 0)
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for ls2FirstCoordIndex in 0..<linearRing.count - 1 {
                 let ls2FirstCoord  = linearRing[ls2FirstCoordIndex]
                 let ls2SecondCoord = linearRing[ls2FirstCoordIndex + 1]
                 let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
-                let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
+                let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary)
 
                 /// Interior, interior
                 if lineSegmentIntersection.geometry?.dimension == .one {

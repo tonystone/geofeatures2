@@ -166,6 +166,7 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_LineString_noIntersection", testLineString_LineString_noIntersection),
                 ("testLineString_LineString_interiorsIntersectAtOnePointFirstSegments", testLineString_LineString_interiorsIntersectAtOnePointFirstSegments),
                 ("testLineString_LineString_interiorsIntersectAtOnePointSecondSegments", testLineString_LineString_interiorsIntersectAtOnePointSecondSegments),
+                ("testLineString_LineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross", testLineString_LineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross),
                 ("testLineString_LineString_interiorsIntersectAtTwoPointsBothSegments", testLineString_LineString_interiorsIntersectAtTwoPointsBothSegments),
                 ("testLineString_LineString_firstInteriorIntersectsSecondBoundary", testLineString_LineString_firstInteriorIntersectsSecondBoundary),
                 ("testLineString_LineString_firstInteriorIntersectsSecondBoundary_FirstBoundaryPoint", testLineString_LineString_firstInteriorIntersectsSecondBoundary_FirstBoundaryPoint),
@@ -177,7 +178,12 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint", testLineString_LineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint),
                 ("testLineString_LineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap", testLineString_LineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap),
                 ("testLineString_LineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap", testLineString_LineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap),
-                ("testLineString_LineString_secondProperSubsetOfFirst", testLineString_LineString_secondProperSubsetOfFirst)
+                ("testLineString_LineString_secondProperSubsetOfFirst", testLineString_LineString_secondProperSubsetOfFirst),
+                ("testLineString_LinearRing_noIntersection", testLineString_LinearRing_noIntersection),
+                ("testLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment", testLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment),
+                ("testLineString_LinearRing_interiorsIntersectAtOnePointSecondSegments", testLineString_LinearRing_interiorsIntersectAtOnePointSecondSegments),
+                ("testLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross", testLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross),
+                ("testLineString_LinearRing_interiorsIntersectAtTwoPointsBothSegments", testLineString_LinearRing_interiorsIntersectAtTwoPointsBothSegments)
            ]
    }
 }
