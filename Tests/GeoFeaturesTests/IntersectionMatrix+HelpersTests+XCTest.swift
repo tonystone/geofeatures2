@@ -183,7 +183,12 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment", testLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment),
                 ("testLineString_LinearRing_interiorsIntersectAtOnePointSecondSegments", testLineString_LinearRing_interiorsIntersectAtOnePointSecondSegments),
                 ("testLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross", testLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross),
-                ("testLineString_LinearRing_interiorsIntersectAtTwoPointsBothSegments", testLineString_LinearRing_interiorsIntersectAtTwoPointsBothSegments)
+                ("testLineString_LinearRing_interiorsIntersectAtTwoPointsBothSegments", testLineString_LinearRing_interiorsIntersectAtTwoPointsBothSegments),
+                ("testLineString_LinearRing_firstInteriorIntersectsSecondInteriorAtSegmentEndpoint", testLineString_LinearRing_firstInteriorIntersectsSecondInteriorAtSegmentEndpoint),
+                ("testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_FirstBoundaryPoint", testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_FirstBoundaryPoint),
+                ("testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_SecondBoundaryPoint", testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_SecondBoundaryPoint),
+                ("testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_BothBoundaryPoints", testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_BothBoundaryPoints),
+                ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing)
            ]
    }
 }

@@ -785,16 +785,33 @@ extension IntersectionMatrix {
 
         var relatedTo = RelatedTo()
         for tempPoint in points {
+            var pointIsOnExterior = true // The point cannot touch the boundary or interior of any segment to be on the exterior
             for firstCoordIndex in 0..<linearRing.count - 1 {
                 let firstCoord  = linearRing[firstCoordIndex]
                 let secondCoord = linearRing[firstCoordIndex + 1]
                 let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
                 let location = pointIsOnLineSegment(tempPoint, segment: segment)
                 if location == .onInterior {
-                    relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    pointIsOnExterior = false
+                    if tempPoint.boundaryPoint {
+                        relatedTo.firstBoundaryTouchesSecondInterior = .zero
+                    } else {
+                        relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    }
                 } else if location == .onBoundary {
                      /// The boundary of any line segment on the linear ring is necessarily on the interior of the linear ring
-                    relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    pointIsOnExterior = false
+                    if tempPoint.boundaryPoint {
+                        relatedTo.firstBoundaryTouchesSecondInterior = .zero
+                    } else {
+                        relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    }
+                }
+            }
+
+            if pointIsOnExterior {
+                if tempPoint.boundaryPoint {
+                    relatedTo.firstBoundaryTouchesSecondExterior = .zero
                 } else {
                     relatedTo.firstInteriorTouchesSecondExterior = .zero
                 }

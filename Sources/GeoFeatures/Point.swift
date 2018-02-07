@@ -37,27 +37,33 @@ public struct Point<CoordinateType: Coordinate & CopyConstructable> {
     public var y: Double {
         return coordinate.y
     }
+    
+    public var boundaryPoint: Bool = false
 
     ///
     /// Constructs a Point with another Point of the same type.
     ///
-    public init(other: Point<CoordinateType>, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+    public init(other: Point<CoordinateType>, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem, boundaryPoint: Bool = false) {
 
         self.precision = precision
         self.coordinateSystem = coordinateSystem
 
         self.coordinate = CoordinateType(other: other.coordinate, precision: precision)
+
+        self.boundaryPoint = boundaryPoint
     }
 
     ///
     /// Constructs a Point with a Coordinate of type CoordinateType.
     ///
-    public init(coordinate: CoordinateType, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+    public init(coordinate: CoordinateType, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem, boundaryPoint: Bool = false) {
 
         self.precision = precision
         self.coordinateSystem = coordinateSystem
 
         self.coordinate = CoordinateType(other: coordinate, precision: precision)
+
+        self.boundaryPoint = boundaryPoint
     }
 
     internal let coordinate: CoordinateType
