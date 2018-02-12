@@ -188,7 +188,12 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_FirstBoundaryPoint", testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_FirstBoundaryPoint),
                 ("testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_SecondBoundaryPoint", testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_SecondBoundaryPoint),
                 ("testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_BothBoundaryPoints", testLineString_LinearRing_firstBoundaryIntersectsSecondInterior_BothBoundaryPoints),
-                ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing)
+                ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing),
+                ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing2", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing2),
+                ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing3", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing3),
+                ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing4", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing4),
+                ("testLineString_LinearRing_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap", testLineString_LinearRing_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap),
+                ("testLineString_LinearRing_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap", testLineString_LinearRing_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap)
            ]
    }
 }
