@@ -3437,6 +3437,7 @@ extension IntersectionMatrix {
             let ls1FirstCoord  = lineString[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1]
             let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+            let firstBoundary = (ls1FirstCoordIndex == 0)
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for lineString2 in multiLineString {
@@ -3444,7 +3445,8 @@ extension IntersectionMatrix {
                     let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                     let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
                     let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
-                    let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
+                    let secondBoundary = (ls2FirstCoordIndex == lineString2.count - 2)
+                    let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
 
                     /// Interior, interior
                     if lineSegmentIntersection.geometry?.dimension == .one {

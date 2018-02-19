@@ -192,8 +192,17 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing2", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing2),
                 ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing3", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing3),
                 ("testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing4", testLineString_LinearRing_firstInteriorDoesNotIntersectSecondExterior_LineStringSubsetOfLinearRing4),
-                ("testLineString_LinearRing_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap", testLineString_LinearRing_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap),
-                ("testLineString_LinearRing_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap", testLineString_LinearRing_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap)
+                ("testLineString_MultiLineString_noIntersection", testLineString_MultiLineString_noIntersection),
+                ("testLineString_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsFirstLineString", testLineString_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsFirstLineString),
+                ("testLineString_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsSecondLineString", testLineString_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsSecondLineString),
+                ("testLineString_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsFirstLineString", testLineString_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsFirstLineString),
+                ("testLineString_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsSecondLineString", testLineString_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsSecondLineString),
+                ("testLineString_MultiLineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross", testLineString_MultiLineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross),
+                ("testLineString_MultiLineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings", testLineString_MultiLineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings),
+                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString1", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString1),
+                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString2", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString2),
+                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString1", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString1),
+                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString2", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString2)
            ]
    }
 }
