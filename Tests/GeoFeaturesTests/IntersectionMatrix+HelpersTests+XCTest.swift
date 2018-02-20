@@ -202,7 +202,19 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString1", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString1),
                 ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString2", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString2),
                 ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString1", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString1),
-                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString2", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString2)
+                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString2", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString2),
+                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints_FirstLineString", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints_FirstLineString),
+                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints_SecondLineString", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints_SecondLineString),
+                ("testLineString_MultiLineString_firstInteriorIntersectsSecondBoundary_AllBoundaryPoints", testLineString_MultiLineString_firstInteriorIntersectsSecondBoundary_AllBoundaryPoints),
+                ("testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_IdenticalLineStrings_FirstLineString", testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_IdenticalLineStrings_FirstLineString),
+                ("testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_IdenticalLineStrings_SecondLineString", testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_IdenticalLineStrings_SecondLineString),
+                ("testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesFirstBoundaryPointOfSecondLineString", testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesFirstBoundaryPointOfSecondLineString),
+                ("testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesSecondBoundaryPointOfFirstLineString", testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesSecondBoundaryPointOfFirstLineString),
+                ("testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint_FirstLineString", testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint_FirstLineString),
+                ("testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint_SecondLineString", testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint_SecondLineString),
+                ("testLineString_MultiLineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap_FirstLineString", testLineString_MultiLineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap_FirstLineString),
+                ("testLineString_MultiLineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap_SecondLineString", testLineString_MultiLineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap_SecondLineString),
+                ("testLineString_MultiLineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap", testLineString_MultiLineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap)
            ]
    }
 }

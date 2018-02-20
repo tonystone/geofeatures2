@@ -868,6 +868,7 @@ extension IntersectionMatrix {
             }
 
             /// If this point is reached, any point that touches the boundary of the multi line string has been removed
+            var tempPointNotTouchingAnyLineString = true
             for lineString in multiLineString {
                 for firstCoordIndex in 0..<lineString.count - 1 {
                     let firstCoord  = lineString[firstCoordIndex]
@@ -876,13 +877,17 @@ extension IntersectionMatrix {
                     let location = pointIsOnLineSegment(tempPoint, segment: segment)
                     if location == .onInterior {
                         relatedTo.firstInteriorTouchesSecondInterior = .zero
+                        tempPointNotTouchingAnyLineString = false
                     } else if location == .onBoundary {
                         /// Touching the boundary of any line segment is necessarily on the interior
                         relatedTo.firstInteriorTouchesSecondInterior = .zero
-                    } else {
-                        relatedTo.firstInteriorTouchesSecondExterior = .zero
+                        tempPointNotTouchingAnyLineString = false
                     }
                 }
+            }
+            
+            if tempPointNotTouchingAnyLineString {
+                relatedTo.firstInteriorTouchesSecondExterior = .zero
             }
         }
         return relatedTo
@@ -3187,7 +3192,7 @@ extension IntersectionMatrix {
         return true
     }
 
-    /// Is the frist multi line string contained in or a subset of the second multi line string?
+    /// Is the first multi line string contained in or a subset of the second multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     /// TODO:
     fileprivate static func subset(_ multiLineString1: MultiLineString<CoordinateType>, _ multiLineString2: MultiLineString<CoordinateType>) -> Bool {
@@ -3488,7 +3493,8 @@ extension IntersectionMatrix {
         }
 
         /// Exterior, interior
-        if !subset(reducedLs, reducedMls) {
+        let reducedMls2 = MultiLineString<CoordinateType>(elements: [reducedLs], precision: reducedLs.precision, coordinateSystem: reducedLs.coordinateSystem)
+        if !subset(reducedMls, reducedMls2) {
             matrixIntersects[.exterior, .interior] = .one
         }
 
