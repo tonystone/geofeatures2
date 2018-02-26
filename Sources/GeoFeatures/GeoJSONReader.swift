@@ -89,7 +89,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
             throw GeoJSONReaderError.invalidJSON("The data couldn’t be read because it isn’t in the correct format: "  + error.localizedDescription)
         }
 
-        guard let jsonObject = parsedJSON as? [String : Any] else {
+        guard let jsonObject = parsedJSON as? [String: Any] else {
             throw GeoJSONReaderError.invalidJSON("Root JSON must be an object type.")
         }
 
@@ -104,7 +104,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
     ///
     /// - Returns: A Geometry object representing the GeoJSON
     ///
-    public func read(jsonObject: [String : Any]) throws -> Geometry {
+    public func read(jsonObject: [String: Any]) throws -> Geometry {
 
         guard let type = jsonObject["type"] as? String else {
             throw GeoJSONReaderError.missingAttribute("Missing required attribute \"type\".")
@@ -139,7 +139,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
     }
 
     /// Parse a Point type
-    private func point(jsonObject: [String : Any]) throws -> Point<CoordinateType> {
+    private func point(jsonObject: [String: Any]) throws -> Point<CoordinateType> {
 
         let coordinates = try Coordinates<[Any]>.coordinates(json: jsonObject)
 
@@ -153,7 +153,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
     }
 
     /// Parse a LineString type
-    private func lineString(jsonObject: [String : Any]) throws -> LineString<CoordinateType> {
+    private func lineString(jsonObject: [String: Any]) throws -> LineString<CoordinateType> {
 
         let coordinates = try Coordinates<[[Any]]>.coordinates(json: jsonObject)
 
@@ -173,7 +173,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
     }
 
     /// Parse a Polygon type
-    private func polygon(jsonObject: [String : Any]) throws -> Polygon<CoordinateType> {
+    private func polygon(jsonObject: [String: Any]) throws -> Polygon<CoordinateType> {
 
         let coordinates = try Coordinates<[[[Any]]]>.coordinates(json: jsonObject)
 
@@ -198,7 +198,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
     }
 
     /// Parse a MultiPoint type
-    private func multiPoint(jsonObject: [String : Any]) throws -> MultiPoint<CoordinateType> {
+    private func multiPoint(jsonObject: [String: Any]) throws -> MultiPoint<CoordinateType> {
 
         let coordinates = try Coordinates<[[Any]]>.coordinates(json: jsonObject)
 
@@ -218,7 +218,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
     }
 
     /// Parse a MultiLineString type
-    private func multiLineString(jsonObject: [String : Any]) throws -> MultiLineString<CoordinateType> {
+    private func multiLineString(jsonObject: [String: Any]) throws -> MultiLineString<CoordinateType> {
 
         let coordinates = try Coordinates<[ [[Any]] ]>.coordinates(json: jsonObject)
 
@@ -238,7 +238,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
     }
 
     /// Parse a MultiPolygon type
-    private func multiPolygon(jsonObject: [String : Any]) throws -> MultiPolygon<CoordinateType> {
+    private func multiPolygon(jsonObject: [String: Any]) throws -> MultiPolygon<CoordinateType> {
 
         let coordinates = try Coordinates<[ [[[Any]]] ]>.coordinates(json: jsonObject)
 
@@ -258,14 +258,14 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
     }
 
     /// Parse a GeometryCollection type
-    private func geometryCollection(jsonObject: [String : Any]) throws -> GeometryCollection {
+    private func geometryCollection(jsonObject: [String: Any]) throws -> GeometryCollection {
         var elements: [Geometry] = []
 
         guard let geometriesObject = jsonObject["geometries"] else {
             throw GeoJSONReaderError.missingAttribute("Missing required attribute \"geometries\".")
         }
 
-        guard let geometries = geometriesObject as? [[String : Any]] else {
+        guard let geometries = geometriesObject as? [[String: Any]] else {
             throw GeoJSONReaderError.invalidJSON("Invalid structure for \"geometries\" attribute.")
         }
 
@@ -290,7 +290,7 @@ public class GeoJSONReader<CoordinateType: Coordinate & CopyConstructable & _Arr
         let coordinateValues = try array.map { (value) -> Double in
             switch value {
             case let value as Double:       return value
-            case let value as NSNumber:     return Double(value)
+            case let value as NSNumber:     return Double(truncating: value)
             case let value as Int:          return Double(value)
             case let value as Float:        return Double(value)
             case let value as String:
