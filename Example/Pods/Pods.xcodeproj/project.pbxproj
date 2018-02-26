@@ -451,7 +451,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0920;
 				TargetAttributes = {
 					DB7505EEB82EFE5301F70E50 = {
 						LastSwiftMigration = 0900;
@@ -569,6 +569,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1802C38276295D2D6594621E /* Pods-GeoFeatures_Tests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -637,6 +638,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C1B234AB1F58962F103E5271 /* Pods-GeoFeatures_Example.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -672,6 +674,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 99649502930ABA5AD199E8E1 /* Pods-GeoFeatures_Tests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -707,6 +710,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 74E74B2486C8504C00E3C729 /* Pods-GeoFeatures_Example.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
