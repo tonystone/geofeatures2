@@ -57,7 +57,7 @@ internal class Tokenizer<T: Token> {
                 column = 1
             } else {
                 /// Note: we're counting visual characters not the number of Code Units it takes to hold a character which is why we use the character view.
-                column += match.characters.count
+                column += match.count
             }
             return String(match)
         }
