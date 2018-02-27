@@ -77,8 +77,8 @@ Build Environment
 
 | Platform | Swift | Swift Build | Xcode |
 |:--------:|:-----:|:----------:|:------:|
-| Linux    | [4.0 Development Snapshot 2017-08-03-a](https://swift.org/builds/development/ubuntu1610/swift-DEVELOPMENT-SNAPSHOT-2017-08-03-a/swift-DEVELOPMENT-SNAPSHOT-2017-08-03-a-ubuntu16.10.tar.gz) | &#x2714; | &#x2718; |
-| OSX      | [4.0 Development Snapshot 2017-08-03-a](https://swift.org/builds/development/ubuntu1610/swift-DEVELOPMENT-SNAPSHOT-2017-08-03-a/swift-DEVELOPMENT-SNAPSHOT-2017-08-03-a-ubuntu16.10.tar.gz) | &#x2714; | Xcode 9 beta 5 |
+| Linux    | [4.0.3](https://swift.org/builds/swift-4.0.3-release/ubuntu1404/swift-4.0.3-RELEASE/swift-4.0.3-RELEASE-ubuntu14.04.tar.gz) | &#x2714; | &#x2718; |
+| OSX      | [4.0.3](https://swift.org/builds/swift-4.0.3-release/xcode/swift-4.0.3-RELEASE/swift-4.0.3-RELEASE-osx.pkg) | &#x2714; | Xcode 9.2 |
 
 Minimum Runtime Version
 
