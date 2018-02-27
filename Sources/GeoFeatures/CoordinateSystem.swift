@@ -26,28 +26,15 @@ import Swift
 ///
 public protocol CoordinateSystem {}
 
-public struct Cartesian: CoordinateSystem {
-
+public struct Cartesian: CoordinateSystem, Equatable, Hashable {
     public init() {}
+    public var hashValue: Int = String(reflecting: Cartesian.self).hashValue
 }
 
-extension Cartesian: Equatable, Hashable {
-    public var hashValue: Int {
-        return String(reflecting: self).hashValue
-    }
+public struct Geographic: CoordinateSystem, Equatable, Hashable {
+    public init() {}
+    public var hashValue: Int = String(reflecting: Geographic.self).hashValue
 }
-
-@available(*, unavailable, message: "currently not supported")
-public struct Ellipsoidal: CoordinateSystem {}
-
-@available(*, unavailable, message: "currently not supported")
-public struct Spherical: CoordinateSystem {}
-
-@available(*, unavailable, message: "currently not supported")
-public struct Vertical: CoordinateSystem {}
-
-@available(*, unavailable, message: "currently not supported")
-public struct Polar: CoordinateSystem {}
 
 public func == <T1: CoordinateSystem & Hashable, T2: CoordinateSystem & Hashable>(lhs: T1, rhs: T2) -> Bool {
     if type(of: lhs) == type(of: rhs) {
