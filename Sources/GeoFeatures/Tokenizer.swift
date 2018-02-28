@@ -47,7 +47,7 @@ internal class Tokenizer<T: Token> {
     func accept(_ token: T) -> String? {
         if let range = token.match(stringStream, matchRange: matchRange) {
 
-            let match = stringStream.substring(with: range)
+            let match = stringStream[range]
 
             /// Increment the range for matching
             matchRange = range.upperBound..<matchRange.upperBound
@@ -57,9 +57,9 @@ internal class Tokenizer<T: Token> {
                 column = 1
             } else {
                 /// Note: we're counting visual characters not the number of Code Units it takes to hold a character which is why we use the character view.
-                column += match.characters.count
+                column += match.count
             }
-            return match
+            return String(match)
         }
         return nil
     }
@@ -69,6 +69,6 @@ internal class Tokenizer<T: Token> {
     }
 
     var matchString: String {
-        return stringStream.substring(with: matchRange)
+        return String(stringStream[matchRange])
     }
 }

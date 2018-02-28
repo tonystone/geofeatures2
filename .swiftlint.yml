@@ -17,10 +17,14 @@ disabled_rules:
   - switch_case_on_newline
   - overridden_super_call
   - line_length
-  - type_body_length # Until swiftlint allows overriding rules in sub swiftlint.yml files, we're disabling this rule for tests
-  - file_length      # Until swiftlint allows overriding rules in sub swiftlint.yml files, we're disabling this rule for tests
-  - type_name        # Until swiftlint allows overriding rules in sub swiftlint.yml files, we're disabling this rule for tests
-  - missing_docs     # Development time only, remove when we get closer to production.  Also make this rule an error and not warning.
+  - private_outlet # Giving false positives in Swift 3
+  - redundant_discardable_let
+  - identifier_name  # FIXME: This should be fixed instead of removed, we disabled because of underscores in enums.
+  - file_length
+  - large_tuple
+  - for_where
+  - fallthrough
+  - redundant_optional_initialization
 
 opt_in_rules:
   - closure_spacing
@@ -46,17 +50,13 @@ cyclomatic_complexity:
   warning: 30
   error: 50
 
-file_length:
-  warning: 700
-  error: 1000
-
 function_body_length:
   warning: 400
   error: 100
 
 function_parameter_count:
-  warning: 5
-  error: 8
+  warning: 7
+  error: 9
 
 leading_whitespace:
   severity: error
@@ -121,53 +121,42 @@ trailing_whitespace:
       ignores_comments: true
 
 type_body_length:
-  warning: 300
-  error: 450
+  warning: 500
+  error: 750
 
 type_name:
   min_length:
     warning: 3
     error: 0
   max_length:
-    warning: 40
+    warning: 80
     error: 1000
-
-valid_docs:
-  severity: error
-
-variable_name:
-  min_length: # Note: it important that we allow variable names like x, y, z, m so our min length for error is 0
-    warning: 0
-    error: 0
-  max_length:
-    warning: 40
-    error: 60
 
 vertical_whitespace:
   severity: error
 
 custom_rules:
   func_where_on_newline:
-    regex: "\)[ \t]*(?:->[ \t]*[a-zA-Z0-9]*[ \t]*)?[^\r\n][ \t]*where[ \t]"
+    regex: '\)[ \t]*(?:->[ \t]*[a-zA-Z0-9]*[ \t]*)?[^\r\n][ \t]*where[ \t]'
     message: "func definitions must have their where clause on a new line."
     severity: error # violation severity. optional.
 
   space_after_comment_mark:
-    regex: "(\/\/\/?[^\s\/:])|(\/\/:[^\s\/])"
+    regex: '(\/\/\/?[^\s\/:])|(\/\/:[^\s\/])'
     match_kinds:
       - comment
     message: "There must be a space after /// or // comments and before the text."
     severity: error
 
   identifier_colon:
-    regex: "(?<!swiftlint|HH|mm|h|\"H|'H|\sH):([^\-\)\s\\\/\]])"
+    regex: '(?<!swiftlint|HH|mm|h|\"H|''H|\sH):([^\-\)\s\\\/\]])'
     match_kinds:
       - identifier
     message: "Colons must be next to the identifier when specifying a type."
     severity: error
 
   comma_after_identifier:
-    regex: "(\s+,\s+)|([^\s]+,[^\s'\"]+)"
+    regex: '(\s+,\s+)|([^\s]+,[^\s''\"]+)'
     match_kinds:
       - argument
       - attribute.builtin
@@ -187,7 +176,7 @@ custom_rules:
     severity: error
 
   comma_after_identifier_Comment:
-    regex: "(\/\/\/?[^\r\n]+[a-zA-Z]+,[a-zA-Z]+)"
+    regex: '(\/\/\/?[^\r\n]+[a-zA-Z]+,[a-zA-Z]+)'
     match_kinds:
       - comment
       - comment.mark
@@ -198,32 +187,32 @@ custom_rules:
     severity: error
 
   bracket:
-    regex: "(\}\n{2,}\}|\{\n{2,}\{)"
+    regex: '(\}\n{2,}\}|\{\n{2,}\{)'
     message: "No empty line between two open or close brackets."
     severity: error
 
   empty_brackets:
-    regex: "(\{\s{1,}\})"
+    regex: '(\{\s{1,}\})'
     message: "Empty brackets must not have white space, use {} instead."
     severity: error
 
   triple_line_comments:
-    regex: "(\*(?>(?:(?>[^*]+)|\*(?!\/))*)\*)|(^[ \t]*\/\/[ \t]+(?i)(?!mark|swiftlint)[a-z0-9:]+)|(^[ \t]*\/\/$)"
+    regex: '(\*(?>(?:(?>[^*]+)|\*(?!\/))*)\*)|(^[ \t]*\/\/[ \t]+(?i)(?!mark|swiftlint)[a-z0-9:]+)|(^[ \t]*\/\/$)'
     message: "Comments must be in Quick Help triple line style (i.e. ///)."
     severity: error
 
   declaration_attributes_on_newline:
-    regex: "(@(discardableResults|inline[ \t]*\(\S*\)|available[ \t]*(\S*\)))[^\r\n]+)"
+    regex: '(@(discardableResults|inline[ \t]*\(\S*\)|available[ \t]*(\S*\)))[^\r\n]+)'
     message: "Declaration attributes must be on their own line."
     severity: error
 
   access_control_on_same_line:
-    regex: "(open|public|private|fileprivate|internal)[ \t]*[\r\n]"
+    regex: '(open|public|private|fileprivate|internal)[ \t]*[\r\n]'
     message: "Access control modifiers must be on the same line as the type declaration."
     severity: error
 
   empty_first_line:
-    regex: "(^[ a-zA-Z ]*(?:protocol|extension|class|struct) (?!(?:var|let))[ a-zA-Z:]*\{\n *\S+)"
+    regex: '(^[ a-zA-Z ]*(?:protocol|extension|class|struct) (?!(?:var|let))[ a-zA-Z:]*\{\n *\S+)'
     message: "There should be an empty line after a declaration."
     severity: error
 

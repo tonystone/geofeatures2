@@ -1,7 +1,7 @@
 ///
-///  Coordinate.swift
+///  CartesianTests.swift
 ///
-///  Copyright (c) 2016 Tony Stone
+///  Copyright (c) 2018 Tony Stone
 ///
 ///  Licensed under the Apache License, Version 2.0 (the "License");
 ///  you may not use this file except in compliance with the License.
@@ -15,37 +15,22 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Tony Stone on 2/13/16.
+///  Created by Tony Stone on 02/26/2018.
 ///
-import Swift
+import XCTest
+import GeoFeatures
 
-///
-/// Coordinate (2 dimensional protocol)
-///
-/// Implemented by all Coordinate structs.
-///
-public protocol Coordinate: Hashable, CopyConstructable {
-
-    var x: Double { get }
-    var y: Double { get }
+private struct DummyCoordinateReferenceSystem: CoordinateSystem, Equatable, Hashable {
+    public var hashValue: Int { return String(reflecting: self).hashValue }
 }
 
-///
-/// 3D
-///
-/// Implemented if this Coordinate has z value.
-///
-public protocol ThreeDimensional {
+class CartesianTests: XCTestCase {
 
-    var z: Double { get }
-}
+    func testEqualTrue() {
+        XCTAssertTrue(Cartesian() == Cartesian())
+    }
 
-///
-/// Measured
-///
-/// Implenented if this Coordinate has m value.
-///
-public protocol Measured {
-
-    var m: Double { get }
+    func testEqualFalse() {
+        XCTAssertFalse(Cartesian() == DummyCoordinateReferenceSystem())
+    }
 }
