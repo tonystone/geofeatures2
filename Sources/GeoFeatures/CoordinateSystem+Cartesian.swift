@@ -1,5 +1,5 @@
 ///
-///  GeographicTests.swift
+///  CoordinateSystem+Cartesian.swift
 ///
 ///  Copyright (c) 2018 Tony Stone
 ///
@@ -15,22 +15,28 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Tony Stone on 02/26/2018.
+///  Created by Tony Stone on 2/28/18.
 ///
-import XCTest
-import GeoFeatures
+import Swift
 
-private struct DummyCoordinateReferenceSystem: CoordinateSystem, Equatable, Hashable {
-    public var hashValue: Int { return String(reflecting: self).hashValue }
+///
+/// Cartesian CoordinateSystem Type
+///
+public struct Cartesian: CoordinateSystem, Equatable, Hashable {
+    public init() {}
+    public var hashValue: Int = String(reflecting: Cartesian.self).hashValue
 }
 
-class GeographicTests: XCTestCase {
+///
+/// CustomStringConvertible and CustomDebugStringConvertible Implementation
+///
+extension Cartesian: CustomStringConvertible, CustomDebugStringConvertible {
 
-    func testEqualTrue() {
-        XCTAssertTrue(Geographic() == Geographic())
+    public var description: String {
+        return "\(type(of: self))()"
     }
 
-    func testEqualFalse() {
-        XCTAssertFalse(Geographic() == DummyCoordinateReferenceSystem())
+    public var debugDescription: String {
+        return self.description
     }
 }

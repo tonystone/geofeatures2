@@ -26,16 +26,6 @@ import Swift
 ///
 public protocol CoordinateSystem {}
 
-public struct Cartesian: CoordinateSystem, Equatable, Hashable {
-    public init() {}
-    public var hashValue: Int = String(reflecting: Cartesian.self).hashValue
-}
-
-public struct Geographic: CoordinateSystem, Equatable, Hashable {
-    public init() {}
-    public var hashValue: Int = String(reflecting: Geographic.self).hashValue
-}
-
 public func == <T1: CoordinateSystem & Hashable, T2: CoordinateSystem & Hashable>(lhs: T1, rhs: T2) -> Bool {
     if type(of: lhs) == type(of: rhs) {
         return lhs.hashValue == rhs.hashValue
