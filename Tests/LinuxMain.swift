@@ -36,6 +36,7 @@ import XCTest
          testCase(WKTWriterCoordinate2DMTests.allTests),
          testCase(WKTWriterCoordinate3DTests.allTests),
          testCase(WKTWriterCoordinate3DMTests.allTests),
+         testCase(GeoJSONWriterCoordinate2DTests.allTests),
          testCase(GeometryCollectionGeometryFloatingPrecisionCartesianTests.allTests),
          testCase(GeometryCollectionGeometryFixedPrecisionCartesianTests.allTests),
          testCase(GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests.allTests),

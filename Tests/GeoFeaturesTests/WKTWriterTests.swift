@@ -25,25 +25,6 @@ import GeoFeatures
     import struct GeoFeatures.Polygon
 #endif
 
-private struct UnsupportedGeometry: Geometry {
-
-    let precision: Precision = FloatingPrecision()
-
-    let coordinateSystem: CoordinateSystem = Cartesian()
-
-    let dimension: GeoFeatures.Dimension = .one
-
-    func isEmpty() -> Bool {
-        return true
-    }
-
-    func boundary() -> Geometry {
-        return GeometryCollection()
-    }
-
-    func equals(_ other: Geometry) -> Bool { return false }
-}
-
 // MARK: - Coordinate2D -
 
 class WKTWriterCoordinate2DTests: XCTestCase {

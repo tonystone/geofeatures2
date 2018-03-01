@@ -64,6 +64,8 @@
 		EA8D59161DB7E34C00713261 /* Polygon+SurfaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8D58DC1DB7E34C00713261 /* Polygon+SurfaceTests.swift */; };
 		EA8D59181DB7E34C00713261 /* WKTReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8D58DE1DB7E34C00713261 /* WKTReaderTests.swift */; };
 		EA8D591A1DB7E34C00713261 /* WKTWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8D58E01DB7E34C00713261 /* WKTWriterTests.swift */; };
+		EA8EDC342048846600459166 /* GeoJSONWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8EDC302048843100459166 /* GeoJSONWriterTests.swift */; };
+		EA8EDC352048846A00459166 /* UnsupportedGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8EDC312048843100459166 /* UnsupportedGeometry.swift */; };
 		EA940DC51DDAB9DB00F7DA69 /* PolygonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA940DC41DDAB9DB00F7DA69 /* PolygonTests.swift */; };
 		EAA325A51DD407BC004534F3 /* TokenizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA325A41DD407BC004534F3 /* TokenizerTests.swift */; };
 		EAA325A81DD4E2CA004534F3 /* MultiLineStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA325A71DD4E2CA004534F3 /* MultiLineStringTests.swift */; };
@@ -145,6 +147,8 @@
 		EA8D591F1DB8414200713261 /* GeometryCollection.swift.gyb */ = {isa = PBXFileReference; lastKnownFileType = text; name = GeometryCollection.swift.gyb; path = Sources/GeoFeatures/GeometryCollection.swift.gyb; sourceTree = "<group>"; };
 		EA8D59201DB8416100713261 /* CoordinateCollectionTests.swift.gyb */ = {isa = PBXFileReference; lastKnownFileType = text; name = CoordinateCollectionTests.swift.gyb; path = Tests/GeoFeaturesTests/CoordinateCollectionTests.swift.gyb; sourceTree = "<group>"; };
 		EA8D59211DB8416100713261 /* MultiPointTestInput.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = MultiPointTestInput.py; path = Tests/GeoFeaturesTests/MultiPointTestInput.py; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.python; };
+		EA8EDC302048843100459166 /* GeoJSONWriterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoJSONWriterTests.swift; sourceTree = "<group>"; };
+		EA8EDC312048843100459166 /* UnsupportedGeometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsupportedGeometry.swift; sourceTree = "<group>"; };
 		EA940DC41DDAB9DB00F7DA69 /* PolygonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolygonTests.swift; sourceTree = "<group>"; };
 		EAA325A41DD407BC004534F3 /* TokenizerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenizerTests.swift; sourceTree = "<group>"; };
 		EAA325A71DD4E2CA004534F3 /* MultiLineStringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiLineStringTests.swift; sourceTree = "<group>"; };
@@ -327,6 +331,8 @@
 				EA8D58DE1DB7E34C00713261 /* WKTReaderTests.swift */,
 				EA8D58E01DB7E34C00713261 /* WKTWriterTests.swift */,
 				EA87EB851DDCD60500E679FA /* GeoJSONReaderTests.swift */,
+				EA8EDC302048843100459166 /* GeoJSONWriterTests.swift */,
+				EA8EDC312048843100459166 /* UnsupportedGeometry.swift */,
 				3669862165B76D440C670997 /* AVLTreeTests.swift */,
 			);
 			path = GeoFeaturesTests;
@@ -704,6 +710,7 @@
 				EA8D58E21DB7E34C00713261 /* Coordinate2DMTests.swift in Sources */,
 				EA5CE1251DD62CB600F773F2 /* MultiPolygonTests.swift in Sources */,
 				EA8D58F21DB7E34C00713261 /* IntersectionMatrixTests.swift in Sources */,
+				EA8EDC352048846A00459166 /* UnsupportedGeometry.swift in Sources */,
 				EA940DC51DDAB9DB00F7DA69 /* PolygonTests.swift in Sources */,
 				EA8D58FC1DB7E34C00713261 /* LineString+CurveTests.swift in Sources */,
 				EA8D59101DB7E34C00713261 /* Point+GeometryTests.swift in Sources */,
@@ -723,6 +730,7 @@
 				EA8D58EB1DB7E34C00713261 /* FixedPrecisionTests.swift in Sources */,
 				EA8D591A1DB7E34C00713261 /* WKTWriterTests.swift in Sources */,
 				366988F1665A1275A6250DDE /* AVLTreeTests.swift in Sources */,
+				EA8EDC342048846600459166 /* GeoJSONWriterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
