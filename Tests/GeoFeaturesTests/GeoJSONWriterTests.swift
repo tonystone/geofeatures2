@@ -29,7 +29,9 @@ import struct GeoFeatures.Polygon
 
 class GeoJSONWriterCoordinate2DTests: XCTestCase {
 
-    var writer = GeoJSONWriter<Coordinate2D>()
+    private typealias CoordinateType = Coordinate2D
+
+    let writer = GeoJSONWriter<Coordinate2D>()
 
     // MARK: - General
 
@@ -46,5 +48,75 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
             }
         }
+    }
+
+    func testWriteLineString() {
+
+        let input = LineString<CoordinateType>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)])
+        let expected: [String: Any] =  ["type": "LineString", "coordinates": [ [1.0, 1.0], [2.0, 2.0] ] ]
+
+        XCTAssertTrue(try writer.write(input).elementsEqual(expected, by: { (lhs, rhs) -> Bool in
+            guard lhs.key == rhs.key else { return false }
+
+            if let lhsValue = lhs.value as? String,
+                let rhsValue = rhs.value as? String {
+
+                return lhsValue == rhsValue
+
+            } else if let lhsArray = lhs.value as? [[Double]],
+                      let rhsArray = rhs.value as? [[Double]] {
+
+                for coordinateIndex in 0..<lhsArray.count {
+                    let lhsCoordinate = lhsArray[coordinateIndex]
+                    let rhsCoordinate = rhsArray[coordinateIndex]
+
+                    if lhsCoordinate[0] != rhsCoordinate[0] || lhsCoordinate[1] != rhsCoordinate[1] {
+                        return false
+                    }
+                }
+                return true
+            }
+            return false
+        }))
+    }
+
+    func testWritePolygon() throws {
+        let input = Polygon<CoordinateType>(rings: ([(x: 100.0, y: 0.0), (x: 101.0, y: 0.0), (x: 101.0, y: 1.0), (x: 100.0, y: 1.0), (x: 100.0, y: 0.0)], [[(x: 100.2, y: 0.2), (x: 100.8, y: 0.2), (x: 100.8, y: 0.8), (x: 100.2, y: 0.8), (x: 100.2, y: 0.2)]]))
+
+        let expected: [String: Any] = [ "type": "Polygon",
+                                        "coordinates": [
+                                            [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],
+                                            [ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]
+                                            ]
+                                    ]
+        let value = try writer.write(input)
+        XCTAssertTrue(value.elementsEqual(expected, by: { (lhs, rhs) -> Bool in
+            guard lhs.key == rhs.key else { return false }
+
+            if let lhsValue = lhs.value as? String,
+               let rhsValue = rhs.value as? String {
+
+                return lhsValue == rhsValue
+
+            } else if let lhsArray = lhs.value as? [[[Double]]],
+                      let rhsArray = rhs.value as? [[[Double]]] {
+
+                for ringIndex in 0..<lhsArray.count {
+                    let lhsRing = lhsArray[ringIndex]
+                    let rhsRing = rhsArray[ringIndex]
+
+                    for coordinateIndex in 0..<lhsRing.count {
+                        let lhsCoordinate = lhsRing[coordinateIndex]
+                        let rhsCoordinate = rhsRing[coordinateIndex]
+
+                        if lhsCoordinate[0] != rhsCoordinate[0] || lhsCoordinate[1] != rhsCoordinate[1] {
+                            return false
+                        }
+                    }
+                }
+                return true
+            }
+            return false
+        }))
     }
 }

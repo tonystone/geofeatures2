@@ -29,7 +29,9 @@ extension GeoJSONWriterCoordinate2DTests {
 
    static var allTests: [(String, (GeoJSONWriterCoordinate2DTests) -> () throws -> Void)] {
       return [
-                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry)
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteLineString", testWriteLineString),
+                ("testWritePolygon", testWritePolygon)
            ]
    }
 }

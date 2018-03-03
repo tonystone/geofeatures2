@@ -59,18 +59,46 @@ public class GeoJSONWriter<CoordinateType: Coordinate & CopyConstructable & _Arr
         case let point as Point<CoordinateType>:
             return self.pointObject(point)
 
-        /// case let lineString as LineString<CoordinateType>:
-        ///    return self.lineStringObject(lineString)
+        case let lineString as LineString<CoordinateType>:
+            return self.lineStringObject(lineString)
+
+        case let polygon as Polygon<CoordinateType>:
+            return self.polygonObject(polygon)
 
         default:
             throw GeoJSONWriterError.unsupportedType("Unsupported type \"\(String(describing: geometry.self))\".")
         }
     }
 
+    ///
+    /// Creates a Point GeoJSON Object.
+    ///
     fileprivate func pointObject(_ point: Point<CoordinateType>) -> [String: Any] {
         return [TYPE: "Point", COORDINATES: self.coordinateArray(point.coordinate)]
     }
 
+    ///
+    /// Creates a LineString GeoJSON Object.
+    ///
+    fileprivate func lineStringObject(_ lineString: LineString<CoordinateType>) -> [String: Any] {
+        return [TYPE: "LineString", COORDINATES: lineString.map({ self.coordinateArray($0) })]
+    }
+
+    ///
+    /// Creates a Polygon GeoJSON Object.
+    ///
+    fileprivate func polygonObject(_ polygon: Polygon<CoordinateType>) -> [String: Any] {
+        var coordinates =  [polygon.outerRing.map({ self.coordinateArray($0) })]
+
+        for ring in polygon.innerRings {
+            coordinates.append(ring.map({ self.coordinateArray($0) }))
+        }
+        return [TYPE: "Polygon", COORDINATES: coordinates]
+    }
+
+    ///
+    /// Creates an array of values for printing.
+    ///
     fileprivate func coordinateArray(_ coordinate: CoordinateType) -> [Double] {
 
         var coordinateArray = [coordinate.x, coordinate.y]
