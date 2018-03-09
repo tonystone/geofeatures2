@@ -50,6 +50,31 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
         }
     }
 
+    func testWritePoint() {
+
+        let input = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0))
+        let expected: [String: Any] = ["type": "Point", "coordinates": [1.0, 1.0] ]
+
+        XCTAssertTrue(try writer.write(input).elementsEqual(expected, by: { (lhs, rhs) -> Bool in
+            guard lhs.key == rhs.key else { return false }
+
+            if let lhsValue = lhs.value as? String,
+               let rhsValue = rhs.value as? String {
+
+                return lhsValue == rhsValue
+
+            } else if let lhsCoordinate = lhs.value as? [Double],
+                      let rhsCoordinate = rhs.value as? [Double] {
+
+                if lhsCoordinate[0] != rhsCoordinate[0] || lhsCoordinate[1] != rhsCoordinate[1] {
+                    return false
+                }
+                return true
+            }
+            return false
+        }))
+    }
+
     func testWriteLineString() {
 
         let input = LineString<CoordinateType>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)])
