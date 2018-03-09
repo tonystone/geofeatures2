@@ -65,6 +65,9 @@ public class GeoJSONWriter<CoordinateType: Coordinate & CopyConstructable & _Arr
         case let polygon as Polygon<CoordinateType>:
             return self.polygonObject(polygon)
 
+        case let multiPoint as MultiPoint<CoordinateType>:
+            return self.multiPointObject(multiPoint)
+
         default:
             throw GeoJSONWriterError.unsupportedType("Unsupported type \"\(String(describing: geometry.self))\".")
         }
@@ -94,6 +97,13 @@ public class GeoJSONWriter<CoordinateType: Coordinate & CopyConstructable & _Arr
             coordinates.append(ring.map({ self.coordinateArray($0) }))
         }
         return [TYPE: "Polygon", COORDINATES: coordinates]
+    }
+
+    ///
+    /// Creates a MultiPoint GeoJSON Object.
+    ///
+    fileprivate func multiPointObject(_ multiPoint: MultiPoint<CoordinateType>) -> [String: Any] {
+        return [TYPE: "MultiPoint", COORDINATES: multiPoint.map({ self.coordinateArray($0.coordinate) })]
     }
 
     ///

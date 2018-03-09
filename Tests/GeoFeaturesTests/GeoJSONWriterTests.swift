@@ -144,4 +144,34 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
             return false
         }))
     }
+
+    func testWriteMultiPoint() {
+
+        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 100.0, y: 0.0)), Point<CoordinateType>(coordinate: (x: 101.0, y: 1.0))])
+        let expected: [String: Any] = ["type": "MultiPoint", "coordinates": [ [100.0, 0.0], [101.0, 1.0] ] ]
+
+        XCTAssertTrue(try writer.write(input).elementsEqual(expected, by: { (lhs, rhs) -> Bool in
+            guard lhs.key == rhs.key else { return false }
+
+            if let lhsValue = lhs.value as? String,
+                let rhsValue = rhs.value as? String {
+
+                return lhsValue == rhsValue
+
+            } else if let lhsArray = lhs.value as? [[Double]],
+                let rhsArray = rhs.value as? [[Double]] {
+
+                for coordinateIndex in 0..<lhsArray.count {
+                    let lhsCoordinate = lhsArray[coordinateIndex]
+                    let rhsCoordinate = rhsArray[coordinateIndex]
+
+                    if lhsCoordinate[0] != rhsCoordinate[0] || lhsCoordinate[1] != rhsCoordinate[1] {
+                        return false
+                    }
+                }
+                return true
+            }
+            return false
+        }))
+    }
 }

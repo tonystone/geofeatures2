@@ -32,7 +32,8 @@ extension GeoJSONWriterCoordinate2DTests {
                 ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
                 ("testWritePoint", testWritePoint),
                 ("testWriteLineString", testWriteLineString),
-                ("testWritePolygon", testWritePolygon)
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint)
            ]
    }
 }
