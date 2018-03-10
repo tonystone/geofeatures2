@@ -47,25 +47,8 @@ matrix:
       osx_image: xcode9.2
       env:
          - BUILD="xcodebuild"
-         - TEST_DEST="platform=iOS Simulator,OS=10.0,name=iPhone 6s"
-    -
-      os: osx
-      osx_image: xcode9.2
-      env:
-         - BUILD="xcodebuild"
-         - TEST_DEST="platform=iOS Simulator,OS=10.0,name=iPhone 6"
-    -
-      os: osx
-      osx_image: xcode9.2
-      env:
-         - BUILD="xcodebuild"
-         - TEST_DEST="platform=iOS Simulator,OS=9.3,name=iPhone 6"
-    -
-      os: osx
-      osx_image: xcode9.2
-      env:
-         - BUILD="xcodebuild"
-         - TEST_DEST="platform=iOS Simulator,OS=9.2,name=iPhone 5s"
+         - TEST_DEST="platform=iOS Simulator,OS=11.2,name=iPhone 8"
+
 
 # don't re-build for tags so that [publish binary] is not re-run
 # https://github.com/travis-ci/travis-ci/issues/1532
