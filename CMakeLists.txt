@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(Sticky LANGUAGES NONE)
+project(GeoFeatures LANGUAGES NONE)
 
 message(STATUS "Configuring GeoFeatures for ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
