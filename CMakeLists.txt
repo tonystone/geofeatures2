@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(Sticky LANGUAGES NONE)
+project(GeoFeatures LANGUAGES NONE)
 
 message(STATUS "Configuring GeoFeatures for ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
@@ -14,7 +14,9 @@ include(ExternalProject)
 ExternalProject_Add(
         build-tools
 
-        PREFIX external
+        PREFIX build-tools
+        #        DOWNLOAD_COMMAND ""
+        #        SOURCE_DIR ../../build-tools
         GIT_REPOSITORY https://github.com/tonystone/build-tools.git
         GIT_TAG ${BUILD_TOOLS_VERSION}
         UPDATE_COMMAND ""  # Note: since there is no update step, installing the tools will only happen once even if you change the version.  To force install, remove the external/build-tools directory.
@@ -26,14 +28,9 @@ ExternalProject_Add(
 #
 # Build tool paths.
 #
-set(BUILD_TOOLS_BIN  "${CMAKE_CURRENT_BINARY_DIR}/external/build-tools/bin")
-set(GYBTOOL       "${BUILD_TOOLS_BIN}/gyb")
-set(LINUXMAINTOOL "${BUILD_TOOLS_BIN}/generate_xctest_runner.rb")
+set(BUILD_TOOLS_ROOT  "${CMAKE_CURRENT_BINARY_DIR}/build-tools/build-tools")
+set(BUILD_TOOLS_BIN   "${BUILD_TOOLS_ROOT}/bin")
 
-#
-#
-# Internal functions
-#
 # Look for modules in the our root.
 LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
 
@@ -54,6 +51,7 @@ add_custom_target(geofeatures-xcode-project
         COMMAND swift package generate-xcodeproj --enable-code-coverage
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         SOURCES Package.swift)
+
 
 add_subdirectory(Sources)
 add_subdirectory(Tests)
