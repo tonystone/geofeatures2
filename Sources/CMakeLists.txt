@@ -6,7 +6,7 @@ set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 #
 # Build the list of sources dynamically.
 #
-file(GLOB_RECURSE SOURCE_FILES *.swift Package.swift)
+file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.swift Package.swift )
 
 #
 # Main Build Target
@@ -15,52 +15,54 @@ add_custom_target(geofeatures-build
         COMMAND swift build
         BYPRODUCTS .build
         SOURCES ${SOURCE_FILES}
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         )
 
 #
 # We use gyb for many files, these commands define how to build those.
 #
+set(GYB_COMMON_FLAGS --line-directive "''")
+
 add_gyb_target(generated-LinearRing
-        SOURCE ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/CoordinateCollection.swift.gyb
-        OUTPUT ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/LinearRing.swift
-        FLAGS -D Self=LinearRing
+        SOURCE GeoFeatures/CoordinateCollection.swift.gyb
+        OUTPUT GeoFeatures/LinearRing.swift
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=LinearRing
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-LineString
-        SOURCE ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/CoordinateCollection.swift.gyb
-        OUTPUT ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/LineString.swift
-        FLAGS -D Self=LineString
+        SOURCE GeoFeatures/CoordinateCollection.swift.gyb
+        OUTPUT GeoFeatures/LineString.swift
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=LineString
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-GeometryCollection
-        SOURCE ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/GeometryCollection.swift.gyb
-        OUTPUT ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/GeometryCollection.swift
-        FLAGS -D Self=GeometryCollection -D Element=Geometry -D CoordinateSpecialized=false
+        SOURCE GeoFeatures/GeometryCollection.swift.gyb
+        OUTPUT GeoFeatures/GeometryCollection.swift
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=GeometryCollection -D Element=Geometry -D CoordinateSpecialized=false
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-MultiPoint
-        SOURCE ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/GeometryCollection.swift.gyb
-        OUTPUT ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/MultiPoint.swift
-        FLAGS -D Self=MultiPoint -D Element=Point -D CoordinateSpecialized=true
+        SOURCE GeoFeatures/GeometryCollection.swift.gyb
+        OUTPUT GeoFeatures/MultiPoint.swift
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPoint -D Element=Point -D CoordinateSpecialized=true
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-MultiLineString
-        SOURCE ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/GeometryCollection.swift.gyb
-        OUTPUT ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/MultiLineString.swift
-        FLAGS -D Self=MultiLineString -D Element=LineString -D CoordinateSpecialized=true
+        SOURCE GeoFeatures/GeometryCollection.swift.gyb
+        OUTPUT GeoFeatures/MultiLineString.swift
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiLineString -D Element=LineString -D CoordinateSpecialized=true
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-MultiPolygon
-        SOURCE ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/GeometryCollection.swift.gyb
-        OUTPUT ${CMAKE_SOURCE_DIR}/Sources/GeoFeatures/MultiPolygon.swift
-        FLAGS -D Self=MultiPolygon -D Element=Polygon -D CoordinateSpecialized=true
+        SOURCE GeoFeatures/GeometryCollection.swift.gyb
+        OUTPUT GeoFeatures/MultiPolygon.swift
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPolygon -D Element=Polygon -D CoordinateSpecialized=true
         DEPENDS build-tools
         )
 
-add_dependencies(geofeatures-build generated-LineString generated-LineString generated-GeometryCollection generated-MultiPoint generated-MultiLineString generated-MultiPolygon)
+add_dependencies(geofeatures-build generated-LinearRing generated-LineString generated-GeometryCollection generated-MultiPoint generated-MultiLineString generated-MultiPolygon)
