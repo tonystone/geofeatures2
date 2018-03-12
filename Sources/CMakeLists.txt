@@ -11,7 +11,7 @@ file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.swift Pack
 #
 # Main Build Target
 #
-add_custom_target(geofeatures-build
+add_custom_target(geofeatures-build ALL
         COMMAND swift build
         BYPRODUCTS .build
         SOURCES ${SOURCE_FILES}

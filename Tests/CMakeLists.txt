@@ -14,7 +14,7 @@ list(REMOVE_ITEM TEST_FILES "${LINUX_MAIN}")
 #
 # Test Target
 #
-add_custom_target(geofeatures-test
+add_custom_target(geofeatures-test ALL
         COMMAND swift test
         DEPENDS geofeatures-build
         SOURCES ${TEST_FILES}
