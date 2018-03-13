@@ -60,6 +60,21 @@ pod "GeoFeatures"
 ```
 See the ["Using CocoaPods"](https://guides.cocoapods.org/using/using-cocoapods.html) guide for more information.
 
+## Communication and Contributions
+
+- If you **found a bug**, _and can provide steps to reliably reproduce it_, [open an issue](https://github.com/tonystone/geofeatures2/issues).
+- If you **have a feature request**, [open an issue](https://github.com/tonystone/geofeatures2/issues).
+- If you **want to contribute**
+   - Review  [Documentation/GeoFeatures-Development](Documentation/GeoFeatures-Development.md).
+   - Fork it! [GeoFeatures repository](https://github.com/tonystone/geofeatures2)
+   - Create your feature branch off of **master**: `git checkout -b my-new-feature`
+   - Commit your changes: `git commit -am 'Add some feature'`
+   - Push to the branch: `git push origin my-new-feature`
+   - Submit a pull request :-)
+   
+> For instructions on how to build GeoFeatures for development, please see [Documentation/GeoFeatures-Development](Documentation/GeoFeatures-Development.md).
+
+
 ## Minimum Requirements
 
 Build Environment
@@ -81,20 +96,6 @@ Minimum Runtime Version
 >
 > See the [README](https://github.com/tonystone/vagrant-swift/blob/master/README.md) for instructions.
 > 
-
-## Communication and Contributions
-
-- If you **found a bug**, _and can provide steps to reliably reproduce it_, [open an issue](https://github.com/tonystone/geofeatures2/issues).
-- If you **have a feature request**, [open an issue](https://github.com/tonystone/geofeatures2/issues).
-- If you **want to contribute**
-   - Review  [Documentation/GeoFeatures-Development](Documentation/GeoFeatures-Development.md).
-   - Fork it! [GeoFeatures repository](https://github.com/tonystone/geofeatures2)
-   - Create your feature branch off of **master**: `git checkout -b my-new-feature`
-   - Commit your changes: `git commit -am 'Add some feature'`
-   - Push to the branch: `git push origin my-new-feature`
-   - Submit a pull request :-)
-   
-> For instructions on how to build GeoFeatures for development, please see [Documentation/GeoFeatures-Development](Documentation/GeoFeatures-Development.md).
    
 ## License
 
