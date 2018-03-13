@@ -52,6 +52,5 @@ add_custom_target(geofeatures-xcode-project
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         SOURCES Package.swift)
 
-
 add_subdirectory(Sources)
 add_subdirectory(Tests)
