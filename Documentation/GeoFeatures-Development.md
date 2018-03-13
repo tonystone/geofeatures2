@@ -61,4 +61,4 @@ If you'd like to have an xcode project for your development efforts, we've built
 # make geofeatures-xcode-project
 ```
 
-Will create a fully functioning Xcode project you can develop with.  We ignore the project files during git check-in (in the `.gitignore` file).
+Will create a fully functioning Xcode project you can develop with.  We ignore the Xcode project files during git check-in (in the `.gitignore` file).
