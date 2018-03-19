@@ -84,7 +84,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithNoPoints() {
 
-        let input = LineString<Coordinate2D>(elements: [], precision: precision, coordinateSystem: cs)
+        let input = LineString<Coordinate2D>(elements: [] as [Coordinate2D], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -244,7 +244,7 @@ class LineStringGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testIsSimple_WithNoPoints() {
 
-        let input = LineString<Coordinate2D>(elements: [], precision: precision, coordinateSystem: cs)
+        let input = LineString<Coordinate2D>(elements: [] as [Coordinate2D], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
