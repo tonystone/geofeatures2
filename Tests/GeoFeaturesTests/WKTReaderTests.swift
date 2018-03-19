@@ -800,7 +800,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
             do {
                 let _ = try reader.read(string: wkt)
             } catch {
-                XCTFail()
+                XCTFail("WKT Read Failed")
             }
         }
     }

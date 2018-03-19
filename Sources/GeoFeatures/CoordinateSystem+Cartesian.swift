@@ -1,7 +1,7 @@
 ///
-///  CoordinateSystem.swift
+///  CoordinateSystem+Cartesian.swift
 ///
-///  Copyright (c) 2016 Tony Stone
+///  Copyright (c) 2018 Tony Stone
 ///
 ///  Licensed under the Apache License, Version 2.0 (the "License");
 ///  you may not use this file except in compliance with the License.
@@ -15,20 +15,28 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Tony Stone on 2/5/2016.
+///  Created by Tony Stone on 2/28/18.
 ///
 import Swift
 
 ///
-/// Coordinate System Types
+/// Cartesian CoordinateSystem Type
 ///
-/// These are used by the algorithms when they are applied to the types
-///
-public protocol CoordinateSystem {}
+public struct Cartesian: CoordinateSystem, Equatable, Hashable {
+    public init() {}
+    public var hashValue: Int = String(reflecting: Cartesian.self).hashValue
+}
 
-public func == <T1: CoordinateSystem & Hashable, T2: CoordinateSystem & Hashable>(lhs: T1, rhs: T2) -> Bool {
-    if type(of: lhs) == type(of: rhs) {
-        return lhs.hashValue == rhs.hashValue
+///
+/// CustomStringConvertible and CustomDebugStringConvertible Implementation
+///
+extension Cartesian: CustomStringConvertible, CustomDebugStringConvertible {
+
+    public var description: String {
+        return "\(type(of: self))()"
     }
-    return false
+
+    public var debugDescription: String {
+        return self.description
+    }
 }

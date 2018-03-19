@@ -87,7 +87,7 @@ internal class AVLTree<ValueType: Comparable>: ExpressibleByArrayLiteral {
     ///
     /// - Parameter value: The value to delete from the tree.
     ///
-    public func delete(value: ValueType) -> Void {
+    public func delete(value: ValueType) {
         self.delete(value: value, node: &self.root)
     }
 

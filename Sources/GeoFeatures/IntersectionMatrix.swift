@@ -135,7 +135,7 @@ extension IntersectionMatrix {
     ///
     internal func matches(_ pattern: String) -> Bool {
 
-        var characters = pattern.characters.makeIterator()
+        var characters = pattern.makeIterator()
 
         for row in 0...Index.exterior.rawValue {
             for col in 0...Index.exterior.rawValue {
@@ -262,7 +262,7 @@ extension IntersectionMatrix: CustomStringConvertible {
         var string = ""
 
         for dimension in self {
-            if string.characters.count > 0 {
+            if string.count > 0 {
                 string += ", "
             }
             string += "\(dimension)"

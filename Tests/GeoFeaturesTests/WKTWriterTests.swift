@@ -25,7 +25,7 @@ import GeoFeatures
     import struct GeoFeatures.Polygon
 #endif
 
-fileprivate struct UnsupportedGeometry: Geometry {
+private struct UnsupportedGeometry: Geometry {
 
     let precision: Precision = FloatingPrecision()
 
