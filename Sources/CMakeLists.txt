@@ -65,4 +65,8 @@ add_gyb_target(generated-MultiPolygon
         DEPENDS build-tools
         )
 
-add_dependencies(geofeatures-build generated-LinearRing generated-LineString generated-GeometryCollection generated-MultiPoint generated-MultiLineString generated-MultiPolygon)
+add_custom_target(generated-source
+        DEPENDS generated-LinearRing generated-LineString generated-GeometryCollection generated-MultiPoint generated-MultiLineString generated-MultiPolygon
+        )
+
+add_dependencies(geofeatures-build generated-source)
