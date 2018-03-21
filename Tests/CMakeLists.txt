@@ -4,12 +4,13 @@
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
 file(GLOB_RECURSE TEST_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.swift *.gyb)
-file(GLOB LINUX_MAIN LinuxMain.swift)
+file(GLOB LINUX_MAIN RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} LinuxMain.swift)
 
 #
 # Remove LinuxMain.swift from the list as this will be handled separately if Linux.
 #
 list(REMOVE_ITEM TEST_FILES "${LINUX_MAIN}")
+get_filename_component(LINUX_MAIN ${LINUX_MAIN} ABSOLUTE BASE_DIR ${GYB_TARGET_WORKING_DIRECTORY})
 
 #
 # Test Target
@@ -68,19 +69,20 @@ add_gyb_target(generated-MultiPolygonTests
 
 add_dependencies(geofeatures-test generated-LinearRingTests generated-LineStringTests generated-GeometryCollectionTests generated-MultiPointTests generated-MultiLineStringTests generated-MultiPolygonTests)
 
-if(UNIX AND NOT APPLE)
+#
+# Build the LinuxMain file.
+#
+# Note: We do this for all platforms so that we are assured that it is maintained whenever a change is made to the tests.
+#
+add_custom_command(
+        DEPENDS ${TEST_FILES} build-tools
+        OUTPUT "${LINUX_MAIN}"
+        COMMAND "${BUILD_TOOLS_BIN}/generate_xctest_runner.rb"
+        ARGS --package-path "${CMAKE_SOURCE_DIR}"
+        VERBATIM
+)
 
-    add_custom_command(
-            DEPENDS ${TEST_FILES} build-tools
-            OUTPUT "${LINUX_MAIN}"
-            COMMAND "${BUILD_TOOLS_BIN}/generate_xctest_runner.rb"
-            ARGS --package-path "${CMAKE_SOURCE_DIR}"
-            VERBATIM
-    )
-
-    add_custom_target(linux-main
-            DEPENDS "${LINUX_MAIN}"
-            )
-    add_dependencies(geofeatures-test linux-main)
-
-endif()
+add_custom_target(linux-main
+        DEPENDS "${LINUX_MAIN}"
+        )
+add_dependencies(geofeatures-test linux-main)
