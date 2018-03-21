@@ -35,7 +35,7 @@ extension LinearRing: Surface {
     public func area() -> Double {
         var area: Double = 0.0
 
-        if coordinates.count > 0 {
+        if coordinates.count > 0 && self.isClosed() {
 
             var c1 = coordinates[0]
 

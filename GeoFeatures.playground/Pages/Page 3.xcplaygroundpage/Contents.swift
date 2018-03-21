@@ -1,3 +1,0 @@
-//: [Previous](@previous)
-
-import Foundation

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='macos' display-mode='raw' last-migration='0800'>
+    <pages>
+        <page name='1 - Quick Start'/>
+        <page name='2 - Points'/>
+        <page name='3 - LineStrings'/>
+        <page name='4 - LinearRings'/>
+        <page name='5 - Polygons'/>
+        <page name='6 - MultipPoints'/>
+        <page name='7 - MultiLineStrings'/>
+        <page name='8 - MultiPolygons'/>
+        <page name='9 - GeometryCollections'/>
+        <page name='10 - WKT'/>
+        <page name='11 - GeoJSON'/>
+    </pages>
+</playground>

@@ -24,20 +24,23 @@ let package = Package(
     name: "GeoFeatures",
     products: [
         /// Products define the executables and libraries produced by a package, and make them visible to other packages.
-        .library(
-            name: "GeoFeatures",
-            targets: ["GeoFeatures"])
-        ],
+        .library(name: "GeoFeatures", type: .dynamic, targets: ["GeoFeatures", "GeoFeaturesQuartz", "GeoFeaturesMapKit", "GeoFeaturesPlaygroundSupport"])
+    ],
     dependencies: [
         /// Dependencies declare other packages that this package depends on.
         /// .package(url: packageURL, from: "1.0.0"),
     ],
     targets: [
-        .target(
-            name: "GeoFeatures",
-            dependencies: []),
-        .testTarget(
-            name: "GeoFeaturesTests",
-            dependencies: ["GeoFeatures"])
+        /// Module Targets
+        .target(name: "GeoFeatures", dependencies: []),
+        .target(name: "GeoFeaturesQuartz",      dependencies: ["GeoFeatures"]),
+        .target(name: "GeoFeaturesMapKit",            dependencies: ["GeoFeatures", "GeoFeaturesQuartz"]),
+        .target(name: "GeoFeaturesPlaygroundSupport", dependencies: ["GeoFeatures", "GeoFeaturesQuartz", "GeoFeaturesMapKit"]),
+
+        /// Tests
+        .testTarget(name: "GeoFeaturesTests",                  dependencies: ["GeoFeatures"]),
+        .testTarget(name: "GeoFeaturesQuartzTests",            dependencies: ["GeoFeatures", "GeoFeaturesQuartz"]),
+        .testTarget(name: "GeoFeaturesMapKitTests",            dependencies: ["GeoFeatures", "GeoFeaturesQuartz", "GeoFeaturesMapKit"]),
+        .testTarget(name: "GeoFeaturesPlaygroundSupportTests", dependencies: ["GeoFeatures", "GeoFeaturesQuartz", "GeoFeaturesPlaygroundSupport"])
         ]
 )

@@ -1,5 +1,6 @@
 import Swift
 import GeoFeatures
+import GeoFeaturesPlaygroundSupport
 
 let fixedPrecision1 = FixedPrecision(scale: 10)
 let fixedPrecision2 = FixedPrecision(scale: 10)
@@ -64,21 +65,9 @@ LineString<Coordinate3D>(elements: [(x: 0, y: 0, z: 0), (0, 7, 0), (4, 2, 0), (2
 GeometryCollection().isEmpty()
 GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (1, 1))] as [Geometry]).isEmpty()
 
+GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (1, 1))] as [Geometry])
+
 /// Comparison of points
 let pointsMatch1 = Point<Coordinate2D>(coordinate: (1.4, 2.3)) == Point<Coordinate2D>(coordinate: (1.4, 2.3))
 
 let pointsMatch2 = Point<Coordinate2D>(coordinate: (1, 1)) == Point<Coordinate2D>(coordinate: (1.4, 2.3))
-
-//: Readers and Writers
-
-do {
-    try WKTReader<Coordinate2D>().read(string: "LINESTRING (0 0, 0 90, 90 90, 90 0, 0 0)")
-} catch {
-   print(error)
-}
-
-let writer2D = WKTWriter<Coordinate2D>()
-
-writer2D.write(Point<Coordinate2D>(coordinate: (x: 24.0, y: 12.0)))
-
-writer2D.write(LineString<Coordinate2D>(elements: [(x: 24.0, y: 12.0), (1.0, 1.0), (2.0, 2.0)]))

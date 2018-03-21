@@ -1,7 +1,7 @@
 ///
-///  Curve.swift
+/// GeoFeatures+MapKit.swift
 ///
-///  Copyright (c) 2016 Tony Stone
+/// Copyright (c) Tony Stone, All rights reserved.
 ///
 ///  Licensed under the Apache License, Version 2.0 (the "License");
 ///  you may not use this file except in compliance with the License.
@@ -15,17 +15,7 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Tony Stone on 2/13/2016.
+/// Created by Tony Stone on 3/16/18.
 ///
-public protocol Curve {
 
-    ///
-    /// - Returns: True if this curve is closed (begin and end coordinates are equal)
-    ///
-    func isClosed() -> Bool
-
-    ///
-    /// The length of this Curve calculated using its associated CoordinateSystem.
-    ///
-    func length() -> Double
-}
+import Foundation
