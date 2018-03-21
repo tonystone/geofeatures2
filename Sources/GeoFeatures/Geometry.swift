@@ -62,13 +62,12 @@ public protocol Geometry {
     ///
     func boundary() -> Geometry
 
-///    ///
-///    /// - Returns:  true if this GeometryType instance has no anomalous geometric points, such
-///    /// as self intersection or self tangent.
-///    ///
-///    @warn_unused_result
-///    func isSimple() -> Bool
-///
+    ///
+    /// - Returns:  true if this GeometryType instance has no anomalous geometric points, such
+    /// as self intersection or self tangent.
+    ///
+    func isSimple() -> Bool
+
 ///    ///
 ///    /// The minimum bounding box for this Geometry, returned as a Geometry (Polygon).
 ///    ///
@@ -189,6 +188,10 @@ public func != <T: Geometry>(lhs: T, rhs: Geometry) -> Bool {
 ///         to refer to 2-dimensional geometries (Polygons and MultiPolygons).
 ///
 extension Geometry {
+
+    public func isSimple() -> Bool {
+        fatalError("isSimple() has not been implemented")
+    }
 
     func equals(_ other: Geometry) -> Bool {   // FIXME: equals is implemented but is still required to be implemented for a class implementing Geometry.  Figure out why it is.
         return relate(other, pattern: "TFFFTFFFT")

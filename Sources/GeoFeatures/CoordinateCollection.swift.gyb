@@ -39,25 +39,22 @@ public struct ${Self}<CoordinateType: Coordinate & CopyConstructable> {
     public let coordinateSystem: CoordinateSystem
 
     ///
-    /// ${Self}s are empty constructable
+    /// Construct an empty `${Self}`.
     ///
-    public init() {
-        self.init(precision: defaultPrecision, coordinateSystem: defaultCoordinateSystem)
-    }
+    /// - parameters:
+    ///     - precision: The `Precision` model this `${Self}` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `${Self}` should use in calculations on it's coordinates.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
+    public init(precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
 
-    public init(coordinateSystem: CoordinateSystem) {
-        self.init(precision: defaultPrecision, coordinateSystem: coordinateSystem)
-    }
-
-    public init(precision: Precision) {
-        self.init(precision: precision, coordinateSystem: defaultCoordinateSystem)
-    }
-
-    public init(precision: Precision, coordinateSystem: CoordinateSystem) {
-        self.precision = precision
+        self.precision        = precision
         self.coordinateSystem = coordinateSystem
+        self.coordinates      = []
 
-        buffer = CollectionBuffer<CoordinateType>.create(minimumCapacity: 8) { newBuffer in CollectionBufferHeader(capacity: newBuffer.capacity, count: 0) } as! CollectionBuffer<CoordinateType> // swiftlint:disable:this force_cast
+        /// Note: No validation needed, an empty ${Self} is always valid.
     }
 
     ///
@@ -65,68 +62,144 @@ public struct ${Self}<CoordinateType: Coordinate & CopyConstructable> {
     ///
     /// - parameters:
     ///     - other: The ${Self} of the same type that you want to construct a new ${Self} from.
-    ///     - precision: The `Precision` model this polygon should use in calculations on it's coordinates.
-    ///     - coordinateSystem: The 'CoordinateSystem` this polygon should use in calculations on it's coordinates.
+    ///
+    public init(other: ${Self}<CoordinateType>) {
+
+        self.coordinateSystem = other.coordinateSystem
+        self.precision        = other.precision
+        self.coordinates      = other.coordinates
+
+        /// Note: No validation needed, an as it's assumed the `other` ${Self} is valid.
+    }
+
+    ///
+    /// Construct a ${Self} from another ${Self} (copy constructor) changing the precision and coordinateSystem.
+    ///
+    /// - parameters:
+    ///     - other: The ${Self} of the same type that you want to construct a new ${Self} from.
+    ///     - precision: The `Precision` model this `${Self}` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `${Self}` should use in calculations on it's coordinates.
     ///
     /// - seealso: `CoordinateSystem`
     /// - seealso: `Precision`
     ///
-    public init(other: ${Self}<CoordinateType>, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+    internal init(other: ${Self}<CoordinateType>, precision: Precision, coordinateSystem: CoordinateSystem) {
 
-        self.init(precision: precision, coordinateSystem: coordinateSystem)
+        self.coordinateSystem = coordinateSystem
+        self.precision        = precision
+        self.coordinates      = other.coordinates.map({ CoordinateType(other: $0, precision: precision) })
 
-        other.buffer.withUnsafeMutablePointers { (header, elements) -> Void in
-
-            self.reserveCapacity(numericCast(header.pointee.count))
-
-            for index in 0..<header.pointee.count {
-                self.append(elements[index])
-            }
-        }
+        /// Note: No validation needed, an as it's assumed the `other` ${Self} is valid.
     }
 
     ///
-    /// ${Self} can be constructed from any Swift.Collection including Array as
-    /// long as it has an Element type equal the Coordinate type specified in Element
-    /// and the Distance is an Int type.
+    /// Construct a `${Self}` from a an `Array` of `CoordinateType`.
+    ///
+    /// - parameters:
+    ///     - elements: An `Array` of `CoordinateType` coordinates.
+    ///     - precision: The `Precision` model this `${Self}` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `${Self}` should use in calculations on it's coordinates.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
+    public init(elements: [CoordinateType], precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+
+        self.precision        = precision
+        self.coordinateSystem = coordinateSystem
+        self.coordinates      = elements.map({ CoordinateType(other: $0, precision: precision) })
+    }
+
+    ///
+    /// Construct a `${Self}` from a any `Collection` type which holds `CoordinateType` objects.
+    ///
+    /// ${Self} can be constructed from any Swift.Collection type as
+    /// long as it has an Element type equal the Coordinate type specified in Element.
+    ///
+    /// - parameters:
+    ///     - elements: A `Collection` of `CoordinateType` coordinates.
+    ///     - precision: The `Precision` model this `${Self}` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `${Self}` should use in calculations on it's coordinates.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
     ///
     public init<C: Swift.Collection>(elements: C, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem)
-            where C.Iterator.Element == CoordinateType {
+        where C.Iterator.Element == CoordinateType {
 
-        self.init(precision: precision, coordinateSystem: coordinateSystem)
-
-        self.reserveCapacity(numericCast(elements.count))
-
-        var Iterator = elements.makeIterator()
-
-        while let coordinate = Iterator.next() {
-            self.append(coordinate)
-        }
+        self.precision        = precision
+        self.coordinateSystem = coordinateSystem
+        self.coordinates      = elements.map({ CoordinateType(other: $0, precision: precision) })
     }
 
-    internal var buffer: CollectionBuffer<CoordinateType>
+    internal private(set) var coordinates: [CoordinateType]
 }
 
-extension ${Self} {
+///
+/// TupleConvertible extensions
+///
+/// Coordinates that are TupleConvertible allow initialization via an ordinary Swift tuple.
+///
+extension ${Self} where CoordinateType: TupleConvertible {
 
-    @inline(__always)
-    fileprivate mutating func _ensureUniquelyReferenced() {
-        if !isKnownUniquelyReferenced(&buffer) {
-            buffer = buffer.clone()
+    ///
+    /// Construct a `${Self}` from a any `Swift.Collection` type which holds `CoordinateType.TupleType` tuples.
+    ///
+    /// ${Self} can be constructed from any Swift.Collection type as
+    /// long as it has an Element type equal the Coordinate types tuple specified
+    /// in Element.
+    ///
+    /// - parameters:
+    ///     - elements: A `Collection` of `CoordinateType.TupleType` coordinates.
+    ///     - precision: The `Precision` model this `${Self}` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `${Self}` should use in calculations on it's coordinates.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    /// - seealso: `TupleConvertible`
+    ///
+    public init(elements: [CoordinateType.TupleType], precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+
+        self.precision        = precision
+        self.coordinateSystem = coordinateSystem
+        self.coordinates      = elements.map({ CoordinateType(tuple: $0, precision: precision) })
+    }
+
+    ///
+    /// Append `newElement` to ${Self}.
+    ///
+    public mutating func append(_ newElement: CoordinateType.TupleType) {
+        self.append(CoordinateType(tuple: newElement))
+    }
+
+    ///
+    /// Append the elements of `newElements` to this ${Self}.
+    ///
+    public mutating func append<C: Swift.Collection>(contentsOf newElements: C)
+            where C.Iterator.Element == CoordinateType.TupleType {
+
+        self.coordinates.reserveCapacity(numericCast(newElements.count) + coordinates.count)
+
+        var Iterator = newElements.makeIterator()
+
+        while let coordinate = Iterator.next() {
+            self.append(CoordinateType(tuple: coordinate))
         }
     }
 
-    @inline(__always)
-    fileprivate mutating func _resizeIfNeeded() {
-        if buffer.header.capacity == buffer.header.count {
-            buffer = buffer.resize(buffer.header.capacity * 2)
-        }
+    ///
+    /// Insert `newElement` at index `i` of this ${Self}.
+    ///
+    /// - Requires: `i <= count`.
+    ///
+    public mutating func insert(_ newElement: CoordinateType.TupleType, at i: Int) {
+        self.insert(CoordinateType(tuple: newElement), at: i)
     }
 }
 
 // MARK: Collection conformance
 
-extension ${Self}: Collection, MutableCollection, _DestructorSafeContainer {
+extension ${Self}: Collection, MutableCollection {
 
     ///
     /// Returns the position immediately after `i`.
@@ -148,67 +221,25 @@ extension ${Self}: Collection, MutableCollection, _DestructorSafeContainer {
     /// A "past-the-end" element index; the successor of the last valid subscript argument.
     ///
     public var endIndex: Int {
-        return buffer.header.count
+        return coordinates.count
     }
 
     public subscript(index: Int) -> CoordinateType {
-
         get {
-            guard (index >= 0) && (index < buffer.header.count) else { preconditionFailure("Index out of range.") }
-
-            return buffer.withUnsafeMutablePointerToElements { $0[index] }
+            /// Note: we rely on the array to return an error for any index out of range.
+            return coordinates[index]
         }
-
-        set (newValue) {
-
-            _ensureUniquelyReferenced()
-
-            buffer.update(CoordinateType(other: newValue, precision: precision), at: index)
+        set (newElement) {
+            /// Note: we rely on the array to return an error for any index out of range.
+            coordinates[index] = CoordinateType(other: newElement, precision: precision)
         }
     }
 
     ///
-    /// - Returns: The number of Coordinate3D objects.
+    /// Append `newElement` to ${Self}.
     ///
-    public var count: Int {
-        return self.buffer.header.count
-    }
-
-    ///
-    /// - Returns: The current minimum capacity.
-    ///
-    public var capacity: Int {
-        return self.buffer.header.capacity
-    }
-
-    ///
-    /// Reserve enough space to store `minimumCapacity` elements.
-    ///
-    /// - Postcondition: `capacity >= minimumCapacity` and the array has mutable contiguous buffer.
-    ///
-    public mutating func reserveCapacity(_ minimumCapacity: Int) {
-
-        if buffer.capacity < minimumCapacity {
-
-            _ensureUniquelyReferenced()
-
-            let newSize = Swift.max(buffer.capacity * 2, minimumCapacity)
-
-            buffer = buffer.resize(newSize)
-        }
-    }
-
-    ///
-    /// Reserve enough space to store `minimumCapacity` elements.
-    ///
-    /// - Postcondition: `capacity >= minimumCapacity` and the array has mutable contiguous buffer.
-    ///
-    public mutating func append(_ newElement: CoordinateType) {
-
-        _ensureUniquelyReferenced()
-        _resizeIfNeeded()
-
-        buffer.append(CoordinateType(other: newElement, precision: precision))
+    internal mutating func append(_ newElement: CoordinateType) {
+        self.coordinates.append(CoordinateType(other: newElement, precision: precision))
     }
 
     ///
@@ -217,7 +248,7 @@ extension ${Self}: Collection, MutableCollection, _DestructorSafeContainer {
     public mutating func append<C: Swift.Collection>(contentsOf newElements: C)
             where C.Iterator.Element == CoordinateType {
 
-        self.reserveCapacity(numericCast(newElements.count))
+        self.coordinates.reserveCapacity(numericCast(newElements.count) + coordinates.count)
 
         var Iterator = newElements.makeIterator()
 
@@ -232,111 +263,7 @@ extension ${Self}: Collection, MutableCollection, _DestructorSafeContainer {
     /// - Requires: `i <= count`.
     ///
     public mutating func insert(_ newElement: CoordinateType, at index: Int) {
-
-        _ensureUniquelyReferenced()
-        _resizeIfNeeded()
-
-        buffer.insert(CoordinateType(other: newElement, precision: precision), at: index)
-    }
-
-    ///
-    /// Remove and return the element at index `i` of this ${Self}.
-    ///
-    @discardableResult
-    public mutating func remove(at index: Int) -> CoordinateType {
-        return buffer.remove(at: index)
-    }
-
-    ///
-    /// Remove an element from the end of this ${Self}.
-    ///
-    /// - Requires: `count > 0`.
-    ///
-    @discardableResult
-    public mutating func removeLast() -> CoordinateType {
-        return buffer.removeLast()
-    }
-
-    ///
-    /// Remove all elements of this ${Self}.
-    ///
-    /// - Postcondition: `capacity == 0` if `keepCapacity` is `false`.
-    ///
-    public mutating func removeAll(keepingCapacity keepCapacity: Bool = false) {
-
-        if keepCapacity {
-
-            buffer.withUnsafeMutablePointerToHeader { (header) -> Void in
-                header.pointee.count = 0
-            }
-        } else {
-            buffer = CollectionBuffer<CoordinateType>.create(minimumCapacity: 0) { newBuffer in CollectionBufferHeader(capacity: newBuffer.capacity, count: 0) } as! CollectionBuffer<CoordinateType> // swiftlint:disable:this force_cast
-        }
-    }
-}
-
-///
-/// TupleConvertible extensions
-///
-/// Coordinates that are TupleConvertible allow initialization via an ordinary Swift tuple.
-///
-extension ${Self} where CoordinateType: TupleConvertible {
-
-    ///
-    /// ${Self} can be constructed from any Swift.Collection if it's Elements are tuples that match
-    /// Self.Element's TupleType.
-    ///
-    /// ----
-    ///
-    /// - seealso: TupleConvertible.
-    ///
-    public init<C: Swift.Collection>(elements: C, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem)
-            where C.Iterator.Element == CoordinateType.TupleType {
-
-        self.init(precision: precision, coordinateSystem: coordinateSystem)
-
-        self.reserveCapacity(numericCast(elements.count))
-
-        var Iterator = elements.makeIterator()
-
-        while let coordinate = Iterator.next() {
-            self.append(coordinate)
-        }
-    }
-
-    ///
-    /// Reserve enough space to store `minimumCapacity` elements.
-    ///
-    /// - Postcondition: `capacity >= minimumCapacity` and the array has mutable contiguous buffer.
-    ///
-    public mutating func append(_ newElement: CoordinateType.TupleType) {
-        self.append(CoordinateType(tuple: newElement))
-    }
-
-    ///
-    /// Append the elements of `newElements` to this ${Self}.
-    ///
-    public mutating func append<C: Swift.Collection>(contentsOf newElements: C)
-            where C.Iterator.Element == CoordinateType.TupleType {
-
-        _ensureUniquelyReferenced()
-
-        self.reserveCapacity(numericCast(newElements.count) + buffer.header.count)
-
-        var Iterator = newElements.makeIterator()
-
-        while let coordinate = Iterator.next() {
-            self.append(CoordinateType(tuple: coordinate))
-        }
-    }
-
-    ///
-    /// Insert `newElement` at index `i` of this ${Self}.
-    ///
-    /// - Requires: `i <= count`.
-    ///
-    public mutating func insert(_ newElement: CoordinateType.TupleType, at i: Int) {
-        self.insert(CoordinateType(tuple: newElement), at: i)
+        self.coordinates.insert(CoordinateType(other: newElement, precision: self.precision), at: index)
     }
 }
 
@@ -345,7 +272,7 @@ extension ${Self} where CoordinateType: TupleConvertible {
 extension ${Self}: CustomStringConvertible, CustomDebugStringConvertible {
 
     public var description: String {
-        return "\(type(of: self))(\(self.flatMap { String(describing: $0) }.joined(separator: ", ")))"
+        return "\(type(of: self))(\(self.map { String(describing: $0) }.joined(separator: ", ")))"
     }
 
     public var debugDescription: String {
