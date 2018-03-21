@@ -43,31 +43,35 @@ add_gyb_target(generated-GeometryCollectionTests
         SOURCE GeoFeaturesTests/GeometryCollectionTests.swift.gyb
         OUTPUT GeoFeaturesTests/GeometryCollectionTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='GeometryCollectionTestInput'
-        DEPENDS build-tools
+        DEPENDS GeoFeaturesTests/GeometryCollectionTestInput.py build-tools
         )
 
 add_gyb_target(generated-MultiPointTests
         SOURCE GeoFeaturesTests/GeometryCollectionTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiPointTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiPointTestInput'
-        DEPENDS build-tools
+        DEPENDS GeoFeaturesTests/MultiPointTestInput.py build-tools
         )
 
 add_gyb_target(generated-MultiLineStringTests
         SOURCE GeoFeaturesTests/GeometryCollectionTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiLineStringTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiLineStringTestInput'
-        DEPENDS build-tools
+        DEPENDS GeoFeaturesTests/MultiLineStringTestInput.py build-tools
         )
 
 add_gyb_target(generated-MultiPolygonTests
         SOURCE GeoFeaturesTests/GeometryCollectionTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiPolygonTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiPolygonTestInput'
-        DEPENDS build-tools
+        DEPENDS GeoFeaturesTests/MultiPolygonTestInput.py build-tools
         )
 
-add_dependencies(geofeatures-test generated-LinearRingTests generated-LineStringTests generated-GeometryCollectionTests generated-MultiPointTests generated-MultiLineStringTests generated-MultiPolygonTests)
+add_custom_target(generated-tests
+        DEPENDS generated-LinearRingTests generated-LineStringTests generated-GeometryCollectionTests generated-MultiPointTests generated-MultiLineStringTests generated-MultiPolygonTests
+        )
+
+add_dependencies(geofeatures-test generated-tests)
 
 #
 # Build the LinuxMain file.
@@ -75,7 +79,7 @@ add_dependencies(geofeatures-test generated-LinearRingTests generated-LineString
 # Note: We do this for all platforms so that we are assured that it is maintained whenever a change is made to the tests.
 #
 add_custom_command(
-        DEPENDS ${TEST_FILES} build-tools
+        DEPENDS build-tools
         OUTPUT "${LINUX_MAIN}"
         COMMAND "${BUILD_TOOLS_BIN}/generate_xctest_runner.rb"
         ARGS --package-path "${CMAKE_SOURCE_DIR}"
@@ -83,6 +87,6 @@ add_custom_command(
 )
 
 add_custom_target(linux-main
-        DEPENDS "${LINUX_MAIN}"
+        DEPENDS "${LINUX_MAIN}" generated-tests
         )
 add_dependencies(geofeatures-test linux-main)
