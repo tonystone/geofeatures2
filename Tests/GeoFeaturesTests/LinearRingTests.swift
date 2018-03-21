@@ -66,7 +66,7 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing<Coordinate2D>(other: LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)]), precision: precision, coordinateSystem: cs)
+        let input = LinearRing<Coordinate2D>(other: LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs))
         let expected = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -95,16 +95,6 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -174,46 +164,6 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.0, y: 1.0)), Coordinate2D(tuple: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.0, y: 1.0)), Coordinate2D(tuple: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.0, y: 1.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.0, y: 1.0)), Coordinate2D(tuple: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.0, y: 1.0)), Coordinate2D(tuple: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -250,33 +200,6 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.0, y: 1.0)), Coordinate2D(tuple: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append((x: 1.0, y: 1.0))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 
@@ -318,7 +241,7 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing<Coordinate2DM>(other: LinearRing<Coordinate2DM>(elements: [(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
+        let input = LinearRing<Coordinate2DM>(other: LinearRing<Coordinate2DM>(elements: [(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs))
         let expected = LinearRing<Coordinate2DM>(elements: [(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -347,16 +270,6 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -426,46 +339,6 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.0, y: 1.0, m: 1.0)), Coordinate2DM(tuple: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.0, y: 1.0, m: 1.0)), Coordinate2DM(tuple: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.0, y: 1.0, m: 1.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.0, y: 1.0, m: 1.0)), Coordinate2DM(tuple: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.0, y: 1.0, m: 1.0)), Coordinate2DM(tuple: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -502,33 +375,6 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.0, y: 1.0, m: 1.0)), Coordinate2DM(tuple: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append((x: 1.0, y: 1.0, m: 1.0))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 
@@ -570,7 +416,7 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing<Coordinate3D>(other: LinearRing<Coordinate3D>(elements: [(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0)]), precision: precision, coordinateSystem: cs)
+        let input = LinearRing<Coordinate3D>(other: LinearRing<Coordinate3D>(elements: [(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs))
         let expected = LinearRing<Coordinate3D>(elements: [(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -599,16 +445,6 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -678,46 +514,6 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.0, y: 1.0, z: 1.0)), Coordinate3D(tuple: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.0, y: 1.0, z: 1.0)), Coordinate3D(tuple: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.0, y: 1.0, z: 1.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.0, y: 1.0, z: 1.0)), Coordinate3D(tuple: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.0, y: 1.0, z: 1.0)), Coordinate3D(tuple: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -754,33 +550,6 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.0, y: 1.0, z: 1.0)), Coordinate3D(tuple: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append((x: 1.0, y: 1.0, z: 1.0))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 
@@ -822,7 +591,7 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing<Coordinate3DM>(other: LinearRing<Coordinate3DM>(elements: [(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
+        let input = LinearRing<Coordinate3DM>(other: LinearRing<Coordinate3DM>(elements: [(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs))
         let expected = LinearRing<Coordinate3DM>(elements: [(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -851,16 +620,6 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -930,46 +689,6 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Coordinate3DM(tuple: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Coordinate3DM(tuple: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 1.0, m: 1.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Coordinate3DM(tuple: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Coordinate3DM(tuple: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -1006,33 +725,6 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Coordinate3DM(tuple: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append((x: 1.0, y: 1.0, z: 1.0, m: 1.0))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 
@@ -1074,7 +766,7 @@ class LinearRingCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing<Coordinate2D>(other: LinearRing<Coordinate2D>(elements: [(x: 1.001, y: 1.001), (x: 2.002, y: 2.002)]), precision: precision, coordinateSystem: cs)
+        let input = LinearRing<Coordinate2D>(other: LinearRing<Coordinate2D>(elements: [(x: 1.001, y: 1.001), (x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs))
         let expected = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -1103,16 +795,6 @@ class LinearRingCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -1182,46 +864,6 @@ class LinearRingCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.001, y: 1.001)), Coordinate2D(tuple: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.001, y: 1.001)), Coordinate2D(tuple: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.0, y: 1.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.001, y: 1.001)), Coordinate2D(tuple: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.001, y: 1.001)), Coordinate2D(tuple: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -1258,33 +900,6 @@ class LinearRingCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(LinearRing<Coordinate2D>(elements: [Coordinate2D(tuple: (x: 1.001, y: 1.001)), Coordinate2D(tuple: (x: 2.002, y: 2.002))], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append((x: 1.001, y: 1.001))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 
@@ -1326,7 +941,7 @@ class LinearRingCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing<Coordinate2DM>(other: LinearRing<Coordinate2DM>(elements: [(x: 1.001, y: 1.001, m: 1.001), (x: 2.002, y: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
+        let input = LinearRing<Coordinate2DM>(other: LinearRing<Coordinate2DM>(elements: [(x: 1.001, y: 1.001, m: 1.001), (x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs))
         let expected = LinearRing<Coordinate2DM>(elements: [(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -1355,16 +970,6 @@ class LinearRingCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -1434,46 +1039,6 @@ class LinearRingCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.001, y: 1.001, m: 1.001)), Coordinate2DM(tuple: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.001, y: 1.001, m: 1.001)), Coordinate2DM(tuple: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.0, y: 1.0, m: 1.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.001, y: 1.001, m: 1.001)), Coordinate2DM(tuple: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.001, y: 1.001, m: 1.001)), Coordinate2DM(tuple: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -1510,33 +1075,6 @@ class LinearRingCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(LinearRing<Coordinate2DM>(elements: [Coordinate2DM(tuple: (x: 1.001, y: 1.001, m: 1.001)), Coordinate2DM(tuple: (x: 2.002, y: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append((x: 1.001, y: 1.001, m: 1.001))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 
@@ -1578,7 +1116,7 @@ class LinearRingCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing<Coordinate3D>(other: LinearRing<Coordinate3D>(elements: [(x: 1.001, y: 1.001, z: 1.001), (x: 2.002, y: 2.002, z: 2.002)]), precision: precision, coordinateSystem: cs)
+        let input = LinearRing<Coordinate3D>(other: LinearRing<Coordinate3D>(elements: [(x: 1.001, y: 1.001, z: 1.001), (x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs))
         let expected = LinearRing<Coordinate3D>(elements: [(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -1607,16 +1145,6 @@ class LinearRingCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -1686,46 +1214,6 @@ class LinearRingCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.001, y: 1.001, z: 1.001)), Coordinate3D(tuple: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.001, y: 1.001, z: 1.001)), Coordinate3D(tuple: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.0, y: 1.0, z: 1.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.001, y: 1.001, z: 1.001)), Coordinate3D(tuple: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.001, y: 1.001, z: 1.001)), Coordinate3D(tuple: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -1762,33 +1250,6 @@ class LinearRingCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(LinearRing<Coordinate3D>(elements: [Coordinate3D(tuple: (x: 1.001, y: 1.001, z: 1.001)), Coordinate3D(tuple: (x: 2.002, y: 2.002, z: 2.002))], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append((x: 1.001, y: 1.001, z: 1.001))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 
@@ -1830,7 +1291,7 @@ class LinearRingCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing<Coordinate3DM>(other: LinearRing<Coordinate3DM>(elements: [(x: 1.001, y: 1.001, z: 1.001, m: 1.001), (x: 2.002, y: 2.002, z: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
+        let input = LinearRing<Coordinate3DM>(other: LinearRing<Coordinate3DM>(elements: [(x: 1.001, y: 1.001, z: 1.001, m: 1.001), (x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs))
         let expected = LinearRing<Coordinate3DM>(elements: [(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -1859,16 +1320,6 @@ class LinearRingCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -1938,46 +1389,6 @@ class LinearRingCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Coordinate3DM(tuple: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 2.0, y: 2.0, z: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Coordinate3DM(tuple: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 1.0, m: 1.0))], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Coordinate3DM(tuple: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Coordinate3DM(tuple: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -2014,32 +1425,5 @@ class LinearRingCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(LinearRing<Coordinate3DM>(elements: [Coordinate3DM(tuple: (x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Coordinate3DM(tuple: (x: 2.002, y: 2.002, z: 2.002, m: 2.002))], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append((x: 1.001, y: 1.001, z: 1.001, m: 1.001))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }

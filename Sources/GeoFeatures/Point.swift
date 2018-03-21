@@ -39,25 +39,55 @@ public struct Point<CoordinateType: Coordinate & CopyConstructable> {
     }
 
     ///
-    /// Constructs a Point with another Point of the same type.
+    /// Construct a Point from another Point (copy constructor).
     ///
-    public init(other: Point<CoordinateType>, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+    /// - parameters:
+    ///     - other: The Point of the same type that you want to construct a new Point from.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
+    public init(other: Point<CoordinateType>) {
 
-        self.precision = precision
+        self.precision        = other.precision
+        self.coordinateSystem = other.coordinateSystem
+        self.coordinate       = CoordinateType(other: other.coordinate, precision: precision)
+    }
+
+    ///
+    /// Construct a Point from another Point (copy constructor) changing the precision and coordinateSystem.
+    ///
+    /// - parameters:
+    ///     - other: The Point of the same type that you want to construct a new Point from.
+    ///     - precision: The `Precision` model this `Point` should use in calculations on it's coordinate.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `Pont` should use in calculations on it's coordinate.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
+    public init(other: Point<CoordinateType>, precision: Precision, coordinateSystem: CoordinateSystem) {
+
+        self.precision        = precision
         self.coordinateSystem = coordinateSystem
-
-        self.coordinate = CoordinateType(other: other.coordinate, precision: precision)
+        self.coordinate       = CoordinateType(other: other.coordinate, precision: precision)
     }
 
     ///
     /// Constructs a Point with a Coordinate of type CoordinateType.
     ///
+    /// - parameters:
+    ///     - coordinate: The Coordinate to construct the Point with.
+    ///     - precision: The `Precision` model this `Point` should use in calculations on it's coordinate.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `Pont` should use in calculations on it's coordinate.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
     public init(coordinate: CoordinateType, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
 
-        self.precision = precision
+        self.precision        = precision
         self.coordinateSystem = coordinateSystem
-
-        self.coordinate = CoordinateType(other: coordinate, precision: precision)
+        self.coordinate       = CoordinateType(other: coordinate, precision: precision)
     }
 
     internal let coordinate: CoordinateType

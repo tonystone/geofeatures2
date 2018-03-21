@@ -32,15 +32,11 @@ extension Polygon: Surface {
     /// - requires: isClosed == true for "outerRing" and all "innerRings"
     ///
     public func area() -> Double {
+        var area: Double = 0.0
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Double in
-
-            var area: Double = 0.0
-
-            for i in 0..<header.pointee.count {
-                area += elements[i].area()
-            }
-            return self.precision.convert(area)
+        for i in 0..<rings.count {
+            area += rings[i].area()
         }
+        return self.precision.convert(area)
     }
 }

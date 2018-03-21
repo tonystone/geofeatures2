@@ -325,20 +325,13 @@ extension GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithCRS", testInitWithCRS),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppendContentsOf", testAppendContentsOf),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -491,25 +484,18 @@ extension LineStringCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -524,25 +510,18 @@ extension LineStringCoordinate2DMFloatingPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -557,25 +536,18 @@ extension LineStringCoordinate3DFloatingPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -590,25 +562,18 @@ extension LineStringCoordinate3DMFloatingPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -623,25 +588,18 @@ extension LineStringCoordinate2DFixedPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -656,25 +614,18 @@ extension LineStringCoordinate2DMFixedPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -689,25 +640,18 @@ extension LineStringCoordinate3DFixedPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -722,25 +666,18 @@ extension LineStringCoordinate3DMFixedPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -755,25 +692,18 @@ extension LinearRingCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -788,25 +718,18 @@ extension LinearRingCoordinate2DMFloatingPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -821,25 +744,18 @@ extension LinearRingCoordinate3DFloatingPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -854,25 +770,18 @@ extension LinearRingCoordinate3DMFloatingPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -887,25 +796,18 @@ extension LinearRingCoordinate2DFixedPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -920,25 +822,18 @@ extension LinearRingCoordinate2DMFixedPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -953,25 +848,18 @@ extension LinearRingCoordinate3DFixedPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -986,25 +874,18 @@ extension LinearRingCoordinate3DMFixedPrecisionCartesianTests {
                 ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
                 ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
                 ("testInsertCoordinate", testInsertCoordinate),
                 ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1205,20 +1086,13 @@ extension MultiPolygonCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithCRS", testInitWithCRS),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppendContentsOf", testAppendContentsOf),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1670,23 +1544,16 @@ extension MultiPointCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1702,23 +1569,16 @@ extension MultiPointCoordinate2DMFloatingPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1734,23 +1594,16 @@ extension MultiPointCoordinate3DFloatingPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1766,23 +1619,16 @@ extension MultiPointCoordinate3DMFloatingPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1798,23 +1644,16 @@ extension MultiPointCoordinate2DFixedPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1830,23 +1669,16 @@ extension MultiPointCoordinate2DMFixedPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1862,23 +1694,16 @@ extension MultiPointCoordinate3DFixedPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1894,23 +1719,16 @@ extension MultiPointCoordinate3DMFixedPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -2043,23 +1861,16 @@ extension MultiLineStringCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -2075,23 +1886,16 @@ extension MultiLineStringCoordinate2DMFloatingPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -2107,23 +1911,16 @@ extension MultiLineStringCoordinate2DFixedPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -2139,23 +1936,16 @@ extension MultiLineStringCoordinate2DMFixedPrecisionCartesianTests {
                 ("testInitWithTuple", testInitWithTuple),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
                 ("testAppend", testAppend),
                 ("testAppendContentsOf", testAppendContentsOf),
                 ("testInsert2ExistingElements", testInsert2ExistingElements),
                 ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }

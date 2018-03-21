@@ -96,16 +96,6 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     // MARK: Collection conformance
 
-    func testReserveCapacity() {
-
-        var input = GeometryCollection(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     func testAppendContentsOf() {
 
         let input1 = GeometryCollection(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
@@ -114,46 +104,6 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         input2.append(contentsOf: input1)
 
         XCTAssertEqual(input1, input2)
-    }
-
-    func testRemove() {
-
-        var input =  GeometryCollection(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected = GeometryCollection(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input =  GeometryCollection(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected = GeometryCollection(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input =  GeometryCollection(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected =  GeometryCollection(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepCapacity() {
-
-        var input =  GeometryCollection(elements: [Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
     }
 
     // MARK: Swift.Collection Conformance
@@ -206,32 +156,5 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = GeometryCollection(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = GeometryCollection(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append(Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], [])))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }

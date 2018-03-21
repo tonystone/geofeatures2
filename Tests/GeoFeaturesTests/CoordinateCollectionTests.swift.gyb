@@ -99,7 +99,7 @@ class ${Self}${FunctionQualifier}Tests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = ${GeometryType}<${CoordinateType}>(other: ${GeometryType}<${CoordinateType}>(elements: [${TestTuple0}, ${TestTuple1}]), precision: precision, coordinateSystem: cs)
+        let input = ${GeometryType}<${CoordinateType}>(other: ${GeometryType}<${CoordinateType}>(elements: [${TestTuple0}, ${TestTuple1}], precision: precision, coordinateSystem: cs))
         let expected = ${GeometryType}<${CoordinateType}>(elements: [${ExpectedTuple0}, ${ExpectedTuple1}], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
@@ -128,16 +128,6 @@ class ${Self}${FunctionQualifier}Tests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = ${GeometryType}<${CoordinateType}>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     func testAppend() {
 
@@ -207,46 +197,6 @@ class ${Self}${FunctionQualifier}Tests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testRemove() {
-
-        var input = ${GeometryType}<${CoordinateType}>(elements: [${CoordinateType}(tuple: ${TestTuple0}), ${CoordinateType}(tuple: ${TestTuple1})], precision: precision, coordinateSystem: cs)
-        let expected = ${GeometryType}<${CoordinateType}>(elements: [${CoordinateType}(tuple: ${ExpectedTuple1})], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input = ${GeometryType}<${CoordinateType}>(elements: [${CoordinateType}(tuple: ${TestTuple0}), ${CoordinateType}(tuple: ${TestTuple1})], precision: precision, coordinateSystem: cs)
-        let expected = ${GeometryType}<${CoordinateType}>(elements: [${CoordinateType}(tuple: ${ExpectedTuple0})], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input = ${GeometryType}<${CoordinateType}>(elements: [${CoordinateType}(tuple: ${TestTuple0}), ${CoordinateType}(tuple: ${TestTuple1})], precision: precision, coordinateSystem: cs)
-        let expected = ${GeometryType}<${CoordinateType}>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepingCapacity() {
-
-        var input = ${GeometryType}<${CoordinateType}>(elements: [${CoordinateType}(tuple: ${TestTuple0}), ${CoordinateType}(tuple: ${TestTuple1})], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
     // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
@@ -283,33 +233,6 @@ class ${Self}${FunctionQualifier}Tests: XCTestCase {
     func testCount() {
 
         XCTAssertEqual(${GeometryType}<${CoordinateType}>(elements: [${CoordinateType}(tuple: ${TestTuple0}), ${CoordinateType}(tuple: ${TestTuple1})], precision: precision, coordinateSystem: cs).count, 2)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = ${GeometryType}<${CoordinateType}>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = ${GeometryType}<${CoordinateType}>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append(${TestTuple0})
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 %end

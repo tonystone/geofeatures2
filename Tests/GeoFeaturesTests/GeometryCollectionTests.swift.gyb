@@ -146,16 +146,6 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = ${GeometryType}(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 % if GeometryClass not in ['GeometryCollection', 'MultiPolygon']:
     func testAppend() {
 
@@ -198,46 +188,6 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
         XCTAssertTrue(input.elementsEqual(expected))
     }
 % end
-
-    func testRemove() {
-
-        var input =  ${GeometryType}(elements: [${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-        let expected = ${GeometryType}(elements: [${ExpectedElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input =  ${GeometryType}(elements: [${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-        let expected = ${GeometryType}(elements: [${ExpectedElement1}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input =  ${GeometryType}(elements: [${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-        let expected =  ${GeometryType}(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepCapacity() {
-
-        var input =  ${GeometryType}(elements: [${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
 
     // MARK: Swift.Collection Conformance
 
@@ -289,33 +239,6 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = ${GeometryType}(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = ${GeometryType}(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append(${TestElement1})
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 %end

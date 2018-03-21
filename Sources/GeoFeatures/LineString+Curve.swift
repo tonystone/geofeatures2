@@ -32,11 +32,9 @@ extension LineString: Curve {
     ///
     public func isClosed() -> Bool {
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Bool in
-            if header.pointee.count < 2 { return false }
+        if coordinates.count < 2 { return false }
 
-            return elements[0] == elements[header.pointee.count - 1]
-        }
+        return coordinates[0] == coordinates[coordinates.count - 1]
     }
 
     ///
@@ -44,32 +42,27 @@ extension LineString: Curve {
     ///
     public func length() -> Double {
 
-        let length: Double  = buffer.withUnsafeMutablePointers { (header, elements) -> Double in
+        var length: Double = 0.0
 
-            var length: Double = 0.0
+        if coordinates.count > 0 {
 
-            if header.pointee.count > 0 {
+            var c1 = coordinates[0]
 
-                var c1 = elements[0]
+            for index in stride(from: 1, to: coordinates.count, by: 1) {
 
-                for index in stride(from: 1, to: header.pointee.count, by: 1) {
+                let c2 = coordinates[index]
 
-                    let c2 = elements[index]
+                var result = pow(abs(c1.x - c2.x), 2.0) + pow(abs(c1.y - c2.y), 2.0)
 
-                    var result = pow(abs(c1.x - c2.x), 2.0) + pow(abs(c1.y - c2.y), 2.0)
+                if let c1 = c1 as? ThreeDimensional,
+                    let c2 = c2 as? ThreeDimensional {
 
-                    if let c1 = c1 as? ThreeDimensional,
-                        let c2 = c2 as? ThreeDimensional {
-
-                            result += pow(abs(c1.z - c2.z), 2.0)
-                    }
-                    length += sqrt(result)
-                    c1 = c2
+                    result += pow(abs(c1.z - c2.z), 2.0)
                 }
+                length += sqrt(result)
+                c1 = c2
             }
-            return length
         }
-
         return self.precision.convert(length)
     }
 }
