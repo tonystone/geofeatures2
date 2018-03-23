@@ -34,17 +34,15 @@ extension MultiPoint: Geometry {
     ///
     public func isSimple() -> Bool {
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Bool in
-            var points = [Element]()
+        var points = [Element]()
 
-            for i in 0..<header.pointee.count {
-                if points.contains(elements[i]) {
-                    return false
-                }
-                points.append(elements[i])
+        for i in 0..<elements.count {
+            if points.contains(elements[i]) {
+                return false
             }
-            return true
+            points.append(elements[i])
         }
+        return true
     }
 
     ///

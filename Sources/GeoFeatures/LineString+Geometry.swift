@@ -130,34 +130,32 @@ extension LineString: Geometry {
     ///
     public
     func isSimple() -> Bool {
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Bool in
 
-            /// If there are no more than two coordinates, there can be at most one line segment,
-            /// so this line segment cannot self-intersect.
-            guard header.pointee.count > 2 else {
-                return true
-            }
-
-            /// There must be at least two line segments to get to this point.
-            for i in 0..<header.pointee.count - 2 {
-                let c1 = elements[i]
-                let c2 = elements[i+1]
-                for j in (i+1)..<header.pointee.count - 1 {
-                    let c3 = elements[j]
-                    let c4 = elements[j+1]
-                    var intersect: Bool = false
-                    if j == i+1 {
-                        intersect = segmentsIntersect(c1, c2, c3, c4, true)
-                    } else if i == 0 && j == header.pointee.count - 2 {
-                        intersect = segmentsIntersect(c1, c2, c3, c4, false, true)
-                    } else {
-                        intersect = segmentsIntersect(c1, c2, c3, c4)
-                    }
-                    if intersect { return false }
-                }
-            }
+        /// If there are no more than two coordinates, there can be at most one line segment,
+        /// so this line segment cannot self-intersect.
+        guard coordinates.count > 2 else {
             return true
         }
+
+        /// There must be at least two line segments to get to this point.
+        for i in 0..<coordinates.count - 2 {
+            let c1 = coordinates[i]
+            let c2 = coordinates[i+1]
+            for j in (i+1)..<coordinates.count - 1 {
+                let c3 = coordinates[j]
+                let c4 = coordinates[j+1]
+                var intersect: Bool = false
+                if j == i+1 {
+                    intersect = segmentsIntersect(c1, c2, c3, c4, true)
+                } else if i == 0 && j == coordinates.count - 2 {
+                    intersect = segmentsIntersect(c1, c2, c3, c4, false, true)
+                } else {
+                    intersect = segmentsIntersect(c1, c2, c3, c4)
+                }
+                if intersect { return false }
+            }
+        }
+        return true
     }
 
     ///
