@@ -10,7 +10,7 @@ file(GLOB LINUX_MAIN RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} LinuxMain.swift)
 # Remove LinuxMain.swift from the list as this will be handled separately if Linux.
 #
 list(REMOVE_ITEM TEST_FILES "${LINUX_MAIN}")
-get_filename_component(LINUX_MAIN ${LINUX_MAIN} ABSOLUTE BASE_DIR ${GYB_TARGET_WORKING_DIRECTORY})
+get_filename_component(LINUX_MAIN ${LINUX_MAIN} ABSOLUTE BASE_DIR ${CMAKE_SOURCE_DIR})
 
 #
 # Test Target
@@ -81,7 +81,7 @@ add_dependencies(geofeatures-test generated-tests)
 add_custom_command(
         DEPENDS build-tools
         OUTPUT "${LINUX_MAIN}"
-        COMMAND "${BUILD_TOOLS_BIN}/generate_xctest_runner.rb"
+        COMMAND "${BUILD_TOOLS_BIN}/xctest_tool.rb"
         ARGS --package-path "${CMAKE_SOURCE_DIR}"
         VERBATIM
 )
