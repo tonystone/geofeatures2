@@ -18,13 +18,12 @@
 /// Created by Tony Stone on 3/16/18.
 ///
 
-import CoreGraphics
-import GeoFeatures
-import GeoFeaturesQuartz
-
 #if os(OSX)
 
 import AppKit
+import CoreGraphics
+import GeoFeatures
+import GeoFeaturesQuartz
 
 @IBDesignable
 internal class CartesianGeometryVisualizationView: NSView {
