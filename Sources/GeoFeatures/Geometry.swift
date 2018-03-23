@@ -66,7 +66,6 @@ public protocol Geometry {
 ///    /// - Returns:  true if this GeometryType instance has no anomalous geometric points, such
 ///    /// as self intersection or self tangent.
 ///    ///
-///    @warn_unused_result
 ///    func isSimple() -> Bool
 ///
 ///    ///

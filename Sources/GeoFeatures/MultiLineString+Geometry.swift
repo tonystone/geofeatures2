@@ -36,49 +36,46 @@ extension MultiLineString: Geometry {
     ///
     public func boundary() -> Geometry {
 
-        return self.buffer.withUnsafeMutablePointers { (header, elements) -> Geometry in
+        var endCoordinates = [CoordinateType: Int]()
 
-            var endCoordinates = [CoordinateType: Int]()
+        for i in 0 ..< elements.count {
+            let lineString = elements[i]
 
-            for i in 0 ..< header.pointee.count {
-                let lineString = elements[i]
+            if lineString.count >= 2 && !lineString.isClosed() {
+                var i = 0
 
-                if lineString.count >= 2 && !lineString.isClosed() {
-                    var i = 0
+                /// Start point
+                if var count = endCoordinates[lineString[i]] {
+                    count += 1
 
-                    /// Start point
-                    if var count = endCoordinates[lineString[i]] {
-                        count += 1
+                    endCoordinates[lineString[i]] = count
 
-                        endCoordinates[lineString[i]] = count
+                } else {
+                    endCoordinates[lineString[i]] = 1
+                }
 
-                    } else {
-                        endCoordinates[lineString[i]] = 1
-                    }
+                i = lineString.count - 1
 
-                    i = lineString.count - 1
+                /// End point
+                if var count = endCoordinates[lineString[i]] {
+                    count += 1
 
-                    /// End point
-                    if var count = endCoordinates[lineString[i]] {
-                        count += 1
+                    endCoordinates[lineString[i]] = count
 
-                        endCoordinates[lineString[i]] = count
-
-                    } else {
-                        endCoordinates[lineString[i]] = 1
-                    }
+                } else {
+                    endCoordinates[lineString[i]] = 1
                 }
             }
-
-            var multiPoint = MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
-
-            for (coordinate, count) in endCoordinates {
-                if count % 2 == 1 {
-                    multiPoint.append(Point(coordinate: coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
-                }
-            }
-            return multiPoint
         }
+
+        var boundary = MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+
+        for (coordinate, count) in endCoordinates {
+            if count % 2 == 1 {
+                boundary.append(Point(coordinate: coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
+            }
+        }
+        return boundary
     }
 
     public func equals(_ other: Geometry) -> Bool {

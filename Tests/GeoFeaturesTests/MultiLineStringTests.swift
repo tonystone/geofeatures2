@@ -102,16 +102,6 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
     func testAppend() {
 
         var input    = MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
@@ -149,46 +139,6 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         input.insert(LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)]), at: 0)
 
         XCTAssertTrue(input.elementsEqual(expected))
-    }
-
-    func testRemove() {
-
-        var input =  MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]), LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input =  MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]), LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)])], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input =  MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]), LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-        let expected =  MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepCapacity() {
-
-        var input =  MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]), LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
     }
 
     // MARK: Swift.Collection Conformance
@@ -241,33 +191,6 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append(LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 // MARK: - Coordinate2DM, FloatingPrecision, Cartesian -
@@ -340,16 +263,6 @@ class MultiLineStringCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
     func testAppend() {
 
         var input    = MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
@@ -387,46 +300,6 @@ class MultiLineStringCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         input.insert(LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 1.0, m: 2.0)]), at: 0)
 
         XCTAssertTrue(input.elementsEqual(expected))
-    }
-
-    func testRemove() {
-
-        var input =  MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 0.0, m: 2.0)]), LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 1.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 1.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input =  MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 0.0, m: 2.0)]), LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 1.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 0.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input =  MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 0.0, m: 2.0)]), LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 1.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
-        let expected =  MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepCapacity() {
-
-        var input =  MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 0.0, m: 2.0)]), LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 1.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
     }
 
     // MARK: Swift.Collection Conformance
@@ -479,33 +352,6 @@ class MultiLineStringCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append(LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 0.0, m: 2.0)]))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 // MARK: - Coordinate2D, FixedPrecision, Cartesian -
@@ -578,16 +424,6 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
     func testAppend() {
 
         var input    = MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
@@ -625,46 +461,6 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         input.insert(LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.001), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 1.001)]), at: 0)
 
         XCTAssertTrue(input.elementsEqual(expected))
-    }
-
-    func testRemove() {
-
-        var input =  MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 0.0)]), LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.001), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 1.001)])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input =  MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 0.0)]), LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.001), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 1.001)])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)])], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input =  MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 0.0)]), LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.001), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 1.001)])], precision: precision, coordinateSystem: cs)
-        let expected =  MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepCapacity() {
-
-        var input =  MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 0.0)]), LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.001), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 1.001)])], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
     }
 
     // MARK: Swift.Collection Conformance
@@ -717,33 +513,6 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append(LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 0.0)]))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }
 // MARK: - Coordinate2DM, FixedPrecision, Cartesian -
@@ -816,16 +585,6 @@ class MultiLineStringCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
     }
 
     // MARK: Collection conformance
-
-    func testReserveCapacity() {
-
-        var input = MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
     func testAppend() {
 
         var input    = MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
@@ -863,46 +622,6 @@ class MultiLineStringCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
         input.insert(LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.001, m: 2.0), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 1.001, m: 2.002)]), at: 0)
 
         XCTAssertTrue(input.elementsEqual(expected))
-    }
-
-    func testRemove() {
-
-        var input =  MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.002), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 0.0, m: 2.002)]), LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.001, m: 2.0), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 1.001, m: 2.002)])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 1.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
-
-        let _ = input.remove(at: 0)
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveLast() {
-
-        var input =  MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.002), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 0.0, m: 2.002)]), LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.001, m: 2.0), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 1.001, m: 2.002)])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.0), (x: 0.0, y: 2.0, m: 2.0), (x: 0.0, y: 3.0, m: 2.0), (x: 2.0, y: 0.0, m: 2.0), (x: 0.0, y: 0.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
-
-        let _ = input.removeLast()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAll() {
-
-        var input =  MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.002), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 0.0, m: 2.002)]), LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.001, m: 2.0), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 1.001, m: 2.002)])], precision: precision, coordinateSystem: cs)
-        let expected =  MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-
-        input.removeAll()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testRemoveAllKeepCapacity() {
-
-        var input =  MultiLineString<Coordinate2DM>(elements: [LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.002), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 0.0, m: 2.002)]), LineString<Coordinate2DM>(elements: [(x: 0.0, y: 1.001, m: 2.0), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 1.001, m: 2.002)])], precision: precision, coordinateSystem: cs)
-        let expected = input.capacity
-
-        input.removeAll(keepingCapacity: true)
-
-        XCTAssertEqual(input.capacity, expected)
     }
 
     // MARK: Swift.Collection Conformance
@@ -955,32 +674,5 @@ class MultiLineStringCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
-    }
-
-    // MARK: Misc Internal
-
-    func testEnsureUniquelyReferenced() {
-
-        var input = MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        let copy = input    // This should force the reserveCapacity to clone
-        let _ = copy.capacity
-
-        input.reserveCapacity(expected)
-
-        XCTAssertEqual(input.capacity, expected)
-    }
-
-    func testResizeIfNeeded() {
-
-        var input = MultiLineString<Coordinate2DM>(precision: precision, coordinateSystem: cs)
-        let expected = input.capacity * 2
-
-        /// Force it beyond its initial capacity
-        for _ in 0..<input.capacity + 1 {
-            input.append(LineString<Coordinate2DM>(elements: [(x: 0.0, y: 0.0, m: 2.002), (x: 0.0, y: 2.002, m: 2.002), (x: 0.0, y: 3.003, m: 2.002), (x: 2.002, y: 0.0, m: 2.002), (x: 0.0, y: 0.0, m: 2.002)]))
-        }
-        XCTAssertEqual(input.capacity, expected)
     }
 }

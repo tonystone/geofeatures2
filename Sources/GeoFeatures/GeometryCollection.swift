@@ -36,79 +36,116 @@ import Swift
 ///
 public struct GeometryCollection {
 
-    public typealias Element = Geometry
-
     public let precision: Precision
     public let coordinateSystem: CoordinateSystem
 
     ///
-    /// GeometryCollections are empty constructable
+    /// Construct an empty `GeometryCollection`.
     ///
-    public init() {
-        self.init(precision: defaultPrecision, coordinateSystem: defaultCoordinateSystem)
+    /// - parameters:
+    ///     - precision: The `Precision` model this `GeometryCollection` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `GeometryCollection` should use in calculations on it's coordinates.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
+    public init(precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+        self.precision        = precision
+        self.coordinateSystem = coordinateSystem
+        self.elements         = []
     }
 
-    public init(coordinateSystem: CoordinateSystem) {
-        self.init(precision: defaultPrecision, coordinateSystem: coordinateSystem)
+    ///
+    /// Construct a GeometryCollection from another GeometryCollection (copy constructor).
+    ///
+    /// - parameters:
+    ///     - other: The GeometryCollection of the same type that you want to construct a new GeometryCollection from.
+    ///
+    public init(other: GeometryCollection) {
+
+        self.precision        = other.precision
+        self.coordinateSystem = other.coordinateSystem
+        self.elements         = other.elements
     }
 
-    public init(precision: Precision) {
-        self.init(precision: precision, coordinateSystem: defaultCoordinateSystem)
+    ///
+    /// Construct a GeometryCollection from another GeometryCollection (copy constructor) changing the precision and coordinateSystem.
+    ///
+    /// - parameters:
+    ///     - other: The GeometryCollection of the same type that you want to construct a new GeometryCollection from.
+    ///     - precision: Optionally change the `Precision` model this `GeometryCollection` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: Optionally change the 'CoordinateSystem` this `GeometryCollection` should use in calculations on it's coordinates.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
+    internal init(other: GeometryCollection, precision: Precision, coordinateSystem: CoordinateSystem) {
+
+        self.precision        = precision
+        self.coordinateSystem = coordinateSystem
+
+        /// TODO: Create a new instance to adjust the precision of the new geometry to `GeometryCollection`s precision.
+        self.elements         = other.elements
     }
 
-    public init(precision: Precision, coordinateSystem: CoordinateSystem) {
+    ///
+    /// Construct a `GeometryCollection` from a an `Array` of `Geometry`.
+    ///
+    /// - parameters:
+    ///     - elements: An `Array` of `Geometry` coordinates.
+    ///     - precision: The `Precision` model this `GeometryCollection` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `GeometryCollection` should use in calculations on it's coordinates.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
+    public init(elements: [Geometry], precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+
+        self.precision        = precision
+        self.coordinateSystem = coordinateSystem
+
+        /// TODO: Create a new instance to adjust the precision of the new geometry to `GeometryCollection`s precision.
+        self.elements         = elements
+    }
+
+    ///
+    /// Construct a `GeometryCollection` from a any `Collection` type which holds `Element` objects.
+    ///
+    /// GeometryCollection can be constructed from any Swift.Collection type as
+    /// long as it has an Element type equal the Geometry type specified in Element.
+    ///
+    /// - parameters:
+    ///     - elements: A `Collection` of `Element`s.
+    ///     - precision: The `Precision` model this `GeometryCollection` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `GeometryCollection` should use in calculations on it's coordinates.
+    ///
+    /// - seealso: `CoordinateSystem`
+    /// - seealso: `Precision`
+    ///
+    public init<C: Swift.Collection>(elements: C, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem)
+            where C.Iterator.Element == Geometry {
+
         self.precision = precision
         self.coordinateSystem = coordinateSystem
 
-        buffer = CollectionBuffer<Element>.create(minimumCapacity: 8) { newBuffer in CollectionBufferHeader(capacity: newBuffer.capacity, count: 0) } as! CollectionBuffer<Element> // swiftlint:disable:this force_cast
-    }
-
-    ///
-    /// GeometryCollection can be constructed from any Swift.Collection including Array as
-    /// long as it has an Element type equal the Geometry Element and the Distance
-    /// is an Int type.
-    ///
-    public init<C: Swift.Collection>(elements: C, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem)
-            where C.Iterator.Element == Element {
-
-        self.init(precision: precision, coordinateSystem: coordinateSystem)
-
-        self.reserveCapacity(numericCast(elements.count))
+        self.elements = []
 
         var Iterator = elements.makeIterator()
 
         while let element = Iterator.next() {
-            self.append(element)
+            /// TODO: Create a new instance to adjust the precision of the new geometry to `GeometryCollection`s precision.
+            self.elements.append(element)
         }
     }
 
-    internal var buffer: CollectionBuffer<Element>
-}
-
-// MARK: - Private methods
-
-extension GeometryCollection {
-
-    @inline(__always)
-    fileprivate mutating func _ensureUniquelyReferenced() {
-        if !isKnownUniquelyReferenced(&buffer) {
-            buffer = buffer.clone()
-        }
-    }
-
-    @inline(__always)
-    fileprivate mutating func _resizeIfNeeded() {
-        if buffer.header.capacity == buffer.header.count {
-            buffer = buffer.resize(buffer.header.capacity * 2)
-        }
-    }
+    internal private(set) var elements: [Geometry]
 }
 
 // MARK: - Collection conformance
 
-extension GeometryCollection: Collection, MutableCollection, _DestructorSafeContainer {
+extension GeometryCollection: Collection, MutableCollection {
 
-   ///
+    ///
     /// Returns the position immediately after `i`.
     ///
     /// - Precondition: `(startIndex..<endIndex).contains(i)`
@@ -128,72 +165,35 @@ extension GeometryCollection: Collection, MutableCollection, _DestructorSafeCont
     /// A "past-the-end" element index; the successor of the last valid subscript argument.
     ///
     public var endIndex: Int {
-        return buffer.header.count
+        return elements.count
     }
 
-    public subscript(index: Int) -> Element {
+    public subscript(index: Int) -> Geometry {
         get {
-            guard (index >= 0) && (index < buffer.header.count) else { preconditionFailure("Index out of range.") }
-
-            return buffer.withUnsafeMutablePointerToElements { $0[index] }
+            /// Note: we rely on the array to return an error for any index out of range.
+            return elements[index]
         }
-        set (newValue) {
-
-            _ensureUniquelyReferenced()
-
-            buffer.update(newValue, at: index)
+        set (newElement) {
+            /// Note: we rely on the array to return an error for any index out of range.
+            /// TODO: Create a new instance to adjust the precision of the new geometry to `GeometryCollection`s precision.
+            self.elements[index] = newElement
         }
     }
 
     ///
-    /// - Returns: The number of Geometry objects.
+    /// Append `newElement` to GeometryCollection.
     ///
-    public var count: Int {
-        return self.buffer.header.count
-    }
+    public mutating func append(_ newElement: Geometry) {
 
-    ///
-    /// - Returns: The current minimum capacity.
-    ///
-    public var capacity: Int {
-        return self.buffer.header.capacity
-    }
-
-    ///
-    /// Reserve enough space to store `minimumCapacity` elements.
-    ///
-    /// - Postcondition: `capacity >= minimumCapacity` and the array has mutable contiguous buffer.
-    ///
-    public mutating func reserveCapacity(_ minimumCapacity: Int) {
-
-        if buffer.capacity < minimumCapacity {
-
-            _ensureUniquelyReferenced()
-
-            let newSize = Swift.max(buffer.capacity * 2, minimumCapacity)
-
-            buffer = buffer.resize(newSize)
-        }
-    }
-
-    ///
-    /// Append `newElement` to this GeometryCollection.
-    ///
-    public mutating func append(_ newElement: Element) {
-
-        _ensureUniquelyReferenced()
-        _resizeIfNeeded()
-
-        buffer.append(newElement)
+        /// TODO: Create a new instance to adjust the precision of the new geometry to `GeometryCollection`s precision.
+        self.elements.append(newElement)
     }
 
     ///
     /// Append the elements of `newElements` to this GeometryCollection.
     ///
     public mutating func append<C: Swift.Collection>(contentsOf newElements: C)
-            where C.Iterator.Element == Element {
-
-        self.reserveCapacity(numericCast(newElements.count))
+            where C.Iterator.Element == Geometry {
 
         var Iterator = newElements.makeIterator()
 
@@ -207,47 +207,10 @@ extension GeometryCollection: Collection, MutableCollection, _DestructorSafeCont
     ///
     /// - Requires: `i <= count`.
     ///
-    public mutating func insert(_ newElement: Element, at index: Int) {
+    public mutating func insert(_ newElement: Geometry, at index: Int) {
 
-        _ensureUniquelyReferenced()
-        _resizeIfNeeded()
-
-        buffer.insert(newElement, at: index)
-    }
-
-    ///
-    /// Remove and return the element at index `i` of this GeometryCollection.
-    ///
-    @discardableResult
-    public mutating func remove(at index: Int) -> Element {
-        return buffer.remove(at: index)
-    }
-
-    ///
-    /// Remove an element from the end of this GeometryCollection.
-    ///
-    /// - Requires: `count > 0`.
-    ///
-    @discardableResult
-    public mutating func removeLast() -> Element {
-        return buffer.removeLast()
-    }
-
-    ///
-    /// Remove all elements of this GeometryCollection.
-    ///
-    /// - Postcondition: `capacity == 0` if `keepCapacity` is `false`.
-    ///
-    public mutating func removeAll(keepingCapacity keepCapacity: Bool = false) {
-
-        if keepCapacity {
-
-            buffer.withUnsafeMutablePointerToHeader { (header) -> Void in
-                header.pointee.count = 0
-            }
-        } else {
-            buffer = CollectionBuffer<Element>.create(minimumCapacity: 0) { newBuffer in CollectionBufferHeader(capacity: newBuffer.capacity, count: 0) } as! CollectionBuffer<Element> // swiftlint:disable:this force_cast
-        }
+        /// TODO: Create a new instance to adjust the precision of the new geometry to `GeometryCollection`s precision.
+        self.elements.insert(newElement, at: index)
     }
 }
 
@@ -256,7 +219,7 @@ extension GeometryCollection: Collection, MutableCollection, _DestructorSafeCont
 extension GeometryCollection: CustomStringConvertible, CustomDebugStringConvertible {
 
     public var description: String {
-        return "\(type(of: self))(\(self.flatMap { String(describing: $0) }.joined(separator: ", ")))"
+        return "\(type(of: self))(\(self.map { String(describing: $0) }.joined(separator: ", ")))"
     }
 
     public var debugDescription: String {

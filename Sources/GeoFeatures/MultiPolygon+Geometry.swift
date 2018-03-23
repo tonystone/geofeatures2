@@ -38,20 +38,18 @@ extension MultiPolygon: Geometry {
     /// - Note: The boundary of a MultiPolygon is a set of closed Curves (LineStrings) corresponding to the boundaries of its element Polygons. Each Curve in the boundary of the MultiPolygon is in the boundary of exactly 1 element Polygon, and every Curve in the boundary of an element Polygon is in the boundary of the MultiPolygon.
     ///
     public func boundary() -> Geometry {
-        return self.buffer.withUnsafeMutablePointers({ (header, elements) -> Geometry in
-            var multiLineString = MultiLineString<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        var boundary = MultiLineString<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-            for i in 0..<header.pointee.count {
+        for i in 0..<elements.count {
 
-                if let boundary = elements[i].boundary() as? MultiLineString<CoordinateType> {
+            if let elementBoundary = elements[i].boundary() as? MultiLineString<CoordinateType> {
 
-                    for lineString in boundary {
-                        multiLineString.append(lineString)
-                    }
+                for lineString in elementBoundary {
+                    boundary.append(lineString)
                 }
             }
-            return multiLineString
-        })
+        }
+        return boundary
     }
 
     public func equals(_ other: Geometry) -> Bool {

@@ -54,11 +54,13 @@ You should  reconfigure it after initial start up for '**out of source**' builds
 
 ### Xcode
 
-If you'd like to have an xcode project for your development efforts, we've built in a command to do that.
+If you'd like to have an xcode project/workspace for your development efforts, we've built in a command to do that.
 
 > Make sure you are in the same directory you ran cmake originally.
 ```
-# make geofeatures-xcode-project
+# make geofeatures-xcode-workspace
 ```
 
-Will create a fully functioning Xcode project you can develop with.  We ignore the Xcode project files during git check-in (in the `.gitignore` file).
+This will create a fully functioning Xcode project and workspace you can develop with. The workspace will include the Playground and the Project file so that you can build and use the playground.
+
+> Note: We ignore the Xcode project and workspace files during git check-in (in the `.gitignore` file).
