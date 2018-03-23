@@ -26,7 +26,7 @@ lineString2.length()
 lineString1 == lineString2
 LineString(elements: lineString1, precision:  fixedPrecision) == lineString2    // Change linestring 1 precision by copying it
 
-lineString2.append(Coordinate2D(tuple: (4.001, 4.001)))
+lineString2.append((4.001, 4.001))
 lineString2.append((5.001, 5.001))
 
 var lineString3 = LineString<Coordinate3DM>()
@@ -40,15 +40,6 @@ lineString3.length()
 lineString1 == lineString1
 lineString1 == lineString2
 lineString1 == lineString3
-
-lineString3
-lineString3.remove(at: 0)
-lineString3
-lineString3.remove(at: 1)
-lineString3
-
-lineString3.removeLast()
-lineString3
 
 /// Create a Polygon with a tuple simaler to WKT with the syntax ([tuples], [[tuples]])
 Polygon<Coordinate2D>(rings: ([(x: 0, y: 0), (0, 7), (4, 2), (2, 0), (0, 0)], []))
