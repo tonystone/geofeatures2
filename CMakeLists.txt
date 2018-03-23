@@ -6,8 +6,8 @@ message(STATUS "Configuring GeoFeatures for ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_
 message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "")
 
-# Git tag hash == 1.0.0
-set(BUILD_TOOLS_VERSION 1.0.0)
+# Git tag
+set(BUILD_TOOLS_VERSION 1.1.0)
 
 include(ExternalProject)
 
@@ -51,6 +51,14 @@ add_custom_target(geofeatures-xcode-project
         COMMAND swift package generate-xcodeproj --enable-code-coverage
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         SOURCES Package.swift)
+
+#
+# Build xcode workspace Target which includes the playground
+#
+add_custom_target(geofeatures-xcode-workspace
+        DEPENDS build-tools geofeatures-xcode-project GeoFeatures.playground
+        COMMAND "${BUILD_TOOLS_BIN}/xcworkspace_tool.rb" GeoFeatures GeoFeatures-Playground.playground GeoFeatures.xcodeproj
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
 add_subdirectory(Sources)
 add_subdirectory(Tests)
