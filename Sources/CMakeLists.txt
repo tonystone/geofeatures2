@@ -24,14 +24,14 @@ add_custom_target(geofeatures-build ALL
 set(GYB_COMMON_FLAGS --line-directive "''")
 
 add_gyb_target(generated-LinearRing
-        SOURCE GeoFeatures/CoordinateCollection.swift.gyb
+        SOURCE GeoFeatures/CoordinateCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/LinearRing.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=LinearRing
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-LineString
-        SOURCE GeoFeatures/CoordinateCollection.swift.gyb
+        SOURCE GeoFeatures/CoordinateCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/LineString.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=LineString
         DEPENDS build-tools
