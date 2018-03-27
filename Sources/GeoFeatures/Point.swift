@@ -26,7 +26,7 @@ import Swift
 /// x coordinate value, a y coordinate value. If called for by the associated Spatial Reference System, it may also
 /// have coordinate values for z.
 ///
-public struct Point<CoordinateType: Coordinate & CopyConstructable> {
+public struct Point {
 
     public let precision: Precision
     public let coordinateSystem: CoordinateSystem
@@ -37,22 +37,37 @@ public struct Point<CoordinateType: Coordinate & CopyConstructable> {
     public var y: Double {
         return coordinate.y
     }
+    public var z: Double? {
+        return coordinate.z
+    }
+    public var m: Double? {
+        return coordinate.m
+    }
 
     ///
-    /// Construct a Point from another Point (copy constructor).
+    /// Constructs a Point with a Coordinate of type Coordinate.
     ///
     /// - parameters:
-    ///     - other: The Point of the same type that you want to construct a new Point from.
+    ///     - coordinate: The Coordinate to construct the Point with.
+    ///     - precision: The `Precision` model this `Point` should use in calculations on it's coordinate.
+    ///     - coordinateSystem: The 'CoordinateSystem` this `Pont` should use in calculations on it's coordinate.
     ///
     /// - seealso: `CoordinateSystem`
     /// - seealso: `Precision`
     ///
-    public init(other: Point<CoordinateType>) {
+    public init(coordinate: Coordinate, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
 
-        self.precision        = other.precision
-        self.coordinateSystem = other.coordinateSystem
-        self.coordinate       = CoordinateType(other: other.coordinate, precision: precision)
+        self.precision        = precision
+        self.coordinateSystem = coordinateSystem
+        self.coordinate       = precision.convert(coordinate)
     }
+
+    internal let coordinate: Coordinate
+}
+
+// MARK: - Copy Construction
+
+internal extension Point {
 
     ///
     /// Construct a Point from another Point (copy constructor) changing the precision and coordinateSystem.
@@ -65,52 +80,8 @@ public struct Point<CoordinateType: Coordinate & CopyConstructable> {
     /// - seealso: `CoordinateSystem`
     /// - seealso: `Precision`
     ///
-    public init(other: Point<CoordinateType>, precision: Precision, coordinateSystem: CoordinateSystem) {
-
-        self.precision        = precision
-        self.coordinateSystem = coordinateSystem
-        self.coordinate       = CoordinateType(other: other.coordinate, precision: precision)
-    }
-
-    ///
-    /// Constructs a Point with a Coordinate of type CoordinateType.
-    ///
-    /// - parameters:
-    ///     - coordinate: The Coordinate to construct the Point with.
-    ///     - precision: The `Precision` model this `Point` should use in calculations on it's coordinate.
-    ///     - coordinateSystem: The 'CoordinateSystem` this `Pont` should use in calculations on it's coordinate.
-    ///
-    /// - seealso: `CoordinateSystem`
-    /// - seealso: `Precision`
-    ///
-    public init(coordinate: CoordinateType, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
-
-        self.precision        = precision
-        self.coordinateSystem = coordinateSystem
-        self.coordinate       = CoordinateType(other: coordinate, precision: precision)
-    }
-
-    internal let coordinate: CoordinateType
-}
-
-extension Point where CoordinateType: ThreeDimensional {
-
-    public var z: Double {
-        return coordinate.z
-    }
-}
-
-extension Point where CoordinateType: Measured {
-
-    public var m: Double {
-        return coordinate.m
-    }
-}
-
-extension Point where CoordinateType: TupleConvertible {
-
-    public init(coordinate: CoordinateType.TupleType, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
-        self.init(coordinate: CoordinateType(tuple: coordinate, precision: precision))
+    internal init(other: Point, precision: Precision, coordinateSystem: CoordinateSystem) {
+        self.init(coordinate: other.coordinate, precision: precision, coordinateSystem: coordinateSystem)
     }
 }
 
@@ -125,8 +96,9 @@ extension Point: CustomStringConvertible, CustomDebugStringConvertible {
     }
 }
 
-extension Point: Equatable {}
+extension Point: Equatable {
 
-public func == <CoordinateType>(lhs: Point<CoordinateType>, rhs: Point<CoordinateType>) -> Bool {
-    return lhs.equals(rhs)
+    static public func == (lhs: Point, rhs: Point) -> Bool {
+        return lhs.equals(rhs)
+    }
 }

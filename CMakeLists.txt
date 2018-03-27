@@ -48,6 +48,7 @@ add_custom_target(geofeatures-build-clean
 # Build xcode project Target
 #
 add_custom_target(geofeatures-xcode-project
+        DEPENDS build-tools generated-source generated-tests
         COMMAND swift package generate-xcodeproj --enable-code-coverage
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         SOURCES Package.swift)

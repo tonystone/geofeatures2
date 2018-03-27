@@ -22,6 +22,9 @@ import Swift
 public protocol Precision {
 
     func convert(_ value: Double) -> Double
+    func convert(_ value: Double?) -> Double?
+
+    func convert(_ coordinate: Coordinate) -> Coordinate
 }
 
 public func == <T1: Precision & Hashable, T2: Precision & Hashable>(lhs: T1, rhs: T2) -> Bool {

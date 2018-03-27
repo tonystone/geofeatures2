@@ -20,32 +20,96 @@
 import Swift
 
 ///
-/// Coordinate (2 dimensional protocol)
+/// 2D Coordinate
 ///
-/// Implemented by all Coordinate structs.
+/// Low level 2 dimensional Coordinate type
 ///
-public protocol Coordinate: Hashable, CopyConstructable {
+public struct Coordinate {
 
-    var x: Double { get }
-    var y: Double { get }
+    public var x: Double
+    public var y: Double
+    public var z: Double?
+    public var m: Double?
+
+    public init(x: Double, y: Double, z: Double? = nil, m: Double? = nil) {
+        self.x = x
+        self.y = y
+        self.z = z
+        self.m = m
+    }
+
+    public init(other: Coordinate) {
+        self.init(x: other.x, y: other.y, z: other.z, m: other.m)
+    }
 }
 
-///
-/// 3D
-///
-/// Implemented if this Coordinate has z value.
-///
-public protocol ThreeDimensional {
+extension Coordinate: ExpressibleByArrayLiteral {
 
-    var z: Double { get }
+    /// Creates an instance initialized with the given elements.
+    public init(arrayLiteral values: Double...) {
+        let count = values.count
+        
+        self.x = count > 0 ? values[0] : .nan
+        self.y = count > 1 ? values[1] : .nan
+        self.z = count > 2 ? values[2] :  nil
+        self.m = count > 3 ? values[3] :  nil
+    }
 }
 
-///
-/// Measured
-///
-/// Implenented if this Coordinate has m value.
-///
-public protocol Measured {
+extension Coordinate: ExpressibleByDictionaryLiteral {
 
-    var m: Double { get }
+    /// Creates an instance initialized with the given elements.
+    public init(dictionaryLiteral elements: (String, Double)...) {
+        self.init(x: .nan, y: .nan)
+
+        for (key, value) in elements {
+            switch key {
+            case "x": self.x = value; break
+            case "y": self.y = value; break
+            case "z": self.z = value; break
+            case "m": self.m = value; break
+            default: break
+            }
+        }
+    }
+}
+
+extension Coordinate: CustomStringConvertible, CustomDebugStringConvertible {
+
+    public var description: String {
+        var string =  "(x: \(self.x), y: \(self.y)"
+        if let z = self.z {
+            string.append(", z: \(z)")
+        }
+        if let m = self.m {
+            string.append(", m: \(m)")
+        }
+        string.append(")")
+        return string
+    }
+
+    public var debugDescription: String {
+        return self.description
+    }
+}
+
+extension Coordinate: Hashable {
+
+    public var hashValue: Int {
+        var hash = 31 &* x.hashValue ^ 37 &* y.hashValue
+        if let z = self.z {
+            hash = hash ^ 41 &* z.hashValue
+        }
+        if let m = self.m {
+            hash = hash ^ 53 &* m.hashValue
+        }
+        return hash
+    }
+}
+
+extension Coordinate: Equatable {
+
+    static public func == (lhs: Coordinate, rhs: Coordinate) -> Bool {
+        return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.m == rhs.m
+    }
 }
