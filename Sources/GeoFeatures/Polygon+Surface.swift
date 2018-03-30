@@ -34,8 +34,10 @@ extension Polygon: Surface {
     public func area() -> Double {
         var area: Double = 0.0
 
-        for i in 0..<rings.count {
-            area += rings[i].area()
+        area += outerRing.area()
+
+        for i in 0..<innerRings.count {
+            area += innerRings[i].area()
         }
         return self.precision.convert(area)
     }
