@@ -45,6 +45,7 @@ XCTMain([
    testCase(WKTReaderCoordinate3DMFloatingPrecisionCartesianTests.allTests),
    testCase(MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(RectangleTests.allTests),
    testCase(LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPolygonCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(FixedPrecisionTests.allTests),
@@ -886,6 +887,24 @@ extension MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests {
                 ("testIsClosedOpen", testIsClosedOpen),
                 ("testIsClosedEmpty", testIsClosedEmpty),
                 ("testLength", testLength)
+           ]
+   }
+}
+
+extension RectangleTests {
+   static var allTests: [(String, (RectangleTests) -> () throws -> Void)] {
+      return [
+                ("testInit", testInit),
+                ("testLowerLeft", testLowerLeft),
+                ("testUpperLeft", testUpperLeft),
+                ("testUpperRight", testUpperRight),
+                ("testLowerRight", testLowerRight),
+                ("testCoordinatest", testCoordinatest),
+                ("testUnion", testUnion),
+                ("testEqualTrue", testEqualTrue),
+                ("testEqualFalse", testEqualFalse),
+                ("testDescription", testDescription),
+                ("testDebugDescription", testDebugDescription)
            ]
    }
 }
