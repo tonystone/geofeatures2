@@ -24,6 +24,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Sources/GeoFeatures/**/*.swift'
-  s.preserve_paths = 'Sources/GeoFeatures/**/*.swift.gyb'
 
 end
