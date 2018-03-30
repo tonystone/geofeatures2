@@ -34,20 +34,19 @@ extension Polygon: Geometry {
     ///
     public func boundary() -> Geometry {
 
-        var boundary = MultiLineString<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        var boundary = MultiLineString(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-        for i in 0..<rings.count {
-            var lineString = LineString<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
-            lineString.append(contentsOf: rings[i])
-            
-            boundary.append(lineString)
+        if !self.outerRing.isEmpty() {
+            boundary.append(LineString(coordinates: self.outerRing.coordinates, precision: self.precision, coordinateSystem: self.coordinateSystem))
+            boundary.append(contentsOf: innerRings.map({ LineString(coordinates: $0.coordinates, precision: self.precision, coordinateSystem: self.coordinateSystem) }))
         }
+
         return boundary
     }
 
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? Polygon<CoordinateType> {
-            return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing<CoordinateType>, rhs: LinearRing<CoordinateType>) -> Bool in
+        if let other = other as? Polygon {
+            return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing, rhs: LinearRing) -> Bool in
                 return lhs.equals(rhs)
             })
         }

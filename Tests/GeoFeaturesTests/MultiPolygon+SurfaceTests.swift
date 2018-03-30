@@ -21,7 +21,7 @@ import XCTest
 import GeoFeatures
 
 #if (os(OSX) || os(iOS) || os(tvOS) || os(watchOS)) && SWIFT_PACKAGE
-    /// TODO: Remove this after figuring out why there seems to be a symbol conflict (error: cannot specialize a non-generic definition) with another Polygon on Swift PM on Apple platforms only.
+    /// Note: Resolution of GeoFeatures.Polygon is ambiguous when ApplicationsServices is included in the app (ApplicationsServices is used by XCTest), this resolves the ambiguity.
     import struct GeoFeatures.Polygon
 #endif
 
@@ -33,7 +33,7 @@ class MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testAreaEmpty() {
-        let input    = MultiPolygon<Coordinate2D>(precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon(precision: precision, coordinateSystem: cs)
         let expected = 0.0
 
         XCTAssertEqual(input.area(), expected)
@@ -41,7 +41,7 @@ class MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testAreaWith2SamePolygons() {
 
-        let input    = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: 0, y: 0), (x: 0, y: 6), (x: 6, y: 6), (x: 6, y: 0), (x: 0, y: 0)], [[(x: 1, y: 1), (x: 4, y: 1), (x: 4, y: 2), (x: 1, y: 2), (x: 1, y: 1)]])), Polygon<Coordinate2D>(rings: ([(x: 0, y: 0), (x: 0, y: 6), (x: 6, y: 6), (x: 6, y: 0), (x: 0, y: 0)], [[(x: 1, y: 1), (x: 4, y: 1), (x: 4, y: 2), (x: 1, y: 2), (x: 1, y: 1)]]))], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon(elements: [Polygon(outerRing: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]]), Polygon(outerRing: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]])], precision: precision, coordinateSystem: cs)
         let expected = 66.0
 
         XCTAssertEqual(input.area(), expected)
@@ -49,7 +49,7 @@ class MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testAreaWith2DifferentPolygons() {
 
-        let input    = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: 0, y: 0), (x: 0, y: 6), (x: 6, y: 6), (x: 6, y: 0), (x: 0, y: 0)], [[(x: 1, y: 1), (x: 4, y: 1), (x: 4, y: 2), (x: 1, y: 2), (x: 1, y: 1)]])), Polygon<Coordinate2D>(rings: ([(x: 0, y: 0), (x: 0, y: 6), (x: 6, y: 6), (x: 6, y: 0), (x: 0, y: 0)], []))], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon(elements: [Polygon(outerRing: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]]), Polygon(outerRing: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [])], precision: precision, coordinateSystem: cs)
         let expected = 69.0
 
         XCTAssertEqual(input.area(), expected)

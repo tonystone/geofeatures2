@@ -33,11 +33,11 @@ extension MultiPoint: Geometry {
     /// - Note: The boundary of a MultiPoint is the empty set.
     ///
     public func boundary() -> Geometry {
-        return MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        return MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? MultiPoint<CoordinateType> {
+        if let other = other as? MultiPoint {
             return self.elementsEqual(other)
         }
         return false

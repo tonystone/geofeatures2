@@ -30,54 +30,54 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
     func testBoundaryWith1ElementInvalid() {
-        let geometry = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(precision: precision, coordinateSystem: cs) // Empty Set
+        let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
 
     func testBoundaryWith2Element() {
-        let geometry = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(elements: [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint(elements: [Point(coordinate: Coordinate(x: 1.0, y: 1.0)), Point(coordinate: Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
 
     func testBoundaryWith3ElementOpen() {
-        let geometry = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 3.0, y: 3.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(elements: [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: 3.0, y: 3.0))], precision: precision, coordinateSystem: cs)
+        let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint(elements: [Point(coordinate: Coordinate(x: 1.0, y: 1.0)), Point(coordinate: Coordinate(x: 3.0, y: 3.0))], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
 
     func testBoundaryWith4ElementClosed() {
-        let geometry = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 3.0, y: 3.0), (x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(precision: precision, coordinateSystem: cs) // Empty Set
+        let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
 
     func testBoundaryEmpty() {
-        let geometry = LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(precision: precision, coordinateSystem: cs)  // Empty Set
+        let geometry = LinearRing(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint(precision: precision, coordinateSystem: cs)  // Empty Set
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
 
     func testEqualTrue() {
-        let input1 = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let input2 = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input1 = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input2 = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
      }
 
      func testEqualFalse() {
-        let input1            = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+        let input1            = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = Point(coordinate: Coordinate(x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
@@ -91,7 +91,7 @@ class LinearRingGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 }
 
@@ -103,7 +103,7 @@ class LinearRingGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase 
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 }
 
@@ -115,7 +115,7 @@ class LinearRingGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 }
 
@@ -127,7 +127,7 @@ class LinearRingGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(LinearRing<Coordinate2D>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 }
 
@@ -139,7 +139,7 @@ class LinearRingGeometryCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(LinearRing<Coordinate2DM>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 }
 
@@ -151,7 +151,7 @@ class LinearRingGeometryCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(LinearRing<Coordinate3D>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 }
 
@@ -163,6 +163,6 @@ class LinearRingGeometryCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(LinearRing<Coordinate3DM>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 }

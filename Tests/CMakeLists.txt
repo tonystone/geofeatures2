@@ -26,42 +26,42 @@ add_custom_target(geofeatures-test ALL
 set(GYB_COMMON_FLAGS --line-directive "''")
 
 add_gyb_target(generated-LinearRingTests
-        SOURCE GeoFeaturesTests/CoordinateCollectionTests.swift.gyb
+        SOURCE GeoFeaturesTests/CoordinateCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/LinearRingTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D GeometryType=LinearRing -D FileName=LinearRing.swift
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-LineStringTests
-        SOURCE GeoFeaturesTests/CoordinateCollectionTests.swift.gyb
+        SOURCE GeoFeaturesTests/CoordinateCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/LineStringTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D GeometryType=LineString -D FileName=LineString.swift
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-GeometryCollectionTests
-        SOURCE GeoFeaturesTests/GeometryCollectionTests.swift.gyb
+        SOURCE GeoFeaturesTests/GeometryCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/GeometryCollectionTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='GeometryCollectionTestInput'
         DEPENDS GeoFeaturesTests/GeometryCollectionTestInput.py build-tools
         )
 
 add_gyb_target(generated-MultiPointTests
-        SOURCE GeoFeaturesTests/GeometryCollectionTests.swift.gyb
+        SOURCE GeoFeaturesTests/GeometryCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiPointTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiPointTestInput'
         DEPENDS GeoFeaturesTests/MultiPointTestInput.py build-tools
         )
 
 add_gyb_target(generated-MultiLineStringTests
-        SOURCE GeoFeaturesTests/GeometryCollectionTests.swift.gyb
+        SOURCE GeoFeaturesTests/GeometryCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiLineStringTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiLineStringTestInput'
         DEPENDS GeoFeaturesTests/MultiLineStringTestInput.py build-tools
         )
 
 add_gyb_target(generated-MultiPolygonTests
-        SOURCE GeoFeaturesTests/GeometryCollectionTests.swift.gyb
+        SOURCE GeoFeaturesTests/GeometryCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiPolygonTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiPolygonTestInput'
         DEPENDS GeoFeaturesTests/MultiPolygonTestInput.py build-tools

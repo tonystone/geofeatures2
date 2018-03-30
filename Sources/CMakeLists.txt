@@ -40,28 +40,28 @@ add_gyb_target(generated-LineString
 add_gyb_target(generated-GeometryCollection
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/GeometryCollection.swift
-        FLAGS ${GYB_COMMON_FLAGS} -D Self=GeometryCollection -D Element=Geometry -D CoordinateSpecialized=false
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=GeometryCollection -D Element=Geometry
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-MultiPoint
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiPoint.swift
-        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPoint -D Element=Point -D CoordinateSpecialized=true
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPoint -D Element=Point
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-MultiLineString
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiLineString.swift
-        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiLineString -D Element=LineString -D CoordinateSpecialized=true
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiLineString -D Element=LineString
         DEPENDS build-tools
         )
 
 add_gyb_target(generated-MultiPolygon
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiPolygon.swift
-        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPolygon -D Element=Polygon -D CoordinateSpecialized=true
+        FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPolygon -D Element=Polygon
         DEPENDS build-tools
         )
 

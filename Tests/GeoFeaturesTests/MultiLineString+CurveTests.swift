@@ -28,27 +28,27 @@ class MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
     let cs       = Cartesian()
 
     func testIsClosedClosed() {
-        XCTAssertTrue(MultiLineString<Coordinate2D>(elements:
+        XCTAssertTrue(MultiLineString(elements:
             [
-                LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 0, y: 2), (x: 0, y: 3), (x: 2, y: 0), (x: 0, y: 0)], precision: precision, coordinateSystem: cs),
-                LineString<Coordinate2D>(elements: [(x: 0, y: 1), (x: 0, y: 2), (x: 0, y: 3), (x: 2, y: 0), (x: 0, y: 1)], precision: precision, coordinateSystem: cs)
+                LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 2, y: 0), Coordinate(x: 0, y: 0)], precision: precision, coordinateSystem: cs),
+                LineString(coordinates: [Coordinate(x: 0, y: 1), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 2, y: 0), Coordinate(x: 0, y: 1)], precision: precision, coordinateSystem: cs)
             ], precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testIsClosedOpen() {
-        XCTAssertFalse(MultiLineString<Coordinate2D>(elements:
+        XCTAssertFalse(MultiLineString(elements:
             [
-                LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 0, y: 2), (x: 0, y: 3), (x: 0, y: 4), (x: 0, y: 5)], precision: precision, coordinateSystem: cs),
-                LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 0, y: 2), (x: 0, y: 3), (x: 0, y: 4), (x: 0, y: 5)], precision: precision, coordinateSystem: cs)
+                LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5)], precision: precision, coordinateSystem: cs),
+                LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5)], precision: precision, coordinateSystem: cs)
             ], precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testIsClosedEmpty() {
-        XCTAssertFalse(MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs).isClosed())
+        XCTAssertFalse(MultiLineString(precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testLength() {
-        let input = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 0, y: 2)]), LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 7, y:0)])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString(elements: [LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2)]), LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 7, y:0)])], precision: precision, coordinateSystem: cs)
         let expected = 9.0
 
         XCTAssertEqual(input.length(), expected)
@@ -63,27 +63,27 @@ class MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testIsClosedClosed() {
-        XCTAssertTrue(MultiLineString<Coordinate2D>(elements:
+        XCTAssertTrue(MultiLineString(elements:
             [
-                LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs),
-                LineString<Coordinate2D>(elements: [(x: 0.0, y: 1.001), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 2.002, y: 0.0), (x: 0.0, y: 1.001)], precision: precision, coordinateSystem: cs)
+                LineString(coordinates: [Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 2.002, y: 0.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs),
+                LineString(coordinates: [Coordinate(x: 0.0, y: 1.001), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 2.002, y: 0.0), Coordinate(x: 0.0, y: 1.001)], precision: precision, coordinateSystem: cs)
             ], precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testIsClosedOpen() {
-        XCTAssertFalse(MultiLineString<Coordinate2D>(elements:
+        XCTAssertFalse(MultiLineString(elements:
             [
-                LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.003), (x: 0.0, y: 4.004), (x: 0.0, y: 5.001)], precision: precision, coordinateSystem: cs),
-                LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.002), (x: 0.0, y: 3.003), (x: 0.0, y: 4.004), (x: 0.0, y: 5.001)], precision: precision, coordinateSystem: cs)
+                LineString(coordinates: [Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.0), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 0.0, y: 4.004), Coordinate(x: 0.0, y: 5.001)], precision: precision, coordinateSystem: cs),
+                LineString(coordinates: [Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 0.0, y: 4.004), Coordinate(x: 0.0, y: 5.001)], precision: precision, coordinateSystem: cs)
             ], precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testIsClosedEmpty() {
-        XCTAssertFalse(MultiLineString<Coordinate2D>(precision: precision, coordinateSystem: cs).isClosed())
+        XCTAssertFalse(MultiLineString(precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testLength() {
-        let input = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 0.0, y: 0.0), (x: 0.0, y: 2.002)]), LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 7.001, y:0)])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString(elements: [LineString(coordinates: [Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002)]), LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 7.001, y:0)])], precision: precision, coordinateSystem: cs)
         let expected = 9.0
 
         XCTAssertEqual(input.length(), expected)
