@@ -20,6 +20,11 @@
 
 import Foundation
 
+///
+/// A collection of `Coordinate`s.
+///
+/// This is the main internal type which represents lines, rings and points.
+///
 public struct CoordinateCollection {
 
     public init() {
@@ -44,6 +49,9 @@ public struct CoordinateCollection {
     private var coordinates: [Coordinate]
 }
 
+///
+/// ExpressibleByArrayLiteral conformance.
+///
 extension CoordinateCollection: ExpressibleByArrayLiteral {
 
     /// Creates an instance initialized with the given elements.
@@ -52,7 +60,18 @@ extension CoordinateCollection: ExpressibleByArrayLiteral {
     }
 }
 
+///
+/// `CoordinateCollections` are `Swift.Collection`s and `Swift.MutableCollection`s.
+///
 extension CoordinateCollection: Collection, MutableCollection {
+
+    ///
+    /// The total number of elements that the coordinate collectionS can contain without
+    /// allocating new storage.
+    ///
+    public var capacity: Int {
+        return self.coordinates.capacity
+    }
 
     ///
     /// Prepares the collection to store the specified number of elements, when
@@ -60,15 +79,6 @@ extension CoordinateCollection: Collection, MutableCollection {
     ///
     public mutating func reserveCapacity(_ n: Int) {
         self.coordinates.reserveCapacity(n)
-    }
-
-    ///
-    /// Returns the position immediately after `i`.
-    ///
-    /// - Precondition: `(startIndex..<endIndex).contains(i)`
-    ///
-    public func index(after i: Int) -> Int {
-        return i+1
     }
 
     ///
@@ -85,6 +95,18 @@ extension CoordinateCollection: Collection, MutableCollection {
         return coordinates.count
     }
 
+    ///
+    /// Returns the position immediately after `i`.
+    ///
+    /// - Precondition: `(startIndex..<endIndex).contains(i)`
+    ///
+    public func index(after i: Int) -> Int {
+        return i+1
+    }
+
+    ///
+    /// Accesses the element at the specified position.
+    ///
     public subscript(index: Int) -> Coordinate {
         get {
             return coordinates[index]
@@ -105,15 +127,15 @@ extension CoordinateCollection: Collection, MutableCollection {
     /// Append the elements of `newElements` to this LineString.
     ///
     public mutating func append<C: Swift.Collection>(contentsOf newElements: C)
-        where C.Iterator.Element == Coordinate {
+            where C.Iterator.Element == Coordinate {
 
-            self.coordinates.reserveCapacity(numericCast(newElements.count) + coordinates.count)
+        self.coordinates.reserveCapacity(numericCast(newElements.count) + coordinates.count)
 
-            var Iterator = newElements.makeIterator()
+        var Iterator = newElements.makeIterator()
 
-            while let coordinate = Iterator.next() {
-                self.append(coordinate)
-            }
+        while let coordinate = Iterator.next() {
+            self.append(coordinate)
+        }
     }
 
     ///
@@ -142,7 +164,7 @@ extension CoordinateCollection {
     }
 
     internal func axes() -> [Axis] {
-        var axes: [Axis] = [.x, .y]
+        var axes: [Axis] = [.x, .y]     /// Min axes is the .x and .y Axis since a Coordinate must have at least those.
         var z = false
         var m = false
 
@@ -154,5 +176,36 @@ extension CoordinateCollection {
         if m { axes.append(.m) }
 
         return axes
+    }
+}
+
+internal extension CoordinateCollection {
+
+    typealias CoordinateType = Element
+
+    ///
+    /// Returns the axis aligned minimum bounding box for `self`.
+    ///
+    /// - Returns: Lower left and upper right coordinates
+    ///
+    func boundingBox() -> BoundingBox {
+
+        var iterator = self.makeIterator()
+
+        guard let first = iterator.next()
+            else { return BoundingBox((x: 0, y: 0), (x: 0, y: 0)) }
+
+        var minX = first.x, maxX = first.x
+        var minY = first.y, maxY = first.y
+
+        while let next = iterator.next() {
+
+            minX = Swift.min(minX, next.x)
+            maxX = Swift.max(maxX, next.x)
+
+            minY = Swift.min(minY, next.y)
+            maxY = Swift.max(maxY, next.y)
+        }
+        return BoundingBox((x: minX, y: minY), (x: maxX, y: maxY))
     }
 }
