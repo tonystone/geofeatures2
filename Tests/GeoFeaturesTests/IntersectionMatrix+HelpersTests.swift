@@ -1628,7 +1628,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
     func testMultiPoint_MultiPolygon_outerRingAndInnerRing_intersectsOuterBoundaryOnly() {
 
-        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: -10.0, y: 3.4)), Point<Coordinate2D>(coordinate: (x: 4.0, y: -8.0)), Point<Coordinate2D>(coordinate: (x: 10.0, y: 10.0))], precision: precision, coordinateSystem: cs)
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: -10.0, y: 3.4)), Point<Coordinate2D>(coordinate: (x: 4.0, y: -6.0)), Point<Coordinate2D>(coordinate: (x: 10.0, y: 10.0))], precision: precision, coordinateSystem: cs)
         let geometry2 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -10.0, y: 0.0), (x: -10.0, y: 10.0), (x: 10.0, y: 10.0), (x: 10.0, y: 0.0), (x: -10.0, y: 0.0)], [[(x: 1.0, y: 3.0), (x: 3.0, y: 1.0), (x: 5.0, y: 3.0), (x: 3.0, y: 5.0), (x: 1.0, y: 3.0)]])), Polygon<Coordinate2D>(rings: ([(x: 10.0, y: -2.0), (x: 6.0, y: -10.0), (x: 2.0, y: -2.0), (x: 10.0, y: -2.0)], [[(x: 5.0, y: -3.0), (x: 5.0, y: -5.0), (x: 7.0, y: -5.0), (x: 7.0, y: -3.0), (x: 5.0, y: -3.0)]]))], precision: precision, coordinateSystem: cs)
 
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
@@ -1804,7 +1804,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
     func testMultiPoint_MultiPolygon_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries() {
 
-        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 9.1, y: -2.8)), Point<Coordinate2D>(coordinate: (x: 6.0, y: -10.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: -18.0)), Point<Coordinate2D>(coordinate: (x: -1.0, y: -0.5))], precision: precision, coordinateSystem: cs)
+        let geometry1 = MultiPoint<CoordinateType>(elements: [Point<Coordinate2D>(coordinate: (x: 9.1, y: -2.8)), Point<Coordinate2D>(coordinate: (x: 6.0, y: -10.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: -18.0)), Point<Coordinate2D>(coordinate: (x: 2.5, y: -2.5))], precision: precision, coordinateSystem: cs)
         let geometry2 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -10.0, y: 0.0), (x: -10.0, y: 10.0), (x: 10.0, y: 10.0), (x: 10.0, y: 0.0), (x: -10.0, y: 0.0)], [[(x: 1.0, y: 3.0), (x: 3.0, y: 1.0), (x: 5.0, y: 3.0), (x: 3.0, y: 5.0), (x: 1.0, y: 3.0)], [(x: -8.0, y: 3.0), (x: -2.0, y: 3.0), (x: -5.0, y: 9.0), (x: -8.0, y: 3.0)]])), Polygon<Coordinate2D>(rings: ([(x: 10.0, y: -2.0), (x: 10.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 10.0, y: -2.0)], [[(x: 5.0, y: -3.0), (x: 5.0, y: -5.0), (x: 7.0, y: -5.0), (x: 7.0, y: -3.0), (x: 5.0, y: -3.0)], [(x: 3.0, y: -10.0), (x: 3.0, y: -15.0), (x: 7.0, y: -15.0), (x: 7.0, y: -10.0), (x: 3.0, y: -10.0)]]))], precision: precision, coordinateSystem: cs)
 
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
