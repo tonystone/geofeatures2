@@ -85,13 +85,6 @@ XCTMain([
    testCase(CoordinateCollectionTests.allTests),
    testCase(CoordinateSystemGeographicTests.allTests),
    testCase(LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
    testCase(MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(PointCoordinate2DFloatingPrecisionCartesianTests.allTests),
@@ -1524,62 +1517,6 @@ extension LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests {
                 ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate2DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate3DFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate3DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
            ]
    }
 }

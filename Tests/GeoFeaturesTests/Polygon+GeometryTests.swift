@@ -43,24 +43,24 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: - Boundary
 
     func testBoundaryWithOuterRing() {
-        let geometry = Polygon(outerRing: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiLineString(elements: [LineString(coordinates: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+        let input = Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiLineString(elements: [LineString(coordinates: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWithOuterRingAnd1InnerRing() {
-        let geometry = Polygon(outerRing: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 3.0), Coordinate(x: 3.5, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiLineString(elements: [LineString(coordinates: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)]), LineString(coordinates: [Coordinate(x: 5.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 3.0), Coordinate(x: 3.5, y: 3.5), Coordinate(x: 5.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+        let input = Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [[[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0]]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiLineString(elements: [LineString(coordinates: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]]), LineString(coordinates: [[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0]])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryEmpty() {
-        let geometry = Polygon(precision: precision, coordinateSystem: cs).boundary()
+        let input = Polygon(precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiLineString(precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     // MARK: - Bounds
@@ -82,15 +82,15 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: - Equal
 
     func testEqualTrue() {
-        let input1 = Polygon(outerRing: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 3.0), Coordinate(x: 3.5, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let input2 = Polygon(outerRing: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 3.0), Coordinate(x: 3.5, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input1 = Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [[[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0]]], precision: precision, coordinateSystem: cs)
+        let input2 = Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [[[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0]]], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
      }
 
      func testEqualFalse() {
-        let input1            = Polygon(outerRing: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 3.0), Coordinate(x: 3.5, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = Point(coordinate: Coordinate(x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+        let input1            = Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [[[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0]]], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = Point(coordinate: [1.0, 1.0], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }

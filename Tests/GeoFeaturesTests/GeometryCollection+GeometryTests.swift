@@ -61,10 +61,10 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: Boundary
 
     func testBoundary() {
-        let input = GeometryCollection(elements: [LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]]), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs).boundary()
+        let input = GeometryCollection(elements: [LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]]), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs)
         let expected = GeometryCollection(precision: precision, coordinateSystem: cs) // GeometryCollection will always return an empty GeometryCollection for boundary
 
-        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
     // MARK: - Bounds
