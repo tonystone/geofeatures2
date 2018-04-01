@@ -29,9 +29,13 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: - Dimension
+
     func testDimension () {
         XCTAssertEqual(LineString(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
+
+    // MARK: - Boundary
 
     func testBoundaryWith1ElementInvalid() {
         let geometry = LineString(coordinates: [[1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
@@ -83,6 +87,8 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
         XCTAssertEqual(input.bounds(), expected)
     }
+
+    // MARK: - Equal
 
     func testEqualTrue() {
         let input1 = LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)

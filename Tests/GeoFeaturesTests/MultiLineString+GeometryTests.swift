@@ -29,9 +29,13 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: Dimension Tests
+
     func testDimension () {
         XCTAssertEqual(MultiLineString(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
+
+    // MARK: Boundary Tests
 
     func testBoundaryWith1ElementInvalid() {
         let input = MultiLineString(elements: [LineString(coordinates: [Coordinate(x: 1.0, y: 1.0)])], precision: precision, coordinateSystem: cs).boundary()
@@ -124,6 +128,8 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
 
         XCTAssertEqual(input.bounds(), expected)
     }
+
+    // MARK: Boundary Tests
 
     func testEqualTrue() {
         let input1 = MultiLineString(elements: [LineString(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString(coordinates: [Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 4.0)])], precision: precision, coordinateSystem: cs)

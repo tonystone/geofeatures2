@@ -29,9 +29,13 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: - Dimension
+
     func testDimension () {
         XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
+
+    // MARK: - Boundary
 
     func testBoundaryWith1ElementInvalid() {
         let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()

@@ -32,6 +32,8 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: Dimension
+
     func testDimension () {
         XCTAssertEqual(GeometryCollection(precision: precision, coordinateSystem: cs).dimension, Dimension.empty)
     }
@@ -56,6 +58,8 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(GeometryCollection(elements: [Point(coordinate: [1, 1]), LineString()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
     }
 
+    // MARK: Boundary
+
     func testBoundary() {
         let input = GeometryCollection(elements: [LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]]), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs).boundary()
         let expected = GeometryCollection(precision: precision, coordinateSystem: cs) // GeometryCollection will always return an empty GeometryCollection for boundary
@@ -78,6 +82,8 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.bounds(), expected)
     }
+
+    // MARK: Equal
 
     func testEqualTrue() {
         let input1 = GeometryCollection(elements: [LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]]), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
@@ -107,6 +113,8 @@ class GeometryCollectionGeometryFixedPrecisionCartesianTests: XCTestCase {
 
     let precision = FixedPrecision(scale: 100)
     let cs       = Cartesian()
+
+    // MARK: Dimension
 
     func testDimension () {
         XCTAssertEqual(GeometryCollection(precision: precision, coordinateSystem: cs).dimension, Dimension.empty)

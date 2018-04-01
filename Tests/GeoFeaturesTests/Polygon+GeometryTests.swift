@@ -34,9 +34,13 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: - Dimension
+
     func testDimension () {
         XCTAssertEqual(Polygon(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
+
+    // MARK: - Boundary
 
     func testBoundaryWithOuterRing() {
         let geometry = Polygon(outerRing: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [], precision: precision, coordinateSystem: cs).boundary()
@@ -74,6 +78,8 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.bounds(), expected)
     }
+
+    // MARK: - Equal
 
     func testEqualTrue() {
         let input1 = Polygon(outerRing: [Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 3.0), Coordinate(x: 3.5, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
