@@ -44,6 +44,12 @@ public struct Point {
         return coordinate.m
     }
 
+    public var coordinate: Coordinate {
+        precondition(coordinates.count == 1, "Invalid number of coordinates (\(coordinates.count)) in Point, Points must have 1 coordinate.")
+        
+        return coordinates[0]
+    }
+
     ///
     /// Constructs a Point with a Coordinate of type Coordinate.
     ///
@@ -56,13 +62,20 @@ public struct Point {
     /// - seealso: `Precision`
     ///
     public init(coordinate: Coordinate, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
+        self.init(coordinates: CoordinateCollection(coordinate: coordinate), precision: precision, coordinateSystem: coordinateSystem)
+    }
+
+    internal init(coordinates: CoordinateCollection, precision: Precision, coordinateSystem: CoordinateSystem) {
+        precondition(coordinates.count == 1, "Invalid number of coordinates (\(coordinates.count)) in Point, Points must have 1 coordinate.")
 
         self.precision        = precision
         self.coordinateSystem = coordinateSystem
-        self.coordinate       = precision.convert(coordinate)
+        self.coordinates      = coordinates
+
+        self.coordinates.apply(precision: precision)
     }
 
-    internal let coordinate: Coordinate
+    internal private(set) var coordinates: CoordinateCollection
 }
 
 // MARK: - Copy Construction
@@ -81,7 +94,7 @@ internal extension Point {
     /// - seealso: `Precision`
     ///
     internal init(other: Point, precision: Precision, coordinateSystem: CoordinateSystem) {
-        self.init(coordinate: other.coordinate, precision: precision, coordinateSystem: coordinateSystem)
+        self.init(coordinates: other.coordinates, precision: precision, coordinateSystem: coordinateSystem)
     }
 }
 
