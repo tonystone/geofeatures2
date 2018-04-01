@@ -37,6 +37,10 @@ private struct UnsupportedGeometry: Geometry {
         return true
     }
 
+    func bounds() -> Bounds? {
+        return nil
+    }
+
     func boundary() -> Geometry {
         return GeometryCollection()
     }

@@ -43,9 +43,9 @@ XCTMain([
    testCase(WKTReaderCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(WKTReaderCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(WKTReaderCoordinate3DMFloatingPrecisionCartesianTests.allTests),
+   testCase(BoundsTests.allTests),
    testCase(MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(RectangleTests.allTests),
    testCase(LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPolygonCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(FixedPrecisionTests.allTests),
@@ -259,6 +259,8 @@ extension GeometryCollectionGeometryFloatingPrecisionCartesianTests {
                 ("testDimensionWithNonHomogeneousPointPolygon", testDimensionWithNonHomogeneousPointPolygon),
                 ("testDimensionWithNonHomogeneousPointLineString", testDimensionWithNonHomogeneousPointLineString),
                 ("testBoundary", testBoundary),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualWithSameTypesFalse", testEqualWithSameTypesFalse),
                 ("testEqualWithDifferentTypesFalse", testEqualWithDifferentTypesFalse)
@@ -869,6 +871,23 @@ extension WKTReaderCoordinate3DMFloatingPrecisionCartesianTests {
    }
 }
 
+extension BoundsTests {
+   static var allTests: [(String, (BoundsTests) -> () throws -> Void)] {
+      return [
+                ("testInit", testInit),
+                ("testMin", testMin),
+                ("testMax", testMax),
+                ("testMidWithOriginZero", testMidWithOriginZero),
+                ("testMidWithOriginNegative", testMidWithOriginNegative),
+                ("testExpand", testExpand),
+                ("testEqualTrue", testEqualTrue),
+                ("testEqualFalse", testEqualFalse),
+                ("testDescription", testDescription),
+                ("testDebugDescription", testDebugDescription)
+           ]
+   }
+}
+
 extension MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
@@ -887,24 +906,6 @@ extension MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests {
                 ("testIsClosedOpen", testIsClosedOpen),
                 ("testIsClosedEmpty", testIsClosedEmpty),
                 ("testLength", testLength)
-           ]
-   }
-}
-
-extension RectangleTests {
-   static var allTests: [(String, (RectangleTests) -> () throws -> Void)] {
-      return [
-                ("testInit", testInit),
-                ("testLowerLeft", testLowerLeft),
-                ("testUpperLeft", testUpperLeft),
-                ("testUpperRight", testUpperRight),
-                ("testLowerRight", testLowerRight),
-                ("testCoordinatest", testCoordinatest),
-                ("testUnion", testUnion),
-                ("testEqualTrue", testEqualTrue),
-                ("testEqualFalse", testEqualFalse),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription)
            ]
    }
 }
@@ -990,6 +991,8 @@ extension PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests {
                 ("testBoundaryWithOuterRing", testBoundaryWithOuterRing),
                 ("testBoundaryWithOuterRingAnd1InnerRing", testBoundaryWithOuterRingAnd1InnerRing),
                 ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
            ]
@@ -1517,6 +1520,8 @@ extension LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests {
                 ("testBoundaryWith3ElementOpen", testBoundaryWith3ElementOpen),
                 ("testBoundaryWith4ElementClosed", testBoundaryWith4ElementClosed),
                 ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
            ]
@@ -1593,6 +1598,8 @@ extension MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests {
                 ("testBoundaryWithOGCMultiCurveB", testBoundaryWithOGCMultiCurveB),
                 ("testBoundaryWithOGCMultiCurveC", testBoundaryWithOGCMultiCurveC),
                 ("testBoundaryWithOddIntersection", testBoundaryWithOddIntersection),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
            ]
@@ -1608,6 +1615,8 @@ extension LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests {
                 ("testBoundaryWith3ElementOpen", testBoundaryWith3ElementOpen),
                 ("testBoundaryWith4ElementClosed", testBoundaryWith4ElementClosed),
                 ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
            ]

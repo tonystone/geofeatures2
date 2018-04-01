@@ -63,6 +63,22 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
+    // MARK: - Bounds
+
+    func testBoundsEmpty() {
+        let input = GeometryCollection(precision: precision, coordinateSystem: cs)
+        let expected: Bounds? = nil
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    func testBoundsWithElements() {
+        let input = GeometryCollection(elements: [LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]]), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 6.0, y: 4.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
     func testEqualTrue() {
         let input1 = GeometryCollection(elements: [LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]]), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
         let input2 = GeometryCollection(elements: [LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]]), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)

@@ -45,6 +45,15 @@ extension LinearRing: Geometry {
         return boundary
     }
 
+    ///
+    /// The min and max X Y values that make up the bounding coordinates of `self`.
+    ///
+    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding `self` or nil if the `self` is empty.
+    ///
+    public func bounds() -> Bounds? {
+        return self.coordinates.bounds()
+    }
+
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? LinearRing {
             return self.elementsEqual(other, by: { (lhs: Iterator.Element, rhs: Iterator.Element) -> Bool in

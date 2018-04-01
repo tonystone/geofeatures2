@@ -184,16 +184,16 @@ internal extension CoordinateCollection {
     typealias CoordinateType = Element
 
     ///
-    /// Returns the axis aligned minimum bounding box for `self`.
+    /// The min and max Coordinates that make up the minimum bounding points of the geometry.
     ///
-    /// - Returns: Lower left and upper right coordinates
+    /// - Returns: `Bounds` instance that represents the min and max coordinates that make up a box around the Geometry or nil if the Geometry contains no coordinates.
     ///
-    func boundingBox() -> BoundingBox {
+    func bounds() -> Bounds? {
 
         var iterator = self.makeIterator()
 
         guard let first = iterator.next()
-            else { return BoundingBox((x: 0, y: 0), (x: 0, y: 0)) }
+            else { return nil }
 
         var minX = first.x, maxX = first.x
         var minY = first.y, maxY = first.y
@@ -206,6 +206,6 @@ internal extension CoordinateCollection {
             minY = Swift.min(minY, next.y)
             maxY = Swift.max(maxY, next.y)
         }
-        return BoundingBox((x: minX, y: minY), (x: maxX, y: maxY))
+        return Bounds(min: (x: minX, y: minY), max: (x: maxX, y: maxY))
     }
 }

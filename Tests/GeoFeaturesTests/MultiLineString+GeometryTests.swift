@@ -104,8 +104,25 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
                                                                 LineString(coordinates: [Coordinate(x: 2.25, y: 4.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 2.5, y: 2.0), Coordinate(x: 2.50, y: 1.5)]),
                                                                 LineString(coordinates: [Coordinate(x: 2.25, y: 4.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 2.5, y: 5.0), Coordinate(x: 2.50, y: 6.0)])], precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(elements: [Point(coordinate: Coordinate(x: 2.25, y: 4.0)), Point(coordinate: Coordinate(x: 2.5, y: 6.0)), Point(coordinate: Coordinate(x: 1.0, y: 1.0)), Point(coordinate: Coordinate(x: 2.5, y: 1.5))], precision: precision, coordinateSystem: cs)
+    }
+
+    // MARK: Bounds 
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
+    func testBoundsEmpty() {
+        let input = MultiLineString(precision: precision, coordinateSystem: cs)
+        let expected: Bounds? = nil
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    func testBoundsWithElements() {
+        let input = MultiLineString(elements: [LineString(coordinates: [[1.00,  1.0], [2.0,  2.0], [1.5,  3.0], [2.25,  4.0]]),
+                                               LineString(coordinates: [[2.25,  4.0], [3.0,  3.0], [2.5,  2.0], [2.50,  1.5]]),
+                                               LineString(coordinates: [[2.25,  4.0], [3.0,  5.0], [2.5,  5.0], [2.50,  6.0]])], precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 3.0, y: 6.0))
+
+        XCTAssertEqual(input.bounds(), expected)
     }
 
     func testEqualTrue() {

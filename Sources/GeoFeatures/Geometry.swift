@@ -67,12 +67,13 @@ public protocol Geometry {
 ///    /// as self intersection or self tangent.
 ///    ///
 ///    func isSimple() -> Bool
-///
-///    ///
-///    /// The minimum bounding box for this Geometry, returned as a Geometry (Polygon).
-///    ///
-///    @warn_unused_result
-///    func envelop() -> Geometry
+
+    ///
+    /// The min and max X Y values that make up the bounding coordinates of the geometry.
+    ///
+    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding the geometry or nil if the geometry is empty.
+    ///
+    func bounds() -> Bounds?
 
     ///
     /// - Returns: true if this GeometryType instance is equal to the other Geometry instance.

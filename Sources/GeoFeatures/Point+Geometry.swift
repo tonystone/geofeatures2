@@ -36,6 +36,15 @@ extension Point: Geometry {
         return MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// The min and max X Y values that make up the bounding coordinates of `self`.
+    ///
+    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding `self` or nil if the `self` is empty.
+    ///
+    public func bounds() -> Bounds? {
+        return self.coordinates.bounds()
+    }
+
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? Point {
             return self.coordinate == other.coordinate
