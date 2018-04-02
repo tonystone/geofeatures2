@@ -26,6 +26,10 @@ import Swift
 ///
 public struct Coordinate {
 
+    public enum Axis {
+        case x, y, z, m
+    }
+
     public var x: Double
     public var y: Double
     public var z: Double?
@@ -47,8 +51,10 @@ extension Coordinate: ExpressibleByArrayLiteral {
 
     /// Creates an instance initialized with the given elements.
     public init(arrayLiteral values: Double...) {
+        precondition(values.count >= 2)
+
         let count = values.count
-        
+
         self.x = count > 0 ? values[0] : .nan
         self.y = count > 1 ? values[1] : .nan
         self.z = count > 2 ? values[2] :  nil
@@ -60,6 +66,8 @@ extension Coordinate: ExpressibleByDictionaryLiteral {
 
     /// Creates an instance initialized with the given elements.
     public init(dictionaryLiteral elements: (String, Double)...) {
+        precondition(elements.count >= 2)
+
         self.init(x: .nan, y: .nan)
 
         for (key, value) in elements {

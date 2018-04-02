@@ -38,36 +38,36 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Boundary Tests
 
     func testBoundaryWith1ElementInvalid() {
-        let input    = MultiLineString(elements: [LineString(coordinates: [[1.0,  1.0]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[1.0,  1.0]])], precision: precision, coordinateSystem: cs)
         let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith2Element() {
-        let input    = MultiLineString(elements: [LineString(coordinates: [[1.0,  1.0], [2.0,  2.0]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0,  1.0]), Point(coordinate: [2.0,  2.0])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0,  1.0]), Point([2.0,  2.0])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith3ElementOpen() {
-        let input    = MultiLineString(elements: [LineString(coordinates: [[1.0,  1.0], [2.0,  2.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0,  1.0]), Point(coordinate: [3.0,  3.0])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0,  1.0]), Point([3.0,  3.0])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith4ElementClosed() {
-        let input    = MultiLineString(elements: [LineString(coordinates: [[1.0,  1.0], [2.0,  2.0], [3.0,  3.0], [1.0,  1.0]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  3.0], [1.0,  1.0]])], precision: precision, coordinateSystem: cs)
         let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith2EqualPoints() {
-        let input    = MultiLineString(elements: [LineString(coordinates: [[1.0,  1.0], [2.0,  2.0]]), LineString(coordinates: [[1.0,  1.0], [3.0,  3.0]]), LineString(coordinates: [[1.0,  1.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0,  1.0]), Point(coordinate: [2.0,  2.0])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0]]), LineString([[1.0,  1.0], [3.0,  3.0]]), LineString([[1.0,  1.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0,  1.0]), Point([2.0,  2.0])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
@@ -80,34 +80,34 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testBoundaryWithOGCMultiCurveA() {
-        let input = MultiLineString(elements: [LineString(coordinates: [[1.00,  1.0], [2.0,  2.0], [1.5,  3.0], [2.25,  4.0]]),
-                                               LineString(coordinates: [[2.25,  4.0], [3.0,  3.0], [2.5,  2.0], [2.50,  1.5]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0,  1.0]), Point(coordinate: [2.5,  1.5])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString([LineString([[1.00,  1.0], [2.0,  2.0], [1.5,  3.0], [2.25,  4.0]]),
+                                               LineString([[2.25,  4.0], [3.0,  3.0], [2.5,  2.0], [2.50,  1.5]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0,  1.0]), Point([2.5,  1.5])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWithOGCMultiCurveB() {
-        let input = MultiLineString(elements: [LineString(coordinates: [[1.00,  1.0], [2.25,  4.0], [2.5,  3.0], [1.25,  3.5]]),
-                                               LineString(coordinates: [[10.0,  10.0], [20.0,  20.0], [30.0,  30.0], [10.0,  10.0]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0,  1.0]), Point(coordinate: [1.25,  3.5])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString([LineString([[1.00,  1.0], [2.25,  4.0], [2.5,  3.0], [1.25,  3.5]]),
+                                               LineString([[10.0,  10.0], [20.0,  20.0], [30.0,  30.0], [10.0,  10.0]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0,  1.0]), Point([1.25,  3.5])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWithOGCMultiCurveC() {
-        let input = MultiLineString(elements: [LineString(coordinates: [[1.5,  3.0], [1.0,  4.0], [2.5,  3.5], [1.5,  3.0]]),
-                                               LineString(coordinates: [[1.0,  1.0], [0.5,  2.0], [2.5,  3.5], [3.0,  1.5], [1.0,  1.0]])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString([LineString([[1.5,  3.0], [1.0,  4.0], [2.5,  3.5], [1.5,  3.0]]),
+                                               LineString([[1.0,  1.0], [0.5,  2.0], [2.5,  3.5], [3.0,  1.5], [1.0,  1.0]])], precision: precision, coordinateSystem: cs)
         let expected = MultiPoint(precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWithOddIntersection() {
-        let input = MultiLineString(elements: [LineString(coordinates: [[1.00,  1.0], [2.0,  2.0], [1.5,  3.0], [2.25,  4.0]]),
-                                               LineString(coordinates: [[2.25,  4.0], [3.0,  3.0], [2.5,  2.0], [2.50,  1.5]]),
-                                               LineString(coordinates: [[2.25,  4.0], [3.0,  5.0], [2.5,  5.0], [2.50,  6.0]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [2.25,  4.0]), Point(coordinate: [2.5,  6.0]), Point(coordinate: [1.0,  1.0]), Point(coordinate: [2.5,  1.5])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString([LineString([[1.00,  1.0], [2.0,  2.0], [1.5,  3.0], [2.25,  4.0]]),
+                                               LineString([[2.25,  4.0], [3.0,  3.0], [2.5,  2.0], [2.50,  1.5]]),
+                                               LineString([[2.25,  4.0], [3.0,  5.0], [2.5,  5.0], [2.50,  6.0]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([2.25,  4.0]), Point([2.5,  6.0]), Point([1.0,  1.0]), Point([2.5,  1.5])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
@@ -122,9 +122,9 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testBoundsWithElements() {
-        let input = MultiLineString(elements: [LineString(coordinates: [[1.00,  1.0], [2.0,  2.0], [1.5,  3.0], [2.25,  4.0]]),
-                                               LineString(coordinates: [[2.25,  4.0], [3.0,  3.0], [2.5,  2.0], [2.50,  1.5]]),
-                                               LineString(coordinates: [[2.25,  4.0], [3.0,  5.0], [2.5,  5.0], [2.50,  6.0]])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString([LineString([[1.00,  1.0], [2.0,  2.0], [1.5,  3.0], [2.25,  4.0]]),
+                                               LineString([[2.25,  4.0], [3.0,  3.0], [2.5,  2.0], [2.50,  1.5]]),
+                                               LineString([[2.25,  4.0], [3.0,  5.0], [2.5,  5.0], [2.50,  6.0]])], precision: precision, coordinateSystem: cs)
         let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 3.0, y: 6.0))
 
         XCTAssertEqual(input.bounds(), expected)
@@ -133,15 +133,15 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Boundary Tests
 
     func testEqualTrue() {
-        let input1 = MultiLineString(elements: [LineString(coordinates: [[1.0,  1.0], [2.0,  2.0]]), LineString(coordinates: [[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
-        let input2 = MultiLineString(elements: [LineString(coordinates: [[1.0,  1.0], [2.0,  2.0]]), LineString(coordinates: [[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
+        let input1 = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0]]), LineString([[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
+        let input2 = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0]]), LineString([[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
      }
 
      func testEqualFalse() {
-        let input1            = MultiLineString(elements: [LineString(coordinates: [[1.0,  1.0], [2.0,  2.0]]), LineString(coordinates: [[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = LineString(coordinates: [[1.0,  1.0], [2.0,  2.0]], precision: precision, coordinateSystem: cs)
+        let input1            = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0]]), LineString([[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = LineString([[1.0,  1.0], [2.0,  2.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }

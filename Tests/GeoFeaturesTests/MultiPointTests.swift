@@ -81,16 +81,16 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiPoint(Point(x: 1.0, y: 1.0), Point(x: 2.0, y: 2.0))"
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiPoint([Point(x: 1.0, y: 1.0), Point(x: 2.0, y: 2.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiPoint(Point(x: 1.0, y: 1.0), Point(x: 2.0, y: 2.0))"
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiPoint([Point(x: 1.0, y: 1.0), Point(x: 2.0, y: 2.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -99,16 +99,16 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testAppend() {
 
         var input    = MultiPoint(precision: precision, coordinateSystem: cs)
-        let expected = [Point(coordinate: [1.0, 1.0])]
+        let expected = [Point([1.0, 1.0])]
 
-        input.append(Point(coordinate: [1.0, 1.0]))
+        input.append(Point([1.0, 1.0]))
 
         XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
 
-        let input1 = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let input1 = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
         var input2 = MultiPoint(precision: precision, coordinateSystem: cs)
 
         input2.append(contentsOf: input1)
@@ -117,20 +117,20 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
     func testInsert2ExistingElements() {
 
-        var input = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
-        let expected = [Point(coordinate: [2.0, 2.0]), Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])]
+        var input = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
 
-        input.insert(Point(coordinate: [2.0, 2.0]), at: 0)
+        input.insert(Point([2.0, 2.0]), at: 0)
 
         XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
 
-        var input = MultiPoint(elements: [Point(coordinate: [1.0, 1.0])], precision: precision, coordinateSystem: cs)
-        let expected = [Point(coordinate: [2.0, 2.0]), Point(coordinate: [1.0, 1.0])]
+        var input = MultiPoint([Point([1.0, 1.0])], precision: precision, coordinateSystem: cs)
+        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0])]
 
-        input.insert(Point(coordinate: [2.0, 2.0]), at: 0)
+        input.insert(Point([2.0, 2.0]), at: 0)
 
         XCTAssertTrue(input.elementsEqual(expected))
     }
@@ -139,26 +139,26 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testSubscriptGet() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
-        let expected = Point(coordinate: [2.0, 2.0])
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = Point([2.0, 2.0])
 
         XCTAssertTrue(input[1].equals(expected))
     }
 
     func testSubscriptSet() {
 
-        var input    = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [1.0, 1.0])], precision: precision, coordinateSystem: cs)
+        var input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([1.0, 1.0])], precision: precision, coordinateSystem: cs)
 
-        input[1] = Point(coordinate: [1.0, 1.0])
+        input[1] = Point([1.0, 1.0])
 
         XCTAssertEqual(input, expected)
     }
 
     func testEquals() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
     }
@@ -173,7 +173,7 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isEmpty(), expected)
@@ -181,7 +181,7 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testCount() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
@@ -236,16 +236,16 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiPoint(Point(x: 1.0, y: 1.0), Point(x: 2.0, y: 2.0))"
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiPoint([Point(x: 1.0, y: 1.0), Point(x: 2.0, y: 2.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiPoint(Point(x: 1.0, y: 1.0), Point(x: 2.0, y: 2.0))"
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiPoint([Point(x: 1.0, y: 1.0), Point(x: 2.0, y: 2.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -254,16 +254,16 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     func testAppend() {
 
         var input    = MultiPoint(precision: precision, coordinateSystem: cs)
-        let expected = [Point(coordinate: [1.0, 1.0])]
+        let expected = [Point([1.0, 1.0])]
 
-        input.append(Point(coordinate: [1.001, 1.001]))
+        input.append(Point([1.001, 1.001]))
 
         XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testAppendContentsOf() {
 
-        let input1 = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let input1 = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
         var input2 = MultiPoint(precision: precision, coordinateSystem: cs)
 
         input2.append(contentsOf: input1)
@@ -272,20 +272,20 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     }
     func testInsert2ExistingElements() {
 
-        var input = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
-        let expected = [Point(coordinate: [2.0, 2.0]), Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])]
+        var input = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
 
-        input.insert(Point(coordinate: [2.002, 2.002]), at: 0)
+        input.insert(Point([2.002, 2.002]), at: 0)
 
         XCTAssertTrue(input.elementsEqual(expected))
     }
 
     func testInsert1ExistingElements() {
 
-        var input = MultiPoint(elements: [Point(coordinate: [1.001, 1.001])], precision: precision, coordinateSystem: cs)
-        let expected = [Point(coordinate: [2.0, 2.0]), Point(coordinate: [1.0, 1.0])]
+        var input = MultiPoint([Point([1.001, 1.001])], precision: precision, coordinateSystem: cs)
+        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0])]
 
-        input.insert(Point(coordinate: [2.002, 2.002]), at: 0)
+        input.insert(Point([2.002, 2.002]), at: 0)
 
         XCTAssertTrue(input.elementsEqual(expected))
     }
@@ -294,26 +294,26 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testSubscriptGet() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
-        let expected = Point(coordinate: [2.0, 2.0])
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let expected = Point([2.0, 2.0])
 
         XCTAssertTrue(input[1].equals(expected))
     }
 
     func testSubscriptSet() {
 
-        var input    = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [1.0, 1.0])], precision: precision, coordinateSystem: cs)
+        var input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([1.0, 1.0])], precision: precision, coordinateSystem: cs)
 
-        input[1] = Point(coordinate: [1.001, 1.001])
+        input[1] = Point([1.001, 1.001])
 
         XCTAssertEqual(input, expected)
     }
 
     func testEquals() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
     }
@@ -328,7 +328,7 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isEmpty(), expected)
@@ -336,7 +336,7 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testCount() {
 
-        let input    = MultiPoint(elements: [Point(coordinate: [1.001, 1.001]), Point(coordinate: [2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.count, expected)

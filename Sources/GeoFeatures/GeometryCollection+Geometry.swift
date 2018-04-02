@@ -27,11 +27,11 @@ extension GeometryCollection: Geometry {
 
         var dimension: Dimension = .empty // No dimension
 
-        if elements.count > 0 {
+        if self.count > 0 {
 
-            for index in 0..<elements.count {
+            for index in 0..<self.count {
 
-                dimension = Swift.max(dimension, elements[index].dimension)
+                dimension = Swift.max(dimension, self[index].dimension)
             }
         }
         return dimension
@@ -49,21 +49,6 @@ extension GeometryCollection: Geometry {
     public func boundary() -> Geometry {
         /// Return an empty GeometryCollection
         return GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
-    }
-
-    ///
-    /// The min and max X Y values that make up the bounding coordinates of `self`.
-    ///
-    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding `self` or nil if the `self` is empty.
-    ///
-    public func bounds() -> Bounds? {
-
-        let bounds = self.elements.flatMap { $0.bounds() }
-
-        guard bounds.count > 0
-            else { return nil }
-
-        return bounds.reduce(bounds[0], { $0.expand(other: $1) })
     }
 
     public func equals(_ other: Geometry) -> Bool {

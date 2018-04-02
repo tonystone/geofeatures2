@@ -34,22 +34,9 @@ extension Polygon: Geometry {
     ///
     public func boundary() -> Geometry {
 
-        var boundary = MultiLineString(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        let boundary = self.map({ LineString(converting: $0, precision: self.precision, coordinateSystem: self.coordinateSystem) })
 
-        if !self.outerRing.isEmpty() {
-            boundary.append(LineString(coordinates: self.outerRing.coordinates, precision: self.precision, coordinateSystem: self.coordinateSystem))
-            boundary.append(contentsOf: innerRings.map({ LineString(coordinates: $0.coordinates, precision: self.precision, coordinateSystem: self.coordinateSystem) }))
-        }
-        return boundary
-    }
-
-    ///
-    /// The min and max X Y values that make up the bounding coordinates of `self`.
-    ///
-    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding `self` or nil if the `self` is empty.
-    ///
-    public func bounds() -> Bounds? {
-        return self.outerRing.coordinates.bounds()
+        return MultiLineString(boundary, precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
     public func equals(_ other: Geometry) -> Bool {

@@ -208,7 +208,7 @@ public class WKTReader {
         if tokenizer.accept(.RIGHT_PAREN) == nil {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
-        return Point(coordinate: coordinate, precision: precision, coordinateSystem: cs)
+        return Point(coordinate, precision: precision, coordinateSystem: cs)
     }
 
     /// BNF: <linestring tagged text> ::= linestring <linestring text>
@@ -228,7 +228,7 @@ public class WKTReader {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
-        var coordinates = CoordinateCollection()
+        var coordinates: [Coordinate] = []
 
         var done = false
 
@@ -247,7 +247,7 @@ public class WKTReader {
         if tokenizer.accept(.RIGHT_PAREN) == nil {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
-        return LineString(coordinates: coordinates, precision: precision, coordinateSystem: cs)
+        return LineString(coordinates, precision: precision, coordinateSystem: cs)
     }
 
     /// BNF: None defined by OGC
@@ -267,7 +267,7 @@ public class WKTReader {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .LEFT_PAREN))
         }
 
-        var coordinates = CoordinateCollection()
+        var coordinates: [Coordinate] = []
 
         var done = false
 
@@ -286,7 +286,7 @@ public class WKTReader {
         if tokenizer.accept(.RIGHT_PAREN) == nil {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
-        return LinearRing(coordinates: coordinates, precision: precision, coordinateSystem: cs)
+        return LinearRing(coordinates, precision: precision, coordinateSystem: cs)
     }
 
     /// BNF: <polygon tagged text> ::= polygon <polygon text>
@@ -309,7 +309,7 @@ public class WKTReader {
         let outerRing = try self.linearRingText(tokenizer, require: require)
 
         if tokenizer.accept(.RIGHT_PAREN) != nil {
-            return Polygon(outerRing: outerRing, innerRings: [], precision: precision, coordinateSystem: cs)
+            return Polygon(outerRing, innerRings: [], precision: precision, coordinateSystem: cs)
         }
 
         if tokenizer.accept(.COMMA) == nil {
@@ -339,7 +339,7 @@ public class WKTReader {
         if tokenizer.accept(.RIGHT_PAREN) == nil {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
-        return Polygon(outerRing: outerRing, innerRings: innerRings, precision: precision, coordinateSystem: cs)
+        return Polygon(outerRing, innerRings: innerRings, precision: precision, coordinateSystem: cs)
     }
 
     /// BNF: <multipoint tagged text> ::= multipoint <multipoint text>
@@ -378,7 +378,7 @@ public class WKTReader {
         if tokenizer.accept(.RIGHT_PAREN) == nil {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
-        return MultiPoint(elements: elements, precision: precision, coordinateSystem: cs)
+        return MultiPoint(elements, precision: precision, coordinateSystem: cs)
     }
 
     /// BNF: <multilinestring tagged text> ::= multilinestring <multilinestring text>
@@ -416,7 +416,7 @@ public class WKTReader {
         if tokenizer.accept(.RIGHT_PAREN) == nil {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
-        return MultiLineString(elements: elements, precision: precision, coordinateSystem: cs)
+        return MultiLineString(elements, precision: precision, coordinateSystem: cs)
     }
 
     /// BNF: <multipolygon tagged text> ::= multipolygon <multipolygon text>
@@ -456,7 +456,7 @@ public class WKTReader {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
 
-        return MultiPolygon(elements: elements, precision: precision, coordinateSystem: cs)
+        return MultiPolygon(elements, precision: precision, coordinateSystem: cs)
     }
 
     /// BNF: <geometrycollection tagged text> ::= geometrycollection <geometrycollection text>
@@ -527,7 +527,7 @@ public class WKTReader {
         if tokenizer.accept(.RIGHT_PAREN) == nil {
             throw Errors.unexpectedToken(errorMessage(tokenizer, expectedToken: .RIGHT_PAREN))
         }
-        return GeometryCollection(elements: elements, precision: precision, coordinateSystem: cs)
+        return GeometryCollection(elements, precision: precision, coordinateSystem: cs)
     }
 
     /// BNF: <point> ::= <x> <y>

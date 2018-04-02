@@ -35,9 +35,9 @@ extension MultiPolygon: Geometry {
     public func boundary() -> Geometry {
         var boundary = MultiLineString(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-        for i in 0..<elements.count {
+        for i in 0..<self.count {
 
-            if let elementBoundary = elements[i].boundary() as? MultiLineString {
+            if let elementBoundary = self[i].boundary() as? MultiLineString {
 
                 for lineString in elementBoundary {
                     boundary.append(lineString)
@@ -45,21 +45,6 @@ extension MultiPolygon: Geometry {
             }
         }
         return boundary
-    }
-
-    ///
-    /// The min and max X Y values that make up the bounding coordinates of `self`.
-    ///
-    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding `self` or nil if the `self` is empty.
-    ///
-    public func bounds() -> Bounds? {
-
-        let bounds = self.elements.flatMap { $0.bounds() }
-
-        guard bounds.count > 0
-            else { return nil }
-
-        return bounds.reduce(bounds[0], { $0.expand(other: $1) })
     }
 
     public func equals(_ other: Geometry) -> Bool {

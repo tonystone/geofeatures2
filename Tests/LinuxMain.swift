@@ -82,7 +82,6 @@ XCTMain([
    testCase(Coordinate2DMTests.allTests),
    testCase(MultiLineStringCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiLineStringCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(CoordinateCollectionTests.allTests),
    testCase(CoordinateSystemGeographicTests.allTests),
    testCase(LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
@@ -1459,36 +1458,6 @@ extension MultiLineStringCoordinate2DFixedPrecisionCartesianTests {
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
                 ("testCount", testCount)
-           ]
-   }
-}
-
-extension CoordinateCollectionTests {
-   static var allTests: [(String, (CoordinateCollectionTests) -> () throws -> Void)] {
-      return [
-                ("testInit", testInit),
-                ("testInitWithCoordinate", testInitWithCoordinate),
-                ("testInitWithEmptyArrayOfCoordinates", testInitWithEmptyArrayOfCoordinates),
-                ("testInitWithArrayOfCoordinates", testInitWithArrayOfCoordinates),
-                ("testInitWithCollectionOfCoordinates", testInitWithCollectionOfCoordinates),
-                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
-                ("testCapacity", testCapacity),
-                ("testStartIndex", testStartIndex),
-                ("testEndIndex", testEndIndex),
-                ("testIndexAfter", testIndexAfter),
-                ("testSubscrptGet", testSubscrptGet),
-                ("testSubscrptSet", testSubscrptSet),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert", testInsert),
-                ("testApplyPrecision", testApplyPrecision),
-                ("testAxesWithCoordinate2D", testAxesWithCoordinate2D),
-                ("testAxesWithCoordinate2DM", testAxesWithCoordinate2DM),
-                ("testAxesWithCoordinate2DMixed", testAxesWithCoordinate2DMixed),
-                ("testAxesWithCoordinate3D", testAxesWithCoordinate3D),
-                ("testAxesWithCoordinate3DMixed", testAxesWithCoordinate3DMixed),
-                ("testAxesWithCoordinate3DM", testAxesWithCoordinate3DM),
-                ("testAxesWithCoordinate3DMMixed", testAxesWithCoordinate3DMMixed)
            ]
    }
 }

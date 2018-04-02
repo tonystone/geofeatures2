@@ -19,11 +19,11 @@ fixedPrecision4 == floatingPrecision1
 //: ## Usage scenarios
 
 /// LinearRing created with simple tuble array
-LinearRing(coordinates: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
+LinearRing([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
 
-LinearRing(coordinates: [[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]])
+LinearRing([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]])
 
-let geometry1: Geometry = LineString(coordinates: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
+let geometry1: Geometry = LineString([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
 
 if let linearType = geometry1 as? Curve {
     linearType.length()
@@ -32,37 +32,37 @@ if let linearType = geometry1 as? Curve {
 }
 
 /// Create a Polygon with a simple array of tuples and an array of innerRings
-let polygon1 = Polygon(outerRing: [[0.0, 0.0], [0.0, 7.0], [4, 2], [2, 0], [0, 0]], innerRings: [])
+let polygon1 = Polygon([[0.0, 0.0], [0.0, 7.0], [4, 2], [2, 0], [0, 0]])
 
 /// Create a Polygon with a tuple similar to WKT with the syntax ([tuples], [[tuples]])
-let polygon2 = Polygon(outerRing: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [])
-let polygon3 = Polygon(outerRing: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [[[0.5, 0.5], [0.5, 6.5], [3.5, 1.5], [1.5, 0.5], [0.5, 0.5]]])
+let polygon2 = Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
+let polygon3 = Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [[[0.5, 0.5], [0.5, 6.5], [3.5, 1.5], [1.5, 0.5], [0.5, 0.5]]])
 
 /// Geoemetry arrays can be constructed and used to create rthe collection types
-var geometryArray: [Geometry] = [Point(coordinate: [1, 1]), Polygon()]
-var pointArray:    [Geometry] = [Point(coordinate: [1, 1]), Point(coordinate: [2, 2])]
+var geometryArray: [Geometry] = [Point([1, 1]), Polygon()]
+var pointArray:    [Geometry] = [Point([1, 1]), Point([2, 2])]
 
-var geometryCollection1 = GeometryCollection(elements: geometryArray)
-var geometryCollection2 = GeometryCollection(elements: pointArray)
+var geometryCollection1 = GeometryCollection(geometryArray)
+var geometryCollection2 = GeometryCollection(pointArray)
 
 ///  Iterate over a collection type
 for geometry in geometryCollection1 {
     print(geometry)
 }
 
-Point(coordinate: [1, 1]).isEmpty()
+Point([1, 1]).isEmpty()
 Polygon().isEmpty()
-Polygon(outerRing: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: []).isEmpty()
+Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]]).isEmpty()
 LineString().isEmpty()
-LineString(coordinates: [[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]]).isEmpty()
+LineString([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]]).isEmpty()
 
 GeometryCollection().isEmpty()
-GeometryCollection(elements: [Point(coordinate: [1, 1])] as [Geometry]).isEmpty()
+GeometryCollection([Point([1, 1]), LineString([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]])])
 
 /// Comparison of points
-let pointsMatch1 = Point(coordinate: [1.4, 2.3]) == Point(coordinate: [1.4, 2.3])
+let pointsMatch1 = Point([1.4, 2.3]) == Point([1.4, 2.3])
 
-let pointsMatch2 = Point(coordinate: [1, 1]) == Point(coordinate: [1.4, 2.3])
+let pointsMatch2 = Point([1, 1]) == Point([1.4, 2.3])
 
 //: Readers and Writers
 
@@ -75,9 +75,9 @@ do {
 let writer = WKTWriter()
 
 do {
-    try writer.write(Point(coordinate: [24.0, 12.0]))
+    try writer.write(Point([24.0, 12.0]))
 
-    try writer.write(LineString(coordinates: [[24.0, 12.0], [1.0, 1.0], [2.0, 2.0]]))
+    try writer.write(LineString([[24.0, 12.0], [1.0, 1.0], [2.0, 2.0]]))
 } catch {
     print(error)
 }

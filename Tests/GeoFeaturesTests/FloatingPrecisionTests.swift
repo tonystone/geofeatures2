@@ -39,11 +39,11 @@ class FloatingPrecisionTests: XCTestCase {
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        XCTAssertEqual(precision.description, "FloatingPrecision")
+        XCTAssertEqual(precision.description, "FloatingPrecision()")
     }
 
     func testDebugDescription() {
-        XCTAssertEqual(precision.debugDescription, "FloatingPrecision")
+        XCTAssertEqual(precision.debugDescription, "FloatingPrecision()")
     }
 
     func testEqualTrue() {

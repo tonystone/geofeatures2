@@ -28,12 +28,12 @@ import Swift
 extension LinearRing: Curve {
 
     ///
-    /// - Returns: True if this curve is closed (begin and end coordinates are equal)
+    /// - Returns: True if this curve is closed (begin and end self are equal)
     ///
     public func isClosed() -> Bool {
-        if coordinates.count < 2 { return false }
+        if self.count < 2 { return false }
 
-        return coordinates[0] == coordinates[coordinates.count - 1]
+        return self[0] == self[self.count - 1]
     }
 
     ///
@@ -43,13 +43,13 @@ extension LinearRing: Curve {
 
         var length: Double = 0.0
 
-        if coordinates.count > 0 {
+        if self.count > 0 {
 
-            var c1 = coordinates[0]
+            var c1 = self[0]
 
-            for index in stride(from: 1, to: coordinates.count, by: 1) {
+            for index in stride(from: 1, to: self.count, by: 1) {
 
-                let c2 = coordinates[index]
+                let c2 = self[index]
 
                 length += sqrt(pow(abs(c1.x - c2.x), 2.0) + pow(abs(c1.y - c2.y), 2.0))
                 c1 = c2
