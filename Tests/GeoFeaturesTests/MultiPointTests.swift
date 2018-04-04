@@ -158,8 +158,8 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeAppend() {
 
-        var input    = (geometry: MultiPoint(precision: precision, coordinateSystem: cs), newElements: [Point([1.0, 1.0])])
-        let expected = [Point([1.0, 1.0])]
+        var input: (geometry: MultiPoint, newElements: [MultiPoint.Element]) = (MultiPoint(precision: precision, coordinateSystem: cs), [Point([1.0, 1.0])])
+        let expected: [MultiPoint.Element] = [Point([1.0, 1.0])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -168,8 +168,8 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeInsert() {
 
-        var input = (geometry: MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs), newElements: [Point([2.0, 2.0])])
-        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
+        var input: (geometry: MultiPoint, newElements: [MultiPoint.Element]) = (MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs), [Point([2.0, 2.0])])
+        let expected: [MultiPoint.Element]  = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -178,8 +178,8 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeReplace() {
 
-        var input = (geometry: MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs), newElements: [Point([2.0, 2.0])])
-        let expected = [Point([2.0, 2.0]), Point([2.0, 2.0])]
+        var input: (geometry: MultiPoint, newElements: [MultiPoint.Element]) = (MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs), [Point([2.0, 2.0])])
+        let expected: [MultiPoint.Element]  = [Point([2.0, 2.0]), Point([2.0, 2.0])]
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
@@ -344,8 +344,8 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeAppend() {
 
-        var input    = (geometry: MultiPoint(precision: precision, coordinateSystem: cs), newElements: [Point([1.001, 1.001])])
-        let expected = [Point([1.0, 1.0])]
+        var input: (geometry: MultiPoint, newElements: [MultiPoint.Element]) = (MultiPoint(precision: precision, coordinateSystem: cs), [Point([1.001, 1.001])])
+        let expected: [MultiPoint.Element] = [Point([1.0, 1.0])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -354,8 +354,8 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeInsert() {
 
-        var input = (geometry: MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs), newElements: [Point([2.002, 2.002])])
-        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
+        var input: (geometry: MultiPoint, newElements: [MultiPoint.Element]) = (MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs), [Point([2.002, 2.002])])
+        let expected: [MultiPoint.Element]  = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -364,8 +364,8 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeReplace() {
 
-        var input = (geometry: MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs), newElements: [Point([2.002, 2.002])])
-        let expected = [Point([2.0, 2.0]), Point([2.0, 2.0])]
+        var input: (geometry: MultiPoint, newElements: [MultiPoint.Element]) = (MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs), [Point([2.002, 2.002])])
+        let expected: [MultiPoint.Element]  = [Point([2.0, 2.0]), Point([2.0, 2.0])]
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 

@@ -158,8 +158,8 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testReplaceSubrangeAppend() {
 
-        var input    = (geometry: GeometryCollection(precision: precision, coordinateSystem: cs), newElements: [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
-        let expected = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element]
+        var input: (geometry: GeometryCollection, newElements: [GeometryCollection.Element]) = (GeometryCollection(precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
+        let expected: [GeometryCollection.Element] = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -168,8 +168,8 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testReplaceSubrangeInsert() {
 
-        var input = (geometry: GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs), newElements: [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
-        let expected = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element]
+        var input: (geometry: GeometryCollection, newElements: [GeometryCollection.Element]) = (GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
+        let expected: [GeometryCollection.Element]  = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -178,8 +178,8 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testReplaceSubrangeReplace() {
 
-        var input = (geometry: GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs), newElements: [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
-        let expected = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element]
+        var input: (geometry: GeometryCollection, newElements: [GeometryCollection.Element]) = (GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
+        let expected: [GeometryCollection.Element]  = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 

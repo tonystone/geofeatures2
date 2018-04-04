@@ -158,8 +158,8 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeAppend() {
 
-        var input    = (geometry: MultiLineString(precision: precision, coordinateSystem: cs), newElements: [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])])
-        let expected = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString(precision: precision, coordinateSystem: cs), [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])])
+        let expected: [MultiLineString.Element] = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -168,8 +168,8 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeInsert() {
 
-        var input = (geometry: MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs), newElements: [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])])
-        let expected = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs), [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])])
+        let expected: [MultiLineString.Element]  = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -178,8 +178,8 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeReplace() {
 
-        var input = (geometry: MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs), newElements: [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])])
-        let expected = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs), [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])])
+        let expected: [MultiLineString.Element]  = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
@@ -344,8 +344,8 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeAppend() {
 
-        var input    = (geometry: MultiLineString(precision: precision, coordinateSystem: cs), newElements: [LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]])])
-        let expected = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString(precision: precision, coordinateSystem: cs), [LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]])])
+        let expected: [MultiLineString.Element] = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -354,8 +354,8 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeInsert() {
 
-        var input = (geometry: MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs), newElements: [LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])])
-        let expected = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs), [LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])])
+        let expected: [MultiLineString.Element]  = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -364,8 +364,8 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeReplace() {
 
-        var input = (geometry: MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs), newElements: [LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])])
-        let expected = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs), [LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])])
+        let expected: [MultiLineString.Element]  = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 

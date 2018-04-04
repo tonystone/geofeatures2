@@ -196,8 +196,8 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
     func testReplaceSubrangeAppend() {
 
-        var input    = (geometry: ${GeometryType}(precision: precision, coordinateSystem: cs), newElements: [${TestElement1}])
-        let expected = [${ExpectedElement1}]${ElementArrayCast}
+        var input: (geometry: ${GeometryType}, newElements: [${GeometryElementType}]) = (${GeometryType}(precision: precision, coordinateSystem: cs), [${TestElement1}])
+        let expected: [${GeometryElementType}] = [${ExpectedElement1}]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -206,8 +206,8 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
     func testReplaceSubrangeInsert() {
 
-        var input = (geometry: ${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs), newElements: [${TestElement2}])
-        let expected = [${ExpectedElement2}, ${ExpectedElement1}, ${ExpectedElement2}]${ElementArrayCast}
+        var input: (geometry: ${GeometryType}, newElements: [${GeometryElementType}]) = (${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs), [${TestElement2}])
+        let expected: [${GeometryElementType}]  = [${ExpectedElement2}, ${ExpectedElement1}, ${ExpectedElement2}]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -216,8 +216,8 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
 
     func testReplaceSubrangeReplace() {
 
-        var input = (geometry: ${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs), newElements: [${TestElement2}])
-        let expected = [${ExpectedElement2}, ${ExpectedElement2}]${ElementArrayCast}
+        var input: (geometry: ${GeometryType}, newElements: [${GeometryElementType}]) = (${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs), [${TestElement2}])
+        let expected: [${GeometryElementType}]  = [${ExpectedElement2}, ${ExpectedElement2}]
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
