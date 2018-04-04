@@ -34,6 +34,63 @@ class PointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.y, 1.001)
     }
 
+    func testInitWithArrayLiteral () {
+        let input: Point = [2.0, 3.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, nil)
+        XCTAssertEqual(input.m, nil)
+    }
+
+    func testInitWithDictionaryLiteral () {
+        let input: Point = ["x": 2.0, "y": 3.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, nil)
+        XCTAssertEqual(input.m, nil)
+    }
+
+    // MARK: MutableCollection Conformance
+
+    func testStartIndex() {
+        let input    = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let expected = 0
+
+        XCTAssertEqual(input.startIndex, expected)
+    }
+
+    func testEndIndex() {
+        let input    = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let expected = 1
+
+        XCTAssertEqual(input.endIndex, expected)
+    }
+
+    func testIndexAfter() {
+        let input    = 0
+        let expected = 1
+
+        XCTAssertEqual(Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs).index(after: input), expected)
+    }
+
+    func testSubscriptGet() {
+        let input    = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let expected = Coordinate(x: 2.0, y: 2.0)
+
+        XCTAssertEqual(input[0], expected)
+    }
+
+    func testSubscriptSet() {
+        var input = (point: Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs),coordnate:  Coordinate(x: 1.0, y: 1.0))
+        let expected = Coordinate(x: 1.0, y: 1.0)
+
+        input.point[0] = input.coordnate
+
+        XCTAssertEqual(input.point[0], expected)
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
@@ -62,6 +119,19 @@ class PointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.x, 1.001)
         XCTAssertEqual(input.y, 1.001)
         XCTAssertEqual(input.m, 1.001)
+    }
+
+    func testInitWithArrayLiteral () {
+        /// 2DM is not supported using array literals because arrays are positional and Z comes before M in the array.  Use a dictionary instead.
+    }
+
+    func testInitWithDictionaryLiteral () {
+        let input: Point = ["x": 2.0, "y": 3.0, "m": 5.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, nil)
+        XCTAssertEqual(input.m, 5.0)
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -94,6 +164,24 @@ class PointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.z, 1.001)
     }
 
+    func testInitWithArrayLiteral3D () {
+        let input: Point = [2.0, 3.0, 4.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, 4.0)
+        XCTAssertEqual(input.m, nil)
+    }
+
+    func testInitWithDictionaryLiteral3D () {
+        let input: Point = ["x": 2.0, "y": 3.0, "z": 4.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, 4.0)
+        XCTAssertEqual(input.m, nil)
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
@@ -123,6 +211,24 @@ class PointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.y, 1.001)
         XCTAssertEqual(input.z, 1.001)
         XCTAssertEqual(input.m, 1.001)
+    }
+
+    func testInitWithArrayLiteral3DM () {
+        let input: Point = [2.0, 3.0, 4.0, 5.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, 4.0)
+        XCTAssertEqual(input.m, 5.0)
+    }
+
+    func testInitWithDictionaryLiteral3DM () {
+        let input: Point = ["x": 2.0, "y": 3.0, "z": 4.0, "m": 5.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, 4.0)
+        XCTAssertEqual(input.m, 5.0)
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible

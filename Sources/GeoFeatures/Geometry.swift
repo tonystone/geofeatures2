@@ -80,47 +80,47 @@ public protocol Geometry {
     ///
     func equals(_ other: Geometry) -> Bool
 
-    ///
-    ///- Returns: true if this geometric object is “spatially disjoint” from the other Geometry.
-    ///
-    func disjoint(_ other: Geometry) -> Bool
-
-    ///
-    /// - Returns: true if this geometric object “spatially intersects” the other Geometry.
-    ///
-    func intersects(_ other: Geometry) -> Bool
-
-    ///
-    /// - Returns: true if this geometric object “spatially touches” the other Geometry.
-    /// - Returns: false is self and other are both 0-Dimensional (Point and MultiPoint)
-    ///
-    func touches(_ other: Geometry) -> Bool
-
-    ///
-    /// - Returns: true if this geometric object “spatially crosses" the other Geometry.
-    ///
-    func crosses(_ other: Geometry) -> Bool
-
-    ///
-    /// - Returns: true if this geometric object is “spatially within” the other Geometry.
-    ///
-    func within(_ other: Geometry) -> Bool
-
-    ///
-    /// - Returns: true if this geometric object “spatially contains” the other Geometry
-    ///
-    func contains(_ other: Geometry) -> Bool
-
-    ///
-    /// - Returns: true if this geometric object “spatially overlaps” the other Geometry.
-    ///
-    func overlaps(_ other: Geometry) -> Bool
-
-    ///
-    /// - Returns true if this geometric object is spatially related to the other Geometry by testing for intersections between the interior, boundary and exterior of the two geometric objects as specified by the values in the intersectionPatternMatrix.
-    /// - Returns: false if all the tested intersections are empty except exterior (this) intersect exterior (another).
-    ///
-    func relate(_ other: Geometry, pattern: String) -> Bool
+///    ///
+///    ///- Returns: true if this geometric object is “spatially disjoint” from the other Geometry.
+///    ///
+///    func disjoint(_ other: Geometry) -> Bool
+///
+///    ///
+///    /// - Returns: true if this geometric object “spatially intersects” the other Geometry.
+///    ///
+///    func intersects(_ other: Geometry) -> Bool
+///
+///    ///
+///    /// - Returns: true if this geometric object “spatially touches” the other Geometry.
+///    /// - Returns: false is self and other are both 0-Dimensional (Point and MultiPoint)
+///    ///
+///    func touches(_ other: Geometry) -> Bool
+///
+///    ///
+///    /// - Returns: true if this geometric object “spatially crosses" the other Geometry.
+///    ///
+///    func crosses(_ other: Geometry) -> Bool
+///
+///    ///
+///    /// - Returns: true if this geometric object is “spatially within” the other Geometry.
+///    ///
+///    func within(_ other: Geometry) -> Bool
+///
+///    ///
+///    /// - Returns: true if this geometric object “spatially contains” the other Geometry
+///    ///
+///    func contains(_ other: Geometry) -> Bool
+///
+///    ///
+///    /// - Returns: true if this geometric object “spatially overlaps” the other Geometry.
+///    ///
+///    func overlaps(_ other: Geometry) -> Bool
+///
+///    ///
+///    /// - Returns true if this geometric object is spatially related to the other Geometry by testing for intersections between the interior, boundary and exterior of the two geometric objects as specified by the values in the intersectionPatternMatrix.
+///    /// - Returns: false if all the tested intersections are empty except exterior (this) intersect exterior (another).
+///    ///
+///    func relate(_ other: Geometry, pattern: String) -> Bool
 ///
 ///    ///
 ///    /// - Returns: A derived geometry collection value that matches the specified m coordinate value.

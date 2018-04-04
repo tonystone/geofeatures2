@@ -85,10 +85,33 @@ class ${Self}${FunctionQualifier}Tests: XCTestCase {
         XCTAssertEqual(${GeometryType}(coordinateSystem: cs).coordinateSystem as? ${ReferenceSystemType}, cs)
     }
 
+    func testInitConverting() {
+
+        let input = ${GeometryType}(converting: ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}]), precision: precision, coordinateSystem: cs)
+        let expected = ${GeometryType}([Coordinate${ExpectedCoordinate0}, Coordinate${ExpectedCoordinate1}], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = ${GeometryType}(other: ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}]), precision: precision, coordinateSystem: cs)
         let expected = ${GeometryType}([Coordinate${ExpectedCoordinate0}, Coordinate${ExpectedCoordinate1}], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: ${GeometryType} = [Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}]
+        let expected = ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -115,55 +138,31 @@ class ${Self}${FunctionQualifier}Tests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = ${GeometryType}(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate${ExpectedCoordinate0}]
+        let input    = ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate${TestCoordinate0})
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}], precision: precision, coordinateSystem: cs)
-        var input2 = ${GeometryType}(precision: precision, coordinateSystem: cs)
+        let input    = ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = ${GeometryType}(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate${ExpectedCoordinate0}, Coordinate${ExpectedCoordinate1}]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate${ExpectedCoordinate1}, Coordinate${ExpectedCoordinate0}, Coordinate${ExpectedCoordinate1}]
-
-        input.insert(Coordinate${TestCoordinate1}, at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -179,6 +178,44 @@ class ${Self}${FunctionQualifier}Tests: XCTestCase {
         input[1] = Coordinate${TestCoordinate0}
 
         XCTAssertEqual(input[1], Coordinate${ExpectedCoordinate0})
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: ${GeometryType}(precision: precision, coordinateSystem: cs), newElements: [Coordinate${TestCoordinate0}])
+        let expected = [Coordinate${ExpectedCoordinate0}]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate1}], precision: precision, coordinateSystem: cs), newElements: [Coordinate${TestCoordinate1}])
+        let expected = [Coordinate${ExpectedCoordinate1}, Coordinate${ExpectedCoordinate0}, Coordinate${ExpectedCoordinate1}]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: ${GeometryType}([Coordinate${TestCoordinate0}, Coordinate${TestCoordinate0}], precision: precision, coordinateSystem: cs), newElements: [Coordinate${TestCoordinate1}])
+        let expected = [Coordinate${ExpectedCoordinate1}, Coordinate${ExpectedCoordinate0}]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {

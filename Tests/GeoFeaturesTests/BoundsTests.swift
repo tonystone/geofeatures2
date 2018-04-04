@@ -32,6 +32,16 @@ class BoundsTests: XCTestCase {
         XCTAssertEqual(input.max.y, expected.1.y)
     }
 
+    func testInitWithCoordinate() {
+        let input    = Bounds(min: Coordinate(x: 0.0, y: 0.0), max: Coordinate(x: 90.0, y: 90.0))
+        let expected = ((x: 0.0, y: 0.0), (x: 90.0, y: 90.0))
+
+        XCTAssertEqual(input.min.x, expected.0.x)
+        XCTAssertEqual(input.min.y, expected.0.y)
+        XCTAssertEqual(input.max.x, expected.1.x)
+        XCTAssertEqual(input.max.y, expected.1.y)
+    }
+
     func testMin() {
         let input    = Bounds(min: (x: 1.0, y: 1.0), max: (x: 90.0, y: 90.0))
         let expected = (x: 1.0, y: 1.0)

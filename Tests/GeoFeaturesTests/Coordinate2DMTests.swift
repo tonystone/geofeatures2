@@ -24,12 +24,26 @@ class Coordinate2DMTests: XCTestCase {
 
     // MARK: Coordinate2DM
 
-    func testInitWithXYM () {
-        let coordinate = Coordinate(x: 2.0, y: 3.0, m: 4.0)
+    func testInit () {
+        let coordinate = Coordinate(x: 2.0, y: 3.0, m: 5.0)
 
         XCTAssertEqual(coordinate.x, 2.0)
         XCTAssertEqual(coordinate.y, 3.0)
-        XCTAssertEqual(coordinate.m, 4.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, 5.0)
+    }
+
+    func testInitWithArrayLiteral () {
+        /// Note: 2DM is not possible with Array Literals since it is positional and the Z will always come before the M.
+    }
+
+    func testInitWithDictionaryLiteral () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0, "m": 5.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, 5.0)
     }
 
     func testX () {
@@ -38,6 +52,10 @@ class Coordinate2DMTests: XCTestCase {
 
     func testY () {
         XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0, m: 1003.0).y, 1002.0)
+    }
+
+    func testZ () {
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0, m: 1003.0).z, nil)
     }
 
     func testM () {

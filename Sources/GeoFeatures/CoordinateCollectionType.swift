@@ -29,21 +29,5 @@ public protocol CoordinateCollectionType: MutableCollection where Element == Coo
 ///
 /// Common functions that `CoordinateCollectionType`s offer.
 ///
-extension CoordinateCollectionType {
-
-    internal func axes() -> [Coordinate.Axis] {
-        var axes: [Coordinate.Axis] = [.x, .y]     /// Min axes is the .x and .y Axis since a Coordinate must have at least those.
-        var z = false
-        var m = false
-
-        for i in self.startIndex..<self.endIndex {
-            if self[i].z != nil { z = true }
-            if self[i].m != nil { m = true }
-        }
-        if z { axes.append(.z) }
-        if m { axes.append(.m) }
-
-        return axes
-    }
-}
+extension CoordinateCollectionType {}
 

@@ -52,10 +52,33 @@ class LineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(LineString(coordinateSystem: cs).coordinateSystem as? Cartesian, cs)
     }
 
+    func testInitConverting() {
+
+        let input = LineString(converting: LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = LineString(other: LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), precision: precision, coordinateSystem: cs)
         let expected = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: LineString = [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -82,55 +105,31 @@ class LineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0)]
+        let input    = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate(x: 1.0, y: 1.0))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        var input2 = LineString(precision: precision, coordinateSystem: cs)
+        let input    = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]
-
-        input.insert(Coordinate(x: 2.0, y: 2.0), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -146,6 +145,44 @@ class LineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         input[1] = Coordinate(x: 1.0, y: 1.0)
 
         XCTAssertEqual(input[1], Coordinate(x: 1.0, y: 1.0))
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: LineString(precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 1.0, y: 1.0)])
+        let expected = [Coordinate(x: 1.0, y: 1.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.0, y: 2.0)])
+        let expected = [Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.0, y: 2.0)])
+        let expected = [Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -193,10 +230,33 @@ class LineStringCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(LineString(coordinateSystem: cs).coordinateSystem as? Cartesian, cs)
     }
 
+    func testInitConverting() {
+
+        let input = LineString(converting: LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = LineString(other: LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
         let expected = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: LineString = [Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -223,55 +283,31 @@ class LineStringCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, m: 1.0)]
+        let input    = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate(x: 1.0, y: 1.0, m: 1.0))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        var input2 = LineString(precision: precision, coordinateSystem: cs)
+        let input    = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]
-
-        input.insert(Coordinate(x: 2.0, y: 2.0, m: 2.0), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -287,6 +323,44 @@ class LineStringCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         input[1] = Coordinate(x: 1.0, y: 1.0, m: 1.0)
 
         XCTAssertEqual(input[1], Coordinate(x: 1.0, y: 1.0, m: 1.0))
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: LineString(precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 1.0, y: 1.0, m: 1.0)])
+        let expected = [Coordinate(x: 1.0, y: 1.0, m: 1.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.0, y: 2.0, m: 2.0)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.0, y: 2.0, m: 2.0)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -334,10 +408,33 @@ class LineStringCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(LineString(coordinateSystem: cs).coordinateSystem as? Cartesian, cs)
     }
 
+    func testInitConverting() {
+
+        let input = LineString(converting: LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = LineString(other: LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]), precision: precision, coordinateSystem: cs)
         let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: LineString = [Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -364,55 +461,31 @@ class LineStringCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0)]
+        let input    = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate(x: 1.0, y: 1.0, z: 1.0))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
-        var input2 = LineString(precision: precision, coordinateSystem: cs)
+        let input    = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]
-
-        input.insert(Coordinate(x: 2.0, y: 2.0, z: 2.0), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -428,6 +501,44 @@ class LineStringCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
         input[1] = Coordinate(x: 1.0, y: 1.0, z: 1.0)
 
         XCTAssertEqual(input[1], Coordinate(x: 1.0, y: 1.0, z: 1.0))
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: LineString(precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 1.0, y: 1.0, z: 1.0)])
+        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.0, y: 2.0, z: 2.0)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.0, y: 2.0, z: 2.0)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -475,10 +586,33 @@ class LineStringCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(LineString(coordinateSystem: cs).coordinateSystem as? Cartesian, cs)
     }
 
+    func testInitConverting() {
+
+        let input = LineString(converting: LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = LineString(other: LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
         let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: LineString = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -505,55 +639,31 @@ class LineStringCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]
+        let input    = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        var input2 = LineString(precision: precision, coordinateSystem: cs)
+        let input    = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]
-
-        input.insert(Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -569,6 +679,44 @@ class LineStringCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         input[1] = Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)
 
         XCTAssertEqual(input[1], Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0))
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: LineString(precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)])
+        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -616,10 +764,33 @@ class LineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(LineString(coordinateSystem: cs).coordinateSystem as? Cartesian, cs)
     }
 
+    func testInitConverting() {
+
+        let input = LineString(converting: LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)]), precision: precision, coordinateSystem: cs)
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = LineString(other: LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)]), precision: precision, coordinateSystem: cs)
         let expected = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: LineString = [Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)]
+        let expected = LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -646,55 +817,31 @@ class LineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0)]
+        let input    = LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate(x: 1.001, y: 1.001))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
-        var input2 = LineString(precision: precision, coordinateSystem: cs)
+        let input    = LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]
-
-        input.insert(Coordinate(x: 2.002, y: 2.002), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -710,6 +857,44 @@ class LineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         input[1] = Coordinate(x: 1.001, y: 1.001)
 
         XCTAssertEqual(input[1], Coordinate(x: 1.0, y: 1.0))
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: LineString(precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 1.001, y: 1.001)])
+        let expected = [Coordinate(x: 1.0, y: 1.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.002, y: 2.002)])
+        let expected = [Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.002, y: 2.002)])
+        let expected = [Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -757,10 +942,33 @@ class LineStringCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(LineString(coordinateSystem: cs).coordinateSystem as? Cartesian, cs)
     }
 
+    func testInitConverting() {
+
+        let input = LineString(converting: LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = LineString(other: LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
         let expected = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: LineString = [Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)]
+        let expected = LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -787,55 +995,31 @@ class LineStringCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, m: 1.0)]
+        let input    = LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate(x: 1.001, y: 1.001, m: 1.001))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        var input2 = LineString(precision: precision, coordinateSystem: cs)
+        let input    = LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]
-
-        input.insert(Coordinate(x: 2.002, y: 2.002, m: 2.002), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -851,6 +1035,44 @@ class LineStringCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
         input[1] = Coordinate(x: 1.001, y: 1.001, m: 1.001)
 
         XCTAssertEqual(input[1], Coordinate(x: 1.0, y: 1.0, m: 1.0))
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: LineString(precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 1.001, y: 1.001, m: 1.001)])
+        let expected = [Coordinate(x: 1.0, y: 1.0, m: 1.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.002, y: 2.002, m: 2.002)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.002, y: 2.002, m: 2.002)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -898,10 +1120,33 @@ class LineStringCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(LineString(coordinateSystem: cs).coordinateSystem as? Cartesian, cs)
     }
 
+    func testInitConverting() {
+
+        let input = LineString(converting: LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)]), precision: precision, coordinateSystem: cs)
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = LineString(other: LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)]), precision: precision, coordinateSystem: cs)
         let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: LineString = [Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)]
+        let expected = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -928,55 +1173,31 @@ class LineStringCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0)]
+        let input    = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate(x: 1.001, y: 1.001, z: 1.001))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
-        var input2 = LineString(precision: precision, coordinateSystem: cs)
+        let input    = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]
-
-        input.insert(Coordinate(x: 2.002, y: 2.002, z: 2.002), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -992,6 +1213,44 @@ class LineStringCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
         input[1] = Coordinate(x: 1.001, y: 1.001, z: 1.001)
 
         XCTAssertEqual(input[1], Coordinate(x: 1.0, y: 1.0, z: 1.0))
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: LineString(precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 1.001, y: 1.001, z: 1.001)])
+        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.002, y: 2.002, z: 2.002)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.002, y: 2.002, z: 2.002)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -1039,10 +1298,33 @@ class LineStringCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(LineString(coordinateSystem: cs).coordinateSystem as? Cartesian, cs)
     }
 
+    func testInitConverting() {
+
+        let input = LineString(converting: LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
+        let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
     func testInitCopy() {
 
         let input = LineString(other: LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
         let expected = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
+    }
+
+    func testInitWithArrayLiteral() {
+        let input: LineString = [Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)]
+        let expected = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1069,55 +1351,31 @@ class LineStringCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppend() {
+    func testStartIndex() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]
+        let input    = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input.append(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001))
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        var input2 = LineString(precision: precision, coordinateSystem: cs)
+        let input    = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testAppendContentsOfCoordinates() {
+    func testIndexAfter() {
 
-        var input = LineString(precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]
+        let input    = 0
+        let expected = 1
 
-        input.append(contentsOf: expected)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-            return lhs == rhs
-        }, "\(input) is not equal to \(expected)")
+        XCTAssertEqual(LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    func testInsert() {
-
-        var input = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]
-
-        input.insert(Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
-                return lhs == rhs
-            }, "\(input) is not equal to \(expected)")
-    }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -1133,6 +1391,44 @@ class LineStringCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
         input[1] = Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)
 
         XCTAssertEqual(input[1], Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0))
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input = (geometry: LineString(precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)])
+        let expected = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+        }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs), newElements: [Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)])
+        let expected = [Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {

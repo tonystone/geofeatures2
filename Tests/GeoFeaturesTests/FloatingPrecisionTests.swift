@@ -36,6 +36,41 @@ class FloatingPrecisionTests: XCTestCase {
         XCTAssertNotEqual(precision.convert(100.003), 100.0003)
     }
 
+    func testConvertOptionalEqual() {
+        let input:    Double? = 100.003
+        let expected: Double? = 100.003
+
+        XCTAssertEqual(precision.convert(input), expected)
+    }
+
+    func testConvertOptionalNotEqual1() {
+        let input:    Double? = 100.0
+        let expected: Double? = 100.003
+
+        XCTAssertNotEqual(precision.convert(input), expected)
+    }
+
+    func testConvertOptionalNotEqual2() {
+        let input:    Double? = 100.003
+        let expected: Double? = 100.0003
+
+        XCTAssertNotEqual(precision.convert(input), expected)
+    }
+
+    func testConvertOptionalNilEqual() {
+        let input:    Double? = nil
+        let expected: Double? = nil
+
+        XCTAssertEqual(precision.convert(input), expected)
+    }
+
+    func testConvertOptionalNilNotEqual() {
+        let input:    Double? = nil
+        let expected: Double? = 100.03
+
+        XCTAssertNotEqual(precision.convert(input), expected)
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {

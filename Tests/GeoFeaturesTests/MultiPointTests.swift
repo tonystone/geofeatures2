@@ -77,6 +77,21 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
 
+    func testInitWithArrayLiteral() {
+        let input: MultiPoint = [Point([1.0, 1.0]), Point([2.0, 2.0])]
+        let expected: [MultiPoint.Element] = [Point([1.0, 1.0]), Point([2.0, 2.0])]
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
+    func testInitCopy() {
+
+        let input = MultiPoint(other: MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])]), precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
@@ -95,47 +110,31 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
-    func testAppend() {
+    // MARK: MutableCollection Conformance
 
-        var input    = MultiPoint(precision: precision, coordinateSystem: cs)
-        let expected = [Point([1.0, 1.0])]
+    func testStartIndex() {
 
-        input.append(Point([1.0, 1.0]))
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
-        var input2 = MultiPoint(precision: precision, coordinateSystem: cs)
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
-    }
-    func testInsert2ExistingElements() {
-
-        var input = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
-        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
-
-        input.insert(Point([2.0, 2.0]), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testInsert1ExistingElements() {
+    func testIndexAfter() {
 
-        var input = MultiPoint([Point([1.0, 1.0])], precision: precision, coordinateSystem: cs)
-        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0])]
+        let input    = 0
+        let expected = 1
 
-        input.insert(Point([2.0, 2.0]), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -153,6 +152,38 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         input[1] = Point([1.0, 1.0])
 
         XCTAssertEqual(input, expected)
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input    = (geometry: MultiPoint(precision: precision, coordinateSystem: cs), newElements: [Point([1.0, 1.0])])
+        let expected = [Point([1.0, 1.0])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs), newElements: [Point([2.0, 2.0])])
+        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs), newElements: [Point([2.0, 2.0])])
+        let expected = [Point([2.0, 2.0]), Point([2.0, 2.0])]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
     }
 
     func testEquals() {
@@ -232,6 +263,21 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
 
+    func testInitWithArrayLiteral() {
+        let input: MultiPoint = [Point([1.001, 1.001]), Point([2.002, 2.002])]
+        let expected: [MultiPoint.Element] = [Point([1.001, 1.001]), Point([2.002, 2.002])]
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
+    func testInitCopy() {
+
+        let input = MultiPoint(other: MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])]), precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
@@ -250,47 +296,31 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
-    func testAppend() {
+    // MARK: MutableCollection Conformance
 
-        var input    = MultiPoint(precision: precision, coordinateSystem: cs)
-        let expected = [Point([1.0, 1.0])]
+    func testStartIndex() {
 
-        input.append(Point([1.001, 1.001]))
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
-        var input2 = MultiPoint(precision: precision, coordinateSystem: cs)
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
-    }
-    func testInsert2ExistingElements() {
-
-        var input = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
-        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
-
-        input.insert(Point([2.002, 2.002]), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testInsert1ExistingElements() {
+    func testIndexAfter() {
 
-        var input = MultiPoint([Point([1.001, 1.001])], precision: precision, coordinateSystem: cs)
-        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0])]
+        let input    = 0
+        let expected = 1
 
-        input.insert(Point([2.002, 2.002]), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
@@ -308,6 +338,38 @@ class MultiPointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         input[1] = Point([1.001, 1.001])
 
         XCTAssertEqual(input, expected)
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input    = (geometry: MultiPoint(precision: precision, coordinateSystem: cs), newElements: [Point([1.001, 1.001])])
+        let expected = [Point([1.0, 1.0])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs), newElements: [Point([2.002, 2.002])])
+        let expected = [Point([2.0, 2.0]), Point([1.0, 1.0]), Point([2.0, 2.0])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs), newElements: [Point([2.002, 2.002])])
+        let expected = [Point([2.0, 2.0]), Point([2.0, 2.0])]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
     }
 
     func testEquals() {

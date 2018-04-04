@@ -115,6 +115,21 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
         XCTAssertEqual(input.coordinateSystem as? ${ReferenceSystemType}, expected)
     }
 
+    func testInitWithArrayLiteral() {
+        let input: ${GeometryType} = [${TestElement1}, ${TestElement2}]
+        let expected: [${GeometryElementType}] = [${TestElement1}, ${TestElement2}]
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
+    func testInitCopy() {
+
+        let input = ${GeometryType}(other: ${GeometryType}([${TestElement1}, ${TestElement2}]), precision: precision, coordinateSystem: cs)
+        let expected = ${GeometryType}([${TestElement1}, ${TestElement2}], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
@@ -133,51 +148,31 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
-% if GeometryClass not in ['GeometryCollection', 'MultiPolygon']:
-    func testAppend() {
+    // MARK: MutableCollection Conformance
 
-        var input    = ${GeometryType}(precision: precision, coordinateSystem: cs)
-        let expected = [${ExpectedElement1}]${ElementArrayCast}
+    func testStartIndex() {
 
-        input.append(${TestElement1})
+        let input    = ${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        XCTAssertTrue(input.elementsEqual(expected))
-    }
-% end
-
-    func testAppendContentsOf() {
-
-        let input1 = ${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-        var input2 = ${GeometryType}(precision: precision, coordinateSystem: cs)
-
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
-    }
-% if GeometryClass not in ['GeometryCollection', 'MultiPolygon']:
-    func testInsert2ExistingElements() {
-
-        var input = ${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-        let expected = [${ExpectedElement2}, ${ExpectedElement1}, ${ExpectedElement2}]${ElementArrayCast}
-
-        input.insert(${TestElement2}, at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testInsert1ExistingElements() {
+    func testEndIndex() {
 
-        var input = ${GeometryType}([${TestElement1}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
-        let expected = [${ExpectedElement2}, ${ExpectedElement1}]${ElementArrayCast}
+        let input    = ${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input.insert(${TestElement2}, at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.endIndex, expected)
     }
-% end
 
-    // MARK: Swift.Collection Conformance
+    func testIndexAfter() {
+
+        let input    = 0
+        let expected = 1
+
+        XCTAssertEqual(${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs).index(after: input), expected)
+    }
 
     func testSubscriptGet() {
 
@@ -195,6 +190,38 @@ class ${GeometryClass}${ClassQualifier}Tests: XCTestCase {
         input[1] = ${TestElement1}${ElementCast}
 
         XCTAssertEqual(input, expected)
+    }
+
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input    = (geometry: ${GeometryType}(precision: precision, coordinateSystem: cs), newElements: [${TestElement1}])
+        let expected = [${ExpectedElement1}]${ElementArrayCast}
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input = (geometry: ${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs), newElements: [${TestElement2}])
+        let expected = [${ExpectedElement2}, ${ExpectedElement1}, ${ExpectedElement2}]${ElementArrayCast}
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input = (geometry: ${GeometryType}([${TestElement1}, ${TestElement2}]${ElementArrayCast}, precision: precision, coordinateSystem: cs), newElements: [${TestElement2}])
+        let expected = [${ExpectedElement2}, ${ExpectedElement2}]${ElementArrayCast}
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
     }
 
     func testEquals() {
