@@ -123,9 +123,8 @@ extension Point: ExpressibleByArrayLiteral {
     /// Creates an instance initialized with the given elements.
     public init(arrayLiteral values: Double...) {
         precondition(values.count >= 2)
-        let count = values.count
 
-        self.init(Coordinate(x: count > 0 ? values[0] : .nan, y: count > 1 ? values[1] : .nan, z: count > 2 ? values[2] :  nil, m: count > 3 ? values[3] :  nil))
+        self.init(Coordinate(x: values[0], y: values[1], z: values.count > 2 ? values[2] :  nil, m: values.count > 3 ? values[3] :  nil))
     }
 }
 
@@ -136,22 +135,20 @@ extension Point: ExpressibleByDictionaryLiteral {
     /// Creates an instance initialized with the given elements.
     public init(dictionaryLiteral elements: (String, Double)...) {
         precondition(elements.count >= 2)
+        precondition(elements[0].0 == "x")
+        precondition(elements[1].0 == "y")
 
-        var x: Double  = .nan
-        var y: Double  = .nan
         var z: Double? = nil
         var m: Double? = nil
 
-        for (key, value) in elements {
+        for (key, value) in elements[2...] {
             switch key {
-            case "x": x = value; break
-            case "y": y = value; break
             case "z": z = value; break
             case "m": m = value; break
             default: break
             }
         }
-        self.init(Coordinate(x: x, y: y, z: z, m: m))
+        self.init(Coordinate(x: elements[0].1, y: elements[1].1, z: z, m: m))
     }
 }
 
