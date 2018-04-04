@@ -21,7 +21,7 @@ import XCTest
 import GeoFeatures
 
 #if (os(OSX) || os(iOS) || os(tvOS) || os(watchOS)) && SWIFT_PACKAGE
-    /// Note: Resolution of GeoFeatures.Polygon is ambiguous when ApplicationsServices is included in the app (ApplicationsServices is used by XCTest), this resolves the ambiguity.
+    /// TODO: Remove this after figuring out why there seems to be a symbol conflict (error: cannot specialize a non-generic definition) with another Polygon on Swift PM on Apple platforms only.
     import struct GeoFeatures.Polygon
 #endif
 
@@ -77,88 +77,119 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
 
+    func testInitWithArrayLiteral() {
+        let input: MultiLineString = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+        let expected: [MultiLineString.Element] = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
+    func testInitCopy() {
+
+        let input = MultiLineString(other: MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]), precision: precision, coordinateSystem: cs)
+        let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiLineString(LineString((x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)), LineString((x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)))"
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiLineString([LineString([(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]), LineString([(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiLineString(LineString((x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)), LineString((x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)))"
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiLineString([LineString([(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]), LineString([(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
-    func testAppend() {
+    // MARK: MutableCollection Conformance
 
-        var input    = MultiLineString(precision: precision, coordinateSystem: cs)
-        let expected = [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
+    func testStartIndex() {
 
-        input.append(LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]))
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
-        var input2 = MultiLineString(precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
-    }
-    func testInsert2ExistingElements() {
-
-        var input = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
-        let expected = [LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
-
-        input.insert(LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testInsert1ExistingElements() {
+    func testIndexAfter() {
 
-        var input = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])], precision: precision, coordinateSystem: cs)
-        let expected = [LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
+        let input    = 0
+        let expected = 1
 
-        input.insert(LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
-        let expected = LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let expected = LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])
 
         XCTAssertTrue(input[1].equals(expected))
     }
 
     func testSubscriptSet() {
 
-        var input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])], precision: precision, coordinateSystem: cs)
+        var input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])], precision: precision, coordinateSystem: cs)
 
-        input[1] = LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])
+        input[1] = LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])
 
         XCTAssertEqual(input, expected)
     }
 
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString(precision: precision, coordinateSystem: cs), [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])])
+        let expected: [MultiLineString.Element] = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs), [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])])
+        let expected: [MultiLineString.Element]  = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs), [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])])
+        let expected: [MultiLineString.Element]  = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
     func testEquals() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
     }
@@ -173,7 +204,7 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isEmpty(), expected)
@@ -181,7 +212,7 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testCount() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
@@ -232,88 +263,119 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
 
+    func testInitWithArrayLiteral() {
+        let input: MultiLineString = [LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])]
+        let expected: [MultiLineString.Element] = [LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])]
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
+    func testInitCopy() {
+
+        let input = MultiLineString(other: MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])]), precision: precision, coordinateSystem: cs)
+        let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiLineString(LineString((x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)), LineString((x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)))"
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiLineString([LineString([(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]), LineString([(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiLineString(LineString((x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)), LineString((x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)))"
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiLineString([LineString([(x: 0.0, y: 0.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 0.0)]), LineString([(x: 0.0, y: 1.0), (x: 0.0, y: 2.0), (x: 0.0, y: 3.0), (x: 2.0, y: 0.0), (x: 0.0, y: 1.0)])])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
-    func testAppend() {
+    // MARK: MutableCollection Conformance
 
-        var input    = MultiLineString(precision: precision, coordinateSystem: cs)
-        let expected = [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
+    func testStartIndex() {
 
-        input.append(LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]))
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    func testAppendContentsOf() {
+    func testEndIndex() {
 
-        let input1 = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
-        var input2 = MultiLineString(precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let expected = 2
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
-    }
-    func testInsert2ExistingElements() {
-
-        var input = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
-        let expected = [LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
-
-        input.insert(LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]]), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(input.endIndex, expected)
     }
 
-    func testInsert1ExistingElements() {
+    func testIndexAfter() {
 
-        var input = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]])], precision: precision, coordinateSystem: cs)
-        let expected = [LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
+        let input    = 0
+        let expected = 1
 
-        input.insert(LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]]), at: 0)
-
-        XCTAssertTrue(input.elementsEqual(expected))
+        XCTAssertEqual(MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
-
-    // MARK: Swift.Collection Conformance
 
     func testSubscriptGet() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
-        let expected = LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let expected = LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])
 
         XCTAssertTrue(input[1].equals(expected))
     }
 
     func testSubscriptSet() {
 
-        var input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])], precision: precision, coordinateSystem: cs)
+        var input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])], precision: precision, coordinateSystem: cs)
 
-        input[1] = LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]])
+        input[1] = LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]])
 
         XCTAssertEqual(input, expected)
     }
 
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString(precision: precision, coordinateSystem: cs), [LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]])])
+        let expected: [MultiLineString.Element] = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs), [LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])])
+        let expected: [MultiLineString.Element]  = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input: (geometry: MultiLineString, newElements: [MultiLineString.Element]) = (MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs), [LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])])
+        let expected: [MultiLineString.Element]  = [LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
     func testEquals() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
-        let expected = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
     }
@@ -328,7 +390,7 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isEmpty(), expected)
@@ -336,7 +398,7 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testCount() {
 
-        let input    = MultiLineString(elements: [LineString(coordinates: [[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString(coordinates: [[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.count, expected)

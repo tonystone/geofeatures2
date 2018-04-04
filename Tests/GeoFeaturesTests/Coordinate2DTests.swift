@@ -22,21 +22,42 @@ import XCTest
 
 class Coordinate2DTests: XCTestCase {
 
-    // MARK: Coordinate2D
+    // MARK: Init
 
-    func testInitWithXY () {
+    func testInit() {
         let coordinate = Coordinate(x: 2.0, y: 3.0)
 
         XCTAssertEqual(coordinate.x, 2.0)
         XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
     }
 
-    func testX () {
-        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).x, 1001.0)
+    func testInitWithArrayLiteral () {
+        let coordinate: Coordinate = [2.0, 3.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
     }
 
-    func testY () {
-        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).y, 1002.0)
+    func testInitWithDictionaryLiteral () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
+    func testInitWithDictionaryLiteralIncorrectElements () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0, "incorrect": 1.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
     }
 
     // MARK: Copy Constructable
@@ -46,8 +67,27 @@ class Coordinate2DTests: XCTestCase {
 
         XCTAssertEqual(coordinate.x, 2.0)
         XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
     }
 
+    // MARK: Accessors
+
+    func testX () {
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).x, 1001.0)
+    }
+
+    func testY () {
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).y, 1002.0)
+    }
+
+    func testZ () {
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).z, nil)
+    }
+
+    func testM () {
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).m, nil)
+    }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 

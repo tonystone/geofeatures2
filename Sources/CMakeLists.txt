@@ -27,42 +27,42 @@ add_gyb_target(generated-LinearRing
         SOURCE GeoFeatures/CoordinateCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/LinearRing.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=LinearRing
-        DEPENDS build-tools
+        DEPENDS GeoFeatures/CoordinateCollectionTypes.swift.gyb build-tools
         )
 
 add_gyb_target(generated-LineString
         SOURCE GeoFeatures/CoordinateCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/LineString.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=LineString
-        DEPENDS build-tools
+        DEPENDS GeoFeatures/CoordinateCollectionTypes.swift.gyb build-tools
         )
 
 add_gyb_target(generated-GeometryCollection
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/GeometryCollection.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=GeometryCollection -D Element=Geometry
-        DEPENDS build-tools
+        DEPENDS GeoFeatures/GeometryCollectionTypes.swift.gyb build-tools
         )
 
 add_gyb_target(generated-MultiPoint
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiPoint.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPoint -D Element=Point
-        DEPENDS build-tools
+        DEPENDS GeoFeatures/GeometryCollectionTypes.swift.gyb build-tools
         )
 
 add_gyb_target(generated-MultiLineString
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiLineString.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiLineString -D Element=LineString
-        DEPENDS build-tools
+        DEPENDS GeoFeatures/GeometryCollectionTypes.swift.gyb build-tools
         )
 
 add_gyb_target(generated-MultiPolygon
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiPolygon.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPolygon -D Element=Polygon
-        DEPENDS build-tools
+        DEPENDS GeoFeatures/GeometryCollectionTypes.swift.gyb build-tools
         )
 
 add_custom_target(generated-source

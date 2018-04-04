@@ -28,22 +28,88 @@ class PointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testInit() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.x, 1.001)
         XCTAssertEqual(input.y, 1.001)
     }
 
+    func testInitWithArrayLiteral () {
+        let input: Point = [2.0, 3.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, nil)
+        XCTAssertEqual(input.m, nil)
+    }
+
+    func testInitWithDictionaryLiteral () {
+        let input: Point = ["x": 2.0, "y": 3.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, nil)
+        XCTAssertEqual(input.m, nil)
+    }
+
+    func testInitWithDictionaryLiteralIncorrectElements () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0, "incorrect": 1.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
+    // MARK: MutableCollection Conformance
+
+    func testStartIndex() {
+        let input    = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let expected = 0
+
+        XCTAssertEqual(input.startIndex, expected)
+    }
+
+    func testEndIndex() {
+        let input    = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let expected = 1
+
+        XCTAssertEqual(input.endIndex, expected)
+    }
+
+    func testIndexAfter() {
+        let input    = 0
+        let expected = 1
+
+        XCTAssertEqual(Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs).index(after: input), expected)
+    }
+
+    func testSubscriptGet() {
+        let input    = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let expected = Coordinate(x: 2.0, y: 2.0)
+
+        XCTAssertEqual(input[0], expected)
+    }
+
+    func testSubscriptSet() {
+        var input = (point: Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs),coordnate:  Coordinate(x: 1.0, y: 1.0))
+        let expected = Coordinate(x: 1.0, y: 1.0)
+
+        input.point[0] = input.coordnate
+
+        XCTAssertEqual(input.point[0], expected)
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.description, "Point(x: 1.001, y: 1.001)")
     }
 
     func testDebugDescription() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.debugDescription, "Point(x: 1.001, y: 1.001)")
     }
@@ -57,23 +123,36 @@ class PointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testInit() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.x, 1.001)
         XCTAssertEqual(input.y, 1.001)
         XCTAssertEqual(input.m, 1.001)
     }
 
+    func testInitWithArrayLiteral () {
+        /// 2DM is not supported using array literals because arrays are positional and Z comes before M in the array.  Use a dictionary instead.
+    }
+
+    func testInitWithDictionaryLiteral () {
+        let input: Point = ["x": 2.0, "y": 3.0, "m": 5.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, nil)
+        XCTAssertEqual(input.m, 5.0)
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.description, "Point(x: 1.001, y: 1.001, m: 1.001)")
     }
 
     func testDebugDescription() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.debugDescription, "Point(x: 1.001, y: 1.001, m: 1.001)")
     }
@@ -87,23 +166,41 @@ class PointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testInit() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.x, 1.001)
         XCTAssertEqual(input.y, 1.001)
         XCTAssertEqual(input.z, 1.001)
     }
 
+    func testInitWithArrayLiteral3D () {
+        let input: Point = [2.0, 3.0, 4.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, 4.0)
+        XCTAssertEqual(input.m, nil)
+    }
+
+    func testInitWithDictionaryLiteral3D () {
+        let input: Point = ["x": 2.0, "y": 3.0, "z": 4.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, 4.0)
+        XCTAssertEqual(input.m, nil)
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.description, "Point(x: 1.001, y: 1.001, z: 1.001)")
     }
 
     func testDebugDescription() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.debugDescription, "Point(x: 1.001, y: 1.001, z: 1.001)")
     }
@@ -117,7 +214,7 @@ class PointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testInit() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.x, 1.001)
         XCTAssertEqual(input.y, 1.001)
@@ -125,16 +222,34 @@ class PointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.m, 1.001)
     }
 
+    func testInitWithArrayLiteral3DM () {
+        let input: Point = [2.0, 3.0, 4.0, 5.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, 4.0)
+        XCTAssertEqual(input.m, 5.0)
+    }
+
+    func testInitWithDictionaryLiteral3DM () {
+        let input: Point = ["x": 2.0, "y": 3.0, "z": 4.0, "m": 5.0]
+
+        XCTAssertEqual(input.x, 2.0)
+        XCTAssertEqual(input.y, 3.0)
+        XCTAssertEqual(input.z, 4.0)
+        XCTAssertEqual(input.m, 5.0)
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.description, "Point(x: 1.001, y: 1.001, z: 1.001, m: 1.001)")
     }
 
     func testDebugDescription() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.debugDescription, "Point(x: 1.001, y: 1.001, z: 1.001, m: 1.001)")
     }
@@ -148,7 +263,7 @@ class PointCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testInit() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.x, 1.0)
         XCTAssertEqual(input.y, 1.0)
@@ -163,7 +278,7 @@ class PointCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testInit() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.x, 1.0)
         XCTAssertEqual(input.y, 1.0)
@@ -179,7 +294,7 @@ class PointCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testInit() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.x, 1.0)
         XCTAssertEqual(input.y, 1.0)
@@ -195,7 +310,7 @@ class PointCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testInit() {
-        let input = Point(coordinate: Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.x, 1.0)
         XCTAssertEqual(input.y, 1.0)

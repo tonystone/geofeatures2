@@ -38,8 +38,8 @@ extension MultiLineString: Geometry {
 
         var endCoordinates = [Coordinate: Int]()
 
-        for i in 0 ..< elements.count {
-            let lineString = elements[i]
+        for i in 0 ..< self.count {
+            let lineString = self[i]
 
             if lineString.count >= 2 && !lineString.isClosed() {
                 var i = 0
@@ -72,7 +72,7 @@ extension MultiLineString: Geometry {
 
         for (coordinate, count) in endCoordinates {
             if count % 2 == 1 {
-                boundary.append(Point(coordinate: coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
+                boundary.append(Point(coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
             }
         }
         return boundary

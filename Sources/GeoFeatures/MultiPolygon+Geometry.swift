@@ -35,9 +35,9 @@ extension MultiPolygon: Geometry {
     public func boundary() -> Geometry {
         var boundary = MultiLineString(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-        for i in 0..<elements.count {
+        for i in 0..<self.count {
 
-            if let elementBoundary = elements[i].boundary() as? MultiLineString {
+            if let elementBoundary = self[i].boundary() as? MultiLineString {
 
                 for lineString in elementBoundary {
                     boundary.append(lineString)

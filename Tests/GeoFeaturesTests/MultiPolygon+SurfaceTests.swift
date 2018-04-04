@@ -41,7 +41,7 @@ class MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testAreaWith2SamePolygons() {
 
-        let input    = MultiPolygon(elements: [Polygon(outerRing: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]]), Polygon(outerRing: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon([Polygon([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]]), Polygon([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]])], precision: precision, coordinateSystem: cs)
         let expected = 66.0
 
         XCTAssertEqual(input.area(), expected)
@@ -49,7 +49,7 @@ class MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testAreaWith2DifferentPolygons() {
 
-        let input    = MultiPolygon(elements: [Polygon(outerRing: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]]), Polygon(outerRing: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon([Polygon([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [[Coordinate(x: 1, y: 1), Coordinate(x: 4, y: 1), Coordinate(x: 4, y: 2), Coordinate(x: 1, y: 2), Coordinate(x: 1, y: 1)]]), Polygon([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 6), Coordinate(x: 6, y: 6), Coordinate(x: 6, y: 0), Coordinate(x: 0, y: 0)], innerRings: [])], precision: precision, coordinateSystem: cs)
         let expected = 69.0
 
         XCTAssertEqual(input.area(), expected)

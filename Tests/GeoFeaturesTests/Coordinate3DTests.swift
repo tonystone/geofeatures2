@@ -24,12 +24,41 @@ class Coordinate3DTests: XCTestCase {
 
     // MARK: Coordinate 3D
 
-    func testInitXYZ () {
+    func test () {
         let coordinate = Coordinate(x: 2.0, y: 3.0, z: 4.0)
 
         XCTAssertEqual(coordinate.x, 2.0)
         XCTAssertEqual(coordinate.y, 3.0)
         XCTAssertEqual(coordinate.z, 4.0)
+    }
+
+    func testInitWithArrayLiteral () {
+        let coordinate: Coordinate = [2.0, 3.0, 4.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, 4.0)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
+    func testInitWithDictionaryLiteral () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0, "z": 4.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, 4.0)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
+    // MARK: CopyConstructable
+
+    func testInitCopy () {
+        let coordinate = Coordinate(other: Coordinate(x: 2.0, y: 3.0, z: 4.0))
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, 4.0)
+        XCTAssertEqual(coordinate.m, nil)
     }
 
     func testX () {
@@ -44,14 +73,8 @@ class Coordinate3DTests: XCTestCase {
         XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0, z: 1003.0).z, 1003.0)
     }
 
-    // MARK: CopyConstructable
-
-    func testInitCopy () {
-        let coordinate = Coordinate(other: Coordinate(x: 2.0, y: 3.0, z: 4.0))
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
-        XCTAssertEqual(coordinate.z, 4.0)
+    func testM () {
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0, z: 1003.0).m, nil)
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible

@@ -5,20 +5,18 @@ import GeoFeatures
 
 //: Usage Scenarios
 
-var lineString1 = LineString()
+var lineString1 = LineString(precision: FixedPrecision(scale: 10))
 lineString1.append([1.001, 1.001])
 lineString1.append([2.001, 2.001])
 lineString1.append([3.001, 3.001])
-
-/// lineString1.append((3.003, 3.003, 3.003))  // Error:
 
 lineString1.length()
 
 let fixedPrecision = FixedPrecision(scale: 100)
 
-let lineString = LineString(coordinates: [[1.001, 1.001], [2.001, 2.001], [3.001, 3.001]], precision: fixedPrecision)
+let lineString = LineString([[1.001, 1.001], [2.001, 2.001], [3.001, 3.001]], precision: fixedPrecision)
 
-var lineString2 = LineString(coordinates: [[1.001, 1.001], [2.001, 2.001], [3.001, 3.001]], precision: fixedPrecision)
+var lineString2 = LineString([[1.001, 1.001], [2.001, 2.001], [3.001, 3.001]], precision: fixedPrecision)
 
 lineString == lineString2
 
@@ -40,17 +38,31 @@ lineString1 == lineString1
 lineString1 == lineString2
 lineString1 == lineString3
 
-let multiLineString = MultiLineString(elements: [lineString1, lineString2, lineString3])
+let multiLineString = MultiLineString([lineString1, lineString2, lineString3])
 
-MultiLineString(elements: multiLineString)
+MultiLineString(multiLineString)
 
 /// Create a Polygon with a tuple simaler to WKT with the syntax ([tuples], [[tuples]])
-Polygon(outerRing: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [])
-Polygon(outerRing: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [[[0.5, 0.5], [1.5, 0.5], [3.5, 1.5], [0.5, 6.5], [0.5, 0.5]]])
-Polygon(outerRing: LinearRing(coordinates: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]]), innerRings: [])
+Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
+Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [[[0.5, 0.5], [1.5, 0.5], [3.5, 1.5], [0.5, 6.5], [0.5, 0.5]]])
 
-Point(coordinate: [1.0, 2.0])
-Point(coordinate: [1.0, 2.0, 3.0, 4.0])
+Polygon([
+    [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]],
+    [[0.5, 0.5], [1.5, 0.5], [3.5, 1.5], [0.5, 6.5], [0.5, 0.5]]
+    ])
 
-LinearRing(coordinates: [[1.00, -1.00], [-1.00, -1.00], [-1.00, 1.00], [1.00, 1.00], [1.00, -1.00]]).area()
-Polygon(outerRing: [[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [[[0.5, 0.5], [1.5, 0.5], [3.5, 1.5], [0.5, 6.5], [0.5, 0.5]]]).area()
+Polygon([
+    LinearRing([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]]),
+    LinearRing([[0.5, 0.5], [1.5, 0.5], [3.5, 1.5], [0.5, 6.5], [0.5, 0.5]])
+    ])
+
+Polygon(LinearRing([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]]))
+
+Point([1.0, 2.0])
+Point([1.0, 2.0, 3.0, 4.0])
+
+LinearRing([[1.00, -1.00], [-1.00, -1.00], [-1.00, 1.00], [1.00, 1.00], [1.00, -1.00]]).area()
+Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [[[0.5, 0.5], [1.5, 0.5], [3.5, 1.5], [0.5, 6.5], [0.5, 0.5]]]).area()
+
+let array = Polygon(LinearRing([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])).map({ Array($0) })
+print(array)

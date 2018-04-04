@@ -21,7 +21,7 @@ import XCTest
 import GeoFeatures
 
 #if (os(OSX) || os(iOS) || os(tvOS) || os(watchOS)) && SWIFT_PACKAGE
-    /// Note: Resolution of GeoFeatures.Polygon is ambiguous when ApplicationsServices is included in the app (ApplicationsServices is used by XCTest), this resolves the ambiguity.
+    /// TODO: Remove this after figuring out why there seems to be a symbol conflict (error: cannot specialize a non-generic definition) with another Polygon on Swift PM on Apple platforms only.
     import struct GeoFeatures.Polygon
 #endif
 
@@ -77,60 +77,119 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertEqual(input.coordinateSystem as? Cartesian, expected)
     }
 
+    func testInitWithArrayLiteral() {
+        let input: GeometryCollection = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+        let expected: [GeometryCollection.Element] = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
+    func testInitCopy() {
+
+        let input = GeometryCollection(other: GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]), precision: precision, coordinateSystem: cs)
+        let expected = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
 
-        let input    = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected = "GeometryCollection(Polygon([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []), Polygon([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))"
+        let input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let expected = "GeometryCollection([Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)])]), Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)])])])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input    = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected = "GeometryCollection(Polygon([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []), Polygon([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))"
+        let input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let expected = "GeometryCollection([Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)])]), Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)])])])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
 
-    // MARK: Collection conformance
+    // MARK: MutableCollection Conformance
 
-    func testAppendContentsOf() {
+    func testStartIndex() {
 
-        let input1 = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        var input2 = GeometryCollection(precision: precision, coordinateSystem: cs)
+        let input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let expected = 0
 
-        input2.append(contentsOf: input1)
-
-        XCTAssertEqual(input1, input2)
+        XCTAssertEqual(input.startIndex, expected)
     }
 
-    // MARK: Swift.Collection Conformance
+    func testEndIndex() {
+
+        let input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let expected = 2
+
+        XCTAssertEqual(input.endIndex, expected)
+    }
+
+    func testIndexAfter() {
+
+        let input    = 0
+        let expected = 1
+
+        XCTAssertEqual(GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs).index(after: input), expected)
+    }
 
     func testSubscriptGet() {
 
-        let input    = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected = Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []) as GeometryCollection.Element
+        let input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let expected = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []) as GeometryCollection.Element
 
         XCTAssertTrue(input[1].equals(expected))
     }
 
     func testSubscriptSet() {
 
-        var input    = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        var input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let expected = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
 
-        input[1] = Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []) as GeometryCollection.Element
+        input[1] = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []) as GeometryCollection.Element
 
         XCTAssertEqual(input, expected)
     }
 
+    // MARK: RangeReplaceableCollection Conformance
+
+    func testReplaceSubrangeAppend() {
+
+        var input: (geometry: GeometryCollection, newElements: [GeometryCollection.Element]) = (GeometryCollection(precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
+        let expected: [GeometryCollection.Element] = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeInsert() {
+
+        var input: (geometry: GeometryCollection, newElements: [GeometryCollection.Element]) = (GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
+        let expected: [GeometryCollection.Element]  = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+
+        input.geometry.replaceSubrange(0..<0, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
+    func testReplaceSubrangeReplace() {
+
+        var input: (geometry: GeometryCollection, newElements: [GeometryCollection.Element]) = (GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
+        let expected: [GeometryCollection.Element]  = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+
+        input.geometry.replaceSubrange(0..<1, with: input.newElements)
+
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+    }
+
     func testEquals() {
 
-        let input    = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
-        let expected = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let expected = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
     }
@@ -145,7 +204,7 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsEmptyFalse() {
 
-        let input    = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isEmpty(), expected)
@@ -153,7 +212,7 @@ class GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testCount() {
 
-        let input    = GeometryCollection(elements: [Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon(outerRing: [[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
+        let input    = GeometryCollection([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [GeometryCollection.Element], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.count, expected)

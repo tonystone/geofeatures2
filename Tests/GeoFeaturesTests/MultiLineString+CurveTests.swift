@@ -28,18 +28,18 @@ class MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
     let cs       = Cartesian()
 
     func testIsClosedClosed() {
-        XCTAssertTrue(MultiLineString(elements:
+        XCTAssertTrue(MultiLineString(
             [
-                LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 2, y: 0), Coordinate(x: 0, y: 0)], precision: precision, coordinateSystem: cs),
-                LineString(coordinates: [Coordinate(x: 0, y: 1), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 2, y: 0), Coordinate(x: 0, y: 1)], precision: precision, coordinateSystem: cs)
+                LineString([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 2, y: 0), Coordinate(x: 0, y: 0)], precision: precision, coordinateSystem: cs),
+                LineString([Coordinate(x: 0, y: 1), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 2, y: 0), Coordinate(x: 0, y: 1)], precision: precision, coordinateSystem: cs)
             ], precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testIsClosedOpen() {
-        XCTAssertFalse(MultiLineString(elements:
+        XCTAssertFalse(MultiLineString(
             [
-                LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5)], precision: precision, coordinateSystem: cs),
-                LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5)], precision: precision, coordinateSystem: cs)
+                LineString([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5)], precision: precision, coordinateSystem: cs),
+                LineString([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5)], precision: precision, coordinateSystem: cs)
             ], precision: precision, coordinateSystem: cs).isClosed())
     }
 
@@ -48,7 +48,7 @@ class MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
     }
 
     func testLength() {
-        let input = MultiLineString(elements: [LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2)]), LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 7, y:0)])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString([LineString([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2)]), LineString([Coordinate(x: 0, y: 0), Coordinate(x: 7, y:0)])], precision: precision, coordinateSystem: cs)
         let expected = 9.0
 
         XCTAssertEqual(input.length(), expected)
@@ -63,18 +63,18 @@ class MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testIsClosedClosed() {
-        XCTAssertTrue(MultiLineString(elements:
+        XCTAssertTrue(MultiLineString(
             [
-                LineString(coordinates: [Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 2.002, y: 0.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs),
-                LineString(coordinates: [Coordinate(x: 0.0, y: 1.001), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 2.002, y: 0.0), Coordinate(x: 0.0, y: 1.001)], precision: precision, coordinateSystem: cs)
+                LineString([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 2.002, y: 0.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs),
+                LineString([Coordinate(x: 0.0, y: 1.001), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 2.002, y: 0.0), Coordinate(x: 0.0, y: 1.001)], precision: precision, coordinateSystem: cs)
             ], precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testIsClosedOpen() {
-        XCTAssertFalse(MultiLineString(elements:
+        XCTAssertFalse(MultiLineString(
             [
-                LineString(coordinates: [Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.0), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 0.0, y: 4.004), Coordinate(x: 0.0, y: 5.001)], precision: precision, coordinateSystem: cs),
-                LineString(coordinates: [Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 0.0, y: 4.004), Coordinate(x: 0.0, y: 5.001)], precision: precision, coordinateSystem: cs)
+                LineString([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.0), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 0.0, y: 4.004), Coordinate(x: 0.0, y: 5.001)], precision: precision, coordinateSystem: cs),
+                LineString([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002), Coordinate(x: 0.0, y: 3.003), Coordinate(x: 0.0, y: 4.004), Coordinate(x: 0.0, y: 5.001)], precision: precision, coordinateSystem: cs)
             ], precision: precision, coordinateSystem: cs).isClosed())
     }
 
@@ -83,7 +83,7 @@ class MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     }
 
     func testLength() {
-        let input = MultiLineString(elements: [LineString(coordinates: [Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002)]), LineString(coordinates: [Coordinate(x: 0, y: 0), Coordinate(x: 7.001, y:0)])], precision: precision, coordinateSystem: cs)
+        let input = MultiLineString([LineString([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 2.002)]), LineString([Coordinate(x: 0, y: 0), Coordinate(x: 7.001, y:0)])], precision: precision, coordinateSystem: cs)
         let expected = 9.0
 
         XCTAssertEqual(input.length(), expected)

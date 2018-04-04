@@ -36,11 +36,11 @@ extension LineString: Geometry {
 
         var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-        if !self.isClosed() && self.coordinates.count >= 2 {
+        if !self.isClosed() && self.self.count >= 2 {
 
             /// Note: direct subscripts protected by self.count >= 2 above.
-            boundary.append(Point(coordinate: self.coordinates[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
-            boundary.append(Point(coordinate: self.coordinates[self.coordinates.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
+            boundary.append(Point(self.self[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
+            boundary.append(Point(self.self[self.self.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
         }
         return boundary
     }

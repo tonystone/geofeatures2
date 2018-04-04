@@ -29,140 +29,78 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: - Dimension
+
     func testDimension () {
         XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
+    // MARK: - Boundary
+
     func testBoundaryWith1ElementInvalid() {
-        let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()
+        let input = LinearRing([[1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith2Element() {
-        let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint(elements: [Point(coordinate: Coordinate(x: 1.0, y: 1.0)), Point(coordinate: Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith3ElementOpen() {
-        let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint(elements: [Point(coordinate: Coordinate(x: 1.0, y: 1.0)), Point(coordinate: Coordinate(x: 3.0, y: 3.0))], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([3.0, 3.0])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith4ElementClosed() {
-        let geometry = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()
+        let input = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryEmpty() {
-        let geometry = LinearRing(precision: precision, coordinateSystem: cs).boundary()
+        let input = LinearRing(precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs)  // Empty Set
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
+    // MARK: - Bounds
+
+    func testBoundsEmpty() {
+        let input = LinearRing(precision: precision, coordinateSystem: cs)
+        let expected: Bounds? = nil
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    func testBoundsWithElements() {
+        let input = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 3.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    // MARK: - Equal
+
     func testEqualTrue() {
-        let input1 = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let input2 = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input1 = LinearRing([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let input2 = LinearRing([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
      }
 
      func testEqualFalse() {
-        let input1            = LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = Point(coordinate: Coordinate(x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+        let input1            = LinearRing([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = Point([1.0, 1.0], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
-}
-
-// MARK: - Coordinate2DM, FloatingPrecision, Cartesian -
-
-class LinearRingGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
-
-    let precision = FloatingPrecision()
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate3D, FloatingPrecision, Cartesian -
-
-class LinearRingGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
-
-    let precision = FloatingPrecision()
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate3DM, FloatingPrecision, Cartesian -
-
-class LinearRingGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
-
-    let precision = FloatingPrecision()
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate2D, FixedPrecision, Cartesian -
-
-class LinearRingGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate2DM, FixedPrecision, Cartesian -
-
-class LinearRingGeometryCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate3D, FixedPrecision, Cartesian -
-
-class LinearRingGeometryCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate3DM, FixedPrecision, Cartesian -
-
-class LinearRingGeometryCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
 }

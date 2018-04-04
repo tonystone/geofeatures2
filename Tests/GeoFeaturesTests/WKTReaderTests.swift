@@ -37,7 +37,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPointFloatValid() {
 
         let input = "POINT (1.0 1.0)"
-        let expected = Point(coordinate: Coordinate(x: 1.0, y: 1.0))
+        let expected = Point(Coordinate(x: 1.0, y: 1.0))
 
         XCTAssertEqual(try wktReader.read(string: input) as? Point, expected)
     }
@@ -45,7 +45,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadUsingUTF8Data() {
 
         let input = Data(bytes: Array("POINT (1.0 1.0)".utf8))
-        let expected = Point(coordinate: Coordinate(x: 1.0, y: 1.0))
+        let expected = Point(Coordinate(x: 1.0, y: 1.0))
 
         XCTAssertEqual(try wktReader.read(data: input) as? Point, expected)
     }
@@ -53,7 +53,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadUsingUnicodeData() {
 
         let input = "POINT (1.0 1.0)".data(using: .unicode)!    // swiftlint:disable:this force_unwrapping
-        let expected = Point(coordinate: Coordinate(x: 1.0, y: 1.0))
+        let expected = Point(Coordinate(x: 1.0, y: 1.0))
 
         XCTAssertEqual(try wktReader.read(data: input, encoding: .unicode) as? Point, expected)
     }
@@ -95,7 +95,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPointIntValid() {
 
         let input = "POINT (1 1)"
-        let expected = Point(coordinate: Coordinate(x: 1.0, y: 1.0))
+        let expected = Point(Coordinate(x: 1.0, y: 1.0))
 
         XCTAssertEqual(try wktReader.read(string: input) as? Point, expected)
     }
@@ -103,7 +103,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPointValidExponentUpperCase() {
 
         let input = "POINT (1.0E-5 1.0E-5)"
-        let expected = Point(coordinate: Coordinate(x: 1.0E-5, y: 1.0E-5))
+        let expected = Point(Coordinate(x: 1.0E-5, y: 1.0E-5))
 
         XCTAssertEqual(try wktReader.read(string: input) as? Point, expected)
     }
@@ -111,7 +111,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPointValidExponentLowerCase() {
 
         let input = "POINT (1.0e-5 1.0e-5)"
-        let expected = Point(coordinate: Coordinate(x: 1.0E-5, y: 1.0E-5))
+        let expected = Point(Coordinate(x: 1.0E-5, y: 1.0E-5))
 
         XCTAssertEqual(try wktReader.read(string: input) as? Point, expected)
     }
@@ -205,7 +205,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadLineStringValid() {
 
         let input = "LINESTRING (1.0 1.0, 2.0 2.0, 3.0 3.0)"
-        let expected = LineString(coordinates: [Coordinate( x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)])
+        let expected = LineString([Coordinate( x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)])
 
         XCTAssertEqual(try wktReader.read(string: input) as? LineString, expected)
     }
@@ -213,7 +213,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadLineStringValidEmpty() {
 
         let input = "LINESTRING EMPTY"
-        let expected = LineString(coordinates: [])
+        let expected = LineString([])
 
         XCTAssertEqual(try wktReader.read(string: input) as? LineString, expected)
     }
@@ -279,7 +279,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadLinearRingValid() {
 
         let input = "LINEARRING (1.0 1.0, 2.0 2.0, 3.0 3.0)"
-        let expected = LinearRing(coordinates: [Coordinate( x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)])
+        let expected = LinearRing([Coordinate( x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)])
 
         XCTAssertEqual(try wktReader.read(string: input) as? LinearRing, expected)
     }
@@ -287,7 +287,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadLinearRingValidEmpty() {
 
         let input = "LINEARRING EMPTY"
-        let expected = LinearRing(coordinates: [])
+        let expected = LinearRing([])
 
         XCTAssertEqual(try wktReader.read(string: input) as? LinearRing, expected)
     }
@@ -353,7 +353,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadMultiPointValid() {
 
         let input = "MULTIPOINT ((1.0 2.0), (3.0 4.0))"
-        let expected = MultiPoint(elements: [Point(coordinate: Coordinate(x: 1.0, y: 2.0)), Point(coordinate: Coordinate(x: 3.0, y: 4.0))])
+        let expected = MultiPoint([Point(Coordinate(x: 1.0, y: 2.0)), Point(Coordinate(x: 3.0, y: 4.0))])
 
         XCTAssertEqual(try wktReader.read(string: input) as? MultiPoint, expected)
     }
@@ -361,7 +361,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadMultiPointValidEmpty() {
 
         let input = "MULTIPOINT EMPTY"
-        let expected = MultiPoint(elements: [])
+        let expected = MultiPoint([])
 
         XCTAssertEqual(try wktReader.read(string: input) as? MultiPoint, expected)
     }
@@ -427,7 +427,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadMultiLineStringValid() {
 
         let input = "MULTILINESTRING ((1.0 1.0, 2.0 2.0, 3.0 3.0), (4.0 4.0, 5.0 5.0, 6.0 6.0))"
-        let expected = MultiLineString(elements: [LineString(coordinates:  [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)]), LineString(coordinates:  [Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 6.0, y: 6.0)])])
+        let expected = MultiLineString([LineString( [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)]), LineString( [Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 6.0, y: 6.0)])])
 
         XCTAssertEqual(try wktReader.read(string: input) as? MultiLineString, expected)
     }
@@ -435,7 +435,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadMultiLineStringValidEmpty() {
 
         let input = "MULTILINESTRING EMPTY"
-        let expected = MultiLineString(elements: [])
+        let expected = MultiLineString([])
 
         XCTAssertEqual(try wktReader.read(string: input) as? MultiLineString, expected)
     }
@@ -501,7 +501,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPolygonZeroInnerRingsValid() {
 
         let input = "POLYGON ((1.0 1.0, 2.0 2.0, 3.0 3.0, 1.0 1.0))"
-        let expected = Polygon(outerRing: LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: [])
+        let expected = Polygon(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: [])
 
         XCTAssertEqual(try wktReader.read(string: input) as? Polygon, expected)
     }
@@ -509,7 +509,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPolygonSingleOuterRingValid() {
 
         let input = "POLYGON ((1.0 1.0, 2.0 2.0, 3.0 3.0, 1.0 1.0), (4.0 4.0, 5.0 5.0, 6.0 6.0, 4.0 4.0))"
-        let expected = Polygon(outerRing: LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: [LinearRing(coordinates: [Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 6.0, y: 6.0), Coordinate(x: 4.0, y: 4.0)])])
+        let expected = Polygon(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: [LinearRing([Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 6.0, y: 6.0), Coordinate(x: 4.0, y: 4.0)])])
 
         XCTAssertEqual(try wktReader.read(string: input) as? Polygon, expected)
     }
@@ -517,7 +517,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPolygonMultipleInnerRingsValid() {
 
         let input = "POLYGON ((1.0 1.0, 2.0 2.0, 3.0 3.0, 1.0 1.0), (4.0 4.0, 5.0 5.0, 6.0 6.0, 4.0 4.0), (3.0 3.0, 4.0 4.0, 5.0 5.0, 3.0 3.0))"
-        let expected = Polygon(outerRing: LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: [LinearRing(coordinates: [Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 6.0, y: 6.0), Coordinate(x: 4.0, y: 4.0)]), LinearRing(coordinates: [Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 3.0, y: 3.0)])])
+        let expected = Polygon(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: [LinearRing([Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 6.0, y: 6.0), Coordinate(x: 4.0, y: 4.0)]), LinearRing([Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 3.0, y: 3.0)])])
 
         XCTAssertEqual(try wktReader.read(string: input) as? Polygon, expected)
     }
@@ -619,7 +619,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadMultiPolygonValid() {
 
         let input = "MULTIPOLYGON (((1.0 1.0, 2.0 2.0, 3.0 3.0, 1.0 1.0)), ((10.0 10.0, 20.0 20.0, 30.0 30.0, 10.0 10.0)))"
-        let expected = MultiPolygon(elements: [Polygon(outerRing: LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: []), Polygon(outerRing: LinearRing(coordinates: [Coordinate(x: 10.0, y: 10.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 30.0, y: 30.0), Coordinate(x: 10.0, y: 10.0)]), innerRings: [])])
+        let expected = MultiPolygon([Polygon(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: []), Polygon(LinearRing([Coordinate(x: 10.0, y: 10.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 30.0, y: 30.0), Coordinate(x: 10.0, y: 10.0)]), innerRings: [])])
 
         XCTAssertEqual(try wktReader.read(string: input) as? MultiPolygon, expected)
     }
@@ -627,7 +627,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadMultiPolygonValidEmpty() {
 
         let input = "MULTIPOLYGON EMPTY"
-        let expected = MultiPolygon(elements: [])
+        let expected = MultiPolygon([])
 
         XCTAssertEqual(try wktReader.read(string: input) as? MultiPolygon, expected)
     }
@@ -693,18 +693,18 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadGeometryCollectionValid() {
 
         let input = "GEOMETRYCOLLECTION (POINT (1.0 1.0), LINESTRING (1.0 1.0, 2.0 2.0, 3.0 3.0), LINEARRING (1.0 1.0, 2.0 2.0, 3.0 3.0), POLYGON ((1.0 1.0, 2.0 2.0, 3.0 3.0, 1.0 1.0)), MULTIPOINT ((1.0 2.0)), MULTILINESTRING ((1.0 1.0, 2.0 2.0, 3.0 3.0), (4.0 4.0, 5.0 5.0, 6.0 6.0)), MULTIPOLYGON (((1.0 1.0, 2.0 2.0, 3.0 3.0, 1.0 1.0)), ((10.0 10.0, 20.0 20.0, 30.0 30.0, 10.0 10.0))), GEOMETRYCOLLECTION (POINT (1.0 1.0), LINESTRING (1.0 1.0, 2.0 2.0, 3.0 3.0)))"
-        let expected = GeometryCollection(elements:
+        let expected = GeometryCollection(
             [
-                Point(coordinate: Coordinate(x: 1.0, y: 1.0)),
-                LineString(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)]),
-                LinearRing(coordinates: [Coordinate( x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)]),
-                Polygon(outerRing: LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: []),
-                MultiPoint(elements: [Point(coordinate: Coordinate(x: 1.0, y: 2.0))]),
-                MultiLineString(elements: [LineString(coordinates:  [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)]), LineString(coordinates:  [Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 6.0, y: 6.0)])]),
-                MultiPolygon(elements: [Polygon(outerRing: LinearRing(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: []), Polygon(outerRing: LinearRing(coordinates: [Coordinate(x: 10.0, y: 10.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 30.0, y: 30.0), Coordinate(x: 10.0, y: 10.0)]), innerRings: [])]),
-                GeometryCollection(elements:  [
-                    Point(coordinate: Coordinate(x: 1.0, y: 1.0)),
-                    LineString(coordinates: [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)])] as [Geometry])
+                Point(Coordinate(x: 1.0, y: 1.0)),
+                LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)]),
+                LinearRing([Coordinate( x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)]),
+                Polygon(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: []),
+                MultiPoint([Point(Coordinate(x: 1.0, y: 2.0))]),
+                MultiLineString([LineString( [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)]), LineString( [Coordinate(x: 4.0, y: 4.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 6.0, y: 6.0)])]),
+                MultiPolygon([Polygon(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), innerRings: []), Polygon(LinearRing([Coordinate(x: 10.0, y: 10.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 30.0, y: 30.0), Coordinate(x: 10.0, y: 10.0)]), innerRings: [])]),
+                GeometryCollection( [
+                    Point(Coordinate(x: 1.0, y: 1.0)),
+                    LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)])] as [Geometry])
                 ] as [Geometry])
 
         XCTAssertEqual(try wktReader.read(string: input) as? GeometryCollection, expected)
@@ -713,7 +713,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadGeometryCollectionValidEmpty() {
 
         let input = "GEOMETRYCOLLECTION EMPTY"
-        let expected = GeometryCollection(elements: [])
+        let expected = GeometryCollection([])
 
         XCTAssertEqual(try wktReader.read(string: input) as? GeometryCollection, expected)
     }
@@ -803,7 +803,7 @@ class WKTReaderCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPointValid() {
 
         let input = "POINT M (1.0 1.0 1.0)"
-        let expected = Point(coordinate: Coordinate(x: 1.0, y: 1.0, m: 1.0))
+        let expected = Point(Coordinate(x: 1.0, y: 1.0, m: 1.0))
 
         XCTAssertEqual(try wktReader.read(string: input) as? Point, expected)
     }
@@ -869,10 +869,10 @@ class WKTReaderCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
     func testReadGeometryCollectionValid() {
 
         let input = "GEOMETRYCOLLECTION M (POINT M (1.0 1.0 1.0), LINESTRING M (1.0 1.0 1.0, 2.0 2.0 2.0, 3.0 3.0 3.0))"
-        let expected = GeometryCollection(elements:
+        let expected = GeometryCollection(
             [
-                Point(coordinate: Coordinate(x: 1.0, y: 1.0, m: 1.0)),
-                LineString(coordinates: [Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 3.0, y: 3.0, m: 3.0)])
+                Point(Coordinate(x: 1.0, y: 1.0, m: 1.0)),
+                LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 3.0, y: 3.0, m: 3.0)])
             ] as [Geometry])
 
         XCTAssertEqual(try wktReader.read(string: input) as? GeometryCollection, expected)
@@ -905,7 +905,7 @@ class WKTReaderCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPointValid() {
 
         let input = "POINT Z (1.0 1.0 1.0)"
-        let expected = Point(coordinate: Coordinate(x: 1.0, y: 1.0, z: 1.0))
+        let expected = Point(Coordinate(x: 1.0, y: 1.0, z: 1.0))
 
         XCTAssertEqual(try wktReader.read(string: input) as? Point, expected)
     }
@@ -971,10 +971,10 @@ class WKTReaderCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadGeometryCollectionValid() {
 
         let input = "GEOMETRYCOLLECTION Z (POINT Z (1.0 1.0 1.0), LINESTRING Z (1.0 1.0 1.0, 2.0 2.0 2.0, 3.0 3.0 3.0))"
-        let expected = GeometryCollection(elements:
+        let expected = GeometryCollection(
             [
-                Point(coordinate: Coordinate(x: 1.0, y: 1.0, z: 1.0)),
-                LineString(coordinates: [Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 3.0, y: 3.0, z: 3.0)])
+                Point(Coordinate(x: 1.0, y: 1.0, z: 1.0)),
+                LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 3.0, y: 3.0, z: 3.0)])
             ] as [Geometry])
 
         XCTAssertEqual(try wktReader.read(string: input) as? GeometryCollection, expected)
@@ -1007,7 +1007,7 @@ class WKTReaderCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
     func testReadPointValid() {
 
         let input = "POINT ZM (1.0 1.0 1.0 1.0)"
-        let expected = Point(coordinate: Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0))
+        let expected = Point(Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0))
 
         XCTAssertEqual(try wktReader.read(string: input) as? Point, expected)
     }
@@ -1073,10 +1073,10 @@ class WKTReaderCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
     func testReadGeometryCollectionValid() {
 
         let input = "GEOMETRYCOLLECTION ZM (POINT ZM (1.0 1.0 1.0 1.0), LINESTRING ZM (1.0 1.0 1.0 1.0, 2.0 2.0 2.0 2.0, 3.0 3.0 3.0 3.0))"
-        let expected = GeometryCollection(elements:
+        let expected = GeometryCollection(
             [
-                Point(coordinate: Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)),
-                LineString(coordinates: [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 3.0, y: 3.0, z: 3.0, m: 3.0)])
+                Point(Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)),
+                LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 3.0, y: 3.0, z: 3.0, m: 3.0)])
             ] as [Geometry])
 
         XCTAssertEqual(try wktReader.read(string: input) as? GeometryCollection, expected)

@@ -20,7 +20,7 @@
 import XCTest
 import GeoFeatures
 
-private let geometryDimension = Dimension.one    // LineString are always 1 dimension
+private let inputDimension = Dimension.one    // LineString are always 1 dimension
 
 // MARK: - Coordinate 2D, FloatingPrecision, Cartesian -
 
@@ -29,55 +29,77 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: - Dimension
+
     func testDimension () {
-        XCTAssertEqual(LineString(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LineString(precision: precision, coordinateSystem: cs).dimension, inputDimension)
     }
 
+    // MARK: - Boundary
+
     func testBoundaryWith1ElementInvalid() {
-        let geometry = LineString(coordinates: [[1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
+        let input = LineString([[1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith2Element() {
-        let geometry = LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let input = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith3ElementOpen() {
-        let geometry = LineString(coordinates: [[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint(elements: [Point(coordinate: [1.0, 1.0]), Point(coordinate: [3.0, 3.0])], precision: precision, coordinateSystem: cs)
+        let input = LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([3.0, 3.0])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith4ElementClosed() {
-        let geometry = LineString(coordinates: [[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
+        let input = LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryEmpty() {
-        let geometry = LineString(precision: precision, coordinateSystem: cs).boundary()
+        let input = LineString(precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs)  // Empty Set
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
+    // MARK: - Bounds
+
+    func testBoundsEmpty() {
+        let input = LineString(precision: precision, coordinateSystem: cs)
+        let expected: Bounds? = nil
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    func testBoundsWithElements() {
+        let input = LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 3.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    // MARK: - Equal
+
     func testEqualTrue() {
-        let input1 = LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
-        let input2 = LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let input1 = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let input2 = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
      }
 
      func testEqualFalse() {
-        let input1            = LineString(coordinates: [[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = Point(coordinate: [1.0, 1.0], precision: precision, coordinateSystem: cs)
+        let input1            = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = Point([1.0, 1.0], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }

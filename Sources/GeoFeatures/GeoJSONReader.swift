@@ -146,7 +146,7 @@ public class GeoJSONReader {
     /// Parse coordinates into a Point
     private func point(coordinates: [Any]) throws -> Point {
 
-        return Point(coordinate: try self.coordinate(array: coordinates), precision: self.precision, coordinateSystem: self.cs)
+        return Point(try self.coordinate(array: coordinates), precision: self.precision, coordinateSystem: self.cs)
     }
 
     /// Parse a LineString type
@@ -154,7 +154,7 @@ public class GeoJSONReader {
 
         let coordinates = try Coordinates<[[Any]]>.coordinates(json: jsonObject)
 
-        return LineString(coordinates: try self.coordinates(jsonArray: coordinates), precision: self.precision, coordinateSystem: self.cs)
+        return LineString(try self.coordinates(jsonArray: coordinates), precision: self.precision, coordinateSystem: self.cs)
     }
 
     /// Parse coordinates into a LineString
@@ -166,7 +166,7 @@ public class GeoJSONReader {
             elements.append(try self.coordinate(array: elementCoordinates))
         }
 
-        return LineString(coordinates: try self.coordinates(jsonArray: coordinates), precision: self.precision, coordinateSystem: self.cs)
+        return LineString(try self.coordinates(jsonArray: coordinates), precision: self.precision, coordinateSystem: self.cs)
     }
 
     /// Parse a Polygon type
@@ -189,9 +189,9 @@ public class GeoJSONReader {
 
         /// Get the inner rings
         for i in stride(from: 1, to: coordinates.count, by: 1) {
-            innerRings.append(LinearRing(coordinates: try self.coordinates(jsonArray: coordinates[i]), precision: self.precision, coordinateSystem: self.cs))
+            innerRings.append(LinearRing(try self.coordinates(jsonArray: coordinates[i]), precision: self.precision, coordinateSystem: self.cs))
         }
-        return Polygon(outerRing: outerRing, innerRings: innerRings, precision: self.precision, coordinateSystem: self.cs)
+        return Polygon(outerRing, innerRings: innerRings, precision: self.precision, coordinateSystem: self.cs)
     }
 
     /// Parse a MultiPoint type
@@ -211,7 +211,7 @@ public class GeoJSONReader {
             elements.append(try self.point(coordinates: elementCoordinates))
         }
 
-        return MultiPoint(elements: elements, precision: self.precision, coordinateSystem: self.cs)
+        return MultiPoint(elements, precision: self.precision, coordinateSystem: self.cs)
     }
 
     /// Parse a MultiLineString type
@@ -231,7 +231,7 @@ public class GeoJSONReader {
             elements.append(try self.lineString(coordinates: elementCoordinates))
         }
 
-        return MultiLineString(elements: elements, precision: self.precision, coordinateSystem: self.cs)
+        return MultiLineString(elements, precision: self.precision, coordinateSystem: self.cs)
     }
 
     /// Parse a MultiPolygon type
@@ -251,7 +251,7 @@ public class GeoJSONReader {
             elements.append(try self.polygon(coordinates: elementCoordinates))
         }
 
-        return MultiPolygon(elements: elements, precision: self.precision, coordinateSystem: self.cs)
+        return MultiPolygon(elements, precision: self.precision, coordinateSystem: self.cs)
     }
 
     /// Parse a GeometryCollection type
@@ -269,11 +269,11 @@ public class GeoJSONReader {
         for object in geometries {
             elements.append(try self.read(jsonObject: object))
         }
-        return GeometryCollection(elements: elements, precision: self.precision, coordinateSystem: self.cs)
+        return GeometryCollection(elements, precision: self.precision, coordinateSystem: self.cs)
     }
 
-    private func coordinates(jsonArray: [[Any]]) throws -> CoordinateCollection {
-        var coordinates = CoordinateCollection()
+    private func coordinates(jsonArray: [[Any]]) throws -> [Coordinate] {
+        var coordinates: [Coordinate] = []
 
         for coordinate in jsonArray {
             coordinates.append(try self.coordinate(array: coordinate))
