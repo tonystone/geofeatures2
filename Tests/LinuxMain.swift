@@ -367,7 +367,8 @@ extension Coordinate2DTests {
       return [
                 ("testInit", testInit),
                 ("testInitWithArrayLiteral", testInitWithArrayLiteral),
-                ("testInitWithDictionaryLiteral2D", testInitWithDictionaryLiteral2D),
+                ("testInitWithDictionaryLiteral", testInitWithDictionaryLiteral),
+                ("testInitWithDictionaryLiteralIncorrectElements", testInitWithDictionaryLiteralIncorrectElements),
                 ("testInitCopy", testInitCopy),
                 ("testX", testX),
                 ("testY", testY),
@@ -1665,6 +1666,7 @@ extension PointCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInit", testInit),
                 ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testInitWithDictionaryLiteral", testInitWithDictionaryLiteral),
+                ("testInitWithDictionaryLiteralIncorrectElements", testInitWithDictionaryLiteralIncorrectElements),
                 ("testStartIndex", testStartIndex),
                 ("testEndIndex", testEndIndex),
                 ("testIndexAfter", testIndexAfter),
