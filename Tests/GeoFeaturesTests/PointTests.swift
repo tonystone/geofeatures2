@@ -52,6 +52,15 @@ class PointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.m, nil)
     }
 
+    func testInitWithDictionaryLiteralIncorrectElements () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0, "incorrect": 1.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
     // MARK: MutableCollection Conformance
 
     func testStartIndex() {

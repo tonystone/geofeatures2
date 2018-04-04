@@ -53,12 +53,7 @@ extension Coordinate: ExpressibleByArrayLiteral {
     public init(arrayLiteral values: Double...) {
         precondition(values.count >= 2)
 
-        let count = values.count
-
-        self.x = count > 0 ? values[0] : .nan
-        self.y = count > 1 ? values[1] : .nan
-        self.z = count > 2 ? values[2] :  nil
-        self.m = count > 3 ? values[3] :  nil
+        self.init(x: values[0], y: values[1], z: values.count > 2 ? values[2] :  nil, m: values.count > 3 ? values[3] :  nil)
     }
 }
 
@@ -67,18 +62,20 @@ extension Coordinate: ExpressibleByDictionaryLiteral {
     /// Creates an instance initialized with the given elements.
     public init(dictionaryLiteral elements: (String, Double)...) {
         precondition(elements.count >= 2)
+        precondition(elements[0].0 == "x")
+        precondition(elements[1].0 == "y")
 
-        self.init(x: .nan, y: .nan)
+        var z: Double? = nil
+        var m: Double? = nil
 
-        for (key, value) in elements {
+        for (key, value) in elements[2...] {
             switch key {
-            case "x": self.x = value; break
-            case "y": self.y = value; break
-            case "z": self.z = value; break
-            case "m": self.m = value; break
+            case "z": z = value; break
+            case "m": m = value; break
             default: break
             }
         }
+        self.init(x: elements[0].1, y: elements[1].1, z: z, m: m)
     }
 }
 
