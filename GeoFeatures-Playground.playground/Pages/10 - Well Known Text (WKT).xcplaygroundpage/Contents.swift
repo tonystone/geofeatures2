@@ -5,14 +5,12 @@ import GeoFeaturesPlaygroundSupport
 
 //: Readers and Writers
 
-do {
-    try WKTReader<Coordinate2D>().read(string: "POLYGON ((0 0, 0 90, 90 90, 90 0, 0 0))")
-} catch {
-    print(error)
-}
 
-let writer2D = WKTWriter<Coordinate2D>()
+try WKTReader().read(string: "POLYGON ((0 0, 0 90, 90 90, 90 0, 0 0))")
 
-writer2D.write(Point<Coordinate2D>(coordinate: (x: 24.0, y: 12.0)))
 
-writer2D.write(LineString<Coordinate2D>(elements: [(x: 24.0, y: 12.0), (1.0, 1.0), (2.0, 2.0)]))
+let writer2D = WKTWriter()
+
+try writer2D.write(Point([24.0, 12.0]))
+
+try writer2D.write(LineString([[24.0, 12.0], [1.0, 1.0], [2.0, 2.0]]))

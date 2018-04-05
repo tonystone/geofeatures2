@@ -10,7 +10,7 @@
         <page name='7 - MultiLineStrings'/>
         <page name='8 - MultiPolygons'/>
         <page name='9 - GeometryCollections'/>
-        <page name='10 - WKT'/>
+        <page name='10 - Well Known Text (WKT)'/>
         <page name='11 - GeoJSON'/>
     </pages>
 </playground>

@@ -21,7 +21,7 @@ import XCTest
 import GeoFeatures
 
 #if (os(OSX) || os(iOS) || os(tvOS) || os(watchOS)) && SWIFT_PACKAGE
-    /// TODO: Remove this after figuring out why there seems to be a symbol conflict (error: cannot specialize a non-generic definition) with another Polygon on Swift PM on Apple platforms only.
+    /// Note: Resolution of GeoFeatures.Polygon is ambiguous when ApplicationsServices is included in the app (ApplicationsServices is used by XCTest), this resolves the ambiguity.
     import struct GeoFeatures.Polygon
 #endif
 
@@ -32,54 +32,76 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: Dimension
+
     func testDimension () {
         XCTAssertEqual(GeometryCollection(precision: precision, coordinateSystem: cs).dimension, Dimension.empty)
     }
 
     func testDimensionWithHomogeneousPoint () {
-        XCTAssertEqual(GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (x: 1, y: 1))] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.zero)
+        XCTAssertEqual(GeometryCollection([Point([1, 1])], precision: precision, coordinateSystem: cs).dimension, Dimension.zero)
     }
 
     func testDimensionWithHomogeneousLineString () {
-        XCTAssertEqual(GeometryCollection(elements: [LineString<Coordinate2D>()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
+        XCTAssertEqual(GeometryCollection([LineString()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
     }
 
     func testDimensionWithHomogeneousPolygon () {
-        XCTAssertEqual(GeometryCollection(elements: [Polygon<Coordinate2D>()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
+        XCTAssertEqual(GeometryCollection([Polygon()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
     }
 
     func testDimensionWithNonHomogeneousPointPolygon () {
-        XCTAssertEqual(GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (x: 1, y: 1)), Polygon<Coordinate2D>()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
+        XCTAssertEqual(GeometryCollection([Point([1, 1]), Polygon()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
     }
 
     func testDimensionWithNonHomogeneousPointLineString () {
-        XCTAssertEqual(GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (x: 1, y: 1)), LineString<Coordinate2D>()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
+        XCTAssertEqual(GeometryCollection([Point([1, 1]), LineString()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
     }
+
+    // MARK: Boundary
 
     func testBoundary() {
-        let input = GeometryCollection(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)]), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]  as [Geometry], precision: precision, coordinateSystem: cs).boundary()
+        let input = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs)
         let expected = GeometryCollection(precision: precision, coordinateSystem: cs) // GeometryCollection will always return an empty GeometryCollection for boundary
 
-        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.boundary() == expected, "\(input) is not equal to \(expected)")
     }
 
+    // MARK: - Bounds
+
+    func testBoundsEmpty() {
+        let input = GeometryCollection(precision: precision, coordinateSystem: cs)
+        let expected: Bounds? = nil
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    func testBoundsWithElements() {
+        let input = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 6.0, y: 4.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    // MARK: Equal
+
     func testEqualTrue() {
-        let input1 = GeometryCollection(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)]), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]  as [Geometry], precision: precision, coordinateSystem: cs)
-        let input2 = GeometryCollection(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)]), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]  as [Geometry], precision: precision, coordinateSystem: cs)
+        let input1 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
+        let input2 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
     }
 
     func testEqualWithSameTypesFalse() {
-        let input1            = GeometryCollection(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)]), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]  as [Geometry], precision: precision, coordinateSystem: cs)
+        let input1            = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
         let input2: Geometry  = GeometryCollection(precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
     }
 
     func testEqualWithDifferentTypesFalse() {
-        let input1            = GeometryCollection(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)]), Polygon<Coordinate2D>(rings: ([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)], []))]  as [Geometry], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input1            = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
     }
@@ -92,27 +114,29 @@ class GeometryCollectionGeometryFixedPrecisionCartesianTests: XCTestCase {
     let precision = FixedPrecision(scale: 100)
     let cs       = Cartesian()
 
+    // MARK: Dimension
+
     func testDimension () {
         XCTAssertEqual(GeometryCollection(precision: precision, coordinateSystem: cs).dimension, Dimension.empty)
     }
 
     func testDimensionWithHomogeneousPoint () {
-        XCTAssertEqual(GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (x: 1, y: 1))] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.zero)
+        XCTAssertEqual(GeometryCollection([Point([1, 1])], precision: precision, coordinateSystem: cs).dimension, Dimension.zero)
     }
 
     func testDimensionWithHomogeneousLineString () {
-        XCTAssertEqual(GeometryCollection(elements: [LineString<Coordinate2D>()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
+        XCTAssertEqual(GeometryCollection([LineString()], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
     }
 
     func testDimensionWithHomogeneousPolygon () {
-        XCTAssertEqual(GeometryCollection(elements: [Polygon<Coordinate2D>()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
+        XCTAssertEqual(GeometryCollection([Polygon()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
     }
 
     func testDimensionWithNonHomogeneousPointPolygon () {
-        XCTAssertEqual(GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (x: 1, y: 1)), Polygon<Coordinate2D>()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
+        XCTAssertEqual(GeometryCollection([Point([1, 1]), Polygon()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
     }
 
     func testDimensionWithNonHomogeneousPointLineString () {
-        XCTAssertEqual(GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (x: 1, y: 1)), LineString<Coordinate2D>()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
+        XCTAssertEqual(GeometryCollection([Point([1, 1]), LineString()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
     }
 }

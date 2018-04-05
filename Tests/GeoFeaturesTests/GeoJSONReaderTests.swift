@@ -21,18 +21,15 @@ import XCTest
 @testable import GeoFeatures
 
 #if (os(OSX) || os(iOS) || os(tvOS) || os(watchOS)) && SWIFT_PACKAGE
-    /// TODO: Remove this after figuring out why there seems to be a symbol conflict (error: cannot specialize a non-generic definition) with another Polygon on Swift PM on Apple platforms only.
+    /// Note: Resolution of GeoFeatures.Polygon is ambiguous when ApplicationsServices is included in the app (ApplicationsServices is used by XCTest), this resolves the ambiguity.
     import struct GeoFeatures.Polygon
 #endif
 
-// MARK: - Coordinate2D, FloatingPrecision, Cartesian -
+// MARK: - Coordinate 2D, FloatingPrecision, Cartesian -
 
 class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    private typealias CoordinateType = Coordinate2D
-    private typealias GeoJSONReaderType = GeoJSONReader<CoordinateType>
-
-    private var reader = GeoJSONReaderType(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+    private var reader = GeoJSONReader(precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
     // MARK: - Negative Tests
 
@@ -126,21 +123,6 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         }
     }
 
-    func testReadWithInvalidNumberOfCoordinates() {
-
-        let input = "{ \"type\": \"Point\", \"coordinates\": [1.0, 1.0, 1.0, 1.0] }"
-        let expected = "Invalid number of coordinates (4) supplied for type GeoFeatures.Coordinate2D."
-
-        XCTAssertThrowsError(try reader.read(string: input)) { error in
-
-            if case GeoJSONReaderError.invalidNumberOfCoordinates(let message) = error {
-                XCTAssertEqual(message, expected)
-            } else {
-                XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
-            }
-        }
-    }
-
     func testReadWithMissingGeometries() {
 
         let input = "{ \"type\": \"GeometryCollection\" }"
@@ -176,17 +158,17 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testReadWithValidPoint() {
 
         let input = "{ \"type\": \"Point\", \"coordinates\": [1.0, 1.0] }"
-        let expected = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0))
+        let expected = Point([1.0, 1.0])
 
-        XCTAssertEqual(try reader.read(string: input) as? Point<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? Point, expected)
     }
 
     func testReadWithValidLineString() {
 
         let input = "{ \"type\": \"LineString\", \"coordinates\": [ [1.0, 1.0], [2.0, 2.0] ] }"
-        let expected = LineString<CoordinateType>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)])
+        let expected = LineString([[1.0, 1.0], [2.0, 2.0]])
 
-        XCTAssertEqual(try reader.read(string: input) as? LineString<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? LineString, expected)
     }
 
     func testReadWithValidPolygon() {
@@ -197,17 +179,17 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
                         "[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]" +
                         "]" +
                     "}"
-        let expected = Polygon<CoordinateType>(rings: ([(x: 100.0, y: 0.0), (x: 101.0, y: 0.0), (x: 101.0, y: 1.0), (x: 100.0, y: 1.0), (x: 100.0, y: 0.0)], [[(x: 100.2, y: 0.2), (x: 100.8, y: 0.2), (x: 100.8, y: 0.8), (x: 100.2, y: 0.8), (x: 100.2, y: 0.2)]]))
+        let expected = Polygon([[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]], innerRings: [[[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]])
 
-        XCTAssertEqual(try reader.read(string: input) as? Polygon<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? Polygon, expected)
     }
 
     func testReadWithValidMultiPoint() {
 
         let input = "{ \"type\": \"MultiPoint\", \"coordinates\": [ [100.0, 0.0], [101.0, 1.0] ] }"
-        let expected = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 100.0, y: 0.0)), Point<CoordinateType>(coordinate: (x: 101.0, y: 1.0))])
+        let expected = MultiPoint([Point([100.0, 0.0]), Point([101.0, 1.0])])
 
-        XCTAssertEqual(try reader.read(string: input) as? MultiPoint<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? MultiPoint, expected)
     }
 
     func testReadWithValidMultiLineString() {
@@ -218,9 +200,9 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
                             "[ [102.0, 2.0], [103.0, 3.0] ]" +
                         "]" +
                     "}"
-        let expected = MultiLineString<CoordinateType>(elements: [LineString<CoordinateType>(elements: [(x: 100.0, y: 0.0), (x: 101.0, y: 1.0)]), LineString<CoordinateType>(elements: [(x: 102.0, y: 2.0), (x: 103.0, y: 3.0)])])
+        let expected = MultiLineString([LineString([[100.0, 0.0], [101.0, 1.0]]), LineString([[102.0, 2.0], [103.0, 3.0]])])
 
-        XCTAssertEqual(try reader.read(string: input) as? MultiLineString<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? MultiLineString, expected)
     }
 
     func testReadWithValidMultiPolygon() {
@@ -232,12 +214,12 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
                             " [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]" +
                         "]" +
                     "}"
-        let expected = MultiPolygon<CoordinateType>(elements: [
-                Polygon<CoordinateType>(rings: ([(x: 102.0, y: 2.0), (x: 103.0, y: 2.0), (x: 103.0, y: 3.0), (x: 102.0, y: 3.0), (x: 102.0, y: 2.0)], [])),
-                Polygon<CoordinateType>(rings: ([(x: 100.0, y: 0.0), (x: 101.0, y: 0.0), (x: 101.0, y: 1.0), (x: 100.0, y: 1.0), (x: 100.0, y: 0.0)], [[(x: 100.2, y: 0.2), (x: 100.8, y: 0.2), (x: 100.8, y: 0.8), (x: 100.2, y: 0.8), (x: 100.2, y: 0.2)]]))
+        let expected = MultiPolygon([
+                Polygon([[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]], innerRings: []),
+                Polygon([[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]], innerRings: [[[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]])
                 ])
 
-        XCTAssertEqual(try reader.read(string: input) as? MultiPolygon<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? MultiPolygon, expected)
     }
 
     func testReadWithValidGeometryCollection() {
@@ -248,57 +230,37 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
                             "{ \"type\": \"LineString\", \"coordinates\": [ [101.0, 0.0], [102.0, 1.0] ] }" +
                         "]" +
                     "}"
-        let expected = GeometryCollection(elements: [
-                Point<CoordinateType>(coordinate: (x: 100.0, y: 0.0)),
-                LineString<CoordinateType>(elements: [(x: 101.0, y: 0.0), (x: 102.0, y: 1.0)])
+        let expected = GeometryCollection([
+                Point([100.0, 0.0]),
+                LineString([[101.0, 0.0], [102.0, 1.0]])
                 ] as [Geometry])
 
         XCTAssertEqual(try reader.read(string: input) as? GeometryCollection, expected)
     }
 }
 
-// MARK: - Coordinate3DM, FixedPrecision, Cartesian -
+// MARK: - Coordinate 3DM, FixedPrecision, Cartesian -
 
 class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
-    private typealias CoordinateType = Coordinate3DM
-    private typealias GeoJSONReaderType = GeoJSONReader<CoordinateType>
-
-    private var reader = GeoJSONReaderType(precision: FixedPrecision(scale: 100), coordinateSystem: Cartesian())
-
-    // MARK: negative Tests
-
-    func testReadWithInvalidNumberOfCoordinates() {
-
-        let input = "{ \"type\": \"Point\", \"coordinates\": [1.0, 1.0, 1.0] }"
-        let expected = "Invalid number of coordinates (3) supplied for type GeoFeatures.Coordinate3DM."
-
-        XCTAssertThrowsError(try reader.read(string: input)) { error in
-
-            if case GeoJSONReaderError.invalidNumberOfCoordinates(let message) = error {
-                XCTAssertEqual(message, expected)
-            } else {
-                XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
-            }
-        }
-    }
+    private var reader = GeoJSONReader(precision: FixedPrecision(scale: 100), coordinateSystem: Cartesian())
 
     // MARK: Positive Tests
 
     func testReadWithValidPoint() {
 
         let input = "{ \"type\": \"Point\", \"coordinates\": [1.001, 1.001, 1.001, 1.001] }"
-        let expected = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0, z: 1.0, m: 1.0))
+        let expected = Point([1.0, 1.0, 1.0, 1.0])
 
-        XCTAssertEqual(try reader.read(string: input) as? Point<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? Point, expected)
     }
 
     func testReadWithValidLineString() {
 
         let input = "{ \"type\": \"LineString\", \"coordinates\": [ [1.0, 1.0, 1.0, 1.0], [2.0, 2.0, 2.0, 2.0] ] }"
-        let expected = LineString<CoordinateType>(elements: [(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)])
+        let expected = LineString([[1.0, 1.0, 1.0, 1.0], [2.0, 2.0, 2.0, 2.0]])
 
-        XCTAssertEqual(try reader.read(string: input) as? LineString<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? LineString, expected)
     }
 
     func testReadWithValidPolygon() {
@@ -309,17 +271,17 @@ class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
                         "[ [100.2, 0.2, 1.0, 1.0], [100.8, 0.2, 1.0, 1.0], [100.8, 0.8, 1.0, 1.0], [100.2, 0.8, 1.0, 1.0], [100.2, 0.2, 1.0, 1.0] ]" +
                         "]" +
                     "}"
-        let expected = Polygon<CoordinateType>(rings: ([(x: 100.0, y: 0.0, z: 1.0, m: 1.0), (x: 101.0, y: 0.0, z: 1.0, m: 1.0), (x: 101.0, y: 1.0, z: 1.0, m: 1.0), (x: 100.0, y: 1.0, z: 1.0, m: 1.0), (x: 100.0, y: 0.0, z: 1.0, m: 1.0)], [[(x: 100.2, y: 0.2, z: 1.0, m: 1.0), (x: 100.8, y: 0.2, z: 1.0, m: 1.0), (x: 100.8, y: 0.8, z: 1.0, m: 1.0), (x: 100.2, y: 0.8, z: 1.0, m: 1.0), (x: 100.2, y: 0.2, z: 1.0, m: 1.0)]]))
+        let expected = Polygon([[100.0, 0.0, 1.0, 1.0], [101.0, 0.0, 1.0, 1.0], [101.0, 1.0, 1.0, 1.0], [100.0, 1.0, 1.0, 1.0], [100.0, 0.0, 1.0, 1.0]], innerRings: [[[100.2, 0.2, 1.0, 1.0], [100.8, 0.2, 1.0, 1.0], [100.8, 0.8, 1.0, 1.0], [100.2, 0.8, 1.0, 1.0], [100.2, 0.2, 1.0, 1.0]]])
 
-        XCTAssertEqual(try reader.read(string: input) as? Polygon<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? Polygon, expected)
     }
 
     func testReadWithValidMultiPoint() {
 
         let input = "{ \"type\": \"MultiPoint\", \"coordinates\": [ [100.0, 0.0, 1.0, 1.0], [101.0, 1.0, 1.0, 1.0] ] }"
-        let expected = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 100.0, y: 0.0, z: 1.0, m: 1.0)), Point<CoordinateType>(coordinate: (x: 101.0, y: 1.0, z: 1.0, m: 1.0))])
+        let expected = MultiPoint([Point([100.0, 0.0, 1.0, 1.0]), Point([101.0, 1.0, 1.0, 1.0])])
 
-        XCTAssertEqual(try reader.read(string: input) as? MultiPoint<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? MultiPoint, expected)
     }
 
     func testReadWithValidMultiLineString() {
@@ -330,9 +292,9 @@ class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
                             "[ [102.0, 2.0, 1.0, 1.0], [103.0, 3.0, 1.0, 1.0] ]" +
                         "]" +
                     "}"
-        let expected = MultiLineString<CoordinateType>(elements: [LineString<CoordinateType>(elements: [(x: 100.0, y: 0.0, z: 1.0, m: 1.0), (x: 101.0, y: 1.0, z: 1.0, m: 1.0)]), LineString<CoordinateType>(elements: [(x: 102.0, y: 2.0, z: 1.0, m: 1.0), (x: 103.0, y: 3.0, z: 1.0, m: 1.0)])])
+        let expected = MultiLineString([LineString([[100.0, 0.0, 1.0, 1.0], [101.0, 1.0, 1.0, 1.0]]), LineString([[102.0, 2.0, 1.0, 1.0], [103.0, 3.0, 1.0, 1.0]])])
 
-        XCTAssertEqual(try reader.read(string: input) as? MultiLineString<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? MultiLineString, expected)
     }
 
     func testReadWithValidMultiPolygon() {
@@ -344,12 +306,12 @@ class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
                             " [[100.2, 0.2, 1.0, 1.0], [100.8, 0.2, 1.0, 1.0], [100.8, 0.8, 1.0, 1.0], [100.2, 0.8, 1.0, 1.0], [100.2, 0.2, 1.0, 1.0]]]" +
                         "]" +
                     "}"
-        let expected = MultiPolygon<CoordinateType>(elements: [
-                Polygon<CoordinateType>(rings: ([(x: 102.0, y: 2.0, z: 1.0, m: 1.0), (x: 103.0, y: 2.0, z: 1.0, m: 1.0), (x: 103.0, y: 3.0, z: 1.0, m: 1.0), (x: 102.0, y: 3.0, z: 1.0, m: 1.0), (x: 102.0, y: 2.0, z: 1.0, m: 1.0)], [])),
-                Polygon<CoordinateType>(rings: ([(x: 100.0, y: 0.0, z: 1.0, m: 1.0), (x: 101.0, y: 0.0, z: 1.0, m: 1.0), (x: 101.0, y: 1.0, z: 1.0, m: 1.0), (x: 100.0, y: 1.0, z: 1.0, m: 1.0), (x: 100.0, y: 0.0, z: 1.0, m: 1.0)], [[(x: 100.2, y: 0.2, z: 1.0, m: 1.0), (x: 100.8, y: 0.2, z: 1.0, m: 1.0), (x: 100.8, y: 0.8, z: 1.0, m: 1.0), (x: 100.2, y: 0.8, z: 1.0, m: 1.0), (x: 100.2, y: 0.2, z: 1.0, m: 1.0)]]))
+        let expected = MultiPolygon([
+                Polygon([[102.0, 2.0, 1.0, 1.0], [103.0, 2.0, 1.0, 1.0], [103.0, 3.0, 1.0, 1.0], [102.0, 3.0, 1.0, 1.0], [102.0, 2.0, 1.0, 1.0]], innerRings: []),
+                Polygon([[100.0, 0.0, 1.0, 1.0], [101.0, 0.0, 1.0, 1.0], [101.0, 1.0, 1.0, 1.0], [100.0, 1.0, 1.0, 1.0], [100.0, 0.0, 1.0, 1.0]], innerRings: [[[100.2, 0.2, 1.0, 1.0], [100.8, 0.2, 1.0, 1.0], [100.8, 0.8, 1.0, 1.0], [100.2, 0.8, 1.0, 1.0], [100.2, 0.2, 1.0, 1.0]]])
                 ])
 
-        XCTAssertEqual(try reader.read(string: input) as? MultiPolygon<CoordinateType>, expected)
+        XCTAssertEqual(try reader.read(string: input) as? MultiPolygon, expected)
     }
 
     func testReadWithValidGeometryCollection() {
@@ -360,9 +322,9 @@ class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
                             "{ \"type\": \"LineString\", \"coordinates\": [ [101.0, 0.0, 1.0, 1.0], [102.0, 1.0, 1.0, 1.0] ] }" +
                         "]" +
                     "}"
-        let expected = GeometryCollection(elements: [
-                Point<CoordinateType>(coordinate: (x: 100.0, y: 0.0, z: 1.0, m: 1.0)),
-                LineString<CoordinateType>(elements: [(x: 101.0, y: 0.0, z: 1.0, m: 1.0), (x: 102.0, y: 1.0, z: 1.0, m: 1.0)])
+        let expected = GeometryCollection([
+                Point([100.0, 0.0, 1.0, 1.0]),
+                LineString([[101.0, 0.0, 1.0, 1.0], [102.0, 1.0, 1.0, 1.0]])
                 ] as [Geometry])
 
         XCTAssertEqual(try reader.read(string: input) as? GeometryCollection, expected)
@@ -373,50 +335,7 @@ class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
 class GeoJSONReaderInternal: XCTestCase {
 
-    private typealias CoordinateType = Coordinate2D
-    private typealias GeoJSONReaderType = GeoJSONReader<CoordinateType>
-
-    private var reader = GeoJSONReaderType(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-
-    func testCoordinateWithDouble() {
-
-        let input = [Double(1.0), Double(1.0)]
-        let expected = CoordinateType(array: [1.0, 1.0])
-
-        XCTAssertEqual(try reader.coordinate(array: input), expected)
-    }
-
-    func testCoordinateWithNSNumber() {
-
-        let input = [NSNumber(value: 1.0), NSNumber(value: 1.0)]
-        let expected = CoordinateType(array: [1.0, 1.0])
-
-        XCTAssertEqual(try reader.coordinate(array: input), expected)
-    }
-
-    func testCoordinateWithInt() {
-
-        let input = [Int(1), Int(1)]
-        let expected = CoordinateType(array: [1.0, 1.0])
-
-        XCTAssertEqual(try reader.coordinate(array: input), expected)
-    }
-
-    func testCoordinateWithFloat() {
-
-        let input = [Float(1.0), Float(1.0)]
-        let expected = CoordinateType(array: [1.0, 1.0])
-
-        XCTAssertEqual(try reader.coordinate(array: input), expected)
-    }
-
-    func testCoordinateWithString() {
-
-        let input = ["1.0", "1.0"]
-        let expected = CoordinateType(array: [1.0, 1.0])
-
-        XCTAssertEqual(try reader.coordinate(array: input), expected)
-    }
+    private var reader = GeoJSONReader(precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
     func testCoordinateWithInvalidString() {
 

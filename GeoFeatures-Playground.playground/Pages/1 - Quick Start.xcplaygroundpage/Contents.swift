@@ -18,16 +18,13 @@ fixedPrecision1 == floatingPrecision1
 fixedPrecision4 == floatingPrecision1
 
 //: ## Usage scenarios
-/// Simple Array of tubles used as elements
-let coordinates2d: [(x: Double, y: Double)]            = [(0, 0), (0, 7), (4, 2), (2, 0), (0, 0)]
-let coordinates3d: [(x: Double, y: Double, z: Double)] = [(0, 0, 0), (0, 7, 0), (4, 2, 0), (2, 0, 0), (0, 0, 0)]
 
 /// LinearRing created with simple tuble array
-LinearRing<Coordinate2D>(elements: coordinates2d)
+LinearRing([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
 
-LinearRing<Coordinate3D>(elements: coordinates3d)
+LinearRing([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]])
 
-let geometry1: Geometry = LineString<Coordinate3D>(elements: [(x: 0, y: 0, z: 0), (0, 7, 0), (4, 2, 0), (2, 0, 0), (0, 0, 0)])
+let geometry1: Geometry = LineString([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
 
 if let linearType = geometry1 as? Curve {
     linearType.length()
@@ -36,38 +33,54 @@ if let linearType = geometry1 as? Curve {
 }
 
 /// Create a Polygon with a simple array of tuples and an array of innerRings
-let polygon1 = Polygon<Coordinate2D>(outerRing: [(x: 0.0, y: 0.0), (x: 0.0, y: 7.0), (x: 4, y: 2), (x: 2, y: 0), (x: 0, y: 0)])
+let polygon1 = Polygon([[0.0, 0.0], [0.0, 7.0], [4, 2], [2, 0], [0, 0]])
 
-/// Create a Polygon with a tuple simaler to WKT with the syntax ([tuples], [[tuples]])
-let polygon2 = Polygon<Coordinate2D>(rings: ([(x: 0, y: 0), (0, 7), (4, 2), (2, 0), (0, 0)], []))
-let polygon3 = Polygon<Coordinate2D>(rings: ([(x: 0, y: 0), (0, 7), (4, 2), (2, 0), (0, 0)], [[(0.5, 0.5), (0.5, 6.5), (3.5, 1.5), (1.5, 0.5), (0.5, 0.5)]]))
+/// Create a Polygon with a tuple similar to WKT with the syntax ([tuples], [[tuples]])
+let polygon2 = Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
+let polygon3 = Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]], innerRings: [[[0.5, 0.5], [0.5, 6.5], [3.5, 1.5], [1.5, 0.5], [0.5, 0.5]]])
 
 /// Geoemetry arrays can be constructed and used to create rthe collection types
-var geometryArray: [Geometry] = [Point<Coordinate2D>(coordinate: (1, 1)), Polygon<Coordinate2D>()]
-var pointArray:    [Geometry] = [Point<Coordinate2D>(coordinate: (1, 1)), Point<Coordinate2D>(coordinate: (2, 2))]
+var geometryArray: [Geometry] = [Point([1, 1]), Polygon()]
+var pointArray:    [Geometry] = [Point([1, 1]), Point([2, 2])]
 
-var geometryCollection1 = GeometryCollection(elements: geometryArray)
-var geometryCollection2 = GeometryCollection(elements: pointArray)
-
-/// let multiPoint = MultiPoint(pointArray)
+var geometryCollection1 = GeometryCollection(geometryArray)
+var geometryCollection2 = GeometryCollection(pointArray)
 
 ///  Iterate over a collection type
 for geometry in geometryCollection1 {
     print(geometry)
 }
 
-Point<Coordinate2D>(coordinate: (1, 1)).isEmpty()
-Polygon<Coordinate3DM>().isEmpty()
-Polygon<Coordinate2D>(rings: ([(x: 0, y: 0), (0, 7), (4, 2), (2, 0), (0, 0)], [])).isEmpty()
-LineString<Coordinate2D>().isEmpty()
-LineString<Coordinate3D>(elements: [(x: 0, y: 0, z: 0), (0, 7, 0), (4, 2, 0), (2, 0, 0), (0, 0, 0)]).isEmpty()
+Point([1, 1]).isEmpty()
+Polygon().isEmpty()
+Polygon([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]]).isEmpty()
+LineString().isEmpty()
+LineString([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]]).isEmpty()
 
 GeometryCollection().isEmpty()
-GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (1, 1))] as [Geometry]).isEmpty()
+GeometryCollection([Point([1, 1]), LineString([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]])])
 
-GeometryCollection(elements: [Point<Coordinate2D>(coordinate: (1, 1))] as [Geometry])
+GeometryCollection([Point([1, 1])])
 
 /// Comparison of points
-let pointsMatch1 = Point<Coordinate2D>(coordinate: (1.4, 2.3)) == Point<Coordinate2D>(coordinate: (1.4, 2.3))
+let pointsMatch1 = Point([1.4, 2.3]) == Point([1.4, 2.3])
 
-let pointsMatch2 = Point<Coordinate2D>(coordinate: (1, 1)) == Point<Coordinate2D>(coordinate: (1.4, 2.3))
+let pointsMatch2 = Point([1, 1]) == Point([1.4, 2.3])
+
+//: Readers and Writers
+
+do {
+    try WKTReader().read(string: "LINESTRING (0 0, 0 90, 90 90, 90 0, 0 0)")
+} catch {
+   print(error)
+}
+
+let writer = WKTWriter()
+
+do {
+    try writer.write(Point([24.0, 12.0]))
+
+    try writer.write(LineString([[24.0, 12.0], [1.0, 1.0], [2.0, 2.0]]))
+} catch {
+    print(error)
+}

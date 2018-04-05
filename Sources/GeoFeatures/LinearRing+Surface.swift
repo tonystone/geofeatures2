@@ -35,13 +35,13 @@ extension LinearRing: Surface {
     public func area() -> Double {
         var area: Double = 0.0
 
-        if coordinates.count > 0 && self.isClosed() {
+        if self.count > 0 && self.isClosed() {
 
-            var c1 = coordinates[0]
+            var c1 = self[0]
 
-            for index in stride(from: 1, to: coordinates.count, by: 1) {
+            for index in stride(from: 1, to: self.count, by: 1) {
 
-                let c2 = coordinates[index]
+                let c2 = self[index]
 
                 let height = (c1.y + c2.y) / 2
                 let width  = c2.x - c1.x

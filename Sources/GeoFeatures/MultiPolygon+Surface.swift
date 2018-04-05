@@ -24,10 +24,10 @@ extension MultiPolygon: Surface {
     public func area() -> Double {
         var area: Double = 0.0
 
-        if elements.count > 0 {
+        if self.count > 0 {
 
-            for index in 0..<elements.count {
-                area += elements[index].area()
+            for index in 0..<self.count {
+                area += self[index].area()
             }
         }
         return self.precision.convert(area)

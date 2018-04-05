@@ -28,16 +28,16 @@ import Swift
 extension MultiLineString: Curve {
 
     ///
-    /// - Returns: True if all sub-elements are closed (begin and end coordinates are equal)
+    /// - Returns: True if all sub-self are closed (begin and end coordinates are equal)
     ///
     public func isClosed() -> Bool {
 
-        if elements.count == 0 {
+        if self.count == 0 {
             return false
         }
 
-        for i in 0..<elements.count {
-            if !elements[i].isClosed() {
+        for i in 0..<self.count {
+            if !self[i].isClosed() {
                 return false
             }
         }
@@ -45,16 +45,16 @@ extension MultiLineString: Curve {
     }
 
     ///
-    /// - Returns: The length of this Curve calculated using the sum of the length of the sub-elements.
+    /// - Returns: The length of this Curve calculated using the sum of the length of the sub-self.
     ///
     public func length() -> Double {
 
         var length: Double = 0.0
 
-        if elements.count > 0 {
+        if self.count > 0 {
 
-            for i in 0..<elements.count {
-                length += elements[i].length()
+            for i in 0..<self.count {
+                length += self[i].length()
             }
         }
         return self.precision.convert(length)
