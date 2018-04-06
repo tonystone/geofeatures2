@@ -30,17 +30,24 @@ public enum GeoJSONWriterError: Error {
 ///
 /// GeoJSONWriter writer for GeoFeatures based on the Internet Engineering Task Force (IETF) proposed standard "The GeoJSON Format"
 ///
-/// - Parameters:
-///     - CoordinateType: The coordinate type to use for all generated Geometry types.
-///
 /// For more information see [Internet Engineering Task Force (IETF) - The GeoJSON Format](https://tools.ietf.org/html/rfc7946#section-4)
 ///
-public class GeoJSONWriter<CoordinateType: Coordinate & CopyConstructable & _ArrayConstructable> {
+public class GeoJSONWriter {
+
+    public enum Axis {
+        case z, m
+    }
+
+    public enum Errors: Error  {
+        case invalidNumberOfCoordinates(String)
+    }
 
     ///
     /// Initialize this writer
     ///
-    public init() {}
+    public init(axes: [Axis] = []) {
+        self.output = (axes.contains(.z), axes.contains(.m))
+    }
 
     ///
     /// Based on the geometry passed in, converts it into a Object representation as specified by
@@ -56,45 +63,50 @@ public class GeoJSONWriter<CoordinateType: Coordinate & CopyConstructable & _Arr
 
         switch geometry {
 
-        case let point as Point<CoordinateType>:
-            return self.pointObject(point)
+        case let point as Point:
+            return try self.pointObject(point)
 
-        case let lineString as LineString<CoordinateType>:
-            return self.lineStringObject(lineString)
+        case let lineString as LineString:
+            return try self.lineStringObject(lineString)
 
-        case let polygon as Polygon<CoordinateType>:
-            return self.polygonObject(polygon)
+        case let polygon as Polygon:
+            return try self.polygonObject(polygon)
 
-        case let multiPoint as MultiPoint<CoordinateType>:
-            return self.multiPointObject(multiPoint)
+        case let multiPoint as MultiPoint:
+            return try self.multiPointObject(multiPoint)
 
         default:
             throw GeoJSONWriterError.unsupportedType("Unsupported type \"\(String(describing: geometry.self))\".")
         }
     }
 
+    private let output: (z: Bool, m: Bool)
+}
+
+extension GeoJSONWriter {
+
     ///
     /// Creates a Point GeoJSON Object.
     ///
-    fileprivate func pointObject(_ point: Point<CoordinateType>) -> [String: Any] {
-        return [TYPE: "Point", COORDINATES: self.coordinateArray(point.coordinate)]
+    fileprivate func pointObject(_ point: Point) throws -> [String: Any] {
+        return [TYPE: "Point", COORDINATES: try self.coordinateArray(point.coordinate)]
     }
 
     ///
     /// Creates a LineString GeoJSON Object.
     ///
-    fileprivate func lineStringObject(_ lineString: LineString<CoordinateType>) -> [String: Any] {
-        return [TYPE: "LineString", COORDINATES: lineString.map({ self.coordinateArray($0) })]
+    fileprivate func lineStringObject(_ lineString: LineString) throws -> [String: Any] {
+        return [TYPE: "LineString", COORDINATES: try lineString.map({ try self.coordinateArray($0) })]
     }
 
     ///
     /// Creates a Polygon GeoJSON Object.
     ///
-    fileprivate func polygonObject(_ polygon: Polygon<CoordinateType>) -> [String: Any] {
-        var coordinates =  [polygon.outerRing.map({ self.coordinateArray($0) })]
+    fileprivate func polygonObject(_ polygon: Polygon) throws -> [String: Any] {
+        var coordinates =  [try polygon.outerRing.map({ try self.coordinateArray($0) })]
 
         for ring in polygon.innerRings {
-            coordinates.append(ring.map({ self.coordinateArray($0) }))
+            coordinates.append(try ring.map({ try self.coordinateArray($0) }))
         }
         return [TYPE: "Polygon", COORDINATES: coordinates]
     }
@@ -102,23 +114,29 @@ public class GeoJSONWriter<CoordinateType: Coordinate & CopyConstructable & _Arr
     ///
     /// Creates a MultiPoint GeoJSON Object.
     ///
-    fileprivate func multiPointObject(_ multiPoint: MultiPoint<CoordinateType>) -> [String: Any] {
-        return [TYPE: "MultiPoint", COORDINATES: multiPoint.map({ self.coordinateArray($0.coordinate) })]
+    fileprivate func multiPointObject(_ multiPoint: MultiPoint) throws -> [String: Any] {
+        return [TYPE: "MultiPoint", COORDINATES: try multiPoint.map({ try self.coordinateArray($0.coordinate) })]
     }
 
     ///
     /// Creates an array of values for printing.
     ///
-    fileprivate func coordinateArray(_ coordinate: CoordinateType) -> [Double] {
+    fileprivate func coordinateArray(_ coordinate: Coordinate) throws -> [Double] {
 
         var coordinateArray = [coordinate.x, coordinate.y]
 
-        if let coordinate = coordinate as? ThreeDimensional {
-            coordinateArray.append(coordinate.z)
+        if output.z {
+            guard let z = coordinate.z
+                else { throw Errors.invalidNumberOfCoordinates("Coordinate \(coordinate) is missing the Z axis.") }
+
+            coordinateArray.append(z)
         }
 
-        if let coordinate = coordinate as? Measured {
-            coordinateArray.append(coordinate.m)
+        if output.m {
+            guard let m = coordinate.m
+                else { throw Errors.invalidNumberOfCoordinates("Coordinate \(coordinate) is missing the M axis.") }
+
+            coordinateArray.append(m)
         }
         return coordinateArray
     }

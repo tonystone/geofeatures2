@@ -22,18 +22,14 @@ import Swift
 extension MultiPolygon: Surface {
 
     public func area() -> Double {
+        var area: Double = 0.0
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Double in
+        if self.count > 0 {
 
-            var area: Double = 0.0
-
-            if header.pointee.count > 0 {
-
-                for index in 0..<header.pointee.count {
-                    area += elements[index].area()
-                }
+            for index in 0..<self.count {
+                area += self[index].area()
             }
-            return self.precision.convert(area)
         }
+        return self.precision.convert(area)
     }
 }

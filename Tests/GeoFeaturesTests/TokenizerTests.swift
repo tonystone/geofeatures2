@@ -164,8 +164,8 @@ class TokenizerTests: XCTestCase {
         }
     }
 
-/// FIXME: THis is broken on Linux and crashes the tests.
-///     testColumnUnicodeFlags() { func
+///    /// FIXME: This is broken on Linux and crashes the tests. It seems that the indexes are off for unicode on linux.  This is the only 16 byte code.
+///    testColumnUnicodeFlags() {
 ///        let tokenizer = Tokenizer<TestToken>(string: "🇵🇷🇵🇷🇵🇷🇵🇷🇵🇷🇵🇷🇵🇷🇵🇷🇵🇷")
 ///
 ///        for c in 1...tokenizer.matchString.count {

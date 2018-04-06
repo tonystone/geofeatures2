@@ -33,28 +33,24 @@ extension LinearRing: Surface {
     /// - requires: isClosed == true
     ///
     public func area() -> Double {
+        var area: Double = 0.0
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Double in
+        if self.count > 0 {
 
-            var area: Double = 0.0
+            var c1 = self[0]
 
-            if header.pointee.count > 0 {
+            for index in stride(from: 1, to: self.count, by: 1) {
 
-                var c1 = elements[0]
+                let c2 = self[index]
 
-                for index in stride(from: 1, to: header.pointee.count, by: 1) {
+                let height = (c1.y + c2.y) / 2
+                let width  = c2.x - c1.x
 
-                    let c2 = elements[index]
+                area += width * height
 
-                    let height = (c1.y + c2.y) / 2
-                    let width  = c2.x - c1.x
-
-                    area += width * height
-
-                    c1 = c2
-                }
+                c1 = c2
             }
-            return self.precision.convert(area)
         }
+        return self.precision.convert(area)
     }
 }

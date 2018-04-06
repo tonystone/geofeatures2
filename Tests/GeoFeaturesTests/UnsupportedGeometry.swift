@@ -36,5 +36,9 @@ internal struct UnsupportedGeometry: Geometry {
         return GeometryCollection()
     }
 
+    func bounds() -> Bounds? {
+        return nil
+    }
+
     func equals(_ other: Geometry) -> Bool { return false }
 }

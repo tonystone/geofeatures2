@@ -15,7 +15,7 @@
    <img src="https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat" alt="Swift 4.0">
 </a>
 <a href="https://github.com/tonystone/geofeatures2/" target="_blank">
-   <img src="https://img.shields.io/cocoapods/v/GeoFeatures2.svg?style=flat" alt="Pod Version">
+   <img src="https://img.shields.io/cocoapods/v/GeoFeatures.svg?style=flat" alt="Pod Version">
 </a>
 <a href="https://github.com/tonystone/geofeatures2/" target="_blank">
    <img src="https://travis-ci.org/tonystone/geofeatures2.svg?branch=master" alt="Build Status">
@@ -28,14 +28,14 @@
 
 GeoFeatures is a lightweight, high performance geometry library for Swift.  It supports the full set of geometric primitives such as Point, Polygon, and LineString as well as collection classes such as MultiPoint, MultiPolygon,and MultiLineString.
 
-![Inheritance Diagram](Docs/GeoFeatures-Inheritance-Diagram.png)
+![Inheritance Diagram](Documentation/GeoFeatures-Inheritance-Diagram.png)
 
 ## Features
 - [x] Easy to use.
 - [x] Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, Box and GeometryCollection implementations.
 - [x] [WKT (Well-Known-Text)](https://en.wikipedia.org/wiki/Well-known_text) input and output.
 - [x] [GeoJSON](http://geojson.org/) input and output.
-- [x] Indexed Subscripting support for all collection types (e.g. `Point * point = multiPoint[0]`).
+- [x] Indexed Subscripting support for all collection types (e.g. `let point = multiPoint[0]`).
 - [x] **Swift**: Written in pure Swift.
 - [x] CocoaPod framework support (compile as Objective-C framework or static lib).
 - [x] Open Sourced under the the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
@@ -43,17 +43,6 @@ GeoFeatures is a lightweight, high performance geometry library for Swift.  It s
 ## Sources and Binaries
 
 You can find the latest sources and binaries on [github](https://github.com/tonystone/geofeatures2).
-
-## Communication and Contributions
-
-- If you **found a bug**, _and can provide steps to reliably reproduce it_, [open an issue](https://github.com/tonystone/geofeatures2/issues).
-- If you **have a feature request**, [open an issue](https://github.com/tonystone/geofeatures2/issues).
-- If you **want to contribute**
-   - Fork it! [GeoFeatures repository](https://github.com/tonystone/geofeatures2)
-   - Create your feature branch: `git checkout -b my-new-feature`
-   - Commit your changes: `git commit -am 'Add some feature'`
-   - Push to the branch: `git push origin my-new-feature`
-   - Submit a pull request :-)
 
 ## Installation (Swift Package Manager)
 
@@ -70,6 +59,21 @@ it, simply add the following line to your Podfile:
 pod "GeoFeatures"
 ```
 See the ["Using CocoaPods"](https://guides.cocoapods.org/using/using-cocoapods.html) guide for more information.
+
+## Communication and Contributions
+
+- If you **found a bug**, _and can provide steps to reliably reproduce it_, [open an issue](https://github.com/tonystone/geofeatures2/issues).
+- If you **have a feature request**, [open an issue](https://github.com/tonystone/geofeatures2/issues).
+- If you **want to contribute**
+   - Review  [Documentation/GeoFeatures-Development](Documentation/GeoFeatures-Development.md).
+   - Fork it! [GeoFeatures repository](https://github.com/tonystone/geofeatures2)
+   - Create your feature branch off of **master**: `git checkout -b my-new-feature`
+   - Commit your changes: `git commit -am 'Add some feature'`
+   - Push to the branch: `git push origin my-new-feature`
+   - Submit a pull request :-)
+   
+> For instructions on how to build GeoFeatures for development, please see [Documentation/GeoFeatures-Development](Documentation/GeoFeatures-Development.md).
+
 
 ## Minimum Requirements
 
@@ -92,7 +96,7 @@ Minimum Runtime Version
 >
 > See the [README](https://github.com/tonystone/vagrant-swift/blob/master/README.md) for instructions.
 > 
-
+   
 ## License
 
 GeoFeatures is released under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)

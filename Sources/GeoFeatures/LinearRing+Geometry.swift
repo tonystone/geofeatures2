@@ -34,23 +34,19 @@ extension LinearRing: Geometry {
     ///
     public func boundary() -> Geometry {
 
-        return self.buffer.withUnsafeMutablePointers { (header, elements) -> Geometry in
+        var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-            var multiPoint = MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        if !self.isClosed() && self.count >= 2 {
 
-            if !self.isClosed() && header.pointee.count >= 2 {
-
-                /// Note: direct subscripts protected by self.count >= 2 above.
-                multiPoint.append(Point<CoordinateType>(coordinate: elements[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
-                multiPoint.append(Point<CoordinateType>(coordinate: elements[header.pointee.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
-
-            }
-            return multiPoint
+            /// Note: direct subscripts protected by self.count >= 2 above.
+            boundary.append(Point(self[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
+            boundary.append(Point(self[self.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
         }
+        return boundary
     }
 
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? LinearRing<Iterator.Element> {
+        if let other = other as? LinearRing {
             return self.elementsEqual(other, by: { (lhs: Iterator.Element, rhs: Iterator.Element) -> Bool in
                 return lhs == rhs
             })

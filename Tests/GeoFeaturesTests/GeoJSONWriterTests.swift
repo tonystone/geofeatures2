@@ -29,16 +29,14 @@ import struct GeoFeatures.Polygon
 
 class GeoJSONWriterCoordinate2DTests: XCTestCase {
 
-    private typealias CoordinateType = Coordinate2D
-
-    let writer = GeoJSONWriter<Coordinate2D>()
+    let writer = GeoJSONWriter()
 
     // MARK: - General
 
     func testWriteUnsupportedGeometry() {
 
         let input = UnsupportedGeometry()
-        let expected = "Unsupported type \"UnsupportedGeometry(precision: FloatingPrecision, coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
+        let expected = "Unsupported type \"UnsupportedGeometry(precision: FloatingPrecision(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 
@@ -52,7 +50,7 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
 
     func testWritePoint() {
 
-        let input = Point<CoordinateType>(coordinate: (x: 1.0, y: 1.0))
+        let input = Point(Coordinate(x: 1.0, y: 1.0))
         let expected: [String: Any] = ["type": "Point", "coordinates": [1.0, 1.0] ]
 
         XCTAssertTrue(try writer.write(input).elementsEqual(expected, by: { (lhs, rhs) -> Bool in
@@ -77,7 +75,7 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
 
     func testWriteLineString() {
 
-        let input = LineString<CoordinateType>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)])
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)])
         let expected: [String: Any] =  ["type": "LineString", "coordinates": [ [1.0, 1.0], [2.0, 2.0] ] ]
 
         XCTAssertTrue(try writer.write(input).elementsEqual(expected, by: { (lhs, rhs) -> Bool in
@@ -106,7 +104,7 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
     }
 
     func testWritePolygon() throws {
-        let input = Polygon<CoordinateType>(rings: ([(x: 100.0, y: 0.0), (x: 101.0, y: 0.0), (x: 101.0, y: 1.0), (x: 100.0, y: 1.0), (x: 100.0, y: 0.0)], [[(x: 100.2, y: 0.2), (x: 100.8, y: 0.2), (x: 100.8, y: 0.8), (x: 100.2, y: 0.8), (x: 100.2, y: 0.2)]]))
+        let input = Polygon([Coordinate(x: 100.0, y: 0.0), Coordinate(x: 101.0, y: 0.0), Coordinate(x: 101.0, y: 1.0), Coordinate(x: 100.0, y: 1.0), Coordinate(x: 100.0, y: 0.0)], innerRings: [[Coordinate(x: 100.2, y: 0.2), Coordinate(x: 100.8, y: 0.2), Coordinate(x: 100.8, y: 0.8), Coordinate(x: 100.2, y: 0.8), Coordinate(x: 100.2, y: 0.2)]])
 
         let expected: [String: Any] = [ "type": "Polygon",
                                         "coordinates": [
@@ -147,7 +145,7 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
 
     func testWriteMultiPoint() {
 
-        let input = MultiPoint<CoordinateType>(elements: [Point<CoordinateType>(coordinate: (x: 100.0, y: 0.0)), Point<CoordinateType>(coordinate: (x: 101.0, y: 1.0))])
+        let input = MultiPoint([Point(Coordinate(x: 100.0, y: 0.0)), Point(Coordinate(x: 101.0, y: 1.0))])
         let expected: [String: Any] = ["type": "MultiPoint", "coordinates": [ [100.0, 0.0], [101.0, 1.0] ] ]
 
         XCTAssertTrue(try writer.write(input).elementsEqual(expected, by: { (lhs, rhs) -> Bool in

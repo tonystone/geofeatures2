@@ -18,82 +18,87 @@
 ///  Created by Tony Stone on 2/10/2016.
 ///
 import XCTest
-import GeoFeatures
+@testable import GeoFeatures
 
 class Coordinate2DTests: XCTestCase {
 
-    // MARK: Coordinate2D
+    // MARK: Init
 
-    func testInitWithXY () {
-        let coordinate = Coordinate2D(x: 2.0, y: 3.0)
+    func testInit() {
+        let coordinate = Coordinate(x: 2.0, y: 3.0)
 
         XCTAssertEqual(coordinate.x, 2.0)
         XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
     }
 
+    func testInitWithArrayLiteral () {
+        let coordinate: Coordinate = [2.0, 3.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
+    func testInitWithDictionaryLiteral () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
+    func testInitWithDictionaryLiteralIncorrectElements () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0, "incorrect": 1.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
+    // MARK: Copy Constructable
+
+    func testInitCopy () {
+        let coordinate = Coordinate(other: Coordinate(x: 2.0, y: 3.0))
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, nil)
+        XCTAssertEqual(coordinate.m, nil)
+    }
+
+    // MARK: Accessors
+
     func testX () {
-        XCTAssertEqual(Coordinate2D(x: 1001.0, y: 1002.0).x, 1001.0)
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).x, 1001.0)
     }
 
     func testY () {
-        XCTAssertEqual(Coordinate2D(x: 1001.0, y: 1002.0).y, 1002.0)
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).y, 1002.0)
     }
 
-    // MARK: TupleConvertible
-
-    func testInitWithTuple () {
-        let coordinate = Coordinate2D(tuple: (x: 2.0, y: 3.0))
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
+    func testZ () {
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).z, nil)
     }
 
-    func testTuple () {
-        let coordinate = Coordinate2D(tuple: (x: 2.0, y: 3.0))
-        let expected   = (x: 2.0, y: 3.0)
-
-        XCTAssertTrue(coordinate.tuple == expected, "\(coordinate.tuple) is not equal to \(expected)")
-    }
-
-    // MARK: ArrayConstructable
-
-    func testInit_Array () {
-        let coordinate = Coordinate2D(array: [2.0, 3.0])
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
-    }
-
-    func testInit_Array_Invalid () {
-        /// TODO: Can't test precondition at this point due to lack of official support in Swift.
-    }
-
-    // MARK: CopyConstructable
-
-    func testInitCopy () {
-        let coordinate = Coordinate2D(other: Coordinate2D(x: 2.0, y: 3.0))
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
-    }
-
-    func testInitCopyWithFixedPrecision () {
-        let coordinate = Coordinate2D(other: Coordinate2D(x: 2.002, y: 3.003), precision: FixedPrecision(scale: 100))
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
+    func testM () {
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0).m, nil)
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        let coordinate = Coordinate2D(x: 2.0, y: 3.0)
+        let coordinate = Coordinate(x: 2.0, y: 3.0)
 
         XCTAssertEqual(coordinate.description, "(x: 2.0, y: 3.0)")
     }
 
     func testDebugDescription() {
-        let coordinate = Coordinate2D(x: 2.0, y: 3.0)
+        let coordinate = Coordinate(x: 2.0, y: 3.0)
 
         XCTAssertEqual(coordinate.debugDescription, "(x: 2.0, y: 3.0)")
     }
@@ -101,31 +106,31 @@ class Coordinate2DTests: XCTestCase {
     // MARK: Equal
 
     func testEqual () {
-        XCTAssertEqual(Coordinate2D(tuple: (x: 1.0, y: 1.0)), Coordinate2D(tuple: (x: 1.0, y: 1.0)))
+        XCTAssertEqual(Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 1.0))
     }
 
     func testNotEqual () {
-        XCTAssertNotEqual(Coordinate2D(tuple: (x: 1.0, y: 1.0)), Coordinate2D(tuple: (x: 2.0, y: 2.0)))
+        XCTAssertNotEqual(Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0))
     }
 
     // MARK: Hashable
 
     func testHashValueWithZero () {
-        let zero         = Coordinate2D(tuple: (x: 0.0, y: 0.0))
-        let negativeZero = Coordinate2D(tuple: (x: -0.0, y: -0.0))
+        let zero         = Coordinate(x: 0.0, y: 0.0)
+        let negativeZero = Coordinate(x: -0.0, y: -0.0)
 
         XCTAssertEqual(zero.hashValue, negativeZero.hashValue)
     }
 
     func testHashValueWithPositiveValue () {
-        let zero = Coordinate2D(tuple: (x: 0.0, y: 0.0))
+        let zero = Coordinate(x: 0.0, y: 0.0)
         var last = zero
         let limit = 10000
 
         for n in -limit...limit {
 
-            let input    = Coordinate2D(tuple: (x: Double(n), y: Double(n)))
-            let expected = Coordinate2D(tuple: (x: Double(n), y: Double(n)))
+            let input    = Coordinate(x: Double(n), y: Double(n))
+            let expected = Coordinate(x: Double(n), y: Double(n))
 
             XCTAssertEqual   (input.hashValue, expected.hashValue)
             XCTAssertNotEqual(input.hashValue, last.hashValue, "\(input.hashValue) is equal to \(zero.hashValue) for input \(input.description)")

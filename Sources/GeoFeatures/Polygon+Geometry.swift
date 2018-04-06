@@ -34,20 +34,14 @@ extension Polygon: Geometry {
     ///
     public func boundary() -> Geometry {
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> MultiLineString<CoordinateType> in
+        let boundary = self.map({ LineString(converting: $0, precision: self.precision, coordinateSystem: self.coordinateSystem) })
 
-            var multiLineString = MultiLineString<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
-
-            for i in 0..<header.pointee.count {
-                multiLineString.append(LineString<CoordinateType>(elements: elements[i], precision: self.precision, coordinateSystem: self.coordinateSystem))
-            }
-            return multiLineString
-        }
+        return MultiLineString(boundary, precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? Polygon<CoordinateType> {
-            return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing<CoordinateType>, rhs: LinearRing<CoordinateType>) -> Bool in
+        if let other = other as? Polygon {
+            return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing, rhs: LinearRing) -> Bool in
                 return lhs.equals(rhs)
             })
         }

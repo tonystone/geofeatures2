@@ -48,6 +48,20 @@ class FixedPrecisionTests: XCTestCase {
         XCTAssertEqual(precision.convert(1.0999), 1.1)
     }
 
+    func testConvertOptionalWithScale10Lower() {
+        let input:    Double? = 1.01
+        let expected: Double? = 1.0
+
+        XCTAssertEqual(precision.convert(input), expected)
+    }
+
+    func testConvertOptionalWithNil() {
+        let input:    Double? = nil
+        let expected: Double? = nil
+
+        XCTAssertEqual(precision.convert(input), expected)
+    }
+
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {

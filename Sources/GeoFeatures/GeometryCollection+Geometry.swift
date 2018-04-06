@@ -25,20 +25,16 @@ extension GeometryCollection: Geometry {
 
     public var dimension: Dimension {
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Dimension in
+        var dimension: Dimension = .empty // No dimension
 
-            var dimension: Dimension = .empty // No dimension
+        if self.count > 0 {
 
-            if header.pointee.count > 0 {
+            for index in 0..<self.count {
 
-                for index in 0..<header.pointee.count {
-
-                    dimension = Swift.max(dimension, elements[index].dimension)
-                }
+                dimension = Swift.max(dimension, self[index].dimension)
             }
-            return dimension
         }
-
+        return dimension
     }
 
     public func isEmpty() -> Bool {

@@ -37,8 +37,20 @@ public struct FixedPrecision: Precision, Equatable, Hashable  {
         self.scale = abs(scale)
     }
 
+    @inline(__always)
     public func convert(_ value: Double) -> Double {
         return round(value * scale) / scale
+    }
+
+    @inline(__always)
+    public func convert(_ value: Double?) -> Double? {
+        guard let value = value
+            else { return nil }
+        return convert(value)
+    }
+
+    public func convert(_ coordinate: Coordinate) -> Coordinate {
+        return Coordinate(x: self.convert(coordinate.x), y: self.convert(coordinate.y), z: self.convert(coordinate.z), m: self.convert(coordinate.m))
     }
 }
 extension FixedPrecision: CustomStringConvertible, CustomDebugStringConvertible {

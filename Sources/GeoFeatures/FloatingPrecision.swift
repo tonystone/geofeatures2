@@ -27,14 +27,24 @@ public struct FloatingPrecision: Precision, Equatable, Hashable {
 
     public init() {}
 
+    @inline(__always)
     public func convert(_ value: Double) -> Double {
         return value
+    }
+
+    @inline(__always)
+    public func convert(_ value: Double?) -> Double? {
+        return value
+    }
+
+    public func convert(_ coordinate: Coordinate) -> Coordinate {
+        return coordinate
     }
 }
 extension FloatingPrecision: CustomStringConvertible, CustomDebugStringConvertible {
 
     public var description: String {
-        return "\(type(of: self))"
+        return "\(type(of: self))()"
     }
 
     public var debugDescription: String {
