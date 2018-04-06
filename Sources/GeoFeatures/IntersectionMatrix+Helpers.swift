@@ -1498,9 +1498,9 @@ extension IntersectionMatrix {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary = simplePolygon.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let mainPolygon = polygonBoundary.first,
+            let mainPolygon = polygonBoundary[0] as? LinearRing<CoordinateType>,
             mainPolygon.count > 0 else {
                 return relatedToResult
         }
@@ -1522,68 +1522,60 @@ extension IntersectionMatrix {
         /// Array of geometries at which the segment intersects the polygon boundary
         var intersectionGeometries = [Geometry]()
 
-        /// Do a first pass to get the basic relationship of the line segment to the polygon
+        /// Do a first pass to get the intersections of the line segment and the polygon.
+        /// The point here is to get the boundary relationships.
+        /// TODO: This code may be a little rough. Refine later as needed.
         for firstCoordIndex in 0..<mainPolygon.count - 1 {
             let firstCoord  = mainPolygon[firstCoordIndex]
             let secondCoord = mainPolygon[firstCoordIndex + 1]
             let segment2 = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
 
+            /// Get the relationship between two segments
             let lineSegmentIntersection = intersection(segment: segment, other: segment2)
 
+            /// If the two segments intersect, set boundary properties
             if let intersectionGeometry = lineSegmentIntersection.geometry {
                 intersectionGeometries.append(intersectionGeometry)
 
                 if intersectionGeometry.dimension == .one {
                     relatedToResult.firstInteriorTouchesSecondBoundary = .one
-                } else if intersectionGeometry.dimension != .one && intersectionGeometry.dimension == .zero {
-                    if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior {
+                } else if intersectionGeometry.dimension == .zero {
+                    if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior ||
+                        lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary {
+                        relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+                    } else if lineSegmentIntersection.secondSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.secondSegmentSecondBoundaryLocation == .onInterior {
                         relatedToResult.firstInteriorTouchesSecondBoundary = .zero
                     }
                 }
-
-                if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary {
-                    relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
-                }
             }
+        }
 
-            let relatedToResultCoordinate = relatedTo(firstCoord, simplePolygon)
+        /// Get the relationship of the first coordinate of the line segment to the polygon.
+        /// Note that the left coordinate has no boundary.
+        let relatedToResultCoordinate1 = relatedTo(segment.leftCoordinate, simplePolygon)
 
-            if relatedToResultCoordinate.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
-                relatedToResult.firstInteriorTouchesSecondInterior = relatedToResultCoordinate.firstInteriorTouchesSecondInterior
-            }
+        if relatedToResultCoordinate1.firstInteriorTouchesSecondInterior > .empty {
+            relatedToResult.firstInteriorTouchesSecondInterior = .one
+            relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+        }
 
-            if relatedToResultCoordinate.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
-                relatedToResult.firstBoundaryTouchesSecondInterior = relatedToResultCoordinate.firstBoundaryTouchesSecondInterior
-            }
+        if relatedToResultCoordinate1.firstInteriorTouchesSecondExterior > .empty {
+            relatedToResult.firstInteriorTouchesSecondExterior = .one
+            relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+        }
 
-            if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
-                relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
-            }
+        /// Get the relationship of the second coordinate of the line segment to the polygon.
+        /// Note that the right coordinate has no boundary.
+        let relatedToResultCoordinate2 = relatedTo(segment.rightCoordinate, simplePolygon)
 
-            if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
-                relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
-            }
+        if relatedToResultCoordinate2.firstInteriorTouchesSecondInterior > .empty {
+            relatedToResult.firstInteriorTouchesSecondInterior = .one
+            relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+        }
 
-            /// Check the very last coordinate of the polygon boundary
-            if firstCoordIndex == mainPolygon.count - 2 {
-                let relatedToResultCoordinate = relatedTo(firstCoord, simplePolygon)
-
-                if relatedToResultCoordinate.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
-                    relatedToResult.firstInteriorTouchesSecondInterior = relatedToResultCoordinate.firstInteriorTouchesSecondInterior
-                }
-
-                if relatedToResultCoordinate.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
-                    relatedToResult.firstBoundaryTouchesSecondInterior = relatedToResultCoordinate.firstBoundaryTouchesSecondInterior
-                }
-
-                if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
-                    relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
-                }
-
-                if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
-                    relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
-                }
-            }
+        if relatedToResultCoordinate2.firstInteriorTouchesSecondExterior > .empty {
+            relatedToResult.firstInteriorTouchesSecondExterior = .one
+            relatedToResult.firstBoundaryTouchesSecondExterior = .zero
         }
 
         /// Check the cases where no further work is needed.
@@ -1593,6 +1585,7 @@ extension IntersectionMatrix {
             return relatedToResult
         }
 
+        /// TODO: This section needs more work.  It catches more of the edge cases where the line segment intersects the polygon multiple times.
         /// Check the case where the line segment interior lies on the interior or exterior of the polygon.  This is why we have been collecting the geometries.
         /// Do the following:
         /// - Generate an array of the midpoints of the consecutive geometries.
@@ -1671,15 +1664,23 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
+    /// This is very similar to the simple polygon case below.
+    fileprivate static func relatedTo(_ lineString: LineString<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+
+        let polygon = Polygon(outerRing: linearRing)
+
+        return relatedTo(lineString, polygon)
+    }
+
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
     fileprivate static func relatedTo(_ lineString: LineString<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary = simplePolygon.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let mainPolygon = polygonBoundary.first,
-            mainPolygon.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return relatedToResult
         }
 
@@ -2084,23 +2085,17 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Get the holes for a polygon
-    fileprivate static func holes(_ polygon: Polygon<CoordinateType>) -> [Polygon<CoordinateType>] {
+    /// Get the holes for a polygon.  This will be an array of linear rings.
+    fileprivate static func holes(_ polygon: Polygon<CoordinateType>) -> [LinearRing<CoordinateType>] {
 
-        var polygonArray = [Polygon<CoordinateType>]()
-
-        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
-            polygonBoundary.count > 0 else {
-                return polygonArray
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 1,
+            let innerLinearRings = polygonBoundary[1] as? [LinearRing<CoordinateType>],
+            innerLinearRings.count > 0 else {
+                return []
         }
 
-        for index in 1..<polygonBoundary.count {
-            let tempLineString = polygonBoundary[index]
-            let tempPolygon = Polygon<CoordinateType>(outerRing: tempLineString, precision: FloatingPrecision(), coordinateSystem: Cartesian())
-            polygonArray.append(tempPolygon)
-        }
-
-        return polygonArray
+        return innerLinearRings
     }
 
     /// It is assumed that a RelatedTo structure has been generated for two linear rings,
@@ -3011,6 +3006,71 @@ extension IntersectionMatrix {
         return resultMultiLineString
     }
 
+    /// Reduces an array of linear rings to another array of linear rings such that each consecutive
+    /// line segment of each linear ring will have a different slope.
+    fileprivate static func reduce(_ linearRingArray: [LinearRing<CoordinateType>]) -> [LinearRing<CoordinateType>] {
+
+        /// Define the inear ring array that might be returned
+        var resultLinearRingArray = [LinearRing<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())]
+
+        /// Reduce each of the linear rings
+        for linearRing in linearRingArray {
+
+            /// Must have at least 3 points or two line segments for this algorithm to apply
+            guard linearRing.count >= 3 else {
+                resultLinearRingArray.append(linearRing)
+                continue
+            }
+
+            var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
+            var secondSlope: (Double, Bool)
+            var newLinearRing = LinearRing<CoordinateType>()
+            newLinearRing.append(linearRing[0])
+            for lsFirstCoordIndex in 0..<linearRing.count - 2 {
+                let lsFirstCoord  = linearRing[lsFirstCoordIndex]
+                let lsSecondCoord = linearRing[lsFirstCoordIndex + 1]
+                let lsThirdCoord  = linearRing[lsFirstCoordIndex + 2]
+                firstSlope = slope(lsFirstCoord, lsSecondCoord)
+                secondSlope = slope(lsSecondCoord, lsThirdCoord)
+                
+                if firstSlope != secondSlope {
+                    newLinearRing.append(linearRing[lsFirstCoordIndex + 1])
+                }
+            }
+
+            /// Add the last coordinate
+            newLinearRing.append(linearRing[linearRing.count - 1])
+
+            /// Add the new linear ring to the resulting linear ring collection
+            resultLinearRingArray.append(newLinearRing)
+        }
+
+        return resultLinearRingArray
+    }
+
+    /// Reduces the linear rings of a polygon to another polygon whose linear rings are such that each consecutive
+    /// line segment of each linear ring will have a different slope.
+    fileprivate static func reduce(_ polygon: Polygon<CoordinateType>) -> Polygon<CoordinateType> {
+
+        /// Check there is a valid outer ring, else return the original polygon.
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 0,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
+                return polygon
+        }
+
+        /// Reduce the main boundary
+        let reducedMainLinearRing = reduce(outerLinearRing)
+
+        /// Reduce the holes
+        let holesArray = holes(polygon)
+        let reducedHoles = reduce(holesArray)
+
+        /// Construct the new polygon from the reduced pieces
+        return Polygon<CoordinateType>(outerRing: reducedMainLinearRing, innerRings: reducedHoles, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+    }
+
     /// Is segment1 contained in or a subset of segment2?
     fileprivate static func subset(_ segment1: Segment<CoordinateType>, _ segment2: Segment<CoordinateType>) -> Bool {
 
@@ -3152,6 +3212,47 @@ extension IntersectionMatrix {
             }
         }
 
+        return true
+    }
+
+    /// Is the line string contained in or a subset of the polygon?
+    /// If the line string is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
+    /// Note that being on the boundary of a polygon hole is acceptable.
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ lineString: LineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> Bool {
+
+        /// Get the polygon boundary
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 0,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
+                return false
+        }
+
+        /// Check if the line string is inside the main linear ring
+        guard subset(lineString, outerLinearRing) else { return false }
+
+        /// At this point, the line string is inside the main boundary.
+        /// If there are no holes, we are done.
+        let holesArray = holes(polygon)
+        guard holesArray.count > 1 else { return true }
+
+        /// There are holes.  Check each one to see if the line string is in the interior of any.
+        /// Being on the boundary of a hole is okay.
+        for linearRing in holesArray {
+
+            guard linearRing.count > 0 else { continue }
+
+            /// Get the relationship between the point and the hole
+            let relatedToResult = relatedTo(lineString, linearRing)
+
+            /// Check if the line string is on the interior of the hole
+            if relatedToResult.firstTouchesSecondInterior > .empty {
+                return false
+            }
+        }
+
+        /// The line string is not in the interior of any hole.
         return true
     }
 
@@ -3757,17 +3858,17 @@ extension IntersectionMatrix {
         matrixIntersects[.exterior, .exterior] = .two
 
         /// Get the polygon boundary
-        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let mainPolygon = polygonBoundary.first,
-            mainPolygon.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return (nil, matrixIntersects)
         }
 
         /// Check whether the line string is completely contained in the polygon boundary
-        let reducedLs  = reduce(lineString)
-        let reducedPB = reduce(polygonBoundary)
-        if subset(reducedLs, reducedPB) {
+        let reducedLs = reduce(lineString)
+        let reducedPolygon = reduce(polygon)
+        if subset(reducedLs, reducedPolygon) {
             matrixIntersects[.interior, .boundary] = .one
             matrixIntersects[.boundary, .boundary] = .zero
             return (nil, matrixIntersects)
@@ -3796,9 +3897,10 @@ extension IntersectionMatrix {
 
         /// Relate the line string to the main polygon and each of its holes
         var isMainPolygon = true
-        for lineStringSimplePolygon in polygonBoundary {
+        for element in polygonBoundary {
 
-            let tempPolygon = Polygon<CoordinateType>(outerRing: lineStringSimplePolygon, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            guard let linearRing = element as? LinearRing<CoordinateType> else { return (nil, matrixIntersects) }
+            let tempPolygon = Polygon<CoordinateType>(outerRing: linearRing)
 
             let boundaryPoint1RelatedToResult   = relatedTo(lineStringBoundaryPoint1, tempPolygon)
             let boundaryPoint2RelatedToResult   = relatedTo(lineStringBoundaryPoint2, tempPolygon)
