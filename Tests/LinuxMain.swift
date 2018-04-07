@@ -1228,7 +1228,9 @@ extension MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testBoundary", testBoundary),
-                ("testBoundaryEmpty", testBoundaryEmpty)
+                ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testIsSimpleWithNoEqualPointsAfterPrecision", testIsSimpleWithNoEqualPointsAfterPrecision),
+                ("testIsSimpleWithEqualPointsAfterPrecision", testIsSimpleWithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -1238,7 +1240,10 @@ extension MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testBoundary", testBoundary),
-                ("testBoundaryEmpty", testBoundaryEmpty)
+                ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testIsSimpleWithNoEqualPoints", testIsSimpleWithNoEqualPoints),
+                ("testIsSimpleWithNoEqualPointsAfterPrecision", testIsSimpleWithNoEqualPointsAfterPrecision),
+                ("testIsSimpleWithEqualPointsAfterPrecision", testIsSimpleWithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -1248,7 +1253,10 @@ extension MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testBoundary", testBoundary),
-                ("testBoundaryEmpty", testBoundaryEmpty)
+                ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testIsSimpleWithNoEqualPoints", testIsSimpleWithNoEqualPoints),
+                ("testIsSimpleWithNoEqualPointsAfterPrecision", testIsSimpleWithNoEqualPointsAfterPrecision),
+                ("testIsSimpleWithEqualPointsAfterPrecision", testIsSimpleWithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -1258,7 +1266,10 @@ extension MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testBoundary", testBoundary),
-                ("testBoundaryEmpty", testBoundaryEmpty)
+                ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testIsSimpleWithNoEqualPoints", testIsSimpleWithNoEqualPoints),
+                ("testIsSimpleWithNoEqualPointsAfterPrecision", testIsSimpleWithNoEqualPointsAfterPrecision),
+                ("testIsSimpleWithEqualPointsAfterPrecision", testIsSimpleWithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -1268,7 +1279,10 @@ extension MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testBoundary", testBoundary),
-                ("testBoundaryEmpty", testBoundaryEmpty)
+                ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testIsSimpleWithNoEqualPoints", testIsSimpleWithNoEqualPoints),
+                ("testIsSimpleWithNoEqualPointsAfterPrecision", testIsSimpleWithNoEqualPointsAfterPrecision),
+                ("testIsSimpleWithEqualPointsAfterPrecision", testIsSimpleWithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -1278,7 +1292,10 @@ extension MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testBoundary", testBoundary),
-                ("testBoundaryEmpty", testBoundaryEmpty)
+                ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testIsSimpleWithNoEqualPoints", testIsSimpleWithNoEqualPoints),
+                ("testIsSimpleWithNoEqualPointsAfterPrecision", testIsSimpleWithNoEqualPointsAfterPrecision),
+                ("testIsSimpleWithEqualPointsAfterPrecision", testIsSimpleWithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -1290,7 +1307,10 @@ extension MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests {
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty),
                 ("testEqualTrue", testEqualTrue),
-                ("testEqualFalse", testEqualFalse)
+                ("testEqualFalse", testEqualFalse),
+                ("testIsSimpleWithNoEqualPoints", testIsSimpleWithNoEqualPoints),
+                ("testIsSimpleWithNoEqualPointsAfterPrecision", testIsSimpleWithNoEqualPointsAfterPrecision),
+                ("testIsSimpleWithEqualPointsAfterPrecision", testIsSimpleWithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -1302,7 +1322,10 @@ extension MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests {
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty),
                 ("testEqualTrue", testEqualTrue),
-                ("testEqualFalse", testEqualFalse)
+                ("testEqualFalse", testEqualFalse),
+                ("testIsSimpleWithNoEqualPoints", testIsSimpleWithNoEqualPoints),
+                ("testIsSimpleWithNoEqualPointsAfterPrecision", testIsSimpleWithNoEqualPointsAfterPrecision),
+                ("testIsSimpleWithEqualPointsAfterPrecision", testIsSimpleWithEqualPointsAfterPrecision)
            ]
    }
 }
@@ -1399,7 +1422,8 @@ extension PointGeometryCoordinate2DFloatingPrecisionCartesianTests {
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
-                ("testBoundary", testBoundary)
+                ("testBoundary", testBoundary),
+                ("testIsSimple_True", testIsSimple_True)
            ]
    }
 }
@@ -1412,7 +1436,8 @@ extension PointGeometryCoordinate2DMFloatingPrecisionCartesianTests {
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
-                ("testBoundary", testBoundary)
+                ("testBoundary", testBoundary),
+                ("testIsSimple_True", testIsSimple_True)
            ]
    }
 }
@@ -1425,7 +1450,8 @@ extension PointGeometryCoordinate3DFloatingPrecisionCartesianTests {
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
-                ("testBoundary", testBoundary)
+                ("testBoundary", testBoundary),
+                ("testIsSimple_True", testIsSimple_True)
            ]
    }
 }
@@ -1438,7 +1464,8 @@ extension PointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
-                ("testBoundary", testBoundary)
+                ("testBoundary", testBoundary),
+                ("testIsSimple_True", testIsSimple_True)
            ]
    }
 }
@@ -1451,7 +1478,8 @@ extension PointGeometryCoordinate2DFixedPrecisionCartesianTests {
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
-                ("testBoundary", testBoundary)
+                ("testBoundary", testBoundary),
+                ("testIsSimple_True", testIsSimple_True)
            ]
    }
 }
@@ -1464,7 +1492,8 @@ extension PointGeometryCoordinate2DMFixedPrecisionCartesianTests {
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
-                ("testBoundary", testBoundary)
+                ("testBoundary", testBoundary),
+                ("testIsSimple_True", testIsSimple_True)
            ]
    }
 }
@@ -1477,7 +1506,8 @@ extension PointGeometryCoordinate3DFixedPrecisionCartesianTests {
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
-                ("testBoundary", testBoundary)
+                ("testBoundary", testBoundary),
+                ("testIsSimple_True", testIsSimple_True)
            ]
    }
 }
@@ -1490,7 +1520,8 @@ extension PointGeometryCoordinate3DMFixedPrecisionCartesianTests {
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
-                ("testBoundary", testBoundary)
+                ("testBoundary", testBoundary),
+                ("testIsSimple_True", testIsSimple_True)
            ]
    }
 }
@@ -1726,7 +1757,21 @@ extension LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests {
                 ("testBoundsEmpty", testBoundsEmpty),
                 ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
-                ("testEqualFalse", testEqualFalse)
+                ("testEqualFalse", testEqualFalse),
+                ("testIsSimple_WithNoPoints", testIsSimple_WithNoPoints),
+                ("testIsSimple_WithOnePoint", testIsSimple_WithOnePoint),
+                ("testIsSimple_WithTwoPoints", testIsSimple_WithTwoPoints),
+                ("testIsSimple_WithThreeIdenticalPoints", testIsSimple_WithThreeIdenticalPoints),
+                ("testIsSimple_WithThreePoints_FirstSecondSame", testIsSimple_WithThreePoints_FirstSecondSame),
+                ("testIsSimple_WithThreePoints_FirstThirdSame", testIsSimple_WithThreePoints_FirstThirdSame),
+                ("testIsSimple_WithThreePoints_SecondThirdSame", testIsSimple_WithThreePoints_SecondThirdSame),
+                ("testIsSimple_WithThreePoints_AllDifferent", testIsSimple_WithThreePoints_AllDifferent),
+                ("testIsSimple_WithFourPoints_FirstLastSame", testIsSimple_WithFourPoints_FirstLastSame),
+                ("testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint", testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint),
+                ("testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment", testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment),
+                ("testIsSimple_WithFivePoints_SecondLastSame", testIsSimple_WithFivePoints_SecondLastSame),
+                ("testIsSimple_WithFivePoints_FirstFourthSame", testIsSimple_WithFivePoints_FirstFourthSame),
+                ("testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment", testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment)
            ]
    }
 }

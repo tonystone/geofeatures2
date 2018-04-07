@@ -28,6 +28,24 @@ extension MultiPoint: Geometry {
     }
 
     ///
+    /// Determine whether this MultiPoint is considered simple.
+    ///
+    /// A MultiPoint is simple if it has no duplicate Points.
+    ///
+    public func isSimple() -> Bool {
+
+        var points = [Element]()
+
+        for i in self.indices {
+            if points.contains(self[i]) {
+                return false
+            }
+            points.append(self[i])
+        }
+        return true
+    }
+
+    ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
     ///
     /// - Note: The boundary of a MultiPoint is the empty set.

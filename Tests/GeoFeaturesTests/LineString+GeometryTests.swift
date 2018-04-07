@@ -83,7 +83,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testBoundsWithElements() {
         let input = LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 3.0, y: 3.0))
+        let expected = Bounds(min: Coordinate(x: 1.0, y: 1.0), max: Coordinate(x: 3.0, y: 3.0))
 
         XCTAssertEqual(input.bounds(), expected)
     }
@@ -103,4 +103,118 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
+
+     // MARK: - isSimple
+
+    func testIsSimple_WithNoPoints() {
+
+        let input = LineString([], precision: precision, coordinateSystem: cs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithOnePoint() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithTwoPoints() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithThreeIdenticalPoints() {
+
+        let input = LineString([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithThreePoints_FirstSecondSame() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithThreePoints_FirstThirdSame() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithThreePoints_SecondThirdSame() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithThreePoints_AllDifferent() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithFourPoints_FirstLastSame() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = true
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 0.5, y: 0.5)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithFivePoints_SecondLastSame() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 2.0), Coordinate(x: 2.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithFivePoints_FirstFourthSame() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
+
+    func testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment() {
+
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.5, y: 1.0), Coordinate(x: 1.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = false
+
+        XCTAssertEqual(input.isSimple(), expected)
+    }
 }

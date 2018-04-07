@@ -27,6 +27,11 @@ extension Point: Geometry {
         return false    // Point can never be empty
     }
 
+    public
+    func isSimple() -> Bool {
+        return true     // Points are always simple by definition
+    }
+
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
     ///
