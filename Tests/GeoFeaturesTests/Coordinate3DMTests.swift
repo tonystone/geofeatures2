@@ -25,7 +25,36 @@ class Coordinate3DMTests: XCTestCase {
     // MARK: Coordinate3DM
 
     func testInitWithXYZM () {
-        let coordinate = Coordinate3DM(x: 2.0, y: 3.0, z: 4.0, m: 5.0)
+        let coordinate = Coordinate(x: 2.0, y: 3.0, z: 4.0, m: 5.0)
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, 4.0)
+        XCTAssertEqual(coordinate.m, 5.0)
+    }
+
+    func testInitWithArrayLiteral3DM () {
+        let coordinate: Coordinate = [2.0, 3.0, 4.0, 5.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, 4.0)
+        XCTAssertEqual(coordinate.m, 5.0)
+    }
+
+    func testInitWithDictionaryLiteral3DM () {
+        let coordinate: Coordinate = ["x": 2.0, "y": 3.0, "z": 4.0, "m": 5.0]
+
+        XCTAssertEqual(coordinate.x, 2.0)
+        XCTAssertEqual(coordinate.y, 3.0)
+        XCTAssertEqual(coordinate.z, 4.0)
+        XCTAssertEqual(coordinate.m, 5.0)
+    }
+
+    // MARK: CopyConstructable
+
+    func testInitCopy () {
+        let coordinate = Coordinate(other: Coordinate(x: 2.0, y: 3.0, z: 4.0, m: 5.0))
 
         XCTAssertEqual(coordinate.x, 2.0)
         XCTAssertEqual(coordinate.y, 3.0)
@@ -34,84 +63,31 @@ class Coordinate3DMTests: XCTestCase {
     }
 
     func testX () {
-        XCTAssertEqual(Coordinate3DM(x: 1001.0, y: 1002.0, z: 1003.0, m: 1004.0).x, 1001.0)
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0, z: 1003.0, m: 1004.0).x, 1001.0)
     }
 
     func testY () {
-        XCTAssertEqual(Coordinate3DM(x: 1001.0, y: 1002.0, z: 1003.0, m: 1004.0).y, 1002.0)
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0, z: 1003.0, m: 1004.0).y, 1002.0)
     }
 
     func testZ () {
-        XCTAssertEqual(Coordinate3DM(x: 1001.0, y: 1002.0, z: 1003.0, m: 1004.0).z, 1003.0)
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0, z: 1003.0, m: 1004.0).z, 1003.0)
     }
 
     func testM () {
-        XCTAssertEqual(Coordinate3DM(x: 1001.0, y: 1002.0, z: 1003.0, m: 1004.0).m, 1004.0)
-    }
-
-    // MARK: TupleConvertible
-
-    func testInitWithTuple () {
-        let coordinate = Coordinate3DM(tuple: (x: 2.0, y: 3.0, z: 4.0, m: 5.0))
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
-        XCTAssertEqual(coordinate.z, 4.0)
-        XCTAssertEqual(coordinate.m, 5.0)
-    }
-
-    func testTuple () {
-        let coordinate = Coordinate3DM(tuple: (x: 2.0, y: 3.0, z: 4.0, m: 5.0))
-        let expected   = (x: 2.0, y: 3.0, z: 4.0, m: 5.0)
-
-        XCTAssertTrue(coordinate.tuple == expected, "\(coordinate.tuple) is not equal to \(expected)")
-    }
-
-    // MARK: ArrayConstructable
-
-    func testInit_Array () {
-        let coordinate = Coordinate3DM(array: [2.0, 3.0, 4.0, 5.0])
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
-        XCTAssertEqual(coordinate.z, 4.0)
-        XCTAssertEqual(coordinate.m, 5.0)
-    }
-
-    func testInit_Array_Invalid () {
-        /// TODO: Can't test precondition at this point due to lack of official support in Swift.
-    }
-
-    // MARK: CopyConstructable
-
-    func testInitCopy () {
-        let coordinate = Coordinate3DM(other: Coordinate3DM(x: 2.0, y: 3.0, z: 4.0, m: 5.0))
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
-        XCTAssertEqual(coordinate.z, 4.0)
-        XCTAssertEqual(coordinate.m, 5.0)
-    }
-
-    func testInitCopyWithFixedPrecision () {
-        let coordinate = Coordinate3DM(other: Coordinate3DM(x: 2.001, y: 3.001, z: 4.001, m: 5.001), precision: FixedPrecision(scale: 100))
-
-        XCTAssertEqual(coordinate.x, 2.0)
-        XCTAssertEqual(coordinate.y, 3.0)
-        XCTAssertEqual(coordinate.z, 4.0)
-        XCTAssertEqual(coordinate.m, 5.0)
+        XCTAssertEqual(Coordinate(x: 1001.0, y: 1002.0, z: 1003.0, m: 1004.0).m, 1004.0)
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        let coordinate = Coordinate3DM(x: 2.0, y: 3.0, z: 4.0, m: 5.0)
+        let coordinate = Coordinate(x: 2.0, y: 3.0, z: 4.0, m: 5.0)
 
         XCTAssertEqual(coordinate.description, "(x: 2.0, y: 3.0, z: 4.0, m: 5.0)")
     }
 
     func testDebugDescription() {
-        let coordinate = Coordinate3DM(x: 2.0, y: 3.0, z: 4.0, m: 5.0)
+        let coordinate = Coordinate(x: 2.0, y: 3.0, z: 4.0, m: 5.0)
 
         XCTAssertEqual(coordinate.debugDescription, "(x: 2.0, y: 3.0, z: 4.0, m: 5.0)")
     }
@@ -119,31 +95,31 @@ class Coordinate3DMTests: XCTestCase {
     // MARK: Equal
 
     func testEqual () {
-        XCTAssertEqual(Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 4.0, m: 5.0)), Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 4.0, m: 5.0)))
+        XCTAssertEqual(Coordinate(x: 1.0, y: 1.0, z: 4.0, m: 5.0), Coordinate(x: 1.0, y: 1.0, z: 4.0, m: 5.0))
     }
 
     func testNotEqual () {
-        XCTAssertNotEqual(Coordinate3DM(tuple: (x: 1.0, y: 1.0, z: 4.0, m: 5.0)), Coordinate3DM(tuple: (x: 2.0, y: 2.0, z: 4.0, m: 5.0)))
+        XCTAssertNotEqual(Coordinate(x: 1.0, y: 1.0, z: 4.0, m: 5.0), Coordinate(x: 2.0, y: 2.0, z: 4.0, m: 5.0))
     }
 
     // MARK: Hashable
 
     func testHashWithValueZero () {
-        let zero         = Coordinate3DM(tuple: (x: 0.0, y: 0.0, z: 0.0, m: 0.0))
-        let negativeZero = Coordinate3DM(tuple: (x: -0.0, y: -0.0, z: -0.0, m: -0.0))
+        let zero         = Coordinate(x: 0.0, y: 0.0, z: 0.0, m: 0.0)
+        let negativeZero = Coordinate(x: -0.0, y: -0.0, z: -0.0, m: -0.0)
 
         XCTAssertEqual(zero.hashValue, negativeZero.hashValue)
     }
 
     func testHashValueWithPositiveValue () {
-        let zero = Coordinate3DM(tuple: (x: 0.0, y: 0.0, z: 0.0, m: 0.0))
+        let zero = Coordinate(x: 0.0, y: 0.0, z: 0.0, m: 0.0)
         var last = zero
         let limit = 10000
 
         for n in -limit...limit {
 
-            let input    = Coordinate3DM(tuple: (x: Double(n), y: Double(n), z: Double(n), m: Double(n)))
-            let expected = Coordinate3DM(tuple: (x: Double(n), y: Double(n), z: Double(n), m: Double(n)))
+            let input    = Coordinate(x: Double(n), y: Double(n), z: Double(n), m: Double(n))
+            let expected = Coordinate(x: Double(n), y: Double(n), z: Double(n), m: Double(n))
 
             XCTAssertEqual   (input.hashValue, expected.hashValue)
             XCTAssertNotEqual(input.hashValue, last.hashValue, "\(input.hashValue) is equal to \(zero.hashValue) for input \(input.description)")

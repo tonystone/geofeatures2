@@ -35,7 +35,7 @@ extension LineString: Geometry {
     /// This function assumes the three points are collinear.
     ///
     internal
-    func inBetween(_ first: CoordinateType, _ mid: CoordinateType, _ last: CoordinateType) -> Bool {
+    func inBetween(_ first: Coordinate, _ mid: Coordinate, _ last: Coordinate) -> Bool {
         if  mid.x <= Swift.max(first.x, last.x) && mid.x >= Swift.min(first.x, last.x) &&   // in between x values
             mid.y <= Swift.max(first.y, last.y) && mid.y >= Swift.min(first.y, last.y) {    // in between y values
             return true
@@ -57,7 +57,7 @@ extension LineString: Geometry {
     /// allow comparison of slopes where one or both line segments may be vertical.
     ///
     internal
-    func orientation(_ c1: CoordinateType, _ c2: CoordinateType, _ c3: CoordinateType) -> Orientation {
+    func orientation(_ c1: Coordinate, _ c2: Coordinate, _ c3: Coordinate) -> Orientation {
         let difference = (c2.y - c1.y) * (c3.x - c2.x) - (c2.x - c1.x) * (c3.y - c2.y)
 
         /// TODO: May want to check if "value" is near 0 because it is a Double
@@ -80,7 +80,7 @@ extension LineString: Geometry {
     /// This will happen commonly in a LinearRing.
     ///
     internal
-    func segmentsIntersect(_ c1: CoordinateType, _ c2: CoordinateType, _ c3: CoordinateType, _ c4: CoordinateType, _ lastFirstOk: Bool = false, _ firstLastOk: Bool = false) -> Bool {
+    func segmentsIntersect(_ c1: Coordinate, _ c2: Coordinate, _ c3: Coordinate, _ c4: Coordinate, _ lastFirstOk: Bool = false, _ firstLastOk: Bool = false) -> Bool {
 
         /// Calculate various orientations
         let o123 = orientation(c1, c2, c3)    // collinear if c2 = c3 true
@@ -133,21 +133,21 @@ extension LineString: Geometry {
 
         /// If there are no more than two coordinates, there can be at most one line segment,
         /// so this line segment cannot self-intersect.
-        guard coordinates.count > 2 else {
+        guard self.count > 2 else {
             return true
         }
 
         /// There must be at least two line segments to get to this point.
-        for i in 0..<coordinates.count - 2 {
-            let c1 = coordinates[i]
-            let c2 = coordinates[i+1]
-            for j in (i+1)..<coordinates.count - 1 {
-                let c3 = coordinates[j]
-                let c4 = coordinates[j+1]
+        for i in 0..<self.count - 2 {
+            let c1 = self[i]
+            let c2 = self[i+1]
+            for j in (i+1)..<self.count - 1 {
+                let c3 = self[j]
+                let c4 = self[j+1]
                 var intersect: Bool = false
                 if j == i+1 {
                     intersect = segmentsIntersect(c1, c2, c3, c4, true)
-                } else if i == 0 && j == coordinates.count - 2 {
+                } else if i == 0 && j == self.count - 2 {
                     intersect = segmentsIntersect(c1, c2, c3, c4, false, true)
                 } else {
                     intersect = segmentsIntersect(c1, c2, c3, c4)
@@ -165,19 +165,19 @@ extension LineString: Geometry {
     ///
     public func boundary() -> Geometry {
 
-        var boundary = MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-        if !self.isClosed() && self.coordinates.count >= 2 {
+        if !self.isClosed() && self.count >= 2 {
 
             /// Note: direct subscripts protected by self.count >= 2 above.
-            boundary.append(Point<CoordinateType>(coordinate: self.coordinates[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
-            boundary.append(Point<CoordinateType>(coordinate: self.coordinates[self.coordinates.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
+            boundary.append(Point(self[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
+            boundary.append(Point(self[self.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
         }
         return boundary
     }
 
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? LineString<Iterator.Element> {
+        if let other = other as? LineString {
             return self.elementsEqual(other, by: { (lhs: Iterator.Element, rhs: Iterator.Element) -> Bool in
                 return lhs == rhs
             })

@@ -36,10 +36,10 @@ extension MultiLineString: Geometry {
     ///
     public func boundary() -> Geometry {
 
-        var endCoordinates = [CoordinateType: Int]()
+        var endCoordinates = [Coordinate: Int]()
 
-        for i in 0 ..< elements.count {
-            let lineString = elements[i]
+        for i in 0 ..< self.count {
+            let lineString = self[i]
 
             if lineString.count >= 2 && !lineString.isClosed() {
                 var i = 0
@@ -68,18 +68,18 @@ extension MultiLineString: Geometry {
             }
         }
 
-        var boundary = MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
         for (coordinate, count) in endCoordinates {
             if count % 2 == 1 {
-                boundary.append(Point(coordinate: coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
+                boundary.append(Point(coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
             }
         }
         return boundary
     }
 
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? MultiLineString<CoordinateType> {
+        if let other = other as? MultiLineString {
             return self.elementsEqual(other)
         }
         return false

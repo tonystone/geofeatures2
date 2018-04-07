@@ -38,7 +38,7 @@ extension Point: Geometry {
     /// - Note: The boundary of a Point is an empty set.
     ///
     public func boundary() -> Geometry {
-        return MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        return MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
     public func equals(_ other: Geometry) -> Bool {

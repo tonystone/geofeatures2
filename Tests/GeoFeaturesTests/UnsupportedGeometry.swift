@@ -1,5 +1,5 @@
 ///
-///  CopyConstructable.swift
+///  UnsupportedGeometry
 ///
 ///  Copyright (c) 2016 Tony Stone
 ///
@@ -15,19 +15,30 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Tony Stone on 3/19/2016.
+///  Created by Tony Stone on 12/17/16.
 ///
 import Swift
+import GeoFeatures
 
-public protocol CopyConstructable {
+internal struct UnsupportedGeometry: Geometry {
 
-    ///
-    /// Copy constructor
-    ///
-    init(other: Self)
+    let precision: Precision = FloatingPrecision()
 
-    ///
-    /// Copy constructor with new precision
-    ///
-    init(other: Self, precision: Precision)
+    let coordinateSystem: CoordinateSystem = Cartesian()
+
+    let dimension: GeoFeatures.Dimension = .one
+
+    func isEmpty() -> Bool {
+        return true
+    }
+
+    func boundary() -> Geometry {
+        return GeometryCollection()
+    }
+
+    func bounds() -> Bounds? {
+        return nil
+    }
+
+    func equals(_ other: Geometry) -> Bool { return false }
 }

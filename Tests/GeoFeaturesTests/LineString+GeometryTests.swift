@@ -20,71 +20,95 @@
 import XCTest
 import GeoFeatures
 
-private let geometryDimension = Dimension.one    // LineString are always 1 dimension
+private let inputDimension = Dimension.one    // LineString are always 1 dimension
 
-// MARK: - Coordinate2D, FloatingPrecision, Cartesian -
+// MARK: - Coordinate 2D, FloatingPrecision, Cartesian -
 
 class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     let precision = FloatingPrecision()
     let cs       = Cartesian()
 
+    // MARK: - Dimension
+
     func testDimension () {
-        XCTAssertEqual(LineString<Coordinate2D>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LineString(precision: precision, coordinateSystem: cs).dimension, inputDimension)
     }
 
-    func testBoundaryWith1ElementInvalid() {
-        let geometry = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(precision: precision, coordinateSystem: cs) // Empty Set
+    // MARK: - Boundary
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+    func testBoundaryWith1ElementInvalid() {
+        let input = LineString([[1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
+
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith2Element() {
-        let geometry = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(elements: [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let input = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith3ElementOpen() {
-        let geometry = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 3.0, y: 3.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(elements: [Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0)), Point<Coordinate2D>(coordinate: (x: 3.0, y: 3.0))], precision: precision, coordinateSystem: cs)
+        let input = LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([3.0, 3.0])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWith4ElementClosed() {
-        let geometry = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 3.0, y: 3.0), (x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(precision: precision, coordinateSystem: cs) // Empty Set
+        let input = LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryEmpty() {
-        let geometry = LineString<Coordinate2D>(precision: precision, coordinateSystem: cs).boundary()
-        let expected = MultiPoint<Coordinate2D>(precision: precision, coordinateSystem: cs)  // Empty Set
+        let input = LineString(precision: precision, coordinateSystem: cs).boundary()
+        let expected = MultiPoint(precision: precision, coordinateSystem: cs)  // Empty Set
 
-        XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
+        XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
+
+    // MARK: - Bounds
+
+    func testBoundsEmpty() {
+        let input = LineString(precision: precision, coordinateSystem: cs)
+        let expected: Bounds? = nil
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    func testBoundsWithElements() {
+        let input = LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: Coordinate(x: 1.0, y: 1.0), max: Coordinate(x: 3.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
+    // MARK: - Equal
 
     func testEqualTrue() {
-        let input1 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let input2 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input1 = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let input2 = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
-    }
+     }
 
-    func testEqualFalse() {
-        let input1            = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = Point<Coordinate2D>(coordinate: (x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs)
+     func testEqualFalse() {
+        let input1            = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let input2: Geometry  = Point([1.0, 1.0], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
-    }
+     }
+
+     // MARK: - isSimple
 
     func testIsSimple_WithNoPoints() {
 
-        let input = LineString<Coordinate2D>(elements: [] as [Coordinate2D], precision: precision, coordinateSystem: cs)
+        let input = LineString([], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -92,7 +116,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithOnePoint() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -100,7 +124,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithTwoPoints() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -108,7 +132,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithThreeIdenticalPoints() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 2.0, y: 2.0), (x: 2.0, y: 2.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -116,7 +140,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithThreePoints_FirstSecondSame() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 1.0, y: 1.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -124,7 +148,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithThreePoints_FirstThirdSame() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -132,7 +156,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithThreePoints_SecondThirdSame() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -140,7 +164,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithThreePoints_AllDifferent() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 3.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 3.0, y: 3.0)], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -148,7 +172,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithFourPoints_FirstLastSame() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 1.0), (x: 2.0, y: 2.0), (x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
         let expected = true
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -156,7 +180,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 1.0), (x: 2.0, y: 2.0), (x: 0.5, y: 0.5)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 0.5, y: 0.5)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -164,7 +188,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 1.0), (x: 2.0, y: 2.0), (x: 1.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 0.0)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -172,7 +196,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithFivePoints_SecondLastSame() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 1.0), (x: 2.0, y: 2.0), (x: 1.0, y: 2.0), (x: 2.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 2.0), Coordinate(x: 2.0, y: 1.0)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -180,7 +204,7 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithFivePoints_FirstFourthSame() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 1.0), (x: 2.0, y: 2.0), (x: 2.0, y: 1.0), (x: 1.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 2.0)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
@@ -188,205 +212,9 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     func testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment() {
 
-        let input = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 1.0), (x: 2.0, y: 2.0), (x: 1.5, y: 1.0), (x: 1.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.5, y: 1.0), Coordinate(x: 1.0, y: 2.0)], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isSimple(), expected)
-    }
-}
-
-// MARK: - Coordinate2DM, FloatingPrecision, Cartesian -
-
-class LineStringGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
-
-    let precision = FloatingPrecision()
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LineString<Coordinate2DM>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate3D, FloatingPrecision, Cartesian -
-
-class LineStringGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
-
-    let precision = FloatingPrecision()
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LineString<Coordinate3D>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate3DM, FloatingPrecision, Cartesian -
-
-class LineStringGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
-
-    let precision = FloatingPrecision()
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LineString<Coordinate3DM>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate2D, FixedPrecision, Cartesian -
-
-class LineStringGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LineString<Coordinate2D>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-
-    func testIsSimple_WithNoPoints() {
-
-        let input = LineString<Coordinate2D>(elements: [] as [Coordinate2D], precision: precision, coordinateSystem: cs)
-        let expected = true
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithOnePoint() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.002, y: 1.0)], precision: precision, coordinateSystem: cs)
-        let expected = true
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithTwoPoints() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.001, y: 1.0), (x: 2.003, y: 2.001)], precision: precision, coordinateSystem: cs)
-        let expected = true
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithThreeIdenticalPoints() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 2.001, y: 2.0), (x: 2.0003, y: 2.001), (x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithThreePoints_FirstSecondSame() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.001, y: 1.002), (x: 1.0, y: 1.001), (x: 2.001, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithThreePoints_FirstThirdSame() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.001, y: 1.002), (x: 2.001, y: 2.0), (x: 1.0, y: 1.003)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithThreePoints_SecondThirdSame() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.001, y: 1.0), (x: 2.001, y: 2.0), (x: 2.004, y: 2.003)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithThreePoints_AllDifferent() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.001, y: 1.0), (x: 2.003, y: 2.002), (x: 3.001, y: 3.0)], precision: precision, coordinateSystem: cs)
-        let expected = true
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithFourPoints_FirstLastSame() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.003, y: 1.001), (x: 2.001, y: 1.0), (x: 2.002, y: 2.003), (x: 1.001, y: 1.0)], precision: precision, coordinateSystem: cs)
-        let expected = true
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithFourPoints_LastSegmentTouchesButGoesBeyondFirstPoint() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.003, y: 1.002), (x: 2.002, y: 1.0), (x: 2.0, y: 2.004), (x: 0.501, y: 0.502)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithFourPoints_LastSegmentCrossedFirstSegment() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.001, y: 1.0), (x: 2.0007, y: 1.004), (x: 2.001, y: 2.003), (x: 1.004, y: 0.003)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithFivePoints_SecondLastSame() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.001, y: 1.003), (x: 2.001, y: 1.003), (x: 2.003, y: 2.004), (x: 1.003, y: 2.0), (x: 2.004, y: 1.002)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithFivePoints_FirstFourthSame() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.001, y: 1.0), (x: 2.004, y: 1.003), (x: 2.0, y: 2.002), (x: 2.0, y: 1.0), (x: 1.001, y: 2.001)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-
-    func testIsSimple_WithFivePoints_ThirdSegmentTouchesFirstSegment() {
-
-        let input = LineString<Coordinate2D>(elements: [(x: 1.003, y: 1.001), (x: 2.004, y: 1.0), (x: 2.003, y: 2.002), (x: 1.501, y: 1.0), (x: 1.002, y: 2.001)], precision: precision, coordinateSystem: cs)
-        let expected = false
-
-        XCTAssertEqual(input.isSimple(), expected)
-    }
-}
-
-// MARK: - Coordinate2DM, FixedPrecision, Cartesian -
-
-class LineStringGeometryCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LineString<Coordinate2DM>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate3D, FixedPrecision, Cartesian -
-
-class LineStringGeometryCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LineString<Coordinate3D>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
-    }
-}
-
-// MARK: - Coordinate3DM, FixedPrecision, Cartesian -
-
-class LineStringGeometryCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    func testDimension () {
-        XCTAssertEqual(LineString<Coordinate3DM>(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 }
