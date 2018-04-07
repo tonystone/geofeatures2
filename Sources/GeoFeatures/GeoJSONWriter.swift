@@ -22,6 +22,7 @@ import Foundation
 
 private let TYPE        = "type"
 private let COORDINATES = "coordinates"
+private let GEOMETRIES = "geometries"
 
 public enum GeoJSONWriterError: Error {
     case unsupportedType(String)
@@ -69,11 +70,23 @@ public class GeoJSONWriter {
         case let lineString as LineString:
             return try self.lineStringObject(lineString)
 
+        case let linearRing as LinearRing:
+            return try self.linearRingObject(linearRing)
+
         case let polygon as Polygon:
             return try self.polygonObject(polygon)
 
         case let multiPoint as MultiPoint:
             return try self.multiPointObject(multiPoint)
+
+        case let multiLineString as MultiLineString:
+            return try self.multiLineStringObject(multiLineString)
+
+        case let multiPolygon as MultiPolygon:
+            return try self.multiPolygonObject(multiPolygon)
+
+        case let geometryCollection as GeometryCollection:
+            return try self.geometryCollectionObject(geometryCollection)
 
         default:
             throw GeoJSONWriterError.unsupportedType("Unsupported type \"\(String(describing: geometry.self))\".")
@@ -100,6 +113,13 @@ extension GeoJSONWriter {
     }
 
     ///
+    /// Creates a LinearRing GeoJSON Object.
+    ///
+    fileprivate func linearRingObject(_ linearRing: LinearRing) throws -> [String: Any] {
+        return [TYPE: "LineString", COORDINATES: try linearRing.map({ try self.coordinateArray($0) })]
+    }
+
+    ///
     /// Creates a Polygon GeoJSON Object.
     ///
     fileprivate func polygonObject(_ polygon: Polygon) throws -> [String: Any] {
@@ -116,6 +136,34 @@ extension GeoJSONWriter {
     ///
     fileprivate func multiPointObject(_ multiPoint: MultiPoint) throws -> [String: Any] {
         return [TYPE: "MultiPoint", COORDINATES: try multiPoint.map({ try self.coordinateArray($0.coordinate) })]
+    }
+
+    ///
+    /// Creates a MultiLineStrig GeoJSON Object.
+    ///
+    fileprivate func multiLineStringObject(_ multiLineString: MultiLineString) throws -> [String: Any] {
+        return [TYPE: "MultiLineString", COORDINATES: try multiLineString.map({ try coordinateCollection($0) }) ]
+    }
+
+    ///
+    /// Creates a MultiPolygon GeoJSON Object.
+    ///
+    fileprivate func multiPolygonObject(_ multiPolygon: MultiPolygon) throws -> [String: Any] {
+        return [TYPE: "MultiPolygon", COORDINATES: try multiPolygon.map({ try $0.map({ try coordinateCollection($0) }) }) ]
+    }
+
+    ///
+    /// Creates a GeometryCollection GeoJSON Object.
+    ///
+    fileprivate func geometryCollectionObject(_ geometryCollection: GeometryCollection) throws -> [String: Any] {
+        return [TYPE: "GeometryCollection", GEOMETRIES: try geometryCollection.map({ try write($0) }) ]
+    }
+
+    ///
+    /// Creates an Array of Arrays representing the coordinates.
+    ///
+    private func coordinateCollection<C: CoordinateCollectionType>(_ coordinateCollection: C) throws -> [[Double]] {
+        return try coordinateCollection.map({ try self.coordinateArray($0) })
     }
 
     ///
