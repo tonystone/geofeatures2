@@ -281,6 +281,7 @@ extension GeoJSONWriterCoordinate2DMTests {
    static var allTests: [(String, (GeoJSONWriterCoordinate2DMTests) -> () throws -> Void)] {
       return [
                 ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
                 ("testWritePoint", testWritePoint),
                 ("testWriteLineString", testWriteLineString),
                 ("testWriteLinearRing", testWriteLinearRing),
@@ -297,6 +298,7 @@ extension GeoJSONWriterCoordinate3DTests {
    static var allTests: [(String, (GeoJSONWriterCoordinate3DTests) -> () throws -> Void)] {
       return [
                 ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
                 ("testWritePoint", testWritePoint),
                 ("testWriteLineString", testWriteLineString),
                 ("testWriteLinearRing", testWriteLinearRing),
@@ -313,6 +315,7 @@ extension GeoJSONWriterCoordinate3DMTests {
    static var allTests: [(String, (GeoJSONWriterCoordinate3DMTests) -> () throws -> Void)] {
       return [
                 ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
                 ("testWritePoint", testWritePoint),
                 ("testWriteLineString", testWriteLineString),
                 ("testWriteLinearRing", testWriteLinearRing),

@@ -40,7 +40,7 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 
-            if case GeoJSONWriterError.unsupportedType(let message) = error {
+            if case GeoJSONWriter.Errors.unsupportedType(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -149,7 +149,22 @@ class GeoJSONWriterCoordinate2DMTests: XCTestCase {
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 
-            if case GeoJSONWriterError.unsupportedType(let message) = error {
+            if case GeoJSONWriter.Errors.unsupportedType(let message) = error {
+                XCTAssertEqual(message, expected)
+            } else {
+                XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
+            }
+        }
+    }
+
+    func testWriteInvalidNumberOfCoordinates() throws {
+
+        let input = Point(Coordinate(x: 1.0, y: 1.0))
+        let expected = "Coordinate (x: 1.0, y: 1.0) is missing the M axis."
+
+        XCTAssertThrowsError(try writer.write(input)) { error in
+
+            if case GeoJSONWriter.Errors.invalidNumberOfCoordinates(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -258,7 +273,22 @@ class GeoJSONWriterCoordinate3DTests: XCTestCase {
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 
-            if case GeoJSONWriterError.unsupportedType(let message) = error {
+            if case GeoJSONWriter.Errors.unsupportedType(let message) = error {
+                XCTAssertEqual(message, expected)
+            } else {
+                XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
+            }
+        }
+    }
+
+    func testWriteInvalidNumberOfCoordinates() throws {
+
+        let input = Point(Coordinate(x: 1.0, y: 1.0))
+        let expected = "Coordinate (x: 1.0, y: 1.0) is missing the Z axis."
+
+        XCTAssertThrowsError(try writer.write(input)) { error in
+
+            if case GeoJSONWriter.Errors.invalidNumberOfCoordinates(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -367,7 +397,22 @@ class GeoJSONWriterCoordinate3DMTests: XCTestCase {
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 
-            if case GeoJSONWriterError.unsupportedType(let message) = error {
+            if case GeoJSONWriter.Errors.unsupportedType(let message) = error {
+                XCTAssertEqual(message, expected)
+            } else {
+                XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
+            }
+        }
+    }
+
+    func testWriteInvalidNumberOfCoordinates() throws {
+
+        let input = Point(Coordinate(x: 1.0, y: 1.0, z: 1.0))
+        let expected = "Coordinate (x: 1.0, y: 1.0, z: 1.0) is missing the M axis."
+
+        XCTAssertThrowsError(try writer.write(input)) { error in
+
+            if case GeoJSONWriter.Errors.invalidNumberOfCoordinates(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
