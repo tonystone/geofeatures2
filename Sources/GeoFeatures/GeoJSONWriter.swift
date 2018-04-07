@@ -24,10 +24,6 @@ private let TYPE        = "type"
 private let COORDINATES = "coordinates"
 private let GEOMETRIES = "geometries"
 
-public enum GeoJSONWriterError: Error {
-    case unsupportedType(String)
-}
-
 ///
 /// GeoJSONWriter writer for GeoFeatures based on the Internet Engineering Task Force (IETF) proposed standard "The GeoJSON Format"
 ///
@@ -40,6 +36,7 @@ public class GeoJSONWriter {
     }
 
     public enum Errors: Error  {
+        case unsupportedType(String)
         case invalidNumberOfCoordinates(String)
     }
 
@@ -89,7 +86,7 @@ public class GeoJSONWriter {
             return try self.geometryCollectionObject(geometryCollection)
 
         default:
-            throw GeoJSONWriterError.unsupportedType("Unsupported type \"\(String(describing: geometry.self))\".")
+            throw GeoJSONWriter.Errors.unsupportedType("Unsupported type \"\(String(describing: geometry.self))\".")
         }
     }
 
