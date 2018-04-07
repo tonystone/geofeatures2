@@ -15,6 +15,10 @@ XCTMain([
    testCase(WKTWriterCoordinate2DMTests.allTests),
    testCase(WKTWriterCoordinate3DTests.allTests),
    testCase(WKTWriterCoordinate3DMTests.allTests),
+   testCase(GeoJSONWriterCoordinate2DTests.allTests),
+   testCase(GeoJSONWriterCoordinate2DMTests.allTests),
+   testCase(GeoJSONWriterCoordinate3DTests.allTests),
+   testCase(GeoJSONWriterCoordinate3DMTests.allTests),
    testCase(GeometryCollectionGeometryFloatingPrecisionCartesianTests.allTests),
    testCase(GeometryCollectionGeometryFixedPrecisionCartesianTests.allTests),
    testCase(GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests.allTests),
@@ -253,6 +257,73 @@ extension WKTWriterCoordinate3DMTests {
                 ("testWriteMultiLineStringMultipleLineString", testWriteMultiLineStringMultipleLineString),
                 ("testWriteMultiPolygonEmpty", testWriteMultiPolygonEmpty),
                 ("testWriteMultiPolygon", testWriteMultiPolygon)
+           ]
+   }
+}
+
+extension GeoJSONWriterCoordinate2DTests {
+   static var allTests: [(String, (GeoJSONWriterCoordinate2DTests) -> () throws -> Void)] {
+      return [
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWritePoint", testWritePoint),
+                ("testWriteLineString", testWriteLineString),
+                ("testWriteLinearRing", testWriteLinearRing),
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint),
+                ("testWriteMultiLineString", testWriteMultiLineString),
+                ("testWriteMultiPolygon", testWriteMultiPolygon),
+                ("testWriteGeometryCollection", testWriteGeometryCollection)
+           ]
+   }
+}
+
+extension GeoJSONWriterCoordinate2DMTests {
+   static var allTests: [(String, (GeoJSONWriterCoordinate2DMTests) -> () throws -> Void)] {
+      return [
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
+                ("testWritePoint", testWritePoint),
+                ("testWriteLineString", testWriteLineString),
+                ("testWriteLinearRing", testWriteLinearRing),
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint),
+                ("testWriteMultiLineString", testWriteMultiLineString),
+                ("testWriteMultiPolygon", testWriteMultiPolygon),
+                ("testWriteGeometryCollection", testWriteGeometryCollection)
+           ]
+   }
+}
+
+extension GeoJSONWriterCoordinate3DTests {
+   static var allTests: [(String, (GeoJSONWriterCoordinate3DTests) -> () throws -> Void)] {
+      return [
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
+                ("testWritePoint", testWritePoint),
+                ("testWriteLineString", testWriteLineString),
+                ("testWriteLinearRing", testWriteLinearRing),
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint),
+                ("testWriteMultiLineString", testWriteMultiLineString),
+                ("testWriteMultiPolygon", testWriteMultiPolygon),
+                ("testWriteGeometryCollection", testWriteGeometryCollection)
+           ]
+   }
+}
+
+extension GeoJSONWriterCoordinate3DMTests {
+   static var allTests: [(String, (GeoJSONWriterCoordinate3DMTests) -> () throws -> Void)] {
+      return [
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
+                ("testWritePoint", testWritePoint),
+                ("testWriteLineString", testWriteLineString),
+                ("testWriteLinearRing", testWriteLinearRing),
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint),
+                ("testWriteMultiLineString", testWriteMultiLineString),
+                ("testWriteMultiPolygon", testWriteMultiPolygon),
+                ("testWriteGeometryCollection", testWriteGeometryCollection)
            ]
    }
 }
