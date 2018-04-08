@@ -4001,6 +4001,7 @@ extension IntersectionMatrix {
 
         /// We have to check that each boundary point is either on the boundary or outside the polygon
         /// before we know about the value of the boundary, interior entry.
+        matrixIntersects[.boundary, .interior] = .empty
         if (!boundaryPoint1OnPolygonBoundary && !boundaryPoint1OutsidePolygon) || (!boundaryPoint2OnPolygonBoundary && !boundaryPoint2OutsidePolygon) {
             matrixIntersects[.boundary, .interior] = .zero
         }
