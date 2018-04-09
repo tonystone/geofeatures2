@@ -20,8 +20,6 @@
 import XCTest
 import GeoFeatures
 
-private let geometryDimension = Dimension.one    // MultiLineString are always 1 dimension
-
 // MARK: - Coordinate2D, FloatingPrecision, Cartesian -
 
 class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
@@ -32,7 +30,11 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Dimension Tests
 
     func testDimension () {
-        XCTAssertEqual(MultiLineString(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(MultiLineString([LineString([[1.0,  1.0]])],precision: precision, coordinateSystem: cs).dimension, .one)
+    }
+
+    func testDimensionEmpty () {
+        XCTAssertEqual(MultiLineString(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     // MARK: Boundary Tests

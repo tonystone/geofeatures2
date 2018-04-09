@@ -21,10 +21,24 @@ import Swift
 
 extension Point: Geometry {
 
-    public var dimension: Dimension { return .zero }
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .zero
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return .zero
+    }
 
+    ///
+    /// - Returns: true if this Geometry is an empty Geometry.
+    ///
+    /// - Remarks: A point can never be empty so will always return false.
+    ///
     public func isEmpty() -> Bool {
-        return false    // Point can never be empty
+        return false
     }
 
     ///
@@ -36,6 +50,18 @@ extension Point: Geometry {
         return MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// The min and max X Y values that make up the bounding coordinates of the geometry.
+    ///
+    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding the geometry or nil if the geometry is empty.
+    ///
+    public func bounds() -> Bounds? {
+        return Bounds(min: self.coordinate, max: self.coordinate)
+    }
+
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? Point {
             return self.coordinate == other.coordinate

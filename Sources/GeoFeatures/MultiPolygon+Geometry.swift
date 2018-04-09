@@ -21,10 +21,15 @@ import Swift
 
 extension MultiPolygon: Geometry {
 
-    public var dimension: Dimension { return .two }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .two if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .two
     }
 
     ///
@@ -36,9 +41,7 @@ extension MultiPolygon: Geometry {
         var boundary = MultiLineString(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
         for i in 0..<self.count {
-
             if let elementBoundary = self[i].boundary() as? MultiLineString {
-
                 for lineString in elementBoundary {
                     boundary.append(lineString)
                 }
@@ -47,6 +50,9 @@ extension MultiPolygon: Geometry {
         return boundary
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? MultiPolygon{
             return self.elementsEqual(other, by: { (lhs: Polygon, rhs: Polygon) -> Bool in

@@ -19,32 +19,14 @@
 ///
 import Swift
 
+///
+/// Note: See `CoordinateCollectionType` for func implementations not present here.
+///
 extension LinearRing: Geometry {
 
-    public var dimension: Dimension { return .one }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
-    }
-
     ///
-    /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
+    /// - Returns: true if `self` is equal to the `other`.
     ///
-    /// - Note: The boundary of a LineString if empty is the empty MultiPoint. If not empty it is the first and last point.
-    ///
-    public func boundary() -> Geometry {
-
-        var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
-
-        if !self.isClosed() && self.count >= 2 {
-
-            /// Note: direct subscripts protected by self.count >= 2 above.
-            boundary.append(Point(self[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
-            boundary.append(Point(self[self.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
-        }
-        return boundary
-    }
-
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? LinearRing {
             return self.elementsEqual(other, by: { (lhs: Iterator.Element, rhs: Iterator.Element) -> Bool in

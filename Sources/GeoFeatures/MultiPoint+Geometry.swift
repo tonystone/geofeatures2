@@ -21,10 +21,15 @@ import Swift
 
 extension MultiPoint: Geometry {
 
-    public var dimension: Dimension { return .zero }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .zero if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .zero
     }
 
     ///
@@ -36,6 +41,9 @@ extension MultiPoint: Geometry {
         return MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? MultiPoint {
             return self.elementsEqual(other)
