@@ -66,7 +66,7 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
 
             /// Note: direct subscripts protected by self.count >= 2 above.
             boundary.append(Point(self[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
-            boundary.append(Point(self[self.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
+            boundary.append(Point(self[self.endIndex - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
         }
         return boundary
     }
@@ -87,10 +87,10 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
         }
 
         /// There must be at least two line segments to get to this point.
-        for i in 0..<self.count - 2 {
+        for i in 0..<self.endIndex - 2 {
             let c1 = self[i]
             let c2 = self[i+1]
-            for j in (i+1)..<self.count - 1 {
+            for j in (i+1)..<self.endIndex - 1 {
                 let c3 = self[j]
                 let c4 = self[j+1]
                 var intersect: Bool = false
