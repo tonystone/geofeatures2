@@ -23,10 +23,6 @@ extension MultiLineString: Geometry {
 
     public var dimension: Dimension { return .one }
 
-    public func isEmpty() -> Bool {
-        return self.count == 0
-    }
-
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
     ///
@@ -78,6 +74,9 @@ extension MultiLineString: Geometry {
         return boundary
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? MultiLineString {
             return self.elementsEqual(other)

@@ -37,10 +37,6 @@ extension GeometryCollection: Geometry {
         return dimension
     }
 
-    public func isEmpty() -> Bool {
-        return self.count == 0
-    }
-
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
     ///
@@ -51,6 +47,9 @@ extension GeometryCollection: Geometry {
         return GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? GeometryCollection {
             return self.elementsEqual(other, by: { (lhs: Geometry, rhs: Geometry) -> Bool in

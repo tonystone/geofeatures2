@@ -23,10 +23,6 @@ extension Polygon: Geometry {
 
     public var dimension: Dimension { return .two }
 
-    public func isEmpty() -> Bool {
-        return self.outerRing.count == 0
-    }
-
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
     ///
@@ -39,6 +35,9 @@ extension Polygon: Geometry {
         return MultiLineString(boundary, precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? Polygon {
             return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing, rhs: LinearRing) -> Bool in
