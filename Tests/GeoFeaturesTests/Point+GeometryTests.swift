@@ -33,6 +33,15 @@ class PointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs).dimension, geometryDimension)
     }
 
+    // MARK: - Bounds
+
+    func testBounds() {
+        let input = Point(Coordinate(x: 2.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
     func testIsEmpty() {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
@@ -75,6 +84,15 @@ class PointGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
+    // MARK: - Bounds
+
+    func testBounds() {
+        let input = Point(Coordinate(x: 2.0, y: 3.0, m: 0.0), precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
     func testEqualsWithIntOneTrue() {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs))
     }
@@ -111,6 +129,15 @@ class PointGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testIsEmpty() {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
+    }
+
+    // MARK: - Bounds
+
+    func testBounds() {
+        let input = Point(Coordinate(x: 2.0, y: 3.0, z: 0.0), precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
     }
 
     func testEqualsWithIntOneTrue() {
@@ -151,6 +178,15 @@ class PointGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
+    // MARK: - Bounds
+
+    func testBounds() {
+        let input = Point(Coordinate(x: 2.0, y: 3.0, z: 0.0, m: 0.0), precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
     func testEqualsWithIntOneTrue() {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs))
     }
@@ -187,6 +223,15 @@ class PointGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testIsEmpty() {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
+    }
+
+    // MARK: - Bounds
+
+    func testBounds() {
+        let input = Point(Coordinate(x: 2.001, y: 3.001), precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
     }
 
     func testEqualsWithIntOneTrue() {
@@ -227,6 +272,15 @@ class PointGeometryCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
+    // MARK: - Bounds
+
+    func testBounds() {
+        let input = Point(Coordinate(x: 2.001, y: 3.001, m: 0.0), precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
     func testEqualsWithIntOneTrue() {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.0, y: 1.0, m: 1.0), precision: precision, coordinateSystem: cs))
     }
@@ -265,6 +319,15 @@ class PointGeometryCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
+    // MARK: - Bounds
+
+    func testBounds() {
+        let input = Point(Coordinate(x: 2.001, y: 3.001, z: 0.0), precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
+    }
+
     func testEqualsWithIntOneTrue() {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.0, y: 1.0, z: 1.0), precision: precision, coordinateSystem: cs))
     }
@@ -301,6 +364,15 @@ class PointGeometryCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
     func testIsEmpty() {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
+    }
+
+    // MARK: - Bounds
+
+    func testBounds() {
+        let input = Point(Coordinate(x: 2.001, y: 3.001, z: 0.0, m: 0.0), precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
+
+        XCTAssertEqual(input.bounds(), expected)
     }
 
     func testEqualsWithIntOneTrue() {

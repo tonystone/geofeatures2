@@ -1394,6 +1394,7 @@ extension PointGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (PointGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testBounds", testBounds),
                 ("testIsEmpty", testIsEmpty),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
@@ -1408,6 +1409,7 @@ extension PointGeometryCoordinate2DMFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1421,6 +1423,7 @@ extension PointGeometryCoordinate3DFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1434,6 +1437,7 @@ extension PointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1447,6 +1451,7 @@ extension PointGeometryCoordinate2DFixedPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1460,6 +1465,7 @@ extension PointGeometryCoordinate2DMFixedPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1473,6 +1479,7 @@ extension PointGeometryCoordinate3DFixedPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1486,6 +1493,7 @@ extension PointGeometryCoordinate3DMFixedPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
