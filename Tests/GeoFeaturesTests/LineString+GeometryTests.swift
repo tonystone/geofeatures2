@@ -20,8 +20,6 @@
 import XCTest
 import GeoFeatures
 
-private let inputDimension = Dimension.one    // LineString are always 1 dimension
-
 // MARK: - Coordinate 2D, FloatingPrecision, Cartesian -
 
 class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
@@ -32,7 +30,11 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     // MARK: - Dimension
 
     func testDimension () {
-        XCTAssertEqual(LineString(precision: precision, coordinateSystem: cs).dimension, inputDimension)
+        XCTAssertEqual(LineString([[1.0, 1.0]], precision: precision, coordinateSystem: cs).dimension, .one)
+    }
+
+    func testDimensionEmpty () {
+        XCTAssertEqual(LineString(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     // MARK: - Boundary

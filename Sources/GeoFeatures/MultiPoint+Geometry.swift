@@ -21,7 +21,16 @@ import Swift
 
 extension MultiPoint: Geometry {
 
-    public var dimension: Dimension { return .zero }
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .zero if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .zero
+    }
 
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.

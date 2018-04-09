@@ -19,8 +19,7 @@ XCTMain([
    testCase(GeoJSONWriterCoordinate2DMTests.allTests),
    testCase(GeoJSONWriterCoordinate3DTests.allTests),
    testCase(GeoJSONWriterCoordinate3DMTests.allTests),
-   testCase(GeometryCollectionGeometryFloatingPrecisionCartesianTests.allTests),
-   testCase(GeometryCollectionGeometryFixedPrecisionCartesianTests.allTests),
+   testCase(GeometryCollectionGeometryTests.allTests),
    testCase(GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests.allTests),
@@ -328,34 +327,25 @@ extension GeoJSONWriterCoordinate3DMTests {
    }
 }
 
-extension GeometryCollectionGeometryFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (GeometryCollectionGeometryFloatingPrecisionCartesianTests) -> () throws -> Void)] {
+extension GeometryCollectionGeometryTests {
+   static var allTests: [(String, (GeometryCollectionGeometryTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testDimensionWithHomogeneousPoint", testDimensionWithHomogeneousPoint),
                 ("testDimensionWithHomogeneousLineString", testDimensionWithHomogeneousLineString),
+                ("testDimensionWithHomogeneousLineStringEmpty", testDimensionWithHomogeneousLineStringEmpty),
                 ("testDimensionWithHomogeneousPolygon", testDimensionWithHomogeneousPolygon),
+                ("testDimensionWithHomogeneousPolygonEmpty", testDimensionWithHomogeneousPolygonEmpty),
                 ("testDimensionWithNonHomogeneousPointPolygon", testDimensionWithNonHomogeneousPointPolygon),
+                ("testDimensionWithNonHomogeneousPointPolygonEmpty", testDimensionWithNonHomogeneousPointPolygonEmpty),
                 ("testDimensionWithNonHomogeneousPointLineString", testDimensionWithNonHomogeneousPointLineString),
+                ("testDimensionWithNonHomogeneousPointLineStringEmpty", testDimensionWithNonHomogeneousPointLineStringEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundsEmpty", testBoundsEmpty),
                 ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualWithSameTypesFalse", testEqualWithSameTypesFalse),
                 ("testEqualWithDifferentTypesFalse", testEqualWithDifferentTypesFalse)
-           ]
-   }
-}
-
-extension GeometryCollectionGeometryFixedPrecisionCartesianTests {
-   static var allTests: [(String, (GeometryCollectionGeometryFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension),
-                ("testDimensionWithHomogeneousPoint", testDimensionWithHomogeneousPoint),
-                ("testDimensionWithHomogeneousLineString", testDimensionWithHomogeneousLineString),
-                ("testDimensionWithHomogeneousPolygon", testDimensionWithHomogeneousPolygon),
-                ("testDimensionWithNonHomogeneousPointPolygon", testDimensionWithNonHomogeneousPointPolygon),
-                ("testDimensionWithNonHomogeneousPointLineString", testDimensionWithNonHomogeneousPointLineString)
            ]
    }
 }
@@ -1153,6 +1143,7 @@ extension PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWithOuterRing", testBoundaryWithOuterRing),
                 ("testBoundaryWithOuterRingAnd1InnerRing", testBoundaryWithOuterRingAnd1InnerRing),
                 ("testBoundaryEmpty", testBoundaryEmpty),
@@ -1227,6 +1218,7 @@ extension MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1237,6 +1229,7 @@ extension MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1247,6 +1240,7 @@ extension MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1257,6 +1251,7 @@ extension MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1267,6 +1262,7 @@ extension MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1277,6 +1273,7 @@ extension MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1287,6 +1284,7 @@ extension MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty),
                 ("testEqualTrue", testEqualTrue),
@@ -1299,6 +1297,7 @@ extension MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty),
                 ("testEqualTrue", testEqualTrue),
@@ -1576,6 +1575,7 @@ extension MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWithSinglePolygonNoInnerRings", testBoundaryWithSinglePolygonNoInnerRings),
                 ("testBoundaryWithSinglePolygonInnerRings", testBoundaryWithSinglePolygonInnerRings),
                 ("testBoundaryWithMultiplePolygons", testBoundaryWithMultiplePolygons),
@@ -1679,6 +1679,7 @@ extension LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWith1ElementInvalid", testBoundaryWith1ElementInvalid),
                 ("testBoundaryWith2Element", testBoundaryWith2Element),
                 ("testBoundaryWith3ElementOpen", testBoundaryWith3ElementOpen),
@@ -1696,6 +1697,7 @@ extension MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWith1ElementInvalid", testBoundaryWith1ElementInvalid),
                 ("testBoundaryWith2Element", testBoundaryWith2Element),
                 ("testBoundaryWith3ElementOpen", testBoundaryWith3ElementOpen),
@@ -1718,6 +1720,7 @@ extension LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWith1ElementInvalid", testBoundaryWith1ElementInvalid),
                 ("testBoundaryWith2Element", testBoundaryWith2Element),
                 ("testBoundaryWith3ElementOpen", testBoundaryWith3ElementOpen),

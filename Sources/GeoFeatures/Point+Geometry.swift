@@ -21,7 +21,16 @@ import Swift
 
 extension Point: Geometry {
 
-    public var dimension: Dimension { return .zero }
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .zero
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return .zero
+    }
 
     ///
     /// - Returns: true if this Geometry is an empty Geometry.

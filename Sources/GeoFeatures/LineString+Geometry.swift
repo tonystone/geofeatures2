@@ -24,7 +24,6 @@ import Swift
 ///
 extension LineString: Geometry {
 
-    public var dimension: Dimension { return .one }
     ///
     /// - Returns: true if `self` is equal to the `other`.
     ///

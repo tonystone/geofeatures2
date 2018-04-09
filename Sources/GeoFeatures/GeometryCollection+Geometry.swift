@@ -23,18 +23,15 @@ import Swift
 
 extension GeometryCollection: Geometry {
 
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: The maximum dimension of the geonetries contained in or, or .empty if there are no geomentries.
+    ///
+    /// - SeeAlso: Dimension
+    ///
     public var dimension: Dimension {
-
-        var dimension: Dimension = .empty // No dimension
-
-        if self.count > 0 {
-
-            for index in 0..<self.count {
-
-                dimension = Swift.max(dimension, self[index].dimension)
-            }
-        }
-        return dimension
+        return self.reduce(Dimension.empty, { Swift.max($0, $1.dimension) })
     }
 
     ///

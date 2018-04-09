@@ -21,7 +21,16 @@ import Swift
 
 extension MultiLineString: Geometry {
 
-    public var dimension: Dimension { return .one }
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .one if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .one
+    }
 
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.

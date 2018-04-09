@@ -25,8 +25,6 @@ import GeoFeatures
     import struct GeoFeatures.Polygon
 #endif
 
-private let geometryDimension = Dimension.two    // Polygon are always 2 dimension
-
 // MARK: - Coordinate2D, FloatingPrecision, Cartesian -
 
 class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
@@ -37,7 +35,11 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: - Dimension
 
     func testDimension () {
-        XCTAssertEqual(Polygon(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(Polygon([[[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]]], precision: precision, coordinateSystem: cs).dimension, .two)
+    }
+
+    func testDimensionEmpty () {
+        XCTAssertEqual(Polygon(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     // MARK: - Boundary

@@ -21,7 +21,16 @@ import Swift
 
 extension Polygon: Geometry {
 
-    public var dimension: Dimension { return .two }
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .two if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .two
+    }
 
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
