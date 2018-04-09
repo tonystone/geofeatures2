@@ -33,11 +33,11 @@ To build and test the code-line and run the appropriate tools, run the following
 ```
 If you want to build the code-line only, run:
 ```bash
-# make geofeatures-build
+# make build
 ```
 Or to specifically target the tests, run:
 ```bash
-# make geofeatures-test
+# make tests
 ```
 
 If you get stuck and need help, run:
@@ -60,7 +60,7 @@ If you'd like to have an xcode project/workspace for your development efforts, w
 
 > Make sure you are in the same directory you ran cmake originally.
 ```bash
-# make geofeatures-xcode-workspace
+# make xcode-workspace
 ```
 
 This will create a fully functioning Xcode project and workspace you can develop with. The workspace will include the Playground and the Project file so that you can build and use the playground.

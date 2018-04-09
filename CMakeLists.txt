@@ -39,7 +39,7 @@ include(Gyb)
 #
 # Clean the sticky package
 #
-add_custom_target(geofeatures-build-clean
+add_custom_target(build-clean
         COMMAND swift package clean
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         )
@@ -47,8 +47,8 @@ add_custom_target(geofeatures-build-clean
 #
 # Build xcode project Target
 #
-add_custom_target(geofeatures-xcode-project
-        DEPENDS build-tools generated-source generated-tests
+add_custom_target(xcode-project
+        DEPENDS build-tools generate-source generate-tests
         COMMAND swift package generate-xcodeproj --enable-code-coverage
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         SOURCES Package.swift)
@@ -56,8 +56,8 @@ add_custom_target(geofeatures-xcode-project
 #
 # Build xcode workspace Target which includes the playground
 #
-add_custom_target(geofeatures-xcode-workspace
-        DEPENDS build-tools geofeatures-xcode-project GeoFeatures.playground
+add_custom_target(xcode-workspace
+        DEPENDS build-tools xcode-project GeoFeatures.playground
         COMMAND "${BUILD_TOOLS_BIN}/xcworkspace_tool.rb" GeoFeatures GeoFeatures.playground GeoFeatures.xcodeproj
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
