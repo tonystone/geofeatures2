@@ -8,9 +8,9 @@ import XCTest
 @testable import GeoFeaturesTests
 
 XCTMain([
-   testCase(MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(MultiPolygonSurfaceCoordinate2DFixedCartesianTests.allTests),
    testCase(PolygonCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(PolygonCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(PolygonCoordinate2DFixedCartesianTests.allTests),
    testCase(WKTWriterCoordinate2DTests.allTests),
    testCase(WKTWriterCoordinate2DMTests.allTests),
    testCase(WKTWriterCoordinate3DTests.allTests),
@@ -22,25 +22,25 @@ XCTMain([
    testCase(GeometryCollectionGeometryTests.allTests),
    testCase(GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(GeoJSONReaderCoordinate3DMFixedCartesianTests.allTests),
    testCase(GeoJSONReaderInternal.allTests),
    testCase(Coordinate2DTests.allTests),
    testCase(LineStringCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LineStringCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(LineStringCoordinate2DFixedCartesianTests.allTests),
+   testCase(LineStringCoordinate2DMFixedCartesianTests.allTests),
+   testCase(LineStringCoordinate3DFixedCartesianTests.allTests),
+   testCase(LineStringCoordinate3DMFixedCartesianTests.allTests),
    testCase(LinearRingCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(LinearRingCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(LinearRingCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(LinearRingCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(LinearRingCoordinate2DFixedCartesianTests.allTests),
+   testCase(LinearRingCoordinate2DMFixedCartesianTests.allTests),
+   testCase(LinearRingCoordinate3DFixedCartesianTests.allTests),
+   testCase(LinearRingCoordinate3DMFixedCartesianTests.allTests),
    testCase(TokenizerTests.allTests),
    testCase(WKTReaderCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(WKTReaderCoordinate2DMFloatingPrecisionCartesianTests.allTests),
@@ -48,11 +48,11 @@ XCTMain([
    testCase(WKTReaderCoordinate3DMFloatingPrecisionCartesianTests.allTests),
    testCase(BoundsTests.allTests),
    testCase(MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(MultiLineStringCurveCoordinate2DFixedCartesianTests.allTests),
    testCase(LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPolygonCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(FixedPrecisionTests.allTests),
-   testCase(PolygonSurfaceCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(FixedTests.allTests),
+   testCase(PolygonSurfaceCoordinate2DFixedCartesianTests.allTests),
    testCase(PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(IntersectionMatrixTests.allTests),
    testCase(FloatingPrecisionTests.allTests),
@@ -61,30 +61,30 @@ XCTMain([
    testCase(MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(MultiPointGeometryCoordinate2DFixedCartesianTests.allTests),
+   testCase(MultiPointGeometryCoordinate2DMFixedCartesianTests.allTests),
+   testCase(MultiPointGeometryCoordinate3DFixedCartesianTests.allTests),
+   testCase(MultiPointGeometryCoordinate3DMFixedCartesianTests.allTests),
    testCase(LineStringCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringCurveCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(LinearRingSurfaceCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingSurfaceCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(LinearRingSurfaceCoordinate2DFixedCartesianTests.allTests),
    testCase(Coordinate3DMTests.allTests),
    testCase(PointGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(PointGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(PointGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(PointGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(PointGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(PointGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(PointGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(PointGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(PointGeometryCoordinate2DFixedCartesianTests.allTests),
+   testCase(PointGeometryCoordinate2DMFixedCartesianTests.allTests),
+   testCase(PointGeometryCoordinate3DFixedCartesianTests.allTests),
+   testCase(PointGeometryCoordinate3DMFixedCartesianTests.allTests),
    testCase(MultiPointCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPointCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(MultiPointCoordinate2DFixedCartesianTests.allTests),
    testCase(Coordinate3DTests.allTests),
    testCase(MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(Coordinate2DMTests.allTests),
    testCase(MultiLineStringCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(MultiLineStringCoordinate2DFixedCartesianTests.allTests),
    testCase(CoordinateSystemGeographicTests.allTests),
    testCase(LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
@@ -93,14 +93,14 @@ XCTMain([
    testCase(PointCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(PointCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(PointCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(PointCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(PointCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(PointCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(PointCoordinate3DMFixedPrecisionCartesianTests.allTests)
+   testCase(PointCoordinate2DFixedCartesianTests.allTests),
+   testCase(PointCoordinate2DMFixedCartesianTests.allTests),
+   testCase(PointCoordinate3DFixedCartesianTests.allTests),
+   testCase(PointCoordinate3DMFixedCartesianTests.allTests)
 ])
 
-extension MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPolygonSurfaceCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiPolygonSurfaceCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testAreaEmpty", testAreaEmpty),
                 ("testAreaWith2SamePolygons", testAreaWith2SamePolygons),
@@ -136,8 +136,8 @@ extension PolygonCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension PolygonCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PolygonCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (PolygonCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitNoArg", testInitNoArg),
                 ("testInitWithNoArgDefaults", testInitWithNoArgDefaults),
@@ -400,8 +400,8 @@ extension GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension GeoJSONReaderCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (GeoJSONReaderCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testReadWithValidPoint", testReadWithValidPoint),
                 ("testReadWithValidLineString", testReadWithValidLineString),
@@ -553,8 +553,8 @@ extension LineStringCoordinate3DMFloatingPrecisionCartesianTests {
    }
 }
 
-extension LineStringCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LineStringCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (LineStringCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
@@ -580,8 +580,8 @@ extension LineStringCoordinate2DFixedPrecisionCartesianTests {
    }
 }
 
-extension LineStringCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LineStringCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (LineStringCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
@@ -607,8 +607,8 @@ extension LineStringCoordinate2DMFixedPrecisionCartesianTests {
    }
 }
 
-extension LineStringCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LineStringCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (LineStringCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
@@ -634,8 +634,8 @@ extension LineStringCoordinate3DFixedPrecisionCartesianTests {
    }
 }
 
-extension LineStringCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LineStringCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (LineStringCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
@@ -769,8 +769,8 @@ extension LinearRingCoordinate3DMFloatingPrecisionCartesianTests {
    }
 }
 
-extension LinearRingCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (LinearRingCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
@@ -796,8 +796,8 @@ extension LinearRingCoordinate2DFixedPrecisionCartesianTests {
    }
 }
 
-extension LinearRingCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (LinearRingCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
@@ -823,8 +823,8 @@ extension LinearRingCoordinate2DMFixedPrecisionCartesianTests {
    }
 }
 
-extension LinearRingCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (LinearRingCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
@@ -850,8 +850,8 @@ extension LinearRingCoordinate3DFixedPrecisionCartesianTests {
    }
 }
 
-extension LinearRingCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (LinearRingCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
@@ -1045,8 +1045,8 @@ extension MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiLineStringCurveCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiLineStringCurveCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testIsClosedClosed", testIsClosedClosed),
                 ("testIsClosedOpen", testIsClosedOpen),
@@ -1099,8 +1099,8 @@ extension MultiPolygonCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension FixedPrecisionTests {
-   static var allTests: [(String, (FixedPrecisionTests) -> () throws -> Void)] {
+extension FixedTests {
+   static var allTests: [(String, (FixedTests) -> () throws -> Void)] {
       return [
                 ("testConvertWithScale10Lower", testConvertWithScale10Lower),
                 ("testConvertWithScale10Middle", testConvertWithScale10Middle),
@@ -1119,8 +1119,8 @@ extension FixedPrecisionTests {
    }
 }
 
-extension PolygonSurfaceCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonSurfaceCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PolygonSurfaceCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (PolygonSurfaceCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testAreaEmpty", testAreaEmpty),
                 ("testAreaWithTriangle", testAreaWithTriangle),
@@ -1258,8 +1258,8 @@ extension MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
    }
 }
 
-extension MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointGeometryCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiPointGeometryCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testDimensionEmpty", testDimensionEmpty),
@@ -1269,8 +1269,8 @@ extension MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests {
    }
 }
 
-extension MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointGeometryCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (MultiPointGeometryCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testDimensionEmpty", testDimensionEmpty),
@@ -1280,8 +1280,8 @@ extension MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests {
    }
 }
 
-extension MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointGeometryCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (MultiPointGeometryCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testDimensionEmpty", testDimensionEmpty),
@@ -1293,8 +1293,8 @@ extension MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests {
    }
 }
 
-extension MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointGeometryCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (MultiPointGeometryCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testDimensionEmpty", testDimensionEmpty),
@@ -1349,8 +1349,8 @@ extension LinearRingSurfaceCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension LinearRingSurfaceCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingSurfaceCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingSurfaceCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (LinearRingSurfaceCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testAreaEmpty", testAreaEmpty),
                 ("testAreaWithTriangle", testAreaWithTriangle),
@@ -1446,8 +1446,8 @@ extension PointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
    }
 }
 
-extension PointGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointGeometryCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (PointGeometryCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
@@ -1460,8 +1460,8 @@ extension PointGeometryCoordinate2DFixedPrecisionCartesianTests {
    }
 }
 
-extension PointGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointGeometryCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (PointGeometryCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
@@ -1474,8 +1474,8 @@ extension PointGeometryCoordinate2DMFixedPrecisionCartesianTests {
    }
 }
 
-extension PointGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointGeometryCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (PointGeometryCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
@@ -1488,8 +1488,8 @@ extension PointGeometryCoordinate3DFixedPrecisionCartesianTests {
    }
 }
 
-extension PointGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointGeometryCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (PointGeometryCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
@@ -1530,8 +1530,8 @@ extension MultiPointCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension MultiPointCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiPointCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithNoArg", testInitWithNoArg),
                 ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
@@ -1644,8 +1644,8 @@ extension MultiLineStringCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension MultiLineStringCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiLineStringCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiLineStringCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithNoArg", testInitWithNoArg),
                 ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
@@ -1796,32 +1796,32 @@ extension PointCoordinate3DMFloatingPrecisionCartesianTests {
    }
 }
 
-extension PointCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (PointCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
            ]
    }
 }
 
-extension PointCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (PointCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
            ]
    }
 }
 
-extension PointCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (PointCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
            ]
    }
 }
 
-extension PointCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (PointCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
            ]

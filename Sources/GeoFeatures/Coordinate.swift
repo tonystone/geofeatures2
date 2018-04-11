@@ -20,19 +20,28 @@
 import Swift
 
 ///
-/// 2D Coordinate
-///
-/// Low level 2 dimensional Coordinate type
+/// A low level Coordinate type which forms the internal storage for all `Geometry` types.
 ///
 public struct Coordinate {
 
-    public enum Axis {
-        case x, y, z, m
-    }
-
+    ///
+    /// The `x` Axis value.
+    ///
     public var x: Double
+
+    ///
+    /// The `y` Axis value.
+    ///
     public var y: Double
+
+    ///
+    /// The `z` Axis value, if available.
+    ///
     public var z: Double?
+
+    ///
+    /// The `m` Axis value, if available.
+    ///
     public var m: Double?
 
     public init(x: Double, y: Double, z: Double? = nil, m: Double? = nil) {

@@ -1,5 +1,5 @@
 
-> :warning: **WARNING** :warning: The project is in a _prerelease_ state. There is active work going on that will result in API changes that can/will break code while things are finished.  Use with caution.
+> **WARNING** This project is in a **_pre-release_** state. There is active work going on that will result in API changes that can/will break code while things are finished.  Use with caution.
 >
 >  For a stable release, please use the latest release of **GeoFeature 1** which can be found at [https://github.com/tonystone/geofeatures](https://github.com/tonystone/geofeatures). 
 
@@ -28,13 +28,13 @@
 
 GeoFeatures is a lightweight, high performance geometry library for Swift.  It supports the full set of geometric primitives such as Point, Polygon, and LineString as well as collection classes such as MultiPoint, MultiPolygon,and MultiLineString.
 
-![Inheritance Diagram](Documentation/GeoFeatures-Inheritance-Diagram.png)
+![Inheritance Diagram](http:/github.com/tonystone/geofeatures2/raw/master/Documentation/GeoFeatures-Inheritance-Diagram.png)
 
 ## Features
 - [x] Easy to use.
 - [x] Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, Box and GeometryCollection implementations.
 - [x] [WKT (Well-Known-Text)](https://en.wikipedia.org/wiki/Well-known_text) input and output.
-- [x] [GeoJSON](http://geojson.org/) input and output.
+- [x] [GeoJSON](https://tools.ietf.org/html/rfc7946) input and output.
 - [x] Indexed Subscripting support for all collection types (e.g. `let point = multiPoint[0]`).
 - [x] **Swift**: Written in pure Swift.
 - [x] CocoaPod framework support (compile as Objective-C framework or static lib).

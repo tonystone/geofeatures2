@@ -20,9 +20,9 @@
 import Swift
 
 ///
-/// Surface extension for LinearRing
+/// `Surface` protocol implementation.
 ///
-extension LinearRing: Surface {
+extension LinearRing {
 
     ///
     /// Calculates the area of this `LinearRing`

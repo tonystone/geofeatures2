@@ -19,7 +19,10 @@
 ///
 import Swift
 
-extension Polygon: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension Polygon {
 
     ///
     /// The spatial dimension of `self`.

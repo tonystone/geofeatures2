@@ -71,11 +71,6 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
         return boundary
     }
 
-    ///
-    /// The min and max X Y values that make up the bounding coordinates of the geometry.
-    ///
-    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding the geometry or nil if the geometry is empty.
-    ///
     public func bounds() -> Bounds? {
 
         var iterator = self.makeIterator()

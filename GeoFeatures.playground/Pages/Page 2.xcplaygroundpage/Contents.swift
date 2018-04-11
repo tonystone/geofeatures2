@@ -5,18 +5,18 @@ import GeoFeatures
 
 //: Usage Scenarios
 
-var lineString1 = LineString(precision: FixedPrecision(scale: 10))
+var lineString1 = LineString(precision: Fixed(scale: 10))
 lineString1.append([1.001, 1.001])
 lineString1.append([2.001, 2.001])
 lineString1.append([3.001, 3.001])
 
 lineString1.length()
 
-let fixedPrecision = FixedPrecision(scale: 100)
+let fixed = Fixed(scale: 100)
 
-let lineString = LineString([[1.001, 1.001], [2.001, 2.001], [3.001, 3.001]], precision: fixedPrecision)
+let lineString = LineString([[1.001, 1.001], [2.001, 2.001], [3.001, 3.001]], precision: fixed)
 
-var lineString2 = LineString([[1.001, 1.001], [2.001, 2.001], [3.001, 3.001]], precision: fixedPrecision)
+var lineString2 = LineString([[1.001, 1.001], [2.001, 2.001], [3.001, 3.001]], precision: fixed)
 
 lineString == lineString2
 

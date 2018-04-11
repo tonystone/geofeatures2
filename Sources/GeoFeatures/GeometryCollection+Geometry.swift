@@ -21,7 +21,10 @@ import Swift
 
 // MARK: - Geometry conformance
 
-extension GeometryCollection: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension GeometryCollection {
 
     ///
     /// The spatial dimension of `self`.

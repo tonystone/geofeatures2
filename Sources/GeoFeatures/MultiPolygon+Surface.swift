@@ -19,7 +19,10 @@
 ///
 import Swift
 
-extension MultiPolygon: Surface {
+///
+/// `Surface` protocol implementation.
+///
+extension MultiPolygon {
 
     public func area() -> Double {
         var area: Double = 0.0

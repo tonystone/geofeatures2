@@ -46,11 +46,6 @@ extension Geometry where Self: GeometryCollectionType {
 ///
 extension Geometry where Self: GeometryCollectionType, Self.Element: Geometry {
 
-    ///
-    /// The min and max X Y values that make up the bounding coordinates of the geometry.
-    ///
-    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding the geometry or nil if the geometry is empty.
-    ///
     public func bounds() -> Bounds? {
 
         let bounds = self.flatMap { $0.bounds() }
@@ -69,11 +64,7 @@ extension Geometry where Self: GeometryCollectionType, Self.Element: Geometry {
 ///
 extension Geometry where Self: GeometryCollectionType, Self.Element == Geometry  {
 
-    ///
-    /// The min and max X Y values that make up the bounding coordinates of the geometry.
-    ///
-    /// - Returns: `Bounds` instance containing the minX, minY, maxX, maxY values bounding the geometry or nil if the geometry is empty.
-    ///
+
     public func bounds() -> Bounds? {
 
         let bounds = self.flatMap { $0.bounds() }

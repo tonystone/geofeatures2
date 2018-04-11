@@ -19,14 +19,36 @@
 ///
 import Swift
 
+///
+/// The precision model used for all `Geometry` types.
+///
 public protocol Precision {
 
+    ///
+    /// Convert a double into `self` precision.
+    ///
+    /// - Returns: A double converted to `self` precision.
+    ///
     func convert(_ value: Double) -> Double
+
+    ///
+    /// Convert an optional double into `self` precision.
+    ///
+    /// - Returns: A double converted to `self` precision if a value was passed, or nil otherwise.
+    ///
     func convert(_ value: Double?) -> Double?
 
+    ///
+    /// Convert a Coordinate into `self` precision.
+    ///
+    /// - Returns: A Coordinate converted to `self` precision.
+    ///
     func convert(_ coordinate: Coordinate) -> Coordinate
 }
 
+///
+/// Compares to precision types for equality when both are Hashable.
+///
 public func == <T1: Precision & Hashable, T2: Precision & Hashable>(lhs: T1, rhs: T2) -> Bool {
     if type(of: lhs) == type(of: rhs) {
         return lhs.hashValue == rhs.hashValue
