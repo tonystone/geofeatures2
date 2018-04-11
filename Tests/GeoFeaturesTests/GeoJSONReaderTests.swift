@@ -29,7 +29,7 @@ import XCTest
 
 class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    private var reader = GeoJSONReader(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+    private var reader = GeoJSONReader(precision: Floating(), coordinateSystem: Cartesian())
 
     // MARK: - Negative Tests
 

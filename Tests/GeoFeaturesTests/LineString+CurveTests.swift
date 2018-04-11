@@ -24,7 +24,7 @@ import GeoFeatures
 
 class LineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testLengthTest1() {
@@ -71,7 +71,7 @@ class LineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
 class LineStringCurveCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testPerformanceLength() {

@@ -24,7 +24,7 @@ import GeoFeatures
 
 class LinearRingSurfaceCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
     let accuracy  = 0.000000000001
 
@@ -88,11 +88,11 @@ class LinearRingSurfaceCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate2D, FixedPrecision, Cartesian -
+// MARK: - Coordinate2D, Fixed, Cartesian -
 
-class LinearRingSurfaceCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
+class LinearRingSurfaceCoordinate2DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100000)
+    let precision = Fixed(scale: 100000)
     let cs       = Cartesian()
 
     func testAreaEmpty() {

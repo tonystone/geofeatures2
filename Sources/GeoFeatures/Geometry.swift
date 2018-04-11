@@ -22,7 +22,7 @@ import Swift
 ///
 /// Default Precision for all class
 ///
-public let defaultPrecision = FloatingPrecision()
+public let defaultPrecision = Floating()
 
 ///
 /// Default CoordinateSystem

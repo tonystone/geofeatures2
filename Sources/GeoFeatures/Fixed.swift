@@ -1,5 +1,5 @@
 ///
-///  FloatingPrecision.swift
+///  Fixed.swift
 ///
 ///  Copyright (c) 2016 Tony Stone
 ///
@@ -19,32 +19,55 @@
 ///
 import Swift
 
-public struct FloatingPrecision: Precision, Equatable, Hashable {
+#if os(Linux) || os(FreeBSD)
+    import Glibc
+#else
+    import Darwin
+#endif
 
-    public var hashValue: Int {
-        return 31.hashValue
+///
+/// Fixed Precision ensures coordinates have a fixed number of decimal places.
+///
+/// - Remarks: The number of decimal places is determined by the scale passed.
+///
+public struct Fixed: Precision {
+
+    public let scale: Double
+
+    public init(scale: Double) {
+        self.scale = abs(scale)
     }
-
-    public init() {}
 
     @inline(__always)
     public func convert(_ value: Double) -> Double {
-        return value
+        return round(value * scale) / scale
     }
 
     @inline(__always)
     public func convert(_ value: Double?) -> Double? {
-        return value
+        guard let value = value
+            else { return nil }
+        return convert(value)
     }
 
     public func convert(_ coordinate: Coordinate) -> Coordinate {
-        return coordinate
+        return Coordinate(x: self.convert(coordinate.x), y: self.convert(coordinate.y), z: self.convert(coordinate.z), m: self.convert(coordinate.m))
     }
 }
-extension FloatingPrecision: CustomStringConvertible, CustomDebugStringConvertible {
+
+extension Fixed: Hashable {
+
+    public var hashValue: Int {
+        return 31.hashValue + scale.hashValue
+    }
+}
+
+extension Fixed: Equatable {}
+
+extension Fixed: CustomStringConvertible, CustomDebugStringConvertible {
 
     public var description: String {
-        return "\(type(of: self))()"
+        return "\(type(of: self))(scale: \(self.scale))"
     }
 
     public var debugDescription: String {

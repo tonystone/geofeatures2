@@ -24,7 +24,7 @@ import GeoFeatures
 
 class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     // MARK: - Dimension

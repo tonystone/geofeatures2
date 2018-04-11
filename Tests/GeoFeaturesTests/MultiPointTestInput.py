@@ -15,7 +15,7 @@ Variants = [
                 'Point(x: 2.0, y: 2.0)'
                 ),
 
-            ('Coordinate2D', 'FixedPrecision', '(scale: 100)', 'Cartesian', '()',
+            ('Coordinate2D', 'Fixed', '(scale: 100)', 'Cartesian', '()',
                 'Point([1.001, 1.001])',
                 'Point([1.0, 1.0])',
                 'Point(x: 1.0, y: 1.0)',
