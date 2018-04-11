@@ -15,6 +15,7 @@ XCTMain([
    testCase(WKTWriterCoordinate2DMTests.allTests),
    testCase(WKTWriterCoordinate3DTests.allTests),
    testCase(WKTWriterCoordinate3DMTests.allTests),
+   testCase(FixedTests.allTests),
    testCase(GeoJSONWriterCoordinate2DTests.allTests),
    testCase(GeoJSONWriterCoordinate2DMTests.allTests),
    testCase(GeoJSONWriterCoordinate3DTests.allTests),
@@ -51,11 +52,9 @@ XCTMain([
    testCase(MultiLineStringCurveCoordinate2DFixedCartesianTests.allTests),
    testCase(LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPolygonCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(FixedTests.allTests),
    testCase(PolygonSurfaceCoordinate2DFixedCartesianTests.allTests),
    testCase(PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(IntersectionMatrixTests.allTests),
-   testCase(FloatingPrecisionTests.allTests),
    testCase(CoordinateSystemCartesianTests.allTests),
    testCase(MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
@@ -78,6 +77,7 @@ XCTMain([
    testCase(PointGeometryCoordinate2DMFixedCartesianTests.allTests),
    testCase(PointGeometryCoordinate3DFixedCartesianTests.allTests),
    testCase(PointGeometryCoordinate3DMFixedCartesianTests.allTests),
+   testCase(FloatingTests.allTests),
    testCase(MultiPointCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPointCoordinate2DFixedCartesianTests.allTests),
    testCase(Coordinate3DTests.allTests),
@@ -256,6 +256,26 @@ extension WKTWriterCoordinate3DMTests {
                 ("testWriteMultiLineStringMultipleLineString", testWriteMultiLineStringMultipleLineString),
                 ("testWriteMultiPolygonEmpty", testWriteMultiPolygonEmpty),
                 ("testWriteMultiPolygon", testWriteMultiPolygon)
+           ]
+   }
+}
+
+extension FixedTests {
+   static var allTests: [(String, (FixedTests) -> () throws -> Void)] {
+      return [
+                ("testConvertWithScale10Lower", testConvertWithScale10Lower),
+                ("testConvertWithScale10Middle", testConvertWithScale10Middle),
+                ("testConvertWithScale10Upper", testConvertWithScale10Upper),
+                ("testConvertWithScale10Lower2", testConvertWithScale10Lower2),
+                ("testConvertWithScale10Middle2", testConvertWithScale10Middle2),
+                ("testConvertWithScale10Upper2", testConvertWithScale10Upper2),
+                ("testConvertOptionalWithScale10Lower", testConvertOptionalWithScale10Lower),
+                ("testConvertOptionalWithNil", testConvertOptionalWithNil),
+                ("testDescription", testDescription),
+                ("testDebugDescription", testDebugDescription),
+                ("testEqualTrue", testEqualTrue),
+                ("testEqualFalse", testEqualFalse),
+                ("testEqualFalseWithDifferentType", testEqualFalseWithDifferentType)
            ]
    }
 }
@@ -1099,26 +1119,6 @@ extension MultiPolygonCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension FixedTests {
-   static var allTests: [(String, (FixedTests) -> () throws -> Void)] {
-      return [
-                ("testConvertWithScale10Lower", testConvertWithScale10Lower),
-                ("testConvertWithScale10Middle", testConvertWithScale10Middle),
-                ("testConvertWithScale10Upper", testConvertWithScale10Upper),
-                ("testConvertWithScale10Lower2", testConvertWithScale10Lower2),
-                ("testConvertWithScale10Middle2", testConvertWithScale10Middle2),
-                ("testConvertWithScale10Upper2", testConvertWithScale10Upper2),
-                ("testConvertOptionalWithScale10Lower", testConvertOptionalWithScale10Lower),
-                ("testConvertOptionalWithNil", testConvertOptionalWithNil),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testEqualTrue", testEqualTrue),
-                ("testEqualFalse", testEqualFalse),
-                ("testEqualFalseWithDifferentType", testEqualFalseWithDifferentType)
-           ]
-   }
-}
-
 extension PolygonSurfaceCoordinate2DFixedCartesianTests {
    static var allTests: [(String, (PolygonSurfaceCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
@@ -1180,25 +1180,6 @@ extension IntersectionMatrixTests {
                 ("testDescription", testDescription),
                 ("testEqual", testEqual),
                 ("testEqualFalse", testEqualFalse)
-           ]
-   }
-}
-
-extension FloatingPrecisionTests {
-   static var allTests: [(String, (FloatingPrecisionTests) -> () throws -> Void)] {
-      return [
-                ("testConvertEqual", testConvertEqual),
-                ("testConvertNotEqual1", testConvertNotEqual1),
-                ("testConvertNotEqual2", testConvertNotEqual2),
-                ("testConvertOptionalEqual", testConvertOptionalEqual),
-                ("testConvertOptionalNotEqual1", testConvertOptionalNotEqual1),
-                ("testConvertOptionalNotEqual2", testConvertOptionalNotEqual2),
-                ("testConvertOptionalNilEqual", testConvertOptionalNilEqual),
-                ("testConvertOptionalNilNotEqual", testConvertOptionalNilNotEqual),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testEqualTrue", testEqualTrue),
-                ("testEqualFalseWithDifferentType", testEqualFalseWithDifferentType)
            ]
    }
 }
@@ -1498,6 +1479,25 @@ extension PointGeometryCoordinate3DMFixedCartesianTests {
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
                 ("testBoundary", testBoundary)
+           ]
+   }
+}
+
+extension FloatingTests {
+   static var allTests: [(String, (FloatingTests) -> () throws -> Void)] {
+      return [
+                ("testConvertEqual", testConvertEqual),
+                ("testConvertNotEqual1", testConvertNotEqual1),
+                ("testConvertNotEqual2", testConvertNotEqual2),
+                ("testConvertOptionalEqual", testConvertOptionalEqual),
+                ("testConvertOptionalNotEqual1", testConvertOptionalNotEqual1),
+                ("testConvertOptionalNotEqual2", testConvertOptionalNotEqual2),
+                ("testConvertOptionalNilEqual", testConvertOptionalNilEqual),
+                ("testConvertOptionalNilNotEqual", testConvertOptionalNilNotEqual),
+                ("testDescription", testDescription),
+                ("testDebugDescription", testDebugDescription),
+                ("testEqualTrue", testEqualTrue),
+                ("testEqualFalseWithDifferentType", testEqualFalseWithDifferentType)
            ]
    }
 }
