@@ -1,0 +1,1 @@
+The basic types implemented by GeoFeatures are `Point`, `LineString`, `LinearRing`, and `Polygon`.  GeoFeatures also implements composit types `MultiPoint`, `MultiLineString`, `MultiPolygon`, and `GeometryCollection` which allow more complex types to be constructed.  

@@ -61,5 +61,10 @@ add_custom_target(xcode-workspace
         COMMAND "${BUILD_TOOLS_BIN}/xcworkspace_tool.rb" GeoFeatures GeoFeatures.playground GeoFeatures.xcodeproj
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
+add_custom_target(documentation
+        DEPENDS generate-source
+        COMMAND jazzy --clean
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
 add_subdirectory(Sources)
 add_subdirectory(Tests)
