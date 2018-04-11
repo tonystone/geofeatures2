@@ -58,7 +58,7 @@ add_custom_target(xcode-project
 #
 add_custom_target(xcode-workspace
         DEPENDS build-tools xcode-project GeoFeatures.playground
-        COMMAND "${BUILD_TOOLS_BIN}/xcworkspace_tool.rb" GeoFeatures GeoFeatures.playground GeoFeatures.xcodeproj
+        COMMAND "${BUILD_TOOLS_BIN}/xcworkspace_tool.rb" GeoFeatures GeoFeatures.xcodeproj GeoFeatures.playground
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
 add_custom_target(documentation
