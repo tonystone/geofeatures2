@@ -32,12 +32,10 @@ GeoFeatures is a lightweight, high performance geometry library for Swift.  It s
 
 ## Features
 - [x] Easy to use.
-- [x] Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, Box and GeometryCollection implementations.
+- [x] Point, MultiPoint, LineString, LinearRing, MultiLineString, Polygon, MultiPolygon, Box and GeometryCollection implementations.
 - [x] [WKT (Well-Known-Text)](https://en.wikipedia.org/wiki/Well-known_text) input and output.
 - [x] [GeoJSON](https://tools.ietf.org/html/rfc7946) input and output.
-- [x] Indexed Subscripting support for all collection types (e.g. `let point = multiPoint[0]`).
 - [x] **Swift**: Written in pure Swift.
-- [x] CocoaPod framework support (compile as Objective-C framework or static lib).
 - [x] Open Sourced under the the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 ## Sources and Binaries
