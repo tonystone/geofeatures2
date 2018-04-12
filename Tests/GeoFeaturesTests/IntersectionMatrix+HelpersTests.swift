@@ -3141,50 +3141,50 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
-    func testLineString_Polygon_interiorsIntersectAtOnePointLineStringFirstSegment() {
+    func testLineString_Polygon_interiorsIntersect_lineStringFirstSegment() {
 
-        let geometry1 = LineString<Coordinate2D>(elements: [(x: -5.0, y: -5.0), (x: 2.0, y: 2.0), (x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-        let geometry2 = LinearRing<Coordinate2D>(elements: [(x: -2.0, y: 0.0), (x: -2.0, y: -2.0), (x: -5.0, y: -2.0), (x: -2.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: 4.0, y: -4.0), (x: 7.0, y: -1.0), (x: 12.0, y: -1.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
 
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
 
         let expected  = IntersectionMatrix(arrayLiteral: [
-            [.zero,  .empty, .one],
-            [.empty, .empty, .zero],
-            [.one,   .empty, .two]
+            [.one,  .empty, .one],
+            [.zero, .empty, .zero],
+            [.two,  .one,   .two]
             ])
 
         XCTAssertEqual(matrix, expected)
     }
 
-    func testLineString_Polygon_interiorsIntersectAtOnePointSecondSegments() {
+    func testLineString_Polygon_interiorsIntersect_lineStringSecondSegment() {
 
-        let geometry1 = LineString<Coordinate2D>(elements: [(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 10.0, y: -6.0)], precision: precision, coordinateSystem: cs)
-        let geometry2 = LinearRing<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 10.0, y: 6.0)], precision: precision, coordinateSystem: cs)
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: 4.0, y: -4.0), (x: 7.0, y: -7.0), (x: 12.0, y: -7.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
 
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
 
         let expected  = IntersectionMatrix(arrayLiteral: [
-            [.zero,  .empty, .one],
-            [.empty, .empty, .zero],
-            [.one,   .empty, .two]
+            [.one,  .empty, .one],
+            [.zero, .empty, .zero],
+            [.two,  .one,   .two]
             ])
 
         XCTAssertEqual(matrix, expected)
     }
 
-    /// TODO: Add more tests like this one, where the line string and linear ring touch at a point but do not cross.
-    func testLineString_Polygon_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross() {
+    /// TODO: Add more tests like this one, where the line string and polygon touch at a point but do not cross.
+    func testLineString_Polygon_interiorIntersectsBoundaryAtOnePoint_lineStringFirstSegment_doNotCross() {
 
-        let geometry1 = LineString<Coordinate2D>(elements: [(x: -5.0, y: -5.0), (x: 2.0, y: 2.0), (x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-        let geometry2 = LinearRing<Coordinate2D>(elements: [(x: 4.0, y: -8.0), (x: -3.0, y: -3.0), (x: 10.0, y: -3.0), (x: 4.0, y: -8.0)], precision: precision, coordinateSystem: cs)
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: 5.5, y: 5.0), (x: 5.5, y: -2.5), (x: 10.0, y: -2.5)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
 
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
 
         let expected  = IntersectionMatrix(arrayLiteral: [
-            [.zero,  .empty, .one],
+            [.empty, .zero,  .one],
             [.empty, .empty, .zero],
-            [.one,   .empty, .two]
+            [.two,   .one,   .two]
             ])
 
         XCTAssertEqual(matrix, expected)

@@ -53,6 +53,9 @@ struct RelatedTo {
     var firstTouchesSecondInteriorOnly: Bool {
         return firstTouchesSecondInterior > .empty && firstTouchesSecondBoundary == .empty && firstTouchesSecondExterior == .empty
     }
+    var firstTouchesSecondInteriorOrBoundaryOnly: Bool {
+        return (firstTouchesSecondInterior > .empty || firstTouchesSecondBoundary > .empty) && firstTouchesSecondExterior == .empty
+    }
 
     var firstInteriorTouchesSecondExterior: Dimension   = .empty
     var firstBoundaryTouchesSecondExterior: Dimension   = .empty
@@ -984,6 +987,11 @@ extension IntersectionMatrix {
 
         if isSubset {
             relatedToResult.firstInteriorTouchesSecondInterior = .zero
+            if point.boundaryPoint {
+                relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+            } else {
+                relatedToResult.firstInteriorTouchesSecondInterior = .zero
+            }
         } else {
             relatedToResult.firstInteriorTouchesSecondExterior = .zero
         }
@@ -1494,7 +1502,8 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-    fileprivate static func relatedTo(_ segment: Segment<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+    /// The leftCoordinateBoundaryPoint and rightCoordinateBoundaryPoint flags apply to the segment.
+    fileprivate static func relatedTo(_ segment: Segment<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>, leftCoordinateBoundaryPoint: Bool = false, rightCoordinateBoundaryPoint: Bool = false) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1535,14 +1544,32 @@ extension IntersectionMatrix {
 
             /// If the two segments intersect, set boundary properties
             if let intersectionGeometry = lineSegmentIntersection.geometry {
-                intersectionGeometries.append(intersectionGeometry)
+                /// Append the new geometry to the geometry array, only if the geometry does not currently exist in the array
+                let matchingGeometries = intersectionGeometries.filter{
+                    if ($0 as? Point<CoordinateType>) == (intersectionGeometry as? Point<CoordinateType>) {
+                        return true
+                    }
+                    return false
+                }
+                if matchingGeometries.count == 0 {
+                    intersectionGeometries.append(intersectionGeometry)
+                }
 
                 if intersectionGeometry.dimension == .one {
                     relatedToResult.firstInteriorTouchesSecondBoundary = .one
                 } else if intersectionGeometry.dimension == .zero {
-                    if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior ||
-                        lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary {
-                        relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+                    if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary {
+                        if leftCoordinateBoundaryPoint {
+                            relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+                        } else {
+                            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                        }
+                    } else if lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onBoundary {
+                        if rightCoordinateBoundaryPoint {
+                            relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+                        } else {
+                            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                        }
                     } else if lineSegmentIntersection.secondSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.secondSegmentSecondBoundaryLocation == .onInterior {
                         relatedToResult.firstInteriorTouchesSecondBoundary = .zero
                     }
@@ -1691,8 +1718,15 @@ extension IntersectionMatrix {
             let firstCoord  = lineString[firstCoordIndex]
             let secondCoord = lineString[firstCoordIndex + 1]
             let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            var leftCoordinateBoundaryPoint = false
+            var rightCoordinateBoundaryPoint = false
+            if firstCoordIndex == 0 {
+                leftCoordinateBoundaryPoint = true
+            } else if firstCoordIndex == lineString.count - 2 {
+                rightCoordinateBoundaryPoint = true
+            }
 
-            let segmentRelatedToResult = relatedTo(segment, simplePolygon)
+            let segmentRelatedToResult = relatedTo(segment, simplePolygon, leftCoordinateBoundaryPoint: leftCoordinateBoundaryPoint, rightCoordinateBoundaryPoint: rightCoordinateBoundaryPoint)
 
             if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
                 relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
@@ -3883,8 +3917,10 @@ extension IntersectionMatrix {
             return (nil, matrixIntersects)
         }
 
-        let lineStringBoundaryPoint1 = lineStringBoundary[0]
-        let lineStringBoundaryPoint2 = lineStringBoundary[1]
+        var lineStringBoundaryPoint1 = lineStringBoundary[0]
+        var lineStringBoundaryPoint2 = lineStringBoundary[1]
+        lineStringBoundaryPoint1.boundaryPoint = true
+        lineStringBoundaryPoint2.boundaryPoint = true
 
         /// Must add an algorithm here to check whether a line segment is inside a polygon
         var lineStringInsideMainPolygon     = false /// Implies part of the line string lies inside the polygon
@@ -3910,6 +3946,7 @@ extension IntersectionMatrix {
 
                 if lineStringRelatedToResult.firstTouchesSecondInterior > .empty {
                     lineStringInsideMainPolygon = true
+                    matrixIntersects[.interior, .interior] = .one
                 }
 
                 if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
@@ -3960,6 +3997,10 @@ extension IntersectionMatrix {
                 /// We will only consider cases here where the line string is inside the main polygon.
                 /// If the line string touches only the main polygon boundary or is outside the main polygon,
                 /// those cases have already been addressed.
+                
+                if lineStringRelatedToResult.firstTouchesSecondInteriorOrBoundaryOnly {
+                    matrixIntersects[.interior, .interior] = .empty
+                }
 
                 if lineStringRelatedToResult.firstTouchesSecondExterior > matrixIntersects[.interior, .interior] {
                     matrixIntersects[.interior, .interior] = lineStringRelatedToResult.firstTouchesSecondExterior
