@@ -29,7 +29,7 @@ import GeoFeatures
 
 class MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     func testDimension () {

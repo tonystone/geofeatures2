@@ -19,7 +19,10 @@
 ///
 import Swift
 
-extension MultiLineString: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension MultiLineString {
 
     ///
     /// The spatial dimension of `self`.

@@ -1,5 +1,5 @@
 ///
-///  FixedPrecisionTests.swift
+///  FixedTests.swift
 ///
 ///  Copyright (c) 2016 Tony Stone
 ///
@@ -20,9 +20,9 @@
 import XCTest
 import GeoFeatures
 
-class FixedPrecisionTests: XCTestCase {
+class FixedTests: XCTestCase {
 
-    let precision  = FixedPrecision(scale: 10)
+    let precision  = Fixed(scale: 10)
 
     func testConvertWithScale10Lower() {
         XCTAssertEqual(precision.convert(1.01), 1.0)
@@ -65,30 +65,30 @@ class FixedPrecisionTests: XCTestCase {
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        XCTAssertEqual(precision.description, "FixedPrecision(scale: 10.0)")
+        XCTAssertEqual(precision.description, "Fixed(scale: 10.0)")
     }
 
     func testDebugDescription() {
-        XCTAssertEqual(precision.debugDescription, "FixedPrecision(scale: 10.0)")
+        XCTAssertEqual(precision.debugDescription, "Fixed(scale: 10.0)")
     }
 
     func testEqualTrue() {
-        let input1 = FixedPrecision(scale: 10)
-        let input2 = FixedPrecision(scale: 10)
+        let input1 = Fixed(scale: 10)
+        let input2 = Fixed(scale: 10)
 
         XCTAssertEqual(input1, input2)
     }
 
     func testEqualFalse() {
-        let input1 = FixedPrecision(scale: 10)
-        let input2 = FixedPrecision(scale: 100)
+        let input1 = Fixed(scale: 10)
+        let input2 = Fixed(scale: 100)
 
         XCTAssertNotEqual(input1, input2)
     }
 
     func testEqualFalseWithDifferentType() {
-        let input1 = FixedPrecision(scale: 10)
-        let input2 = FloatingPrecision()
+        let input1 = Fixed(scale: 10)
+        let input2 = Floating()
 
         XCTAssertFalse(input1 == input2)
     }

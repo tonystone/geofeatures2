@@ -1,5 +1,5 @@
 ///
-///  FixedPrecision.swift
+///  FloatingPrecision.swift
 ///
 ///  Copyright (c) 2016 Tony Stone
 ///
@@ -19,44 +19,41 @@
 ///
 import Swift
 
-#if os(Linux) || os(FreeBSD)
-    import Glibc
-#else
-    import Darwin
-#endif
+///
+/// Floating precision corresponds to the standard Swift Double precision type. No conversion will be done.
+///
+public struct Floating: Precision {
 
-public struct FixedPrecision: Precision, Equatable, Hashable  {
-
-    public let scale: Double
-
-    public var hashValue: Int {
-        return 31.hashValue + scale.hashValue
-    }
-
-    public init(scale: Double) {
-        self.scale = abs(scale)
-    }
+    public init() {}
 
     @inline(__always)
     public func convert(_ value: Double) -> Double {
-        return round(value * scale) / scale
+        return value
     }
 
     @inline(__always)
     public func convert(_ value: Double?) -> Double? {
-        guard let value = value
-            else { return nil }
-        return convert(value)
+        return value
     }
 
     public func convert(_ coordinate: Coordinate) -> Coordinate {
-        return Coordinate(x: self.convert(coordinate.x), y: self.convert(coordinate.y), z: self.convert(coordinate.z), m: self.convert(coordinate.m))
+        return coordinate
     }
 }
-extension FixedPrecision: CustomStringConvertible, CustomDebugStringConvertible {
+
+extension Floating: Hashable {
+
+    public var hashValue: Int {
+        return 31.hashValue
+    }
+}
+
+extension Floating:  Equatable {}
+
+extension Floating: CustomStringConvertible, CustomDebugStringConvertible {
 
     public var description: String {
-        return "\(type(of: self))(scale: \(self.scale))"
+        return "\(type(of: self))()"
     }
 
     public var debugDescription: String {

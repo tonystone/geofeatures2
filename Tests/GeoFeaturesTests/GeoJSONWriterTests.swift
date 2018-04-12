@@ -36,7 +36,7 @@ class GeoJSONWriterCoordinate2DTests: XCTestCase {
     func testWriteUnsupportedGeometry() {
 
         let input = UnsupportedGeometry()
-        let expected = "Unsupported type \"UnsupportedGeometry(precision: FloatingPrecision(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
+        let expected = "Unsupported type \"UnsupportedGeometry(precision: Floating(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 
@@ -145,7 +145,7 @@ class GeoJSONWriterCoordinate2DMTests: XCTestCase {
     func testWriteUnsupportedGeometry() {
 
         let input = UnsupportedGeometry()
-        let expected = "Unsupported type \"UnsupportedGeometry(precision: FloatingPrecision(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
+        let expected = "Unsupported type \"UnsupportedGeometry(precision: Floating(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 
@@ -269,7 +269,7 @@ class GeoJSONWriterCoordinate3DTests: XCTestCase {
     func testWriteUnsupportedGeometry() {
 
         let input = UnsupportedGeometry()
-        let expected = "Unsupported type \"UnsupportedGeometry(precision: FloatingPrecision(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
+        let expected = "Unsupported type \"UnsupportedGeometry(precision: Floating(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 
@@ -393,7 +393,7 @@ class GeoJSONWriterCoordinate3DMTests: XCTestCase {
     func testWriteUnsupportedGeometry() {
 
         let input = UnsupportedGeometry()
-        let expected = "Unsupported type \"UnsupportedGeometry(precision: FloatingPrecision(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
+        let expected = "Unsupported type \"UnsupportedGeometry(precision: Floating(), coordinateSystem: Cartesian(), dimension: GeoFeatures.Dimension.one)\"."
 
         XCTAssertThrowsError(try writer.write(input)) { error in
 

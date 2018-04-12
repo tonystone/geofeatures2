@@ -54,9 +54,9 @@ extension WKTWriter {
 }
 
 ///
-/// WKTWriter
-///
 /// WKTWriter generates a WKT – Well-known Text – representation of a `Geometry` object.
+///
+/// - Remarks: GeoFeatures follows the OGC specification of WKT found here [OpenGIS Implementation Standard for Geographic information - Simple feature access - Part 1: Common architecture](http://portal.opengeospatial.org/files/?artifact_id=25355)
 ///
 public class WKTWriter {
     
@@ -71,9 +71,11 @@ public class WKTWriter {
     /// Based on the geometry passed in, converts it into a string representation as specified by
     /// the OGC WKT standard.
     ///
-    /// - parameter geometry: A geometry type to be converted to WKT
-    /// - returns: WKT string for supported types. If unsupported, an empty string is returned.
-    /// - note: This method does not check the validity of the geometry.
+    /// - Parameter geometry: A geometry type to be converted to WKT
+    ///
+    /// - Returns: WKT string for supported types. If unsupported, an empty string is returned.
+    ///
+    /// - Note: This method does not check the validity of the geometry.
     ///
     public func write(_ geometry: Geometry) throws -> String {
 

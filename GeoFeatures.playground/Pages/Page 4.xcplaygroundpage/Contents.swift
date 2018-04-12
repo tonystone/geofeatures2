@@ -2,7 +2,7 @@
 
 import GeoFeatures
 
-let precision = FixedPrecision(scale: 10)
+let precision = Fixed(scale: 10)
 
 var polygon = Polygon([[[0, 0], [60, 144], [120, 0], [0, 0]]], precision: precision)
 polygon.bounds()

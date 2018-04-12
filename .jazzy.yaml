@@ -1,0 +1,60 @@
+module: GeoFeatures
+author: Tony Stone
+author_url: http://github.com/tonystone
+github_url: http://github.com/tonystone/geofeatures2
+readme: ./README.md
+exclude:
+  - "Tests/**/*.swift"
+  - "Sources/GeoFeatures/CoordinateCollectionType.swift"
+  - "Sources/GeoFeatures/GeometryCollectionType.swift"
+  - "Documentation/GeoFeatures-Development.md"
+  - "Documentation/HowTo.md"
+
+swift_version: 4.0.3
+
+theme: apple
+
+output: documentation/html
+
+abstract: Documentation/Abstracts/*.md
+
+custom_categories:
+  - name: Documentation
+    children:
+    - Introduction
+    - Features
+  - name: Geometry Model
+    children:
+    - Geometry
+    - Curve
+    - Surface
+    - Coordinate
+    - Point
+    - LineString
+    - LinearRing
+    - Polygon
+    - MultiPoint
+    - MultiLineString
+    - MultiPolygon
+    - GeometryCollection
+  - name: Spacial Dimension
+    children:
+    - Dimension
+  - name: Precision Model
+    children:
+    - Precision
+    - Floating
+    - Fixed
+    - defaultPrecision
+  - name: Coordinate Systems
+    children:
+    - CoordinateSystem
+    - Cartesian
+    - Geographic
+    - defaultCoordinateSystem
+  - name: Input/Output
+    children:
+    - WKTReader
+    - WKTWriter
+    - GeoJSONReader
+    - GeoJSONWriter

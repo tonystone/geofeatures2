@@ -19,7 +19,10 @@
 ///
 import Swift
 
-extension Point: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension Point {
 
     ///
     /// The spatial dimension of `self`.

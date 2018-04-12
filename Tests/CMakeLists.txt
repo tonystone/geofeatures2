@@ -15,9 +15,9 @@ get_filename_component(LINUX_MAIN ${LINUX_MAIN} ABSOLUTE BASE_DIR ${CMAKE_SOURCE
 #
 # Test Target
 #
-add_custom_target(geofeatures-test ALL
+add_custom_target(tests ALL
         COMMAND swift test
-        DEPENDS geofeatures-build
+        DEPENDS build
         SOURCES ${TEST_FILES}
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         )
@@ -25,53 +25,53 @@ add_custom_target(geofeatures-test ALL
 # GYB Targets
 set(GYB_COMMON_FLAGS --line-directive "''")
 
-add_gyb_target(generated-LinearRingTests
+add_gyb_target(generate-LinearRingTests
         SOURCE GeoFeaturesTests/CoordinateCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/LinearRingTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D GeometryType=LinearRing -D FileName=LinearRing.swift
         DEPENDS build-tools
         )
 
-add_gyb_target(generated-LineStringTests
+add_gyb_target(generate-LineStringTests
         SOURCE GeoFeaturesTests/CoordinateCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/LineStringTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D GeometryType=LineString -D FileName=LineString.swift
         DEPENDS build-tools
         )
 
-add_gyb_target(generated-GeometryCollectionTests
+add_gyb_target(generate-GeometryCollectionTests
         SOURCE GeoFeaturesTests/GeometryCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/GeometryCollectionTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='GeometryCollectionTestInput'
         DEPENDS GeoFeaturesTests/GeometryCollectionTestInput.py build-tools
         )
 
-add_gyb_target(generated-MultiPointTests
+add_gyb_target(generate-MultiPointTests
         SOURCE GeoFeaturesTests/GeometryCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiPointTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiPointTestInput'
         DEPENDS GeoFeaturesTests/MultiPointTestInput.py build-tools
         )
 
-add_gyb_target(generated-MultiLineStringTests
+add_gyb_target(generate-MultiLineStringTests
         SOURCE GeoFeaturesTests/GeometryCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiLineStringTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiLineStringTestInput'
         DEPENDS GeoFeaturesTests/MultiLineStringTestInput.py build-tools
         )
 
-add_gyb_target(generated-MultiPolygonTests
+add_gyb_target(generate-MultiPolygonTests
         SOURCE GeoFeaturesTests/GeometryCollectionTypesTests.swift.gyb
         OUTPUT GeoFeaturesTests/MultiPolygonTests.swift
         FLAGS ${GYB_COMMON_FLAGS} -D TestInput='MultiPolygonTestInput'
         DEPENDS GeoFeaturesTests/MultiPolygonTestInput.py build-tools
         )
 
-add_custom_target(generated-tests
-        DEPENDS generated-LinearRingTests generated-LineStringTests generated-GeometryCollectionTests generated-MultiPointTests generated-MultiLineStringTests generated-MultiPolygonTests
+add_custom_target(generate-tests
+        DEPENDS generate-LinearRingTests generate-LineStringTests generate-GeometryCollectionTests generate-MultiPointTests generate-MultiLineStringTests generate-MultiPolygonTests
         )
 
-add_dependencies(geofeatures-test generated-tests)
+add_dependencies(tests generate-tests)
 
 #
 # Build the LinuxMain file.
@@ -87,6 +87,6 @@ add_custom_command(
 )
 
 add_custom_target(linux-main
-        DEPENDS "${LINUX_MAIN}" generated-tests
+        DEPENDS "${LINUX_MAIN}" generate-tests
         )
-add_dependencies(geofeatures-test linux-main)
+add_dependencies(tests linux-main)

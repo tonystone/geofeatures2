@@ -55,7 +55,7 @@ public class GeoJSONWriter {
     ///
     /// - Returns: GeoJSON Object for supported type.
     ///
-    /// - Throws: `GeoJSONWriterError.unsupportedType` if the `geometry` parameter type is unsupported.
+    /// - Throws: `Errors.unsupportedType` if the `geometry` parameter type is unsupported.
     ///
     public func write(_ geometry: Geometry) throws -> [String: Any] {
 

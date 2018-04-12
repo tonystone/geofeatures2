@@ -32,7 +32,7 @@ import XCTest
 
 class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -44,7 +44,7 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitWithPrecision() {
 
-        XCTAssertEqual(LinearRing(precision: precision).precision as? FloatingPrecision, precision)
+        XCTAssertEqual(LinearRing(precision: precision).precision as? Floating, precision)
     }
 
     func testInitWithCRS() {
@@ -210,7 +210,7 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
 class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -222,7 +222,7 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitWithPrecision() {
 
-        XCTAssertEqual(LinearRing(precision: precision).precision as? FloatingPrecision, precision)
+        XCTAssertEqual(LinearRing(precision: precision).precision as? Floating, precision)
     }
 
     func testInitWithCRS() {
@@ -388,7 +388,7 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
 class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -400,7 +400,7 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitWithPrecision() {
 
-        XCTAssertEqual(LinearRing(precision: precision).precision as? FloatingPrecision, precision)
+        XCTAssertEqual(LinearRing(precision: precision).precision as? Floating, precision)
     }
 
     func testInitWithCRS() {
@@ -566,7 +566,7 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
 class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -578,7 +578,7 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitWithPrecision() {
 
-        XCTAssertEqual(LinearRing(precision: precision).precision as? FloatingPrecision, precision)
+        XCTAssertEqual(LinearRing(precision: precision).precision as? Floating, precision)
     }
 
     func testInitWithCRS() {
@@ -740,11 +740,11 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate, FixedPrecision, Cartesian -
+// MARK: - Coordinate, Fixed, Cartesian -
 
-class LinearRingCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
+class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -756,7 +756,7 @@ class LinearRingCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
 
     func testInitWithPrecision() {
 
-        XCTAssertEqual(LinearRing(precision: precision).precision as? FixedPrecision, precision)
+        XCTAssertEqual(LinearRing(precision: precision).precision as? Fixed, precision)
     }
 
     func testInitWithCRS() {
@@ -918,11 +918,11 @@ class LinearRingCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate, FixedPrecision, Cartesian -
+// MARK: - Coordinate, Fixed, Cartesian -
 
-class LinearRingCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
+class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -934,7 +934,7 @@ class LinearRingCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
 
     func testInitWithPrecision() {
 
-        XCTAssertEqual(LinearRing(precision: precision).precision as? FixedPrecision, precision)
+        XCTAssertEqual(LinearRing(precision: precision).precision as? Fixed, precision)
     }
 
     func testInitWithCRS() {
@@ -1096,11 +1096,11 @@ class LinearRingCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate, FixedPrecision, Cartesian -
+// MARK: - Coordinate, Fixed, Cartesian -
 
-class LinearRingCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
+class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -1112,7 +1112,7 @@ class LinearRingCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
 
     func testInitWithPrecision() {
 
-        XCTAssertEqual(LinearRing(precision: precision).precision as? FixedPrecision, precision)
+        XCTAssertEqual(LinearRing(precision: precision).precision as? Fixed, precision)
     }
 
     func testInitWithCRS() {
@@ -1274,11 +1274,11 @@ class LinearRingCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate, FixedPrecision, Cartesian -
+// MARK: - Coordinate, Fixed, Cartesian -
 
-class LinearRingCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
+class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -1290,7 +1290,7 @@ class LinearRingCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
     func testInitWithPrecision() {
 
-        XCTAssertEqual(LinearRing(precision: precision).precision as? FixedPrecision, precision)
+        XCTAssertEqual(LinearRing(precision: precision).precision as? Fixed, precision)
     }
 
     func testInitWithCRS() {

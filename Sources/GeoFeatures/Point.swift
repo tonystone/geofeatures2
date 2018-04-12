@@ -26,45 +26,41 @@ import Swift
 /// x coordinate value, a y coordinate value. If called for by the associated Spatial Reference System, it may also
 /// have coordinate values for z.
 ///
-public struct Point {
+public struct Point: Geometry {
 
     ///
-    /// - Returns: The `Precision` of this GeometryCollection
-    ///
-    /// - SeeAlso: `Precision`
-    ///
+    /// The `Precision` of this GeometryCollection
+	///
     public let precision: Precision
 
     ///
-    /// - Returns: The `CoordinateSystem` of this GeometryCollection
-    ///
-    /// - SeeAlso: `CoordinateSystem`
-    ///
+    /// The `CoordinateSystem` of this GeometryCollection
+	///
     public let coordinateSystem: CoordinateSystem
 
     ///
-    /// - Returns: The `x` Axis value of the stored `Coordinate`.
+    /// The `x` Axis value of the stored `Coordinate`.
     ///
     public var x: Double {
         return coordinate.x
     }
 
     ///
-    /// - Returns: The `y` Axis value of the stored `Coordinate`.
+    /// The `y` Axis value of the stored `Coordinate`.
     ///
     public var y: Double {
         return coordinate.y
     }
 
     ///
-    /// - Returns: The `z` Axis value of the stored `Coordinate` or nil if not present.
+    /// The `z` Axis value of the stored `Coordinate` or nil if not present.
     ///
     public var z: Double? {
         return coordinate.z
     }
 
     ///
-    /// - Returns: The `m` Axis value of the stored `Coordinate` or nil if not present.
+    /// The `m` Axis value of the stored `Coordinate` or nil if not present.
     ///
     public var m: Double? {
         return coordinate.m
@@ -87,10 +83,7 @@ public struct Point {
     ///     - other: The Point of the same type that you want to construct a new Point from.
     ///     - precision: The `Precision` model this `Point` should use in calculations on it's coordinate.
     ///     - coordinateSystem: The 'CoordinateSystem` this `Pont` should use in calculations on it's coordinate.
-    ///
-    /// - SeeAlso: `CoordinateSystem`
-    /// - SeeAlso: `Precision`
-    ///
+	///
     internal init(other: Point, precision: Precision, coordinateSystem: CoordinateSystem) {
         self.init(other.coordinate, precision: precision, coordinateSystem: coordinateSystem)
     }
@@ -102,10 +95,7 @@ public struct Point {
     ///     - coordinate: The Coordinate to construct the Point with.
     ///     - precision: The `Precision` model this `Point` should use in calculations on it's coordinate.
     ///     - coordinateSystem: The 'CoordinateSystem` this `Pont` should use in calculations on it's coordinate.
-    ///
-    /// - SeeAlso: `CoordinateSystem`
-    /// - SeeAlso: `Precision`
-    ///
+	///
     public init(_ coordinate: Coordinate, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
 
         self.precision        = precision

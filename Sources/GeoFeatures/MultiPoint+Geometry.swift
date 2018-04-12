@@ -19,7 +19,10 @@
 ///
 import Swift
 
-extension MultiPoint: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension MultiPoint {
 
     ///
     /// The spatial dimension of `self`.

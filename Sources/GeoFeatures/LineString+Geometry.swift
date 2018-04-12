@@ -20,9 +20,11 @@
 import Swift
 
 ///
+/// `Geometry` protocol implementation.
+///
 /// Note: See `CoordinateCollectionType` for func implementations not present here.
 ///
-extension LineString: Geometry {
+extension LineString {
 
     ///
     /// - Returns: true if `self` is equal to the `other`.

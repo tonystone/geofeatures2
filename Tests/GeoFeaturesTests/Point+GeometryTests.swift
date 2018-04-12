@@ -26,7 +26,7 @@ private let geometryDimension = Dimension.zero   // Point always have a 0 dimens
 
 class PointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testDimension() {
@@ -73,7 +73,7 @@ class PointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
 class PointGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testDimension() {
@@ -120,7 +120,7 @@ class PointGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
 class PointGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testDimension() {
@@ -167,7 +167,7 @@ class PointGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
 class PointGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testDimension() {
@@ -210,11 +210,11 @@ class PointGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate2D, FixedPrecision, Cartesian -
+// MARK: - Coordinate2D, Fixed, Cartesian -
 
-class PointGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
+class PointGeometryCoordinate2DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testDimension() {
@@ -257,11 +257,11 @@ class PointGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate2DM, FixedPrecision, Cartesian -
+// MARK: - Coordinate2DM, Fixed, Cartesian -
 
-class PointGeometryCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
+class PointGeometryCoordinate2DMFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testDimension() {
@@ -304,11 +304,11 @@ class PointGeometryCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate3D, FixedPrecision, Cartesian -
+// MARK: - Coordinate3D, Fixed, Cartesian -
 
-class PointGeometryCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
+class PointGeometryCoordinate3DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testDimension() {
@@ -351,11 +351,11 @@ class PointGeometryCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate3DM, FixedPrecision, Cartesian -
+// MARK: - Coordinate3DM, Fixed, Cartesian -
 
-class PointGeometryCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
+class PointGeometryCoordinate3DMFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testDimension() {

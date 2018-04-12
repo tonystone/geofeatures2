@@ -25,7 +25,10 @@ import Swift
     import Darwin
 #endif
 
-extension MultiLineString: Curve {
+///
+/// `Curve` protocol implementation.
+///
+extension MultiLineString {
 
     ///
     /// - Returns: True if all sub-self are closed (begin and end coordinates are equal)

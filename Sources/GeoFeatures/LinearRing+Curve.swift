@@ -25,7 +25,10 @@ import Swift
     import Darwin
 #endif
 
-extension LinearRing: Curve {
+///
+/// `Curve` protocol implementation.
+///
+extension LinearRing {
 
     ///
     /// - Returns: True if this curve is closed (begin and end self are equal)

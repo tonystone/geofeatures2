@@ -37,7 +37,7 @@ import GeoFeatures
 
 class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -59,7 +59,7 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testInitWithPrecisionAndCRS() {
         let input = MultiLineString(precision: precision, coordinateSystem: cs)
 
-        XCTAssertEqual(input.precision as? FloatingPrecision, precision)
+        XCTAssertEqual(input.precision as? Floating, precision)
         XCTAssertEqual(input.coordinateSystem as? Cartesian, cs)
     }
 
@@ -67,7 +67,7 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input    = MultiLineString(precision: precision)
         let expected = precision
 
-        XCTAssertEqual(input.precision as? FloatingPrecision, expected)
+        XCTAssertEqual(input.precision as? Floating, expected)
     }
 
     func testInitWithCRS() {
@@ -219,11 +219,11 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate2D, FixedPrecision, Cartesian -
+// MARK: - Coordinate2D, Fixed, Cartesian -
 
-class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
+class MultiLineStringCoordinate2DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -238,14 +238,14 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         let input    = MultiLineString()
 
         /// FIXME: Currently Precision and CoordinateSystem can not be Equitable and be used for anything other than Generic constraints because it's a protocol, this limits testing of the defaultPrecision and defaultCoordinateSystem
-        /// XCTAssertEqual(input.precision as? FixedPrecision, GeoFeatures.defaultPrecision)
+        /// XCTAssertEqual(input.precision as? Fixed, GeoFeatures.defaultPrecision)
         XCTAssertEqual(input.coordinateSystem as? Cartesian, GeoFeatures.defaultCoordinateSystem)
     }
 
     func testInitWithPrecisionAndCRS() {
         let input = MultiLineString(precision: precision, coordinateSystem: cs)
 
-        XCTAssertEqual(input.precision as? FixedPrecision, precision)
+        XCTAssertEqual(input.precision as? Fixed, precision)
         XCTAssertEqual(input.coordinateSystem as? Cartesian, cs)
     }
 
@@ -253,7 +253,7 @@ class MultiLineStringCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
         let input    = MultiLineString(precision: precision)
         let expected = precision
 
-        XCTAssertEqual(input.precision as? FixedPrecision, expected)
+        XCTAssertEqual(input.precision as? Fixed, expected)
     }
 
     func testInitWithCRS() {

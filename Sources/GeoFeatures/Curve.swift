@@ -17,6 +17,11 @@
 ///
 ///  Created by Tony Stone on 2/13/2016.
 ///
+import Swift
+
+///
+/// A Curve is a `Dimension.one` Geometry object that consists of a collection of `Coordinate`s.
+///
 public protocol Curve {
 
     ///

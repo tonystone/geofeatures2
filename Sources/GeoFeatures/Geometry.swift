@@ -22,7 +22,7 @@ import Swift
 ///
 /// Default Precision for all class
 ///
-public let defaultPrecision = FloatingPrecision()
+public let defaultPrecision = Floating()
 
 ///
 /// Default CoordinateSystem
@@ -53,12 +53,16 @@ public protocol Geometry {
     var dimension: Dimension { get }
 
     ///
+    /// Does this Geometry contain coordinates.
+    ///
     /// - Returns: true if this Geometry is an empty Geometry.
     ///
     func isEmpty() -> Bool
 
     ///
-    /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
+    /// The closure of the combinatorial boundary of this Geometry instance.
+    ///
+    /// - Returns: A `Geometry` object representing the closure of the combinatorial boundary of this Geometry instance.
     ///
     func boundary() -> Geometry
 
@@ -69,6 +73,8 @@ public protocol Geometry {
     ///
     func bounds() -> Bounds?
 
+    ///
+    /// Is `other` equal to `self`.
     ///
     /// - Returns: true if `self` is equal to the `other`.
     ///

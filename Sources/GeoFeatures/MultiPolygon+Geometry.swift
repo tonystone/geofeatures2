@@ -19,7 +19,10 @@
 ///
 import Swift
 
-extension MultiPolygon: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension MultiPolygon {
 
     ///
     /// The spatial dimension of `self`.

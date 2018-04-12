@@ -97,7 +97,7 @@ script:
     if [[ "$BUILD" == "cmake build"  ]]; then
       set -e  # Fail (and stop build) on first non zero exit code
       cmake ./
-      make geofeatures-test
+      make tests
       set +e
     fi
   - |
@@ -117,7 +117,7 @@ script:
     if [[ "$BUILD" == "xcodebuild"  ]]; then
         set -e  # Fail (and stop build) on first non zero exit code
         cmake ./
-        make geofeatures-xcode-project
+        make xcode-project
         set -o pipefail
         xcodebuild -project "$PROJECT" -scheme "$SCHEME" -destination "$TEST_DEST" -sdk "$TEST_SDK" -enableCodeCoverage YES build-for-testing | bundler exec xcpretty
         xcodebuild -project "$PROJECT" -scheme "$SCHEME" -destination "$TEST_DEST" -sdk "$TEST_SDK" -enableCodeCoverage YES test              | bundler exec xcpretty

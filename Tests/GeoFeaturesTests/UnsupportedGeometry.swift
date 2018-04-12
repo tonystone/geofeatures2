@@ -22,7 +22,7 @@ import GeoFeatures
 
 internal struct UnsupportedGeometry: Geometry {
 
-    let precision: Precision = FloatingPrecision()
+    let precision: Precision = Floating()
 
     let coordinateSystem: CoordinateSystem = Cartesian()
 

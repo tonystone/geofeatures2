@@ -23,7 +23,7 @@ let point: Point = [1, 1]
 
 Point([1, 1]).bounds()
 
-LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), precision: FixedPrecision(scale: 10), coordinateSystem: Cartesian())
+LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), precision: Fixed(scale: 10), coordinateSystem: Cartesian())
 
 LinearRing(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]))
 
