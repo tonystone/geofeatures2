@@ -989,8 +989,6 @@ extension IntersectionMatrix {
             relatedToResult.firstInteriorTouchesSecondInterior = .zero
             if point.boundaryPoint {
                 relatedToResult.firstBoundaryTouchesSecondInterior = .zero
-            } else {
-                relatedToResult.firstInteriorTouchesSecondInterior = .zero
             }
         } else {
             relatedToResult.firstInteriorTouchesSecondExterior = .zero
@@ -4006,8 +4004,8 @@ extension IntersectionMatrix {
                     matrixIntersects[.interior, .interior] = lineStringRelatedToResult.firstTouchesSecondExterior
                 }
 
-                if lineStringRelatedToResult.firstTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
-                    matrixIntersects[.interior, .boundary] = lineStringRelatedToResult.firstTouchesSecondBoundary
+                if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
+                    matrixIntersects[.interior, .boundary] = lineStringRelatedToResult.firstInteriorTouchesSecondBoundary
                 }
 
                 if lineStringRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
