@@ -19,17 +19,13 @@
 ///
 import Swift
 
+///
+/// A Surface is a `Dimension.two` Geometry object.
+///
 public protocol Surface {
 
     ///
     /// The area of this Surface calculated using its associated CoordinateSystem.
     ///
     func area() -> Double
-
-///    ///
-///    ///    The mathematical centroid for this surface as a Point.  The Point is not guaranteed to be on this Surface
-///    ///
-///    @warn_unused_result
-///    func centroid() -> Geometry
-
 }

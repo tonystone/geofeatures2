@@ -20,9 +20,9 @@
 import XCTest
 import GeoFeatures
 
-class FloatingPrecisionTests: XCTestCase {
+class FloatingTests: XCTestCase {
 
-    let precision  = FloatingPrecision()
+    let precision  = Floating()
 
     func testConvertEqual() {
         XCTAssertEqual(precision.convert(100.003), 100.003)
@@ -74,23 +74,23 @@ class FloatingPrecisionTests: XCTestCase {
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
 
     func testDescription() {
-        XCTAssertEqual(precision.description, "FloatingPrecision()")
+        XCTAssertEqual(precision.description, "Floating()")
     }
 
     func testDebugDescription() {
-        XCTAssertEqual(precision.debugDescription, "FloatingPrecision()")
+        XCTAssertEqual(precision.debugDescription, "Floating()")
     }
 
     func testEqualTrue() {
-        let input1 = FloatingPrecision()
-        let input2 = FloatingPrecision()
+        let input1 = Floating()
+        let input2 = Floating()
 
         XCTAssertEqual(input1, input2)
     }
 
     func testEqualFalseWithDifferentType() {
-        let input1 = FixedPrecision(scale: 10)
-        let input2 = FloatingPrecision()
+        let input1 = Fixed(scale: 10)
+        let input2 = Floating()
 
         XCTAssertFalse(input1 == input2)
     }

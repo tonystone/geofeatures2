@@ -2,20 +2,20 @@ import Swift
 import GeoFeatures
 import GeoFeaturesPlaygroundSupport
 
-let fixedPrecision1 = FixedPrecision(scale: 10)
-let fixedPrecision2 = FixedPrecision(scale: 10)
-let fixedPrecision3 = FixedPrecision(scale: 100)
-let fixedPrecision4 = FixedPrecision(scale: 31)
+let Fixed1 = Fixed(scale: 10)
+let Fixed2 = Fixed(scale: 10)
+let Fixed3 = Fixed(scale: 100)
+let Fixed4 = Fixed(scale: 31)
 
-let floatingPrecision1 = FloatingPrecision()
-let floatingPrecision2 = FloatingPrecision()
+let floatingPrecision1 = Floating()
+let floatingPrecision2 = Floating()
 
-let fixedEqual1 = fixedPrecision1 == fixedPrecision2
-let fixedEqual2 = fixedPrecision1 == fixedPrecision3
+let fixedEqual1 = Fixed1 == Fixed2
+let fixedEqual2 = Fixed1 == Fixed3
 
 floatingPrecision1 == floatingPrecision2
-fixedPrecision1 == floatingPrecision1
-fixedPrecision4 == floatingPrecision1
+Fixed1 == floatingPrecision1
+Fixed4 == floatingPrecision1
 
 //: ## Usage scenarios
 

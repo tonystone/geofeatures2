@@ -19,7 +19,10 @@
 ///
 import Foundation
 
-extension Polygon: Surface {
+///
+/// `Surface` protocol implementation.
+///
+extension Polygon {
 
     ///
     /// Calculates the area of this `Polygon`

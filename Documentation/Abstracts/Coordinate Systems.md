@@ -1,0 +1,1 @@
+Type that defines how axis values are applied to each coordinate.

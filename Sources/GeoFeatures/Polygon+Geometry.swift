@@ -19,12 +19,20 @@
 ///
 import Swift
 
-extension Polygon: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension Polygon {
 
-    public var dimension: Dimension { return .two }
-
-    public func isEmpty() -> Bool {
-        return self.outerRing.count == 0
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .two if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .two
     }
 
     ///
@@ -39,6 +47,9 @@ extension Polygon: Geometry {
         return MultiLineString(boundary, precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? Polygon {
             return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing, rhs: LinearRing) -> Bool in

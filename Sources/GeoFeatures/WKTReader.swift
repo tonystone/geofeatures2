@@ -82,10 +82,12 @@ extension WKTReader {
 
 
 ///
-/// Well Known Text (WKT) parser for GeoFeatures based on the OGC WKT specification
+/// Well Known Text (WKT) parser for GeoFeatures.
 ///
 /// - Parameters:
 ///     - Coordinate: The coordinate type to use for all generated Geometry types.
+///
+/// - Remarks: GeoFeatures follows the OGC specification of WKT found here [OpenGIS Implementation Standard for Geographic information - Simple feature access - Part 1: Common architecture](http://portal.opengeospatial.org/files/?artifact_id=25355)
 ///
 public class WKTReader {
 
@@ -98,10 +100,7 @@ public class WKTReader {
     /// - Parameters:
     ///     - precision: The `Precision` model that should used for all coordinates.
     ///     - coordinateSystem: The 'CoordinateSystem` the result Geometries should use in calculations on their coordinates.
-    ///
-    /// - SeeAlso: `Precision`
-    /// - SeeAlso: `CoordinateSystem`
-    ///
+	///
     public init(precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
         self.cs = coordinateSystem
         self.precision = precision

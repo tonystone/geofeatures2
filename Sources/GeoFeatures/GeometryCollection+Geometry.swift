@@ -21,24 +21,20 @@ import Swift
 
 // MARK: - Geometry conformance
 
-extension GeometryCollection: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension GeometryCollection {
 
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: The maximum dimension of the geonetries contained in or, or .empty if there are no geomentries.
+    ///
+    /// - SeeAlso: Dimension
+    ///
     public var dimension: Dimension {
-
-        var dimension: Dimension = .empty // No dimension
-
-        if self.count > 0 {
-
-            for index in 0..<self.count {
-
-                dimension = Swift.max(dimension, self[index].dimension)
-            }
-        }
-        return dimension
-    }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
+        return self.reduce(Dimension.empty, { Swift.max($0, $1.dimension) })
     }
 
     ///
@@ -51,6 +47,9 @@ extension GeometryCollection: Geometry {
         return GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? GeometryCollection {
             return self.elementsEqual(other, by: { (lhs: Geometry, rhs: Geometry) -> Bool in

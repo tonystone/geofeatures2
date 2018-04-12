@@ -20,19 +20,21 @@
 import XCTest
 import GeoFeatures
 
-private let geometryDimension = Dimension.one    // LinearRing are always 1 dimension
-
 // MARK: - Coordinate2D, FloatingPrecision, Cartesian -
 
 class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     // MARK: - Dimension
 
     func testDimension () {
-        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(LinearRing([[1.0, 1.0]],precision: precision, coordinateSystem: cs).dimension, .one)
+    }
+
+    func testDimensionEmpty () {
+        XCTAssertEqual(LinearRing(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     // MARK: - Boundary

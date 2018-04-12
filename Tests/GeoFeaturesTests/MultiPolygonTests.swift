@@ -37,7 +37,7 @@ import GeoFeatures
 
 class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     // MARK: Construction
@@ -59,7 +59,7 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     func testInitWithPrecisionAndCRS() {
         let input = MultiPolygon(precision: precision, coordinateSystem: cs)
 
-        XCTAssertEqual(input.precision as? FloatingPrecision, precision)
+        XCTAssertEqual(input.precision as? Floating, precision)
         XCTAssertEqual(input.coordinateSystem as? Cartesian, cs)
     }
 
@@ -67,7 +67,7 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input    = MultiPolygon(precision: precision)
         let expected = precision
 
-        XCTAssertEqual(input.precision as? FloatingPrecision, expected)
+        XCTAssertEqual(input.precision as? Floating, expected)
     }
 
     func testInitWithCRS() {

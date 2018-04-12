@@ -19,12 +19,20 @@
 ///
 import Swift
 
-extension MultiLineString: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension MultiLineString {
 
-    public var dimension: Dimension { return .one }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .one if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .one
     }
 
     ///
@@ -78,6 +86,9 @@ extension MultiLineString: Geometry {
         return boundary
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
         if let other = other as? MultiLineString {
             return self.elementsEqual(other)

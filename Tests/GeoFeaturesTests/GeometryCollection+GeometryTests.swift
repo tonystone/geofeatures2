@@ -25,11 +25,9 @@ import GeoFeatures
     import struct GeoFeatures.Polygon
 #endif
 
-// MARK: - FloatingPrecision, Cartesian -
+class GeometryCollectionGeometryTests: XCTestCase {
 
-class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
-
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     // MARK: Dimension
@@ -43,19 +41,35 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testDimensionWithHomogeneousLineString () {
-        XCTAssertEqual(GeometryCollection([LineString()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
+        XCTAssertEqual(GeometryCollection([LineString()], precision: precision, coordinateSystem: cs).dimension, Dimension.empty)
+    }
+
+    func testDimensionWithHomogeneousLineStringEmpty () {
+        XCTAssertEqual(GeometryCollection([LineString([[1, 1], [1, 2]])], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
     }
 
     func testDimensionWithHomogeneousPolygon () {
-        XCTAssertEqual(GeometryCollection([Polygon()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
+        XCTAssertEqual(GeometryCollection([Polygon([[[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]]])], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
+    }
+
+    func testDimensionWithHomogeneousPolygonEmpty () {
+        XCTAssertEqual(GeometryCollection([Polygon()], precision: precision, coordinateSystem: cs).dimension, Dimension.empty)
     }
 
     func testDimensionWithNonHomogeneousPointPolygon () {
-        XCTAssertEqual(GeometryCollection([Point([1, 1]), Polygon()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
+        XCTAssertEqual(GeometryCollection([Point([1, 1]), Polygon([[[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]]])], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
+    }
+
+    func testDimensionWithNonHomogeneousPointPolygonEmpty () {
+        XCTAssertEqual(GeometryCollection([Point([1, 1]), Polygon()], precision: precision, coordinateSystem: cs).dimension, Dimension.zero)
     }
 
     func testDimensionWithNonHomogeneousPointLineString () {
-        XCTAssertEqual(GeometryCollection([Point([1, 1]), LineString()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
+        XCTAssertEqual(GeometryCollection([Point([1, 1]), LineString([[1, 1], [1, 2]])], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
+    }
+
+    func testDimensionWithNonHomogeneousPointLineStringEmpty () {
+        XCTAssertEqual(GeometryCollection([Point([1, 1]), LineString()], precision: precision, coordinateSystem: cs).dimension, Dimension.zero)
     }
 
     // MARK: Boundary
@@ -86,8 +100,8 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: Equal
 
     func testEqualTrue() {
-        let input1 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
-        let input2 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
+        let input1 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let input2 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input1, input2)
     }
@@ -104,39 +118,5 @@ class GeometryCollectionGeometryFloatingPrecisionCartesianTests: XCTestCase {
         let input2: Geometry  = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
-    }
-}
-
-// MARK: - FixedPrecision, Cartesian -
-
-class GeometryCollectionGeometryFixedPrecisionCartesianTests: XCTestCase {
-
-    let precision = FixedPrecision(scale: 100)
-    let cs       = Cartesian()
-
-    // MARK: Dimension
-
-    func testDimension () {
-        XCTAssertEqual(GeometryCollection(precision: precision, coordinateSystem: cs).dimension, Dimension.empty)
-    }
-
-    func testDimensionWithHomogeneousPoint () {
-        XCTAssertEqual(GeometryCollection([Point([1, 1])], precision: precision, coordinateSystem: cs).dimension, Dimension.zero)
-    }
-
-    func testDimensionWithHomogeneousLineString () {
-        XCTAssertEqual(GeometryCollection([LineString()], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
-    }
-
-    func testDimensionWithHomogeneousPolygon () {
-        XCTAssertEqual(GeometryCollection([Polygon()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
-    }
-
-    func testDimensionWithNonHomogeneousPointPolygon () {
-        XCTAssertEqual(GeometryCollection([Point([1, 1]), Polygon()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.two)
-    }
-
-    func testDimensionWithNonHomogeneousPointLineString () {
-        XCTAssertEqual(GeometryCollection([Point([1, 1]), LineString()] as [Geometry], precision: precision, coordinateSystem: cs).dimension, Dimension.one)
     }
 }

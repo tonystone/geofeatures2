@@ -25,17 +25,19 @@ import GeoFeatures
     import struct GeoFeatures.Polygon
 #endif
 
-private let geometryDimension = Dimension.two    // MultiPolygon are always 2 dimension
-
 // MARK: - Coordinate 2D, FloatingPrecision, Cartesian -
 
 class MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPolygon(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+        XCTAssertEqual(MultiPolygon([Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [])], precision: precision, coordinateSystem: cs).dimension, .two)
+    }
+
+    func testDimensionEmpty () {
+        XCTAssertEqual(MultiPolygon(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundaryWithSinglePolygonNoInnerRings() {

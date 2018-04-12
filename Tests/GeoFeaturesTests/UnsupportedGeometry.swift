@@ -1,5 +1,5 @@
 ///
-///  Curve.swift
+///  UnsupportedGeometry
 ///
 ///  Copyright (c) 2016 Tony Stone
 ///
@@ -15,22 +15,30 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Tony Stone on 2/13/2016.
+///  Created by Tony Stone on 12/17/16.
 ///
 import Swift
+import GeoFeatures
 
-///
-/// A Curve is a `Dimension.one` Geometry object that consists of a collection of `Coordinate`s.
-///
-public protocol Curve {
+internal struct UnsupportedGeometry: Geometry {
 
-    ///
-    /// - Returns: True if this curve is closed (begin and end coordinates are equal)
-    ///
-    func isClosed() -> Bool
+    let precision: Precision = Floating()
 
-    ///
-    /// The length of this Curve calculated using its associated CoordinateSystem.
-    ///
-    func length() -> Double
+    let coordinateSystem: CoordinateSystem = Cartesian()
+
+    let dimension: GeoFeatures.Dimension = .one
+
+    func isEmpty() -> Bool {
+        return true
+    }
+
+    func boundary() -> Geometry {
+        return GeometryCollection()
+    }
+
+    func bounds() -> Bounds? {
+        return nil
+    }
+
+    func equals(_ other: Geometry) -> Bool { return false }
 }

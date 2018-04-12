@@ -24,7 +24,7 @@ import GeoFeatures
 
 class MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testIsClosedClosed() {
@@ -55,11 +55,11 @@ class MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
     }
 }
 
-// MARK: - Coordinate2D, FixedPrecision, Cartesian -
+// MARK: - Coordinate2D, Fixed, Cartesian -
 
-class MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
+class MultiLineStringCurveCoordinate2DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testIsClosedClosed() {

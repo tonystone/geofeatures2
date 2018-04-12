@@ -25,11 +25,11 @@ import GeoFeatures
     import struct GeoFeatures.Polygon
 #endif
 
-// MARK: - Coordinate2D, FixedPrecision, Cartesian -
+// MARK: - Coordinate2D, Fixed, Cartesian -
 
-class PolygonSurfaceCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
+class PolygonSurfaceCoordinate2DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100000)
+    let precision = Fixed(scale: 100000)
     let cs       = Cartesian()
 
     func testAreaEmpty() {

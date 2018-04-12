@@ -20,20 +20,20 @@
 import Swift
 import Foundation
 
-public enum GeoJSONReaderError: Error {
-    case invalidJSON(String)
-    case invalidEncoding(String)
-    case invalidNumberOfCoordinates(String)
-    case unsupportedType(String)
-    case missingAttribute(String)
-}
-
 ///
 /// GeoJSON reader for GeoFeatures based on the Internet Engineering Task Force (IETF) proposed standard "The GeoJSON Format"
 ///
 /// For more information see [Internet Engineering Task Force (IETF) - The GeoJSON Format](https://tools.ietf.org/html/rfc7946#section-4)
 ///
 public class GeoJSONReader {
+
+    public enum Errors: Error {
+        case invalidJSON(String)
+        case invalidEncoding(String)
+        case invalidNumberOfCoordinates(String)
+        case unsupportedType(String)
+        case missingAttribute(String)
+    }
 
     fileprivate let expectedStringEncoding = String.Encoding.utf8
 
@@ -46,10 +46,7 @@ public class GeoJSONReader {
     /// - Parameters:
     ///     - precision: The `Precision` model that should used for all coordinates.
     ///     - coordinateSystem: The 'CoordinateSystem` the result Geometries should use in calculations on their coordinates.
-    ///
-    /// - SeeAlso: `Precision`
-    /// - SeeAlso: `CoordinateSystem`
-    ///
+///
     public init(precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
         self.cs = coordinateSystem
         self.precision = precision
@@ -83,11 +80,11 @@ public class GeoJSONReader {
             parsedJSON = try JSONSerialization.jsonObject(with: data)
 
         } catch let error as NSError {
-            throw GeoJSONReaderError.invalidJSON("The data couldn’t be read because it isn’t in the correct format: "  + error.localizedDescription)
+            throw GeoJSONReader.Errors.invalidJSON("The data couldn’t be read because it isn’t in the correct format: "  + error.localizedDescription)
         }
 
         guard let jsonObject = parsedJSON as? [String: Any] else {
-            throw GeoJSONReaderError.invalidJSON("Root JSON must be an object type.")
+            throw GeoJSONReader.Errors.invalidJSON("Root JSON must be an object type.")
         }
 
         return try read(jsonObject: jsonObject)
@@ -104,7 +101,7 @@ public class GeoJSONReader {
     public func read(jsonObject: [String: Any]) throws -> Geometry {
 
         guard let type = jsonObject["type"] as? String else {
-            throw GeoJSONReaderError.missingAttribute("Missing required attribute \"type\".")
+            throw GeoJSONReader.Errors.missingAttribute("Missing required attribute \"type\".")
         }
 
         switch type {
@@ -131,7 +128,7 @@ public class GeoJSONReader {
             return try geometryCollection(jsonObject: jsonObject)
 
         default:
-            throw GeoJSONReaderError.unsupportedType("Unsupported type \"\(type)\".")
+            throw GeoJSONReader.Errors.unsupportedType("Unsupported type \"\(type)\".")
         }
     }
 
@@ -259,11 +256,11 @@ public class GeoJSONReader {
         var elements: [Geometry] = []
 
         guard let geometriesObject = jsonObject["geometries"] else {
-            throw GeoJSONReaderError.missingAttribute("Missing required attribute \"geometries\".")
+            throw GeoJSONReader.Errors.missingAttribute("Missing required attribute \"geometries\".")
         }
 
         guard let geometries = geometriesObject as? [[String: Any]] else {
-            throw GeoJSONReaderError.invalidJSON("Invalid structure for \"geometries\" attribute.")
+            throw GeoJSONReader.Errors.invalidJSON("Invalid structure for \"geometries\" attribute.")
         }
 
         for object in geometries {
@@ -296,12 +293,12 @@ public class GeoJSONReader {
                 }
                 fallthrough
             default:
-                throw GeoJSONReaderError.invalidJSON("Invalid structure for \"coordinates\" attribute.")
+                throw GeoJSONReader.Errors.invalidJSON("Invalid structure for \"coordinates\" attribute.")
             }
         }
 
         guard coordinateValues.count >= 2 else {
-            throw GeoJSONReaderError.invalidNumberOfCoordinates("Invalid number of coordinates (\(coordinateValues.count)) supplied for type \(String(reflecting: Coordinate.self)).")
+            throw GeoJSONReader.Errors.invalidNumberOfCoordinates("Invalid number of coordinates (\(coordinateValues.count)) supplied for type \(String(reflecting: Coordinate.self)).")
         }
 
         return Coordinate(x: coordinateValues[0], y: coordinateValues[1], z: coordinateValues.count > 2 ? coordinateValues[2] : nil, m: coordinateValues.count > 3 ? coordinateValues[3] : nil)
@@ -315,10 +312,10 @@ class Coordinates<T> {
     class func coordinates(json: [String: Any]) throws -> T {
 
         guard let coordinatesObject = json["coordinates"] else {
-            throw GeoJSONReaderError.missingAttribute("Missing required attribute \"coordinates\".")
+            throw GeoJSONReader.Errors.missingAttribute("Missing required attribute \"coordinates\".")
         }
         guard let coordinates = coordinatesObject as? T else {
-            throw GeoJSONReaderError.invalidJSON("Invalid structure for \"coordinates\" attribute.")
+            throw GeoJSONReader.Errors.invalidJSON("Invalid structure for \"coordinates\" attribute.")
         }
         return coordinates
     }

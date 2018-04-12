@@ -22,25 +22,22 @@ import Swift
 ///
 /// A polygon consists of an outer ring with it's coordinates in clockwise order and zero or more inner rings in counter clockwise order.
 ///
-/// - Requires: The "outerRing" be oriented clockwise
-/// - Requires: The "innerRings" be oriented counter clockwise
-/// - Requires: isSimple == true
-/// - Requires: isClosed == true for "outerRing" and all "innerRings"
+/// - Requires:
+///     - The `outerRing` be oriented clockwise
+///     - The `innerRings` be oriented counter clockwise
+///     - `isSimple == true`
+///     - `isClosed == true` for `outerRing` and all `innerRings`
 ///
-public struct Polygon {
+public struct Polygon: Geometry, Surface {
 
     ///
-    /// - Returns: The `Precision` of this Polygon
-    ///
-    /// - SeeAlso: `Precision`
-    ///
+    /// The `Precision` of this Polygon
+	///
     public let precision: Precision
 
     ///
-    /// - Returns: The `CoordinateSystem` of this Polygon
-    ///
-    /// - SeeAlso: `CoordinateSystem`
-    ///
+    /// The `CoordinateSystem` of this Polygon
+	///
     public let coordinateSystem: CoordinateSystem
 
     ///
@@ -55,9 +52,7 @@ public struct Polygon {
     }
 
     ///
-    /// - Returns: An Array of `LinearRing`s representing the innerRings of this Polygon
-    ///
-    /// - SeeAlso: `LinearRing`
+    /// An Array of `LinearRing`s representing the innerRings of this Polygon
     ///
     public var innerRings: [LinearRing] {
         guard self.count > 1
@@ -78,10 +73,7 @@ public struct Polygon {
     /// - Parameters:
     ///     - precision: The `Precision` model this polygon should use in calculations on its coordinates.
     ///     - coordinateSystem: The 'CoordinateSystem` this polygon should use in calculations on its coordinates.
-    ///
-    /// - SeeAlso: `CoordinateSystem`
-    /// - SeeAlso: `Precision`
-    ///
+	///
     public init (precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
         self.init([], precision: precision, coordinateSystem: coordinateSystem)
     }
@@ -95,10 +87,6 @@ public struct Polygon {
     ///     - innerRings: A `[CoordinateCollectionType]` representing the interior holes of the Polygon.
     ///     - precision: The `Precision` model this polygon should use in calculations on its coordinates.
     ///     - coordinateSystem: The 'CoordinateSystem` this polygon should use in calculations on it's coordinates.
-    ///
-    /// - SeeAlso: `CoordinateCollectionType`
-    /// - SeeAlso: `CoordinateSystem`
-    /// - SeeAlso: `Precision`
     ///
     public init(_ outerRing: LinearRing, innerRings: [LinearRing] = [], precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
             var rings = [outerRing]
@@ -114,10 +102,7 @@ public struct Polygon {
     ///     - other: The Polygon of the same type that you want to construct a new Polygon from.
     ///     - precision: Optionally change the `Precision` model this `LinearRing` should use in calculations on its coordinates.
     ///     - coordinateSystem: Optionally change the 'CoordinateSystem` this `Polygon` should use in calculations on its coordinates.
-    ///
-    /// - SeeAlso: `CoordinateSystem`
-    /// - SeeAlso: `Precision`
-    ///
+	///
     internal init(other: Polygon, precision: Precision, coordinateSystem: CoordinateSystem) {
         self.init(other.rings, precision: precision, coordinateSystem: coordinateSystem)
     }
@@ -129,10 +114,6 @@ public struct Polygon {
     ///     - rings: A an `Array` of `CoordinateCollectionType` representing the exterior and interior rings of the Polygon.
     ///     - precision: The `Precision` model this polygon should use in calculations on its coordinates.
     ///     - coordinateSystem: The 'CoordinateSystem` this polygon should use in calculations on it's coordinates.
-    ///
-    /// - SeeAlso: `CoordinateCollectionType`
-    /// - SeeAlso: `CoordinateSystem`
-    /// - SeeAlso: `Precision`
     ///
     public init(_ rings: [LinearRing], precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
         self.precision        = precision

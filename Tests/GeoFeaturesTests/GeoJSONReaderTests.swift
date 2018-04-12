@@ -29,7 +29,7 @@ import XCTest
 
 class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    private var reader = GeoJSONReader(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+    private var reader = GeoJSONReader(precision: Floating(), coordinateSystem: Cartesian())
 
     // MARK: - Negative Tests
 
@@ -40,7 +40,7 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
-            if case GeoJSONReaderError.invalidJSON(let message) = error {
+            if case GeoJSONReader.Errors.invalidJSON(let message) = error {
                 XCTAssert(message.range(of: expected, options: .regularExpression) != nil)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -55,7 +55,7 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
-            if case GeoJSONReaderError.invalidJSON(let message) = error {
+            if case GeoJSONReader.Errors.invalidJSON(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -70,7 +70,7 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
-            if case GeoJSONReaderError.missingAttribute(let message) = error {
+            if case GeoJSONReader.Errors.missingAttribute(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -85,7 +85,7 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
-            if case GeoJSONReaderError.unsupportedType(let message) = error {
+            if case GeoJSONReader.Errors.unsupportedType(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -100,7 +100,7 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
-            if case GeoJSONReaderError.missingAttribute(let message) = error {
+            if case GeoJSONReader.Errors.missingAttribute(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -115,7 +115,7 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
-            if case GeoJSONReaderError.invalidJSON(let message) = error {
+            if case GeoJSONReader.Errors.invalidJSON(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -130,7 +130,7 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
-            if case GeoJSONReaderError.missingAttribute(let message) = error {
+            if case GeoJSONReader.Errors.missingAttribute(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -145,7 +145,7 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertThrowsError(try reader.read(string: input)) { error in
 
-            if case GeoJSONReaderError.invalidJSON(let message) = error {
+            if case GeoJSONReader.Errors.invalidJSON(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -239,11 +239,11 @@ class GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate 3DM, FixedPrecision, Cartesian -
+// MARK: - Coordinate 3DM, Fixed, Cartesian -
 
-class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
+class GeoJSONReaderCoordinate3DMFixedCartesianTests: XCTestCase {
 
-    private var reader = GeoJSONReader(precision: FixedPrecision(scale: 100), coordinateSystem: Cartesian())
+    private var reader = GeoJSONReader(precision: Fixed(scale: 100), coordinateSystem: Cartesian())
 
     // MARK: Positive Tests
 
@@ -335,7 +335,7 @@ class GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
 
 class GeoJSONReaderInternal: XCTestCase {
 
-    private var reader = GeoJSONReader(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+    private var reader = GeoJSONReader(precision: Floating(), coordinateSystem: Cartesian())
 
     func testCoordinateWithInvalidString() {
 
@@ -344,7 +344,7 @@ class GeoJSONReaderInternal: XCTestCase {
 
         XCTAssertThrowsError(try reader.coordinate(array: input)) { error in
 
-            if case GeoJSONReaderError.invalidJSON(let message) = error {
+            if case GeoJSONReader.Errors.invalidJSON(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")
@@ -359,7 +359,7 @@ class GeoJSONReaderInternal: XCTestCase {
 
         XCTAssertThrowsError(try Coordinates<String>.coordinates(json: input)) { error in
 
-            if case GeoJSONReaderError.invalidJSON(let message) = error {
+            if case GeoJSONReader.Errors.invalidJSON(let message) = error {
                 XCTAssertEqual(message, expected)
             } else {
                 XCTFail("Wrong error thrown: \(error) is not equal to \(expected)")

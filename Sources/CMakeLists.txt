@@ -11,7 +11,7 @@ file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.swift Pack
 #
 # Main Build Target
 #
-add_custom_target(geofeatures-build ALL
+add_custom_target(build ALL
         COMMAND swift build
         BYPRODUCTS .build
         SOURCES ${SOURCE_FILES}
@@ -26,42 +26,42 @@ set(GYB_COMMON_FLAGS --line-directive "''")
 #
 # GeoFeatures
 #
-add_gyb_target(generated-LinearRing
+add_gyb_target(generate-LinearRing
         SOURCE GeoFeatures/CoordinateCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/LinearRing.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=LinearRing
         DEPENDS GeoFeatures/CoordinateCollectionTypes.swift.gyb build-tools
         )
 
-add_gyb_target(generated-LineString
+add_gyb_target(generate-LineString
         SOURCE GeoFeatures/CoordinateCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/LineString.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=LineString
         DEPENDS GeoFeatures/CoordinateCollectionTypes.swift.gyb build-tools
         )
 
-add_gyb_target(generated-GeometryCollection
+add_gyb_target(generate-GeometryCollection
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/GeometryCollection.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=GeometryCollection -D Element=Geometry
         DEPENDS GeoFeatures/GeometryCollectionTypes.swift.gyb build-tools
         )
 
-add_gyb_target(generated-MultiPoint
+add_gyb_target(generate-MultiPoint
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiPoint.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPoint -D Element=Point
         DEPENDS GeoFeatures/GeometryCollectionTypes.swift.gyb build-tools
         )
 
-add_gyb_target(generated-MultiLineString
+add_gyb_target(generate-MultiLineString
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiLineString.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiLineString -D Element=LineString
         DEPENDS GeoFeatures/GeometryCollectionTypes.swift.gyb build-tools
         )
 
-add_gyb_target(generated-MultiPolygon
+add_gyb_target(generate-MultiPolygon
         SOURCE GeoFeatures/GeometryCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/MultiPolygon.swift
         FLAGS ${GYB_COMMON_FLAGS} -D Self=MultiPolygon -D Element=Polygon
@@ -71,15 +71,15 @@ add_gyb_target(generated-MultiPolygon
 #
 # GeoFeaturesPlaygroundSupport
 #
-add_gyb_target(generated-GeoFeatures-CustomPlaygroundDisplayConvertible
+add_gyb_target(generate-GeoFeatures-CustomPlaygroundDisplayConvertible
         SOURCE GeoFeaturesPlaygroundSupport/GeoFeatures+CustomPlaygroundDisplayConvertible.swift.gyb
         OUTPUT GeoFeaturesPlaygroundSupport/GeoFeatures+CustomPlaygroundDisplayConvertible.swift
         FLAGS ${GYB_COMMON_FLAGS}
         DEPENDS build-tools
         )
 
-add_custom_target(generated-source
-        DEPENDS generated-LinearRing generated-LineString generated-GeometryCollection generated-MultiPoint generated-MultiLineString generated-MultiPolygon generated-GeoFeatures-CustomPlaygroundDisplayConvertible
+add_custom_target(generate-source
+        DEPENDS generate-LinearRing generate-LineString generate-GeometryCollection generate-MultiPoint generate-MultiLineString generate-MultiPolygon generate-GeoFeatures-CustomPlaygroundDisplayConvertible
         )
 
-add_dependencies(geofeatures-build generated-source)
+add_dependencies(build generate-source)

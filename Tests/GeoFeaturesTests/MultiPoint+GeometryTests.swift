@@ -20,17 +20,21 @@
 import XCTest
 import GeoFeatures
 
-private let geometryDimension = Dimension.zero    // MultiPoint are always 0 dimension
-
 // MARK: - Coordinate2D, FloatingPrecision, Cartesian -
 
 class MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs        = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+
+        XCTAssertEqual(MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs).dimension, .zero)
+    }
+
+    func testDimensionEmpty () {
+
+        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundary() {
@@ -52,11 +56,18 @@ class MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
 class MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
+
     func testDimension () {
-        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+
+        XCTAssertEqual(MultiPoint([Point(Coordinate(x: 1.0, y: 1.0, m: 1.0)), Point(Coordinate(x: 2.0, y: 2.0, m: 2.0))],precision: precision, coordinateSystem: cs).dimension, .zero)
+    }
+
+    func testDimensionEmpty () {
+
+        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundary() {
@@ -78,11 +89,17 @@ class MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase
 
 class MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+
+        XCTAssertEqual(MultiPoint([Point(Coordinate(x: 1.0, y: 1.0, z: 1.0)), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0))],precision: precision, coordinateSystem: cs).dimension, .zero)
+    }
+
+    func testDimensionEmpty () {
+
+        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundary() {
@@ -104,11 +121,17 @@ class MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase 
 
 class MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+
+        XCTAssertEqual(MultiPoint([Point(Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 1.0))], precision: precision, coordinateSystem: cs).dimension, .zero)
+    }
+
+    func testDimensionEmpty () {
+
+        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundary() {
@@ -126,15 +149,21 @@ class MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase
     }
 }
 
-// MARK: - Coordinate2D, FixedPrecision, Cartesian -
+// MARK: - Coordinate2D, Fixed, Cartesian -
 
-class MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
+class MultiPointGeometryCoordinate2DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+
+        XCTAssertEqual(MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))],precision: precision, coordinateSystem: cs).dimension, .zero)
+    }
+
+    func testDimensionEmpty () {
+
+        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundary() {
@@ -152,15 +181,21 @@ class MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate2DM, FixedPrecision, Cartesian -
+// MARK: - Coordinate2DM, Fixed, Cartesian -
 
-class MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
+class MultiPointGeometryCoordinate2DMFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+
+        XCTAssertEqual(MultiPoint([Point(Coordinate(x: 1.0, y: 1.0, m: 1.0)), Point(Coordinate(x: 2.0, y: 2.0, m: 2.0))], precision: precision, coordinateSystem: cs).dimension, .zero)
+    }
+
+    func testDimensionEmpty () {
+
+        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundary() {
@@ -178,15 +213,21 @@ class MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests: XCTestCase {
     }
 }
 
-// MARK: - Coordinate3D, FixedPrecision, Cartesian -
+// MARK: - Coordinate3D, Fixed, Cartesian -
 
-class MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
+class MultiPointGeometryCoordinate3DFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+
+        XCTAssertEqual(MultiPoint([Point(Coordinate(x: 1.0, y: 1.0, z: 1.0)), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0))], precision: precision, coordinateSystem: cs).dimension, .zero)
+    }
+
+    func testDimensionEmpty () {
+
+        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundary() {
@@ -218,15 +259,21 @@ class MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests: XCTestCase {
      }
 }
 
-// MARK: - Coordinate3DM, FixedPrecision, Cartesian -
+// MARK: - Coordinate3DM, Fixed, Cartesian -
 
-class MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests: XCTestCase {
+class MultiPointGeometryCoordinate3DMFixedCartesianTests: XCTestCase {
 
-    let precision = FixedPrecision(scale: 100)
+    let precision = Fixed(scale: 100)
     let cs       = Cartesian()
 
     func testDimension () {
-        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, geometryDimension)
+
+        XCTAssertEqual(MultiPoint([Point(Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 1.0))],precision: precision, coordinateSystem: cs).dimension, .zero)
+    }
+
+    func testDimensionEmpty () {
+
+        XCTAssertEqual(MultiPoint(precision: precision, coordinateSystem: cs).dimension, .empty)
     }
 
     func testBoundary() {

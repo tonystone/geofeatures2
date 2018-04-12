@@ -24,7 +24,7 @@ import GeoFeatures
 
 class LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testLengthTest1() {

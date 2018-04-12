@@ -19,6 +19,8 @@
 ///
 import Foundation
 
+enum Orientation: Int { case collinear = 0, clockwise, counterclockwise }
+
 ///
 /// A collection of `Coordinate`s.
 ///
@@ -27,7 +29,73 @@ import Foundation
 public protocol CoordinateCollectionType: MutableCollection where Element == Coordinate, Index == Int {}
 
 ///
-/// Common functions that `CoordinateCollectionType`s offer.
+/// Extension for all `CoordinateCollectionType` that are also a `Geometry` & `Curve` type.
 ///
-extension CoordinateCollectionType {}
+/// - Remarks: This covers `LineString` and `LinearRing`.
+///
+public extension CoordinateCollectionType where Self: Geometry & Curve {
 
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .one if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .one
+    }
+
+    ///
+    /// - Returns: true if this Geometry is an empty Geometry.
+    ///
+    public func isEmpty() -> Bool {
+        return self.isEmpty
+    }
+
+    ///
+    /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
+    ///
+    /// - Note: The boundary of a LineString if empty is the empty MultiPoint. If not empty it is the first and last point.
+    ///
+    public func boundary() -> Geometry {
+
+        var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
+
+        if !self.isClosed() && self.count >= 2 {
+
+            /// Note: direct subscripts protected by self.count >= 2 above.
+            boundary.append(Point(self[0], precision: self.precision, coordinateSystem: self.coordinateSystem))
+            boundary.append(Point(self[self.endIndex - 1], precision: self.precision, coordinateSystem: self.coordinateSystem))
+        }
+        return boundary
+    }
+
+    public func bounds() -> Bounds? {
+
+        var iterator = self.makeIterator()
+
+        guard let first = iterator.next()
+            else { return nil }
+
+        var minX = first.x, maxX = first.x
+        var minY = first.y, maxY = first.y
+
+        while let next = iterator.next() {
+
+            minX = Swift.min(minX, next.x)
+            maxX = Swift.max(maxX, next.x)
+
+            minY = Swift.min(minY, next.y)
+            maxY = Swift.max(maxY, next.y)
+        }
+        return Bounds(min: (x: minX, y: minY), max: (x: maxX, y: maxY))
+    }
+}
+
+///
+/// Extension for all `CoordinateCollectionType`'s.
+///
+/// - Remarks: This covers `LineString`, `LinearRing`, and `Point`.
+///
+internal extension CoordinateCollectionType {}
