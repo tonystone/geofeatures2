@@ -51,19 +51,15 @@ internal extension PathRepresentable {
 ///
 /// Point drawing routines
 ///
-/// Note: The drawing routine translates all Coordinate types to 2d flat space at the moment dropping z and m from 2DM, 3D, and 3DM coordinates.
+/// - Note: The drawing routine translates all Coordinate types to 2d flat space at the moment dropping z and m from 2DM, 3D, and 3DM coordinates.
 ///
 extension Point: PathRepresentable {
 
     internal func path(transform: CGAffineTransform) -> CGPath {
         let path = CGMutablePath()
 
-        let circle = CGRect(x: self.x, y: self.y, width: 2.0, height :2.0)
-
-        /// Center the circle around the point
-        circle.offsetBy(dx: -(circle.width / 2), dy: -(circle.height / 2))
-
-        path.addRoundedRect(in: circle, cornerWidth: 1.0, cornerHeight: 1.0, transform: transform)
+        path.move(to: CGPoint(x: self.x, y: self.y), transform: transform)
+        path.closeSubpath()
 
         return path
     }
