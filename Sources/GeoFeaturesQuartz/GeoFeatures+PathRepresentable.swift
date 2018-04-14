@@ -27,7 +27,7 @@ import GeoFeatures
 ///
 /// Protocol specifying the ability to convert the object into a Quartz 2D path.
 ///
-public protocol PathRepresentable {
+internal protocol PathRepresentable {
 
     ///
     /// Returns a CGPath representation of `self`.
@@ -38,7 +38,7 @@ public protocol PathRepresentable {
 ///
 /// Defaults for protocol `PathRepresentable`.
 ///
-public extension PathRepresentable {
+internal extension PathRepresentable {
 
     ///
     /// Returns a CGPath representation of `self` with the default value for `transform`.
@@ -55,7 +55,7 @@ public extension PathRepresentable {
 ///
 extension Point: PathRepresentable {
 
-    public func path(transform: CGAffineTransform) -> CGPath {
+    internal func path(transform: CGAffineTransform) -> CGPath {
         let path = CGMutablePath()
 
         let circle = CGRect(x: self.x, y: self.y, width: 2.0, height :2.0)
@@ -74,7 +74,7 @@ extension Point: PathRepresentable {
 ///
 extension LineString: PathRepresentable {
 
-    public func path(transform: CGAffineTransform) -> CGPath {
+    internal func path(transform: CGAffineTransform) -> CGPath {
         let path =  CGMutablePath()
 
         if self.count > 0 {
@@ -118,7 +118,7 @@ extension LinearRing: PathRepresentable {
 ///
 extension Polygon: PathRepresentable {
 
-    public func path(transform: CGAffineTransform) -> CGPath {
+    internal func path(transform: CGAffineTransform) -> CGPath {
         let path = CGMutablePath()
 
         path.addPath(self.outerRing.path(transform: transform))
