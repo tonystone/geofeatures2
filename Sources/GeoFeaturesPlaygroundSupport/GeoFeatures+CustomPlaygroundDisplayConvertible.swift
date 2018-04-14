@@ -39,7 +39,7 @@ import GeoFeaturesQuartz
     ///
     /// Point CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.Point: CustomPlaygroundDisplayConvertible {
+    extension Point: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -54,7 +54,7 @@ import GeoFeaturesQuartz
     ///
     /// LineString CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.LineString: CustomPlaygroundDisplayConvertible {
+    extension LineString: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -69,7 +69,7 @@ import GeoFeaturesQuartz
     ///
     /// LinearRing CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.LinearRing: CustomPlaygroundDisplayConvertible {
+    extension LinearRing: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -84,7 +84,7 @@ import GeoFeaturesQuartz
     ///
     /// Polygon CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.Polygon: CustomPlaygroundDisplayConvertible {
+    extension Polygon: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -99,7 +99,7 @@ import GeoFeaturesQuartz
     ///
     /// MultiPoint CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.MultiPoint: CustomPlaygroundDisplayConvertible {
+    extension MultiPoint: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -114,7 +114,7 @@ import GeoFeaturesQuartz
     ///
     /// MultiLineString CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.MultiLineString: CustomPlaygroundDisplayConvertible {
+    extension MultiLineString: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -129,7 +129,7 @@ import GeoFeaturesQuartz
     ///
     /// MultiPolygon CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.MultiPolygon: CustomPlaygroundDisplayConvertible {
+    extension MultiPolygon: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -144,7 +144,7 @@ import GeoFeaturesQuartz
     ///
     /// GeometryCollection CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.GeometryCollection: CustomPlaygroundDisplayConvertible {
+    extension GeometryCollection: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -164,7 +164,7 @@ import GeoFeaturesQuartz
     ///
     /// Point CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.Point: CustomPlaygroundQuickLookable {
+    extension Point: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
@@ -178,7 +178,7 @@ import GeoFeaturesQuartz
     ///
     /// LineString CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.LineString: CustomPlaygroundQuickLookable {
+    extension LineString: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
@@ -192,7 +192,7 @@ import GeoFeaturesQuartz
     ///
     /// LinearRing CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.LinearRing: CustomPlaygroundQuickLookable {
+    extension LinearRing: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
@@ -206,7 +206,7 @@ import GeoFeaturesQuartz
     ///
     /// Polygon CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.Polygon: CustomPlaygroundQuickLookable {
+    extension Polygon: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
@@ -220,7 +220,7 @@ import GeoFeaturesQuartz
     ///
     /// MultiPoint CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.MultiPoint: CustomPlaygroundQuickLookable {
+    extension MultiPoint: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
@@ -234,7 +234,7 @@ import GeoFeaturesQuartz
     ///
     /// MultiLineString CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.MultiLineString: CustomPlaygroundQuickLookable {
+    extension MultiLineString: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
@@ -248,7 +248,7 @@ import GeoFeaturesQuartz
     ///
     /// MultiPolygon CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.MultiPolygon: CustomPlaygroundQuickLookable {
+    extension MultiPolygon: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
@@ -262,7 +262,7 @@ import GeoFeaturesQuartz
     ///
     /// GeometryCollection CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.GeometryCollection: CustomPlaygroundQuickLookable {
+    extension GeometryCollection: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {

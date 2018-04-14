@@ -53,7 +53,7 @@ public extension PathRepresentable {
 ///
 /// Note: The drawing routine translates all Coordinate types to 2d flat space at the moment dropping z and m from 2DM, 3D, and 3DM coordinates.
 ///
-extension GeoFeatures.Point: PathRepresentable {
+extension Point: PathRepresentable {
 
     public func path(transform: CGAffineTransform) -> CGPath {
         let path = CGMutablePath()
@@ -72,7 +72,7 @@ extension GeoFeatures.Point: PathRepresentable {
 ///
 /// LineString drawing implementation
 ///
-extension GeoFeatures.LineString: PathRepresentable {
+extension LineString: PathRepresentable {
 
     public func path(transform: CGAffineTransform) -> CGPath {
         let path =  CGMutablePath()
@@ -94,9 +94,9 @@ extension GeoFeatures.LineString: PathRepresentable {
 ///
 /// LinearRing drawing implementation
 ///
-extension GeoFeatures.LinearRing: PathRepresentable {
+extension LinearRing: PathRepresentable {
 
-    public func path(transform: CGAffineTransform) -> CGPath {
+    internal func path(transform: CGAffineTransform) -> CGPath {
         let path =  CGMutablePath()
 
         if self.count > 0 {
@@ -116,7 +116,7 @@ extension GeoFeatures.LinearRing: PathRepresentable {
 ///
 /// Polygon drawing implementation
 ///
-extension GeoFeatures.Polygon: PathRepresentable {
+extension Polygon: PathRepresentable {
 
     public func path(transform: CGAffineTransform) -> CGPath {
         let path = CGMutablePath()

@@ -52,7 +52,7 @@ import GeoFeaturesQuartz
     ///
     /// ${Type} CustomPlaygroundDisplayConvertible implementation
     ///
-    extension GeoFeatures.${Type}: CustomPlaygroundDisplayConvertible {
+    extension ${Type}: CustomPlaygroundDisplayConvertible {
 
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
@@ -74,7 +74,7 @@ import GeoFeaturesQuartz
     ///
     /// ${Type} CustomPlaygroundQuickLookable implementation
     ///
-    extension GeoFeatures.${Type}: CustomPlaygroundQuickLookable {
+    extension ${Type}: CustomPlaygroundQuickLookable {
 
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
