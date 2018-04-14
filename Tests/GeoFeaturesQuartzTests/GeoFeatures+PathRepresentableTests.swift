@@ -17,6 +17,8 @@
 ///
 /// Created by Tony Stone on 3/16/18.
 ///
+#if os(OSX) || os(iOS) || os(tvOS) || os(watchOS)
+
 import XCTest
 import GeoFeatures
 
@@ -440,3 +442,6 @@ class GeometryCollectionPathRepresentableTests: XCTestCase {
         XCTAssertEqual(input.0.path(transform: input.transform), expected)
     }
 }
+
+#endif
+

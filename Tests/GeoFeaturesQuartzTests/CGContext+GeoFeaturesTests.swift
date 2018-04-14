@@ -17,6 +17,8 @@
 ///
 /// Created by Tony Stone on 4/12/18.
 ///
+#if os(OSX) || os(iOS) || os(tvOS) || os(watchOS)
+
 import XCTest
 import CoreGraphics
 import GeoFeatures
@@ -384,3 +386,5 @@ extension CGContextGeoFeaturesTests {
         return CGImageDestinationFinalize(destination)
     }
 }
+
+#endif
