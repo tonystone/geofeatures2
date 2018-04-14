@@ -28,31 +28,31 @@ import GeoFeaturesQuartz
 @IBDesignable
 internal class CartesianGeometryVisualizationView: NSView {
 
-    static let strokeColor = CGColor(red: 77/255, green: 169/255, blue: 255/255, alpha: 1.0)
+    static let strokeColor = CGColor(red: 77/255,  green: 169/255, blue: 255/255, alpha: 1.0)
     static let fillColor   = CGColor(red: 204/255, green: 230/255, blue: 255/255, alpha: 1.0)
 
-    let geometry: Geometry & QuartzDrawable
+    private let geometry: Geometry
 
     @IBInspectable var scale: CGFloat   = 1.0
 
     @IBInspectable var xOffset: CGFloat = 0.0
     @IBInspectable var yOffset: CGFloat = 0.0
 
-    init(geometry: Geometry & QuartzDrawable) {
+    init(geometry: Geometry) {
         self.geometry = geometry
 
-        let viewBounds = NSRect(x: 0, y: 0, width: 200, height: 200)
+        let viewBounds = Bounds(min: (x: 0, y: 0), max: (x: 200, y: 200))
 
         /// Find the bounding box of the shapes
-        let boundingBox = geometry.boundingBox()
+        let bounds = geometry.bounds() ?? viewBounds
 
-        if boundingBox.width * 1.25 > viewBounds.width || boundingBox.height * 1.25 > viewBounds.height {
-            scale  = 0.75 * min(viewBounds.width/boundingBox.width, viewBounds.height/boundingBox.height)
+        if bounds.width * 1.25 > viewBounds.width || bounds.height * 1.25 > viewBounds.height {
+            scale  = CGFloat(0.75 * Swift.min(viewBounds.width/bounds.width, viewBounds.height/bounds.height))
         }
-        xOffset = viewBounds.midX - boundingBox.midX * scale
-        yOffset = viewBounds.midY - boundingBox.midY * scale
+        xOffset = CGFloat(viewBounds.mid.x - bounds.mid.x * Double(scale))
+        yOffset = CGFloat(viewBounds.mid.y - bounds.mid.y * Double(scale))
 
-        super.init(frame: viewBounds)
+        super.init(frame: viewBounds.cgRect)
     }
 
     required init?(coder: NSCoder) {
@@ -73,12 +73,22 @@ internal class CartesianGeometryVisualizationView: NSView {
 
         context.setStrokeColor(CartesianGeometryVisualizationView.strokeColor)
         context.setFillColor  (CartesianGeometryVisualizationView.fillColor)
+        context.setLineCap    (CGLineCap.round)
 
         context.setLineWidth(2.0)
 
-        geometry.draw(in: context, dirtyRect: dirtyRect)
+        context.draw(geometry)
 
         context.restoreGState()
     }
 }
+
+private extension Bounds {
+
+    var width:  Double { return max.x - min.x }
+    var height: Double { return max.y - min.y }
+
+    var cgRect: CGRect { return CGRect(x: min.x, y: min.y, width: max.x, height: max.y) }
+}
+
 #endif
