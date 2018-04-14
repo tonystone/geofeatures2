@@ -3,9 +3,9 @@
 import GeoFeatures
 import GeoFeaturesPlaygroundSupport
 
-//: Closed LineString
-let closedLineString = LineString([[100.00, 200.00], [200.00, 200.00], [200.00, 100.00], [100.00, 100.00], [100.00, 200.00]])
-
 //: Open LineString
-let openLineString = LineString([[100.00, 200.00], [100.00, 200.00], [150.00, 100.00], [125.00, 100.00]])
-
+let left = LineString([[100, 100], [100, 200], [200, 200]])
+//: Open LineString
+let right = LineString([[200, 100], [100, 100]])
+//: Closed LineString
+let box = left + right
