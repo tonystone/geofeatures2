@@ -130,4 +130,64 @@ extension Polygon: PathRepresentable {
         return path
     }
 }
+
+///
+/// MultiPoint drawing implementation
+///
+extension MultiPoint: PathRepresentable {
+
+    internal func path(transform: CGAffineTransform) -> CGPath {
+        let path = CGMutablePath()
+
+        for point in self {
+            path.addPath(point.path(transform: transform))
+        }
+        return path
+    }
+}
+
+///
+/// MultiLineString drawing implementation
+///
+extension MultiLineString: PathRepresentable {
+
+    internal func path(transform: CGAffineTransform) -> CGPath {
+        let path = CGMutablePath()
+
+        for lineString in self {
+            path.addPath(lineString.path(transform: transform))
+        }
+        return path
+    }
+}
+
+///
+/// MultiPolygon drawing implementation
+///
+extension MultiPolygon: PathRepresentable {
+
+    internal func path(transform: CGAffineTransform) -> CGPath {
+        let path = CGMutablePath()
+
+        for polygon in self {
+            path.addPath(polygon.path(transform: transform))
+        }
+        return path
+    }
+}
+
+///
+/// GeometryCollection drawing implementation
+///
+extension GeometryCollection: PathRepresentable {
+
+    internal func path(transform: CGAffineTransform) -> CGPath {
+        let path = CGMutablePath()
+
+        for case let geometry as PathRepresentable in self {
+            path.addPath(geometry.path(transform: transform))
+        }
+        return path
+    }
+}
 #endif
