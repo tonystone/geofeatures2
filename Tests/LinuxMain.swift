@@ -7,7 +7,6 @@ import XCTest
 
 @testable import GeoFeaturesTests
 @testable import GeoFeaturesQuartzTests
-@testable import GeoFeaturesMapKitTests
 @testable import GeoFeaturesPlaygroundSupportTests
 
 XCTMain([

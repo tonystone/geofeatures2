@@ -44,7 +44,7 @@ import GeoFeaturesQuartz
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
             case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: return "Map goes here"
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -59,7 +59,7 @@ import GeoFeaturesQuartz
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
             case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: return "Map goes here"
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -74,7 +74,7 @@ import GeoFeaturesQuartz
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
             case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: return "Map goes here"
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -89,7 +89,7 @@ import GeoFeaturesQuartz
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
             case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: return "Map goes here"
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -104,7 +104,7 @@ import GeoFeaturesQuartz
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
             case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: return "Map goes here"
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -119,7 +119,7 @@ import GeoFeaturesQuartz
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
             case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: return "Map goes here"
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -134,7 +134,7 @@ import GeoFeaturesQuartz
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
             case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: return "Map goes here"
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -149,7 +149,7 @@ import GeoFeaturesQuartz
         public var playgroundDescription: Any {
             switch self.coordinateSystem {
             case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: return "Map goes here"
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -169,7 +169,7 @@ import GeoFeaturesQuartz
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
             case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: return .text("Map goes here")
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -183,7 +183,7 @@ import GeoFeaturesQuartz
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
             case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: return .text("Map goes here")
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -197,7 +197,7 @@ import GeoFeaturesQuartz
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
             case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: return .text("Map goes here")
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -211,7 +211,7 @@ import GeoFeaturesQuartz
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
             case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: return .text("Map goes here")
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -225,7 +225,7 @@ import GeoFeaturesQuartz
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
             case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: return .text("Map goes here")
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -239,7 +239,7 @@ import GeoFeaturesQuartz
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
             case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: return .text("Map goes here")
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -253,7 +253,7 @@ import GeoFeaturesQuartz
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
             case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: return .text("Map goes here")
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
             }
@@ -267,7 +267,7 @@ import GeoFeaturesQuartz
         public var customPlaygroundQuickLook: PlaygroundQuickLook  {
             switch self.coordinateSystem {
             case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: return .text("Map goes here")
+            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
             default:
                 return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
             }
