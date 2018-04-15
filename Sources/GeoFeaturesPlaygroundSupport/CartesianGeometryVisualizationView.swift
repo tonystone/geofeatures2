@@ -18,18 +18,33 @@
 /// Created by Tony Stone on 3/16/18.
 ///
 
-#if os(OSX)
+#if os(OSX) || os(iOS)
 
-import AppKit
+#if os(OSX)
+    import AppKit
+    typealias CartesianGeometryVisualizationViewBaseType = NSView
+
+    func currentContext() -> CGContext? {
+        return NSGraphicsContext.current?.cgContext
+    }
+#elseif os(iOS)
+    import UIKit
+    typealias CartesianGeometryVisualizationViewBaseType = UIView
+
+    func currentContext() -> CGContext? {
+        return UIGraphicsGetCurrentContext()
+    }
+#endif
+
 import CoreGraphics
 import GeoFeatures
 import GeoFeaturesQuartz
 
 @IBDesignable
-internal class CartesianGeometryVisualizationView: NSView {
+internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizationViewBaseType {
 
-    static let strokeColor = CGColor(red: 77/255,  green: 169/255, blue: 255/255, alpha: 1.0)
-    static let fillColor   = CGColor(red: 204/255, green: 230/255, blue: 255/255, alpha: 1.0)
+    static let strokeColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [77/255.0,  169/255.0, 255/255.0, 1.0] as [CGFloat])
+    static let fillColor   = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [204/255.0,  230/255.0, 255/255.0, 1.0] as [CGFloat])
 
     private let geometry: Geometry
 
@@ -60,9 +75,9 @@ internal class CartesianGeometryVisualizationView: NSView {
         super.init(coder: coder)
     }
 
-    override func draw(_ dirtyRect: NSRect) {
+    override func draw(_ dirtyRect: CGRect) {
 
-        guard let context = NSGraphicsContext.current?.cgContext
+        guard let context = currentContext()
             else { return }
 
         context.saveGState()
@@ -70,12 +85,15 @@ internal class CartesianGeometryVisualizationView: NSView {
         /// Apply the transforms to scale and center the paths
         context.translateBy(x: xOffset, y: yOffset)
         context.scaleBy(x: scale, y: scale)
-
-        context.setStrokeColor(CartesianGeometryVisualizationView.strokeColor)
-        context.setFillColor  (CartesianGeometryVisualizationView.fillColor)
-        context.setLineCap    (CGLineCap.round)
-
+        context.setLineCap(CGLineCap.round)
         context.setLineWidth(2.0)
+
+        if let color = CartesianGeometryVisualizationView.strokeColor {
+            context.setStrokeColor(color)
+        }
+        if let color = CartesianGeometryVisualizationView.fillColor {
+            context.setFillColor(color)
+        }
 
         context.draw(geometry)
 
