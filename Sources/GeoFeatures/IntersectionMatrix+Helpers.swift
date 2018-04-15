@@ -1568,7 +1568,7 @@ extension IntersectionMatrix {
                         } else {
                             relatedToResult.firstInteriorTouchesSecondBoundary = .zero
                         }
-                    } else if lineSegmentIntersection.secondSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.secondSegmentSecondBoundaryLocation == .onInterior {
+                    } else if lineSegmentIntersection.secondSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.secondSegmentSecondBoundaryLocation == .onInterior || lineSegmentIntersection.interiorsTouchAtPoint {
                         relatedToResult.firstInteriorTouchesSecondBoundary = .zero
                     }
                 }
@@ -2755,9 +2755,11 @@ extension IntersectionMatrix {
         ///
         /// Check cases where at least one boundary point of one segment touches the other line segment
         ///
-        let leftSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
-        let rightSign = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
-        let oneLine   = leftSign == 0 && rightSign == 0 /// Both line segments lie on one line
+        let leftSign   = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
+        let rightSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
+        let leftSign2  = isLeft(p0: other.leftCoordinate, p1: other.rightCoordinate, p2: segment.leftCoordinate)
+        let rightSign2 = isLeft(p0: other.leftCoordinate, p1: other.rightCoordinate, p2: segment.rightCoordinate)
+        let oneLine    = leftSign == 0 && rightSign == 0 /// Both line segments lie on one line
         if  (segment1Boundary1Location != .onExterior) ||  (segment1Boundary2Location != .onExterior) ||
             (segment2Boundary1Location != .onExterior) ||  (segment2Boundary2Location != .onExterior) {
 
@@ -2865,7 +2867,7 @@ extension IntersectionMatrix {
         let y = numy / den
 
         var interiorsIntersect = false
-        if (leftSign < 0 && rightSign > 0) || (leftSign > 0 && rightSign < 0) {
+        if ((leftSign < 0 && rightSign > 0) || (leftSign > 0 && rightSign < 0)) && ((leftSign2 < 0 && rightSign2 > 0) || (leftSign2 > 0 && rightSign2 < 0)) {
             interiorsIntersect = true
         }
 
