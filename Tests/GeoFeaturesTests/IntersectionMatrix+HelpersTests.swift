@@ -3270,7 +3270,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
-    func testLineString_Polygon_intersectsPolygonBoundaryInterior() {
+    func testLineString_Polygon_intersectsPolygonBoundaryInteriorExterior() {
 
         let geometry1 = LineString<Coordinate2D>(elements: [(x: 4.0, y: -4.0), (x: 0.0, y: 0.0), (x: 0.0, y: 10.0)], precision: precision, coordinateSystem: cs)
         let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
@@ -3281,6 +3281,54 @@ class IntersectionMatrixHelperTests: XCTestCase {
             [.one,  .zero,  .one],
             [.zero, .empty, .zero],
             [.two,  .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testLineString_Polygon_intersectsPolygonBoundaryInteriorAndExteriorInsideHole() {
+
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: -9.0, y: -9.0), (x: -7.0, y: -7.0), (x: -6.0, y: -6.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x:-10.0, y: -2.0), (x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0)], [[(x:-8.0, y: -4.0), (x: -8.0, y: -8.0), (x: -4.0, y: -8.0), (x: -4.0, y: -4.0), (x: -8.0, y: -4.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,  .zero,  .one],
+            [.zero, .empty, .zero],
+            [.two,  .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testLineString_Polygon_intersectsPolygonBoundaryInteriorExterior_multipleTimes() {
+
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: -4.0, y: -6.0), (x: 10.0, y: -6.0), (x: 10.0, y: -4.0), (x: 0.0, y: -4.0), (x: 0.0, y: -3.0), (x: 12.0, y: -3.0), (x: 12.0, y: 5.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .zero,  .one],
+            [.empty, .empty, .zero],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testLineString_Polygon_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole() {
+
+        let geometry1 = LineString<Coordinate2D>(elements: [(x: -7.0, y: -7.0), (x: 0.0, y: -14.0), (x: 0.0, y: -6.0), (x: -6.0, y: -6.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x:-10.0, y: -2.0), (x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0)], [[(x:-8.0, y: -4.0), (x: -8.0, y: -8.0), (x: -4.0, y: -8.0), (x: -4.0, y: -4.0), (x: -8.0, y: -4.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .zero,  .one],
+            [.empty, .empty, .zero],
+            [.two,   .one,   .two]
             ])
 
         XCTAssertEqual(matrix, expected)
