@@ -88,9 +88,9 @@ class IntersectionMatrixTests: XCTestCase {
             ])
 
         let expected  = IntersectionMatrix(arrayLiteral: [
-            [.empty, .two,  .one],
-            [.two,   .empty, .two],
-            [.one,   .two,   .empty]
+            [.empty, .two,   .one],
+            [.zero,  .empty, .two],
+            [.one,   .zero,  .empty]
             ])
 
         XCTAssertEqual(input.transposed(), expected)
