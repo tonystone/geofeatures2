@@ -11,7 +11,6 @@ env:
   global:
     - PROJECT=GeoFeatures.xcodeproj
     - SCHEME=GeoFeatures-Package
-    - TEST_SDK=iphonesimulator
 
 matrix:
   include:
@@ -48,12 +47,14 @@ matrix:
       env:
          - BUILD="xcodebuild"
          - TEST_DEST="platform=OS X,arch=x86_64"
+         - TEST_SDK=macosx
     -
       os: osx
       osx_image: xcode9.2
       env:
          - BUILD="xcodebuild"
          - TEST_DEST="platform=iOS Simulator,OS=11.2,name=iPhone 8"
+         - TEST_SDK=iphonesimulator
 
 
 # don't re-build for tags so that [publish binary] is not re-run
