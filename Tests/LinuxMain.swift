@@ -98,16 +98,7 @@ XCTMain([
    testCase(PointCoordinate2DFixedCartesianTests.allTests),
    testCase(PointCoordinate2DMFixedCartesianTests.allTests),
    testCase(PointCoordinate3DFixedCartesianTests.allTests),
-   testCase(PointCoordinate3DMFixedCartesianTests.allTests),
-   testCase(CGContextGeoFeaturesTests.allTests),
-   testCase(PointPathRepresentableTests.allTests),
-   testCase(LineStringPathRepresentableTests.allTests),
-   testCase(LinearRingPathRepresentableTests.allTests),
-   testCase(PolygonPathRepresentableTests.allTests),
-   testCase(MultiPointPathRepresentableTests.allTests),
-   testCase(MultiLineStringPathRepresentableTests.allTests),
-   testCase(MultiPolygonPathRepresentableTests.allTests),
-   testCase(GeometryCollectionPathRepresentableTests.allTests)
+   testCase(PointCoordinate3DMFixedCartesianTests.allTests)
 ])
 
 extension MultiPolygonSurfaceCoordinate2DFixedCartesianTests {
@@ -1835,105 +1826,6 @@ extension PointCoordinate3DMFixedCartesianTests {
    static var allTests: [(String, (PointCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
-           ]
-   }
-}
-
-extension CGContextGeoFeaturesTests {
-   static var allTests: [(String, (CGContextGeoFeaturesTests) -> () throws -> Void)] {
-      return [
-                ("testAddPoint", testAddPoint),
-                ("testDrawPoint", testDrawPoint),
-                ("testAddLineString", testAddLineString),
-                ("testDrawLineString", testDrawLineString),
-                ("testAddLinearRing", testAddLinearRing),
-                ("testDrawLinearRing", testDrawLinearRing),
-                ("testAddPolygon", testAddPolygon),
-                ("testDrawPolygon", testDrawPolygon),
-                ("testAddMultiPoint", testAddMultiPoint),
-                ("testDrawMultiPoint", testDrawMultiPoint),
-                ("testAddMultiLineString", testAddMultiLineString),
-                ("testDrawMultiLineString", testDrawMultiLineString),
-                ("testAddMultiPolygon", testAddMultiPolygon),
-                ("testDrawMultiPolygon", testDrawMultiPolygon),
-                ("testAddGeometryCollection", testAddGeometryCollection),
-                ("testDrawGeometryCollection", testDrawGeometryCollection)
-           ]
-   }
-}
-
-extension PointPathRepresentableTests {
-   static var allTests: [(String, (PointPathRepresentableTests) -> () throws -> Void)] {
-      return [
-                ("testPath", testPath),
-                ("testPathWithTansform", testPathWithTansform)
-           ]
-   }
-}
-
-extension LineStringPathRepresentableTests {
-   static var allTests: [(String, (LineStringPathRepresentableTests) -> () throws -> Void)] {
-      return [
-                ("testPathWithOpenLineString", testPathWithOpenLineString),
-                ("testPathWithClosedLineString", testPathWithClosedLineString),
-                ("testPathWithOpenLineStringPathAndTansform", testPathWithOpenLineStringPathAndTansform),
-                ("testPathWithClosedLineStringPathAndTansform", testPathWithClosedLineStringPathAndTansform)
-           ]
-   }
-}
-
-extension LinearRingPathRepresentableTests {
-   static var allTests: [(String, (LinearRingPathRepresentableTests) -> () throws -> Void)] {
-      return [
-                ("testPathWithOpenLinearRing", testPathWithOpenLinearRing),
-                ("testPathWithClosedLinearRing", testPathWithClosedLinearRing),
-                ("testPathWithOpenLinearRingPathAndTansform", testPathWithOpenLinearRingPathAndTansform),
-                ("testPathWithClosedLinearRingPathAndTansform", testPathWithClosedLinearRingPathAndTansform)
-           ]
-   }
-}
-
-extension PolygonPathRepresentableTests {
-   static var allTests: [(String, (PolygonPathRepresentableTests) -> () throws -> Void)] {
-      return [
-                ("testPath", testPath),
-                ("testPathWithTansform", testPathWithTansform)
-           ]
-   }
-}
-
-extension MultiPointPathRepresentableTests {
-   static var allTests: [(String, (MultiPointPathRepresentableTests) -> () throws -> Void)] {
-      return [
-                ("testPath", testPath),
-                ("testPathWithTansform", testPathWithTansform)
-           ]
-   }
-}
-
-extension MultiLineStringPathRepresentableTests {
-   static var allTests: [(String, (MultiLineStringPathRepresentableTests) -> () throws -> Void)] {
-      return [
-                ("testPath", testPath),
-                ("testPathWithTansform", testPathWithTansform)
-           ]
-   }
-}
-
-extension MultiPolygonPathRepresentableTests {
-   static var allTests: [(String, (MultiPolygonPathRepresentableTests) -> () throws -> Void)] {
-      return [
-                ("testPath", testPath),
-                ("testPathWithTansform", testPathWithTansform)
-           ]
-   }
-}
-
-extension GeometryCollectionPathRepresentableTests {
-   static var allTests: [(String, (GeometryCollectionPathRepresentableTests) -> () throws -> Void)] {
-      return [
-                ("testPath", testPath),
-                ("testPathWithTansform", testPathWithTansform)
            ]
    }
 }
