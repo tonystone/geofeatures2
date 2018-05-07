@@ -4059,13 +4059,23 @@ extension IntersectionMatrix {
 
         for polygon in multipolygon {
 
-            /// Get the relationship between the point and the polygon
+            /// Get the relationship between the line string and the polygon
             let (_, intersectionMatrixResult) = generateIntersection(lineString, polygon)
 
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
         }
+
+        /// There is a special case here: line string boundary with multipolygon exterior.
+        /// It's possible that the boundary of the line string exists in two different polygons.
+        /// We have to check for that case and fix it from the above calculations.
+
+        guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
+            return (nil, matrixIntersects)
+        }
+        let (_, boundaryMatrix) = generateIntersection(lineStringBoundary, multipolygon)
+         matrixIntersects[.boundary, .exterior] = boundaryMatrix[.interior, .exterior]
 
         return (nil, matrixIntersects)
     }
