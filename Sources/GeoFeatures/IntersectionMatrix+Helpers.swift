@@ -1560,16 +1560,16 @@ extension IntersectionMatrix {
                         if leftCoordinateBoundaryPoint {
                             relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
                         } else {
-                            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                            if relatedToResult.firstInteriorTouchesSecondBoundary == .empty { relatedToResult.firstInteriorTouchesSecondBoundary = .zero }
                         }
                     } else if lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onBoundary {
                         if rightCoordinateBoundaryPoint {
                             relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
                         } else {
-                            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                            if relatedToResult.firstInteriorTouchesSecondBoundary == .empty { relatedToResult.firstInteriorTouchesSecondBoundary = .zero }
                         }
                     } else if lineSegmentIntersection.secondSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.secondSegmentSecondBoundaryLocation == .onInterior || lineSegmentIntersection.interiorsTouchAtPoint {
-                        relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                        if relatedToResult.firstInteriorTouchesSecondBoundary == .empty { relatedToResult.firstInteriorTouchesSecondBoundary = .zero }
                     }
                 }
             }
