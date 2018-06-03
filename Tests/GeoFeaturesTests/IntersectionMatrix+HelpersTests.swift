@@ -4192,38 +4192,38 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
-//    func testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString1() {
-//
-//        let geometry1 = LineString<Coordinate2D>(elements: [(x: -1.0, y: -1.0), (x: 4.0, y: -1.0), (x: 10.0, y: -6.0)], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testLineString_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString2() {
-//
-//        let geometry1 = LineString<Coordinate2D>(elements: [(x: 0.0, y: -10.0), (x: 0.0, y: -3.0), (x: 12.0, y: -3.0)], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+    func testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString1() {
+
+        let geometry1 = LinearRing<Coordinate2D>(elements: [(x: -1.0, y: -1.0), (x: 4.0, y: -1.0), (x: 10.0, y: -6.0), (x: -1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: 2.0), (x: 1.0, y: 3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .zero,  .one],
+            [.empty, .empty, .empty],
+            [.one,   .zero,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString2() {
+
+        let geometry1 = LinearRing<Coordinate2D>(elements: [(x: 0.0, y: -10.0), (x: 0.0, y: -3.0), (x: 12.0, y: -3.0), (x: 0.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .zero,  .one],
+            [.empty, .empty, .empty],
+            [.one,   .zero,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
 //    func testLineString_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString1() {
 //
 //        let geometry1 = LineString<Coordinate2D>(elements: [(x: -2.0, y: 1.0), (x: -9.0, y: 1.0), (x: -9.0, y: -9.0)], precision: precision, coordinateSystem: cs)
