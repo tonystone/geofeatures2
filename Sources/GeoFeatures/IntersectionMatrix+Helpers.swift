@@ -3693,7 +3693,7 @@ extension IntersectionMatrix {
 
         /// Exterior, interior
         if !subset(reducedLr2, reducedLr1) {
-            matrixIntersects[.interior, .exterior] = .one
+            matrixIntersects[.exterior, .interior] = .one
         }
 
         /// Return the matrix.
