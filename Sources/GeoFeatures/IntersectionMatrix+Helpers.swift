@@ -3327,6 +3327,19 @@ extension IntersectionMatrix {
         return true
     }
 
+    /// Is the multi line string contained in or a subset of the linear ring?
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ multiLineString: MultiLineString<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> Bool {
+
+        for lineString in multiLineString {
+            if !subset(lineString, linearRing) {
+                return false
+            }
+        }
+
+        return true
+    }
+
     /// Is the first multi line string contained in or a subset of the second multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     /// TODO:
@@ -3765,7 +3778,7 @@ extension IntersectionMatrix {
         }
 
         /// Exterior, interior
-        if !subset(reducedLr, reducedMls) {
+        if !subset(reducedMls, reducedLr) {
             matrixIntersects[.exterior, .interior] = .one
         }
 
