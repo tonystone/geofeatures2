@@ -1796,10 +1796,11 @@ extension IntersectionMatrix {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary = simplePolygon.boundary() as? MultiLineString<CoordinateType>,
+        /// Get the polygon boundary
+        guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let mainPolygon = polygonBoundary.first,
-            mainPolygon.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return relatedToResult
         }
 
@@ -1819,6 +1820,10 @@ extension IntersectionMatrix {
 
             if segmentRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
                 relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
+            }
+
+            if segmentRelatedToResult.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                relatedToResult.firstInteriorTouchesSecondExterior = segmentRelatedToResult.firstInteriorTouchesSecondExterior
             }
 
             if segmentRelatedToResult.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
@@ -1903,10 +1908,10 @@ extension IntersectionMatrix {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary = simplePolygon.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let mainPolygon = polygonBoundary.first,
-            mainPolygon.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return relatedToResult
         }
 
@@ -2997,6 +3002,26 @@ extension IntersectionMatrix {
         return newLinearRing
     }
 
+    /// This currently assumes a GeometryCollection where all of the elements are LinearRings.
+    /// Specifically the LinearRings which represent the boundary of a Polygon.
+    /// This function can be extended to handle other geometry collections.
+    fileprivate static func reduce(_ geometryCollection: GeometryCollection) -> GeometryCollection {
+
+        var reducedLinearRings = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+        for index in 0..<geometryCollection.count {
+
+            guard let linearRing = geometryCollection[index] as? LinearRing<CoordinateType> else {
+                return reducedLinearRings
+            }
+
+            let reducedLinearRing = reduce(linearRing)
+            reducedLinearRings.append(reducedLinearRing)
+        }
+
+        return reducedLinearRings
+    }
+
     /// Reduces a multi line string to a sequence of points on each line string such that each consecutive line segment will have a different slope.
     /// Note that for this first pass, we will handle each line string separately.
     /// TODO: Reduce connections between possibly connected line strings.
@@ -3324,6 +3349,66 @@ extension IntersectionMatrix {
             }
         }
 
+        return true
+    }
+
+    /// Is the linear ring contained in or a subset of the collection of linear rings?
+    /// If the linear ring is a subset of the collection, it must match one of linear rings, although the sequence of points need not match.
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ linearRing: LinearRing<CoordinateType>, _ geometryCollection: GeometryCollection) -> Bool {
+
+        for index in 0..<geometryCollection.count {
+
+            guard let linearRing2 = geometryCollection[index] as? LinearRing<CoordinateType> else {
+                return false
+            }
+
+            /// Check if the linear ring is inside the currently selected linear ring from the collection.
+            if subset(linearRing, linearRing2) { return true }
+        }
+
+        /// The linear ring does not match any linear ring in the collection.
+        return false
+    }
+
+    /// Is the linear ring contained in or a subset of the polygon?
+    /// If the linear ring is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
+    /// Note that being on the boundary of a polygon hole is acceptable.
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ linearRing: LinearRing<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> Bool {
+
+        /// Get the polygon boundary
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 0,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
+                return false
+        }
+
+        /// Check if the linear ring is inside the main linear ring
+        guard subset(linearRing, outerLinearRing) else { return false }
+
+        /// At this point, the line string is inside the main boundary.
+        /// If there are no holes, we are done.
+        let holesArray = holes(polygon)
+        guard holesArray.count > 1 else { return true }
+
+        /// There are holes.  Check each one to see if the line string is in the interior of any.
+        /// Being on the boundary of a hole is okay.
+        for holeLinearRing in holesArray {
+
+            guard holeLinearRing.count > 0 else { continue }
+
+            /// Get the relationship between the linear ring and the hole linear ring
+            let relatedToResult = relatedTo(linearRing, holeLinearRing)
+
+            /// Check if the linear ring is on the interior of the hole
+            if relatedToResult.firstTouchesSecondInterior > .empty {
+                return false
+            }
+        }
+
+        /// The linear ring is not in the interior of any hole.
         return true
     }
 
@@ -4103,10 +4188,10 @@ extension IntersectionMatrix {
         matrixIntersects[.exterior, .exterior] = .two
 
         /// Get the polygon boundary
-        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let mainPolygon = polygonBoundary.first,
-            mainPolygon.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return (nil, matrixIntersects)
         }
 
@@ -4123,13 +4208,15 @@ extension IntersectionMatrix {
 
         /// From here on we know the linear ring is not completely contained in the polygon boundary
 
-        var linearRingInsideMainPolygon     = false /// Implies part of the linear ring lies inside the polygon
+        var linearRingInsideMainPolygon = false /// Implies part of the linear ring lies inside the polygon
 
         /// Relate the linear ring to the main polygon and each of its holes
         var isMainPolygon = true
-        for lineStringSimplePolygon in polygonBoundary {
+        for tempLinearRingPolygon in polygonBoundary {
 
-            let tempPolygon = Polygon<CoordinateType>(outerRing: lineStringSimplePolygon, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            guard let linearRingPolygon = tempLinearRingPolygon as? LinearRing<CoordinateType> else { return (nil, matrixIntersects) }
+
+            let tempPolygon = Polygon<CoordinateType>(outerRing: linearRingPolygon, precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
             let linearRingRelatedToResult = relatedTo(linearRing, tempPolygon)
 
