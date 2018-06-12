@@ -4237,8 +4237,11 @@ extension IntersectionMatrix {
                 isMainPolygon = false
 
                 /// If the linear ring does not touch the interior of the main polygon, we're done.
+                /// Also, if there are no holes and the linear ring is inside the main polygon, the interiors overlap.
                 if !linearRingInsideMainPolygon {
                     return (nil, matrixIntersects)
+                } else if polygonBoundary.count == 1 {
+                    matrixIntersects[.interior, .interior] = .one
                 }
 
             } else {
