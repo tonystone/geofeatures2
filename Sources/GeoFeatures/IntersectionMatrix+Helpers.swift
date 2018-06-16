@@ -4209,6 +4209,8 @@ extension IntersectionMatrix {
         /// From here on we know the linear ring is not completely contained in the polygon boundary
 
         var linearRingInsideMainPolygon = false /// Implies part of the linear ring lies inside the polygon
+        
+        var linearRingOutsideAllHoles = true /// Assume initially that the linear ring it outside all holes, assuming any holes exist
 
         /// Relate the linear ring to the main polygon and each of its holes
         var isMainPolygon = true
@@ -4240,8 +4242,6 @@ extension IntersectionMatrix {
                 /// Also, if there are no holes and the linear ring is inside the main polygon, the interiors overlap.
                 if !linearRingInsideMainPolygon {
                     return (nil, matrixIntersects)
-                } else if polygonBoundary.count == 1 {
-                    matrixIntersects[.interior, .interior] = .one
                 }
 
             } else {
@@ -4250,8 +4250,8 @@ extension IntersectionMatrix {
                 /// If the linear ring touches only the main polygon boundary or is outside the main polygon,
                 /// those cases have already been addressed.
 
-                if linearRingRelatedToResult.firstTouchesSecondExterior > matrixIntersects[.interior, .interior] {
-                    matrixIntersects[.interior, .interior] = linearRingRelatedToResult.firstTouchesSecondExterior
+                if linearRingRelatedToResult.firstTouchesSecondExterior == .empty {
+                    linearRingOutsideAllHoles = false
                 }
 
                 if linearRingRelatedToResult.firstTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
@@ -4262,6 +4262,10 @@ extension IntersectionMatrix {
                     matrixIntersects[.interior, .exterior] = linearRingRelatedToResult.firstTouchesSecondInterior
                 }
             }
+        }
+        
+        if linearRingOutsideAllHoles {
+            matrixIntersects[.interior, .interior] = .one
         }
 
         /// No intersection
