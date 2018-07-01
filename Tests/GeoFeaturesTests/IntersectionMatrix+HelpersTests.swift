@@ -6208,22 +6208,102 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
-//    func testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_FirstLineString() {
-//
-//        let geometry1 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,   .empty, .one],
-//            [.empty, .zero,  .zero],
-//            [.empty, .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+    func testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_SameOrder() {
+
+        let geometry1 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .empty, .empty],
+            [.empty, .zero,  .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_DifferentOrder() {
+
+        let geometry1 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)]), LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .empty, .empty],
+            [.empty, .zero,  .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_firstSubsetOfSecond() {
+
+        let geometry1 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.5, y: -1.5), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,  .empty, .empty],
+            [.zero, .zero,  .empty],
+            [.one,  .zero,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_secondSubsetOfFirst() {
+
+        let geometry1 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 2.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 2.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .zero,  .one],
+            [.empty, .zero,  .zero],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExteriorOrBoundary_firstSubsetOfSecond() {
+    
+        let geometry1 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.5, y: -1.5), (x: 2.0, y: -2.0), (x: 1.5, y: -2.5)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 2.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+    
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+    
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,  .empty, .empty],
+            [.zero, .empty, .empty],
+            [.one,  .zero,  .two]
+            ])
+    
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExteriorOrBoundary_secondSubsetOfFirst() {
+
+        let geometry1 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.5, y: -1.5), (x: 2.0, y: -2.0), (x: 1.5, y: -2.5)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 2.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 2.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .zero,  .one],
+            [.empty, .empty, .zero],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
 //    func testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_SecondLineString() {
 //
 //        let geometry1 = MultiLineString<Coordinate2D>(elements: [LineString<Coordinate2D>(elements: [(x: 1.0, y: -1.0), (x: 2.0, y: -2.0), (x: 1.0, y: -3.0)]), LineString<Coordinate2D>(elements: [(x: -4.0, y: 1.0), (x: -4.0, y: 4.0), (x: -1.0, y: 4.0), (x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
