@@ -50,7 +50,7 @@ public struct Point<CoordinateType: Coordinate & CopyConstructable> {
 
         self.coordinate = CoordinateType(other: other.coordinate, precision: precision)
 
-        self.boundaryPoint = boundaryPoint
+        self.boundaryPoint = other.boundaryPoint || boundaryPoint
     }
 
     ///
