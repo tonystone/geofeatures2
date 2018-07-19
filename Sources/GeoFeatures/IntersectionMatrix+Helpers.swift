@@ -1936,8 +1936,15 @@ extension IntersectionMatrix {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
-
-                let segmentRelatedToResult = relatedTo(segment, simplePolygon)
+                var leftCoordinateBoundaryPoint = false
+                var rightCoordinateBoundaryPoint = false
+                if firstCoordIndex == 0 {
+                    leftCoordinateBoundaryPoint = true
+                } else if firstCoordIndex == lineString.count - 2 {
+                    rightCoordinateBoundaryPoint = true
+                }
+                
+                let segmentRelatedToResult = relatedTo(segment, simplePolygon, leftCoordinateBoundaryPoint: leftCoordinateBoundaryPoint, rightCoordinateBoundaryPoint: rightCoordinateBoundaryPoint)
 
                 if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
                     relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
