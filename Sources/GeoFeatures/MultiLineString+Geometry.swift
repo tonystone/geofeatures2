@@ -74,7 +74,7 @@ extension MultiLineString: Geometry {
 
             for (coordinate, count) in endCoordinates {
                 if count % 2 == 1 {
-                    multiPoint.append(Point(coordinate: coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
+                    multiPoint.append(Point(coordinate: coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem, boundaryPoint: true))
                 }
             }
             return multiPoint

@@ -1271,10 +1271,11 @@ extension IntersectionMatrix {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+        /// Get the polygon boundary
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let lineString = polygonBoundary.first,
-            lineString.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return relatedToResult
         }
 
@@ -1285,17 +1286,29 @@ extension IntersectionMatrix {
 
             /// Check if the point is on the interior of the polygon
             if pointRelatedToResult.firstTouchesSecondInterior > .empty {
-                relatedToResult.firstInteriorTouchesSecondInterior = .zero
+                if point.boundaryPoint {
+                    relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+                } else {
+                    relatedToResult.firstInteriorTouchesSecondInterior = .zero
+                }
             }
 
             /// Check if the point is on the boundary of the polygon
             if pointRelatedToResult.firstTouchesSecondBoundary > .empty {
-                relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                if point.boundaryPoint {
+                    relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+                } else {
+                    relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                }
             }
 
             /// Check if the point is on the exterior of the polygon
-            if pointRelatedToResult.firstTouchesSecondInterior > .empty {
-                relatedToResult.firstInteriorTouchesSecondExterior = .zero
+            if pointRelatedToResult.firstTouchesSecondExterior > .empty {
+                if point.boundaryPoint {
+                    relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+                } else {
+                    relatedToResult.firstInteriorTouchesSecondExterior = .zero
+                }
             }
 
         }
@@ -3486,6 +3499,78 @@ extension IntersectionMatrix {
         return true
     }
 
+    /// Is the multi line string contained in or a subset of the polygon?
+    /// If the multi line string is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
+    /// Note that being on the boundary of a polygon hole is acceptable.
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ multiLineString: MultiLineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> Bool {
+
+        /// Get the polygon boundary
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 0,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
+                return false
+        }
+
+        /// Check if each line string of the multi line string is inside the main linear ring
+        for lineString in multiLineString {
+            guard subset(lineString, outerLinearRing) else { return false }
+        }
+
+        /// At this point, the multi line string is inside the main boundary.
+        /// If there are no holes, we are done.
+        let holesArray = holes(polygon)
+        guard holesArray.count > 1 else { return true }
+
+        /// There are holes.  Check each one to see if each line string of the multi line string is in the interior of any.
+        /// Being on the boundary of a hole is okay.
+        for lineString in multiLineString {
+            for linearRing in holesArray {
+
+                guard linearRing.count > 0 else { continue }
+
+                /// Get the relationship between the point and the hole
+                let relatedToResult = relatedTo(lineString, linearRing)
+
+                /// Check if the line string is on the interior of the hole
+                if relatedToResult.firstTouchesSecondInterior > .empty {
+                    return false
+                }
+            }
+        }
+
+        /// The multi line string is not in the interior of any hole.
+        return true
+    }
+    
+    /// Is the multi line string contained in or a subset of the collection of linear rings?
+    /// If the multi line string is a subset of the collection, each line string of the multi line string must be a subset of just one linear ring.
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ multiLineString: MultiLineString<CoordinateType>, _ geometryCollection: GeometryCollection) -> Bool {
+        
+        for lineString in multiLineString {
+            var lineStringInsideLinearRing = false
+            for index in 0..<geometryCollection.count {
+                
+                guard let linearRing = geometryCollection[index] as? LinearRing<CoordinateType> else {
+                    return false
+                }
+                
+                /// Check if the line string is inside the currently selected linear ring from the collection.
+                if subset(lineString, linearRing) {
+                    lineStringInsideLinearRing = true
+                    break
+                }
+            }
+            
+            if !lineStringInsideLinearRing { return false }
+        }
+        
+        /// Each line string of the multi line string is inside a linear ring in the collection.
+        return true
+    }
+
     fileprivate static func generateIntersection(_ lineString1: LineString<CoordinateType>, _ lineString2: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
@@ -4324,10 +4409,10 @@ extension IntersectionMatrix {
         matrixIntersects[.exterior, .exterior] = .two
 
         /// Get the polygon boundary
-        guard let polygonBoundary = polygon.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let mainPolygon = polygonBoundary.first,
-            mainPolygon.count > 0 else {
+            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            outerLinearRing.count > 0 else {
                 return (nil, matrixIntersects)
         }
 
@@ -4342,10 +4427,13 @@ extension IntersectionMatrix {
 
         /// Check whether the polygon boundary is completely contained in the multi line string.
         /// If it is, this guarantees matrixIntersects[.exterior, .boundary] = .empty
+        /// Note that because of the current definition of a multi line string not intersecting itself,
+        /// a polygon boundary cannot be completely inside a multi line string.  Therefore, the subset test
+        /// will be commented out, but possibly should be added in if that definition changes.
         matrixIntersects[.exterior, .boundary] = .one
-        if subset(reducedPB, reducedMls) {
-            matrixIntersects[.exterior, .boundary] = .empty
-        }
+//        if subset(reducedPB, reducedMls) {
+//            matrixIntersects[.exterior, .boundary] = .empty
+//        }
 
         /// From here on we know the multi line string is not completely contained in the polygon boundary,
         /// and we know whether the polygon boundary is completely contained in the multi line string.
@@ -4376,9 +4464,14 @@ extension IntersectionMatrix {
         /// Relate the multi line string to the main polygon and each of its holes
         var isMainPolygon = true
         var multiLineStringCompletelyContainedInHole = false
-        for lineStringSimplePolygon in polygonBoundary {
+        for tempLinearRing in polygonBoundary {
+            
+            guard let linearRing = tempLinearRing as? LinearRing<CoordinateType>,
+                linearRing.count > 0 else {
+                    return (nil, matrixIntersects)
+            }
 
-            let tempPolygon = Polygon<CoordinateType>(outerRing: lineStringSimplePolygon, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            let tempPolygon = Polygon<CoordinateType>(outerRing: linearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
             let multiLineStringRelatedToResult = relatedTo(multiLineString, tempPolygon)
 
