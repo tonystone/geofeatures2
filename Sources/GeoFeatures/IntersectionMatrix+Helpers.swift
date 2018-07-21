@@ -958,12 +958,17 @@ extension IntersectionMatrix {
         points.append(point)
         let tempRelatedToResult = relatedTo(points, outerLinearRing)
         if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
-            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+            if point.boundaryPoint {
+                relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+            } else {
+                relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+            }
             relatedToResult.firstExteriorTouchesSecondInterior = .two
             relatedToResult.firstExteriorTouchesSecondBoundary = .one
             return relatedToResult
         }
 
+        /// Point does not touch the polygon boundary
         let pointCoord = point.coordinate
 
         var isSubset = false
@@ -991,7 +996,11 @@ extension IntersectionMatrix {
                 relatedToResult.firstBoundaryTouchesSecondInterior = .zero
             }
         } else {
-            relatedToResult.firstInteriorTouchesSecondExterior = .zero
+            if point.boundaryPoint {
+                relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+            } else {
+                relatedToResult.firstInteriorTouchesSecondExterior = .zero
+            }
         }
 
         return relatedToResult
@@ -1096,10 +1105,17 @@ extension IntersectionMatrix {
 
         }
 
-        /// Update the interior, exterior parameter
-        relatedToResult.firstInteriorTouchesSecondExterior = .empty
-        if pointTouchesExteriorOfPolygonCount == multipolygon.count {
-            relatedToResult.firstInteriorTouchesSecondExterior = .zero
+        /// Update the interior, exterior or boundary, exterior parameter
+        if point.boundaryPoint {
+            relatedToResult.firstBoundaryTouchesSecondExterior = .empty
+            if pointTouchesExteriorOfPolygonCount == multipolygon.count {
+                relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+            }
+        } else {
+            relatedToResult.firstInteriorTouchesSecondExterior = .empty
+            if pointTouchesExteriorOfPolygonCount == multipolygon.count {
+                relatedToResult.firstInteriorTouchesSecondExterior = .zero
+            }
         }
 
         return relatedToResult
@@ -4296,7 +4312,9 @@ extension IntersectionMatrix {
             return (nil, matrixIntersects)
         }
         let (_, boundaryMatrix) = generateIntersection(lineStringBoundary, multipolygon)
-         matrixIntersects[.boundary, .exterior] = boundaryMatrix[.interior, .exterior]
+        if boundaryMatrix[.boundary, .exterior] <  matrixIntersects[.boundary, .exterior] {
+            matrixIntersects[.boundary, .exterior] = boundaryMatrix[.interior, .exterior]
+        }
 
         return (nil, matrixIntersects)
     }
@@ -4571,6 +4589,19 @@ extension IntersectionMatrix {
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
+        }
+
+        /// The boundary points of the multi line string could be distributed over multiple polygons.
+        /// Check the boundary points and adjust accordingly.
+
+        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+            return (nil, matrixIntersects)
+        }
+
+        let boundaryPointsRelatedToResult = relatedTo(multiLineStringBoundary, multipolygon)
+        
+        if boundaryPointsRelatedToResult.firstBoundaryTouchesSecondExterior < matrixIntersects[.boundary, .exterior] {
+            matrixIntersects[.boundary, .exterior] = boundaryPointsRelatedToResult.firstBoundaryTouchesSecondExterior
         }
 
         return (nil, matrixIntersects)
