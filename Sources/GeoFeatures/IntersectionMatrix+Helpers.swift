@@ -2146,10 +2146,14 @@ extension IntersectionMatrix {
     fileprivate static func holes(_ polygon: Polygon<CoordinateType>) -> [LinearRing<CoordinateType>] {
 
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-            polygonBoundary.count > 1,
-            let innerLinearRings = polygonBoundary[1] as? [LinearRing<CoordinateType>],
-            innerLinearRings.count > 0 else {
+            polygonBoundary.count > 1 else {
                 return []
+        }
+
+        var innerLinearRings = [LinearRing<CoordinateType>]()
+        for index in 1..<polygonBoundary.count {
+            guard let linearRing = polygonBoundary[index] as? LinearRing<CoordinateType> else { return [] }
+            innerLinearRings.append(linearRing)
         }
 
         return innerLinearRings
@@ -4466,74 +4470,90 @@ extension IntersectionMatrix {
             matrixIntersects[.boundary, .exterior] = boundaryPointsRelatedToResult.firstTouchesSecondExterior
         }
 
-        var multiLineStringInsideMainPolygon    = false /// Implies part of the multi line string lies inside the polygon
+        var multiLineStringInsideMainPolygon = false /// Implies part of the multi line string lies inside the polygon
 
-        /// Relate the multi line string to the main polygon and each of its holes
-        var isMainPolygon = true
-        var multiLineStringCompletelyContainedInHole = false
-        for tempLinearRing in polygonBoundary {
-            
-            guard let linearRing = tempLinearRing as? LinearRing<CoordinateType>,
-                linearRing.count > 0 else {
+        /// Relate the multi line string to the main polygon.
+        /// Collect an array of line strings that touch the interior of the main polygon
+        /// that will be used to check against the holes.
+        var interiorLineStrings = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+        guard let mainLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            mainLinearRing.count > 0 else {
+            return (nil, matrixIntersects)
+        }
+
+        for lineString in multiLineString {
+
+            let tempPolygon = Polygon<CoordinateType>(outerRing: mainLinearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+
+            let lineStringRelatedToResult = relatedTo(lineString, tempPolygon)
+
+            if lineStringRelatedToResult.firstTouchesSecondInterior > .empty {
+                multiLineStringInsideMainPolygon = true
+                interiorLineStrings.append(lineString)
+            }
+
+            if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
+                matrixIntersects[.interior, .boundary] = lineStringRelatedToResult.firstInteriorTouchesSecondBoundary
+            }
+
+            if lineStringRelatedToResult.firstTouchesSecondExterior == .one {
+                matrixIntersects[.interior, .exterior] = .one
+            }
+        }
+
+        /// If the multi line string does not touch the interior of the main polygon, we're done.
+        if !multiLineStringInsideMainPolygon {
+            return (nil, matrixIntersects)
+        }
+
+        /// At least one line string touches the interior of the main linear ring.
+        /// Relate each of the line strings that touch the interior of the main linear ring to each of its holes.
+        var multiLineStringTouchesInterior = false
+        let holesArray = holes(polygon)
+
+        for tempLineString in interiorLineStrings {
+
+            guard let lineString = tempLineString as? LineString<CoordinateType>,
+                lineString.count > 0 else {
                     return (nil, matrixIntersects)
             }
 
-            let tempPolygon = Polygon<CoordinateType>(outerRing: linearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            var lineStringTouchesInterior = true
 
-            let multiLineStringRelatedToResult = relatedTo(multiLineString, tempPolygon)
+            for linearRing in holesArray {
 
-            if isMainPolygon {
-
-                if multiLineStringRelatedToResult.firstTouchesSecondInterior > .empty {
-                    multiLineStringInsideMainPolygon = true
-                }
-
-                if multiLineStringRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
-                    matrixIntersects[.interior, .boundary] = multiLineStringRelatedToResult.firstInteriorTouchesSecondBoundary
-                }
-
-                if multiLineStringRelatedToResult.firstTouchesSecondExterior == .one {
-                    matrixIntersects[.interior, .exterior] = .one
-                }
-
-                isMainPolygon = false
-
-                /// If the multi line string does not touch the interior of the main polygon, we're done.
-                if !multiLineStringInsideMainPolygon {
+                guard linearRing.count > 0 else {
                     return (nil, matrixIntersects)
                 }
 
-            } else {
+                let tempPolygon = Polygon<CoordinateType>(outerRing: linearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
 
-                /// We will only consider cases here where the multi line string is inside the main polygon
-                /// and not completely contained in the polygon boundary.
-                /// If the multi line string touches only the polygon boundary or is outside the main polygon,
-                /// those cases have already been addressed.
+                let lineStringRelatedToResult = relatedTo(lineString, tempPolygon)
 
-                if multiLineStringRelatedToResult.firstInteriorTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
-                    matrixIntersects[.interior, .boundary] = multiLineStringRelatedToResult.firstInteriorTouchesSecondBoundary
+                if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
+                    matrixIntersects[.interior, .boundary] = lineStringRelatedToResult.firstInteriorTouchesSecondBoundary
                 }
 
-                if multiLineStringRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
-                    matrixIntersects[.interior, .exterior] = multiLineStringRelatedToResult.firstTouchesSecondInterior
+                if lineStringRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
+                    matrixIntersects[.interior, .exterior] = lineStringRelatedToResult.firstTouchesSecondInterior
                 }
 
-                if multiLineStringRelatedToResult.firstTouchesSecondExterior == .empty {
-                    multiLineStringCompletelyContainedInHole = true
+                if lineStringRelatedToResult.firstTouchesSecondExterior == .empty {
+                    lineStringTouchesInterior = false
                 }
             }
+
+            multiLineStringTouchesInterior = multiLineStringTouchesInterior || lineStringTouchesInterior
         }
 
         /// We have to check whether the multi line string is completely contained in the main polygon and in a hole
         /// in order to set the interior, interior entry.
         if multiLineStringInsideMainPolygon {
-            matrixIntersects[.interior, .interior] = .one
-            if multiLineStringCompletelyContainedInHole {
-                matrixIntersects[.interior, .interior] = .empty
-            }
+            matrixIntersects[.interior, .interior] = (multiLineStringTouchesInterior ? .one : .empty)
         }
 
-        /// No intersection
+        /// Return
         return (nil, matrixIntersects)
     }
 
