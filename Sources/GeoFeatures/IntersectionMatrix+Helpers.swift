@@ -2059,6 +2059,30 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
+    fileprivate static func disjoint(_ polygon1: Polygon<CoordinateType>, _ polygon2: Polygon<CoordinateType>) -> Bool {
+
+        /// Get the relationship of the outer ring of the first polygon to the second polygon.
+        let (_, outerRing1ToSecondPolygonMatrix) = generateIntersection(polygon1.outerRing, polygon2)
+
+        /// Check whether there is any overlap between the first outer ring and the second polygon.
+        if outerRing1ToSecondPolygonMatrix[.interior, .interior] > .empty || outerRing1ToSecondPolygonMatrix[.interior, .boundary] > .empty ||
+            outerRing1ToSecondPolygonMatrix[.boundary, .interior] > .empty || outerRing1ToSecondPolygonMatrix[.boundary, .boundary] > .empty {
+            return false
+        }
+
+        /// Get the relationship of the outer ring of the second polygon to the first polygon.
+        let (_, outerRing2ToFirstPolygonMatrix)  = generateIntersection(polygon2.outerRing, polygon1)
+
+        /// Check whether there is any overlap between the second outer ring and the first polygon.
+        if outerRing2ToFirstPolygonMatrix[.interior, .interior] > .empty || outerRing2ToFirstPolygonMatrix[.interior, .boundary] > .empty ||
+            outerRing2ToFirstPolygonMatrix[.boundary, .interior] > .empty || outerRing2ToFirstPolygonMatrix[.boundary, .boundary] > .empty {
+            return false
+        }
+
+        /// No overlaps
+        return true
+    }
+
     /// Assume here that both polygons are full polygons with holes
     fileprivate static func relatedToFull(_ polygon1: Polygon<CoordinateType>, _ polygon2: Polygon<CoordinateType>) -> RelatedTo {
 
@@ -2068,6 +2092,15 @@ extension IntersectionMatrix {
         let innerRings1 = polygon1.innerRings
         let outerRing2 = polygon2.outerRing
         let innerRings2 = polygon2.innerRings
+
+        /// Check if the two polygons are disjoint.
+        if disjoint(polygon1, polygon2) {
+            relatedToResult.firstInteriorTouchesSecondExterior = .two
+            relatedToResult.firstBoundaryTouchesSecondExterior = .one
+            relatedToResult.firstExteriorTouchesSecondInterior = .two
+            relatedToResult.firstExteriorTouchesSecondBoundary = .one
+            return relatedToResult
+        }
 
         /// Get the relationship between the two outer linear rings and determine if they are the same.
         /// If the two outer linear rings are the same, then the holes need to be examined for equality.
@@ -2249,7 +2282,7 @@ extension IntersectionMatrix {
         return true
     }
 
-    /// Using a RelateTo structure which compares two sets of linear ring arrays,
+    /// Using a RelatedTo structure which compares two sets of linear ring arrays,
     /// does the first array of linear rings match a subset of the linear rings in the second array?
     fileprivate static func matchesSubset(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
 
@@ -2258,7 +2291,7 @@ extension IntersectionMatrix {
             relatedToLinearRingArrays.firstTouchesSecondExterior == .empty
     }
 
-    /// Using a RelateTo structure which compares two sets of linear ring arrays,
+    /// Using a RelatedTo structure which compares two sets of linear ring arrays,
     /// is the first array of linear rings completely inside a subset of the linear rings in the second array?
     /// This means the two sets do not touch on a boundary.
     fileprivate static func firstInsideSecond(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
@@ -2268,7 +2301,7 @@ extension IntersectionMatrix {
             relatedToLinearRingArrays.firstTouchesSecondExterior == .empty
     }
 
-    /// Using a RelateTo structure which compares two sets of linear ring arrays,
+    /// Using a RelatedTo structure which compares two sets of linear ring arrays,
     /// is the first array of linear rings completely outside of the linear rings in the second array?
     /// This means the two sets do not touch on a boundary.
     fileprivate static func firstOutsideSecond(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
