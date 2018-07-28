@@ -2156,37 +2156,91 @@ extension IntersectionMatrix {
         /// TODO: This might be a general solution, so the specialized case above where the outer rings
         /// are the same may not be needed.  Check that.
 
-        let relatedToInnerRings = relatedTo(innerRings1, innerRings2)
+        /// Get the relationship of the outer ring of the first polygon to the second polygon.
+        let (_, outerRing1ToSecondPolygonMatrix) = generateIntersection(polygon1.outerRing, polygon2)
 
-        relatedToResult = relatedToOuterRings
+        /// Get the relationship of the outer ring of the second polygon to the first polygon.
+        let (_, outerRing2ToFirstPolygonMatrix)  = generateIntersection(polygon2.outerRing, polygon1)
 
-        if relatedToInnerRings.firstExteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
-            relatedToResult.firstInteriorTouchesSecondBoundary = relatedToInnerRings.firstExteriorTouchesSecondBoundary
+        /// Check if one polygon is completely inside the other.  No boundaries touch.
+        if outerRing1ToSecondPolygonMatrix[.interior, .interior] > .empty {
+            relatedToResult.firstInteriorTouchesSecondInterior = .two
+            relatedToResult.firstBoundaryTouchesSecondInterior = .one
+        }
+        
+        if outerRing2ToFirstPolygonMatrix[.interior, .interior] > .empty {
+            relatedToResult.firstInteriorTouchesSecondInterior = .two
+            relatedToResult.firstInteriorTouchesSecondBoundary = .one
+            if outerRing2ToFirstPolygonMatrix[.interior, .exterior] > .empty {
+                relatedToResult.firstBoundaryTouchesSecondInterior = .one
+            }
         }
 
-        if relatedToInnerRings.firstExteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondExterior {
-            relatedToResult.firstInteriorTouchesSecondExterior = relatedToInnerRings.firstExteriorTouchesSecondInterior
+        if outerRing1ToSecondPolygonMatrix[.interior, .boundary] > .empty || outerRing2ToFirstPolygonMatrix[.interior, .boundary] > .empty {
+            relatedToResult.firstBoundaryTouchesSecondBoundary = Swift.max(outerRing1ToSecondPolygonMatrix[.interior, .boundary], outerRing2ToFirstPolygonMatrix[.interior, .boundary])
         }
 
-        if relatedToInnerRings.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondInterior {
-            relatedToResult.firstBoundaryTouchesSecondInterior = relatedToInnerRings.firstBoundaryTouchesSecondExterior
+        if outerRing1ToSecondPolygonMatrix[.interior, .exterior] > .empty {
+            relatedToResult.firstInteriorTouchesSecondExterior = .two
+        }
+        
+        if outerRing1ToSecondPolygonMatrix[.interior, .exterior] > .empty {
+            relatedToResult.firstBoundaryTouchesSecondExterior = .one
         }
 
-        if relatedToInnerRings.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
-            relatedToResult.firstBoundaryTouchesSecondBoundary = relatedToInnerRings.firstBoundaryTouchesSecondBoundary
+//        if outerRing1ToSecondPolygonMatrix[.boundary, .interior] > .empty || outerRing2ToFirstPolygonMatrix[.boundary, .interior] > .empty {
+//            relatedToResult.firstBoundaryTouchesSecondInterior = .one
+//        }
+//
+//        if outerRing1ToSecondPolygonMatrix[.boundary, .boundary] > .empty || outerRing2ToFirstPolygonMatrix[.boundary, .boundary] > .empty {
+//            relatedToResult.firstBoundaryTouchesSecondBoundary = Swift.max(outerRing1ToSecondPolygonMatrix[.boundary, .boundary], outerRing2ToFirstPolygonMatrix[.boundary, .boundary])
+//        }
+//
+//        if outerRing1ToSecondPolygonMatrix[.boundary, .exterior] > .empty || outerRing2ToFirstPolygonMatrix[.boundary, .exterior] > .empty {
+//            relatedToResult.firstBoundaryTouchesSecondExterior = .one
+//        }
+
+        if outerRing2ToFirstPolygonMatrix[.interior, .exterior] > .empty {
+            relatedToResult.firstExteriorTouchesSecondInterior = .two
+            relatedToResult.firstExteriorTouchesSecondBoundary = .one
         }
 
-        if relatedToInnerRings.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondExterior {
-            relatedToResult.firstBoundaryTouchesSecondExterior = relatedToInnerRings.firstBoundaryTouchesSecondInterior
-        }
+//        if outerRing1ToSecondPolygonMatrix[.exterior, .boundary] > .empty || outerRing2ToFirstPolygonMatrix[.exterior, .boundary] > .empty {
+//            relatedToResult.firstExteriorTouchesSecondBoundary = .one
+//        }
 
-        if relatedToInnerRings.firstInteriorTouchesSecondExterior > relatedToResult.firstExteriorTouchesSecondInterior {
-            relatedToResult.firstExteriorTouchesSecondInterior = relatedToInnerRings.firstInteriorTouchesSecondExterior
-        }
-
-        if relatedToInnerRings.firstInteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
-            relatedToResult.firstExteriorTouchesSecondBoundary = relatedToInnerRings.firstInteriorTouchesSecondBoundary
-        }
+        /// Not sure if I need the rest of this.  Will keep it around for a bit.
+//        let relatedToInnerRings = relatedTo(innerRings1, innerRings2)
+//
+//        relatedToResult = relatedToOuterRings
+//
+//        if relatedToInnerRings.firstExteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
+//            relatedToResult.firstInteriorTouchesSecondBoundary = relatedToInnerRings.firstExteriorTouchesSecondBoundary
+//        }
+//
+//        if relatedToInnerRings.firstExteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondExterior {
+//            relatedToResult.firstInteriorTouchesSecondExterior = relatedToInnerRings.firstExteriorTouchesSecondInterior
+//        }
+//
+//        if relatedToInnerRings.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondInterior {
+//            relatedToResult.firstBoundaryTouchesSecondInterior = relatedToInnerRings.firstBoundaryTouchesSecondExterior
+//        }
+//
+//        if relatedToInnerRings.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
+//            relatedToResult.firstBoundaryTouchesSecondBoundary = relatedToInnerRings.firstBoundaryTouchesSecondBoundary
+//        }
+//
+//        if relatedToInnerRings.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondExterior {
+//            relatedToResult.firstBoundaryTouchesSecondExterior = relatedToInnerRings.firstBoundaryTouchesSecondInterior
+//        }
+//
+//        if relatedToInnerRings.firstInteriorTouchesSecondExterior > relatedToResult.firstExteriorTouchesSecondInterior {
+//            relatedToResult.firstExteriorTouchesSecondInterior = relatedToInnerRings.firstInteriorTouchesSecondExterior
+//        }
+//
+//        if relatedToInnerRings.firstInteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
+//            relatedToResult.firstExteriorTouchesSecondBoundary = relatedToInnerRings.firstInteriorTouchesSecondBoundary
+//        }
 
         return relatedToResult
     }

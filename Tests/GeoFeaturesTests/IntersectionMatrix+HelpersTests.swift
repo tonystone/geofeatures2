@@ -8547,23 +8547,55 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+    
+    func testPolygon_Polygon_secondInsideFirst() {
+        
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: 0.0, y: 0.0), (x: 10.0, y: 0.0), (x: 10.0, y: -10.0), (x: 0.0, y: -10.0), (x: 0.0, y: 0.0)], []), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -4.0), (x: 7.0, y: -1.0), (x: 8.0, y: -1.0), (x: 4.0, y: -4.0)], []), precision: precision, coordinateSystem: cs)
+        
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+        
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two,   .one,   .two],
+            [.empty, .empty, .one],
+            [.empty, .empty, .two]
+            ])
+        
+        XCTAssertEqual(matrix, expected)
+    }
 
-//    func testPolygon_LinearRing_interiorsExteriorsIntersect1() {
-//
-//        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing<Coordinate2D>(elements: [(x: 4.0, y: -4.0), (x: 7.0, y: -1.0), (x: 8.0, y: -1.0), (x: 4.0, y: -4.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .two],
-//            [.zero, .empty, .one],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+    func testPolygon_Polygon_firstInsideSecond() {
+
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: 0.0, y: 0.0), (x: 10.0, y: 0.0), (x: 10.0, y: -10.0), (x: 0.0, y: -10.0), (x: 0.0, y: 0.0)], []), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -4.0, y: 4.0), (x: 24.0, y: 4.0), (x: 24.0, y: -24.0), (x: -4.0, y: -24.0), (x: -4.0, y: 4.0)], []), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two, .empty, .empty],
+            [.one, .empty, .empty],
+            [.two, .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPolygon_Polygon_interiorsExteriorsIntersect1() {
+
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -4.0), (x: 7.0, y: -1.0), (x: 8.0, y: -1.0), (x: 4.0, y: -4.0)], []), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two, .one,  .two],
+            [.one, .zero, .one],
+            [.two, .one,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
 //    func testPolygon_LinearRing_interiorsExteriorsIntersect2() {
 //
 //        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
