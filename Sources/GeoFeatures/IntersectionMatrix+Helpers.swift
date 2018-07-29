@@ -2166,6 +2166,9 @@ extension IntersectionMatrix {
         if outerRing1ToSecondPolygonMatrix[.interior, .interior] > .empty {
             relatedToResult.firstInteriorTouchesSecondInterior = .two
             relatedToResult.firstBoundaryTouchesSecondInterior = .one
+            if outerRing1ToSecondPolygonMatrix[.interior, .exterior] > .empty {
+                relatedToResult.firstInteriorTouchesSecondBoundary = .one
+            }
         }
 
         if outerRing2ToFirstPolygonMatrix[.interior, .interior] > .empty {
