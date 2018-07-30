@@ -8773,6 +8773,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testPolygon_Polygon_identicalPolygons() {
+
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two,   .empty, .empty],
+            [.empty, .one,   .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// Polygon MultiPolygon tests
     ///

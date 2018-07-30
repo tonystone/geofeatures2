@@ -531,8 +531,13 @@ extension IntersectionMatrix {
             return .onBoundary
         }
 
-        /// Check for the cases where the line segment is horizontal or vertical
-        if (coordinate.x == leftX && coordinate.x == rightX) || (coordinate.y == leftY && coordinate.y == rightY) {
+        /// Check for the case where the line segment is horizontal
+        if (leftY == rightY) && (coordinate.y == leftY) && ((coordinate.x <= leftX && coordinate.x >= rightX) || (coordinate.x >= leftX && coordinate.x <= rightX)) {
+            return .onInterior
+        }
+
+        /// Check for the cases where the line segment is vertical
+        if (leftX == rightX) && (coordinate.x == leftX) && ((coordinate.y <= leftY && coordinate.y >= rightY) || (coordinate.y >= leftY && coordinate.y <= rightY)) {
             return .onInterior
         }
 
@@ -906,8 +911,8 @@ extension IntersectionMatrix {
         var points = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
         points.append(point)
         let tempRelatedToResult = relatedTo(points, linearRing)
-        if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
-            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+        if tempRelatedToResult.firstTouchesSecondInterior != .empty {
+            relatedToResult.firstInteriorTouchesSecondInterior = .zero
             return relatedToResult
         }
 
@@ -1363,23 +1368,20 @@ extension IntersectionMatrix {
         var relatedToResult = RelatedTo()
 
         /// For each line segment in the line string, check the following:
-        /// - Is all the line segment in the boundary of the linear ring?  If so, set the firstTouchesSecondBoundary to .one.
-        /// - Is a > 0 length proper subset of the line segment in the boundary of the linear ring?  If so, set the firstTouchesSecondBoundary to .one.
-        ///   Also, generate an ordered array of points at which the line segment touches the boundary.  (The line segment could touch the linear ring boundary at
+        /// - Is all the line segment in the interior of the linear ring?  If so, set the firstTouchesSecondInterior to .one.
+        /// - Is a > 0 length proper subset of the line segment in the interior of the linear ring?  If so, set the firstTouchesSecondInterior to .one.
+        ///   Also, generate an ordered array of points at which the line segment touches the interior.  (The line segment could touch the linear ring interior at
         ///   more than one sub line segment.)  This array will include the end points of sub line segments.  From this array generate a second array of the
         ///   midpoints.  Check whether each point in that array is inside or outside of the linear ring.  If inside, set the firstTouchesSecondInterior to .one.
         ///   If outside, set firstTouchesSecondExterior to .one.
-        /// - Does the line segment touch the linear ring boundary at one or more points?  If so, set the firstTouchesSecondBoundary to .zero.
-        /// - Does either line segment endpoint touch inside the linear ring?  If so, set the firstTouchesSecondInterior to .one.
+        /// - Does the line segment touch the linear ring interior at one or more points?  If so, set the firstTouchesSecondInterior to .zero.
         /// - Does either line segment endpoint touch outside the linear ring?  If so, set the firstTouchesSecondExterior to .one.
-        /// - If at any point firstTouchesSecondBoundary, firstTouchesSecondInterior, and firstTouchesSecondExterior are all .one, then stop and return.
-        ///
-        /// Also, add functions to RelatedTo like isInside, isOutside, isInBoundary.
 
         /// Array of geometries at which the segment intersects the linear ring boundary
         var intersectionGeometries = [Geometry]()
 
         /// Do a first pass to get the basic relationship of the line segment to the linear ring
+        var segmentCompletelyContainedInLinearRing = false
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
@@ -1391,61 +1393,33 @@ extension IntersectionMatrix {
                 intersectionGeometries.append(intersectionGeometry)
 
                 if intersectionGeometry.dimension == .one {
-                    relatedToResult.firstInteriorTouchesSecondBoundary = .one
-                } else if intersectionGeometry.dimension != .one && intersectionGeometry.dimension == .zero {
-                    if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior {
-                        relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                    relatedToResult.firstInteriorTouchesSecondInterior = .one
+                    if lineSegmentIntersection.firstSubsetOfSecond {
+                        segmentCompletelyContainedInLinearRing = true
+                    }
+                } else if intersectionGeometry.dimension == .zero {
+                    if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior {
+                        relatedToResult.firstBoundaryTouchesSecondInterior = .zero
                     }
                 }
 
-                if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary || lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary {
-                    relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
-                }
-            }
-
-            let relatedToResultCoordinate = relatedTo(firstCoord, linearRing)
-
-            if relatedToResultCoordinate.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
-                relatedToResult.firstInteriorTouchesSecondInterior = relatedToResultCoordinate.firstInteriorTouchesSecondInterior
-            }
-
-            if relatedToResultCoordinate.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
-                relatedToResult.firstBoundaryTouchesSecondInterior = relatedToResultCoordinate.firstBoundaryTouchesSecondInterior
-            }
-
-            if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
-                relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
-            }
-
-            if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
-                relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
-            }
-
-            /// Check the very last coordinate of the linear ring boundary
-            if firstCoordIndex == linearRing.count - 2 {
-                let relatedToResultCoordinate = relatedTo(firstCoord, linearRing)
-
-                if relatedToResultCoordinate.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
-                    relatedToResult.firstInteriorTouchesSecondInterior = relatedToResultCoordinate.firstInteriorTouchesSecondInterior
-                }
-
-                if relatedToResultCoordinate.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
-                    relatedToResult.firstBoundaryTouchesSecondInterior = relatedToResultCoordinate.firstBoundaryTouchesSecondInterior
-                }
-
-                if relatedToResultCoordinate.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
-                    relatedToResult.firstInteriorTouchesSecondExterior = relatedToResultCoordinate.firstInteriorTouchesSecondExterior
-                }
-
-                if relatedToResultCoordinate.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
-                    relatedToResult.firstBoundaryTouchesSecondExterior = relatedToResultCoordinate.firstBoundaryTouchesSecondExterior
+                if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary || lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onBoundary {
+                    relatedToResult.firstBoundaryTouchesSecondInterior = .zero
                 }
             }
         }
+        
+        if segmentCompletelyContainedInLinearRing {
+            relatedToResult.firstInteriorTouchesSecondInterior = .one
+            relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+        } else {
+            relatedToResult.firstInteriorTouchesSecondExterior = .one
+            relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+        }
 
         /// Check the cases where no further work is needed.
-        if (relatedToResult.firstTouchesSecondBoundary == .one && relatedToResult.firstTouchesSecondInterior == .one && relatedToResult.firstTouchesSecondExterior == .one) ||
-            (relatedToResult.firstTouchesSecondBoundary == .empty) ||
+        if (relatedToResult.firstTouchesSecondInterior == .one && relatedToResult.firstTouchesSecondExterior == .one) ||
+            (relatedToResult.firstTouchesSecondInterior == .empty) ||
             (intersectionGeometries.count <= 1) {
             return relatedToResult
         }
@@ -1803,16 +1777,12 @@ extension IntersectionMatrix {
                 relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
             }
 
-            if segmentRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
-                relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
+            if segmentRelatedToResult.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                relatedToResult.firstInteriorTouchesSecondExterior = segmentRelatedToResult.firstInteriorTouchesSecondExterior
             }
 
             if segmentRelatedToResult.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
                 relatedToResult.firstExteriorTouchesSecondInterior = segmentRelatedToResult.firstExteriorTouchesSecondInterior
-            }
-
-            if segmentRelatedToResult.firstExteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
-                relatedToResult.firstExteriorTouchesSecondBoundary = segmentRelatedToResult.firstExteriorTouchesSecondBoundary
             }
 
         }
@@ -2162,7 +2132,6 @@ extension IntersectionMatrix {
         /// Get the relationship of the outer ring of the second polygon to the first polygon.
         let (_, outerRing2ToFirstPolygonMatrix)  = generateIntersection(polygon2.outerRing, polygon1)
 
-        /// Check if one polygon is completely inside the other.  No boundaries touch.
         if outerRing1ToSecondPolygonMatrix[.interior, .interior] > .empty {
             relatedToResult.firstInteriorTouchesSecondInterior = .two
             relatedToResult.firstBoundaryTouchesSecondInterior = .one
@@ -2219,7 +2188,7 @@ extension IntersectionMatrix {
     /// It is assumed that a RelatedTo structure has been generated for two linear rings,
     /// and now we want to know if the two match.
     fileprivate static func areLinearRingsIdentical(_ relatedToLinearRings: RelatedTo) -> Bool {
-        return relatedToLinearRings.firstTouchesSecondInterior == .empty && relatedToLinearRings.firstTouchesSecondExterior == .empty && relatedToLinearRings.firstBoundaryTouchesSecondBoundary > .empty
+        return relatedToLinearRings.firstTouchesSecondInterior == .one && relatedToLinearRings.firstTouchesSecondExterior == .empty
     }
 
     /// It is assumed that a RelatedTo structure has been generated for two polgyons,
@@ -2753,6 +2722,11 @@ extension IntersectionMatrix {
                     secondSegmentFirstBoundaryLocation  != .onExterior ||
                     secondSegmentSecondBoundaryLocation != .onExterior ||
                     interiorsTouchAtPoint
+        }
+        
+        var firstSubsetOfSecond: Bool {
+            return firstSegmentFirstBoundaryLocation  != .onExterior &&
+                   firstSegmentSecondBoundaryLocation != .onExterior
         }
 
         var geometry: Geometry?
