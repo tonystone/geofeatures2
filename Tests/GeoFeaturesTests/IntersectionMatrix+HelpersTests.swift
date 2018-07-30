@@ -8789,6 +8789,86 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testPolygon_Polygon_identicalPolygons_differentPointOrder() {
+
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0)], []), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: -7.0), (x: 1.0, y: -4.0), (x: 4.0, y: -1.0), (x: 7.0, y: -4.0), (x: 4.0, y: -7.0)], []), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two,   .empty, .empty],
+            [.empty, .one,   .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPolygon_Polygon_identicalPolygons_withHoles() {
+
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -2.0), (x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0)], [[(x: -8.0, y: -4.0), (x: -8.0, y: -8.0), (x: -4.0, y: -8.0), (x: -4.0, y: -4.0), (x: -8.0, y: -4.0)]]), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -2.0), (x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0)], [[(x: -8.0, y: -4.0), (x: -8.0, y: -8.0), (x: -4.0, y: -8.0), (x: -4.0, y: -4.0), (x: -8.0, y: -4.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two,   .empty, .empty],
+            [.empty, .one,   .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPolygon_Polygon_identicalPolygons_withHoles_differentPointOrder() {
+
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -2.0), (x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0)], [[(x: -8.0, y: -4.0), (x: -8.0, y: -8.0), (x: -4.0, y: -8.0), (x: -4.0, y: -4.0), (x: -8.0, y: -4.0)]]), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0), (x: -2.0, y: -2.0)], [[(x: -4.0, y: -8.0), (x: -4.0, y: -4.0), (x: -8.0, y: -4.0), (x: -8.0, y: -8.0), (x: -4.0, y: -8.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two,   .empty, .empty],
+            [.empty, .one,   .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPolygon_Polygon_withHoles_secondSameAsFirstButWithOneExtraHole() {
+
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -2.0), (x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0)], [[(x: -8.0, y: -7.0), (x: -8.0, y: -8.0), (x: -7.0, y: -8.0), (x: -7.0, y: -7.0), (x: -8.0, y: -7.0)]]), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0), (x: -2.0, y: -2.0)], [[(x: -8.0, y: -7.0), (x: -8.0, y: -8.0), (x: -7.0, y: -8.0), (x: -7.0, y: -7.0), (x: -8.0, y: -7.0)], [(x: -6.0, y: -5.0), (x: -6.0, y: -6.0), (x: -5.0, y: -6.0), (x: -5.0, y: -5.0), (x: -6.0, y: -5.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two,   .one,   .two],
+            [.empty, .one,   .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPolygon_Polygon_withHoles_firstSameAsSecondButWithOneExtraHole() {
+
+        let geometry1 = Polygon<Coordinate2D>(rings: ([(x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0), (x: -2.0, y: -2.0)], [[(x: -8.0, y: -7.0), (x: -8.0, y: -8.0), (x: -7.0, y: -8.0), (x: -7.0, y: -7.0), (x: -8.0, y: -7.0)], [(x: -6.0, y: -5.0), (x: -6.0, y: -6.0), (x: -5.0, y: -6.0), (x: -5.0, y: -5.0), (x: -6.0, y: -5.0)]]), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: -2.0), (x: -2.0, y: -2.0), (x: -2.0, y: -10.0), (x: -10.0, y: -10.0), (x: -10.0, y: -2.0)], [[(x: -8.0, y: -7.0), (x: -8.0, y: -8.0), (x: -7.0, y: -8.0), (x: -7.0, y: -7.0), (x: -8.0, y: -7.0)]]), precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two, .empty, .empty],
+            [.one, .one,   .empty],
+            [.two, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// Polygon MultiPolygon tests
     ///

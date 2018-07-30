@@ -2109,6 +2109,7 @@ extension IntersectionMatrix {
             } else if matchesSubset(innerRings2, innerRings1) {
                 /// innerRings2.count < innerRings1.count
                 relatedToResult.firstBoundaryTouchesSecondInterior = .one
+                relatedToResult.firstExteriorTouchesSecondInterior = .two
             } else {
                 /// Two different sets of inner rings that are both not empty
                 relatedToResult.firstInteriorTouchesSecondBoundary = relatedToInnerRings.firstExteriorTouchesSecondBoundary
