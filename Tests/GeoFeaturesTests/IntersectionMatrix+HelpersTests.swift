@@ -10784,4 +10784,248 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
         XCTAssertEqual(matrix, expected)
     }
+
+    ///
+    /// MultiPolygon MultiPolygon tests
+    ///
+
+    func testMultiPolygon_MultiPolygon_noIntersection() {
+
+        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -10.0, y: 3.0), (x: -10.0, y: 13.0), (x: -2.0, y: 13.0), (x: -2.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 8.0, y: -2.0), (x: 8.0, y: -8.0), (x: 2.0, y: -8.0), (x: 8.0, y: -2.0)], []))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 1.0, y: 3.0), (x: 1.0, y: 1.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 10.0, y: 10.0), (x: 20.0, y: 20.0), (x: 10.0, y: 30.0), (x: 10.0, y: 10.0)], []))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .two],
+            [.empty, .empty, .one],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiPolygon_MultiPolygon_withHoles_noIntersection_MultiPolygonsOutsideEachOther() {
+
+        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -10.0, y: 3.0), (x: -10.0, y: 13.0), (x: -2.0, y: 13.0), (x: -2.0, y: 3.0)], [[(x: -9.0, y: 12.0), (x: -9.0, y: 10.0), (x: -7.0, y: 10.0), (x: -7.0, y: 12.0), (x: -9.0, y: 12.0)], [(x: -3.0, y: 4.0), (x: -3.0, y: 8.0), (x: -6.0, y: 8.0), (x: -6.0, y: 4.0), (x: -3.0, y: 4.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 20.0, y: -2.0)], [[(x: 11.0, y: -12.0), (x: 5.0, y: -18.0), (x: 11.0, y: -18.0), (x: 11.0, y: -12.0)], [(x: 12.0, y: -11.0), (x: 12.0, y: -19.0), (x: 19.0, y: -19.0), (x: 19.0, y: -11.0), (x: 12.0, y: -11.0)]]))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: 2.0, y: 2.0), (x: 2.0, y: 12.0), (x: 12.0, y: 12.0), (x: 12.0, y: 2.0), (x: 2.0, y: 2.0)], [[(x: 4.0, y: 4.0), (x: 10.0, y: 4.0), (x: 10.0, y: 10.0), (x: 4.0, y: 10.0), (x: 4.0, y: 4.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: 2.0), (x: 20.0, y: 12.0), (x: 30.0, y: 12.0), (x: 30.0, y: 2.0), (x: 20.0, y: 2.0)], [[(x: 22.0, y: 4.0), (x: 28.0, y: 4.0), (x: 28.0, y: 10.0), (x: 22.0, y: 10.0), (x: 22.0, y: 4.0)]]))], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .two],
+            [.empty, .empty, .one],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+//    func testMultiPolygon_Polygon_withHoles_noIntersection_polygonInsideHole() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -10.0, y: 3.0), (x: -10.0, y: 13.0), (x: -2.0, y: 13.0), (x: -2.0, y: 3.0)], [[(x: -9.0, y: 12.0), (x: -9.0, y: 10.0), (x: -7.0, y: 10.0), (x: -7.0, y: 12.0), (x: -9.0, y: 12.0)], [(x: -3.0, y: 4.0), (x: -3.0, y: 8.0), (x: -6.0, y: 8.0), (x: -6.0, y: 4.0), (x: -3.0, y: 4.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 20.0, y: -2.0)], [[(x: 11.0, y: -12.0), (x: 5.0, y: -18.0), (x: 11.0, y: -18.0), (x: 11.0, y: -12.0)], [(x: 12.0, y: -11.0), (x: 12.0, y: -19.0), (x: 19.0, y: -19.0), (x: 19.0, y: -11.0), (x: 12.0, y: -11.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 13.0, y: -12.0), (x: 18.0, y: -15.0), (x: 13.0, y: -18.0), (x: 13.0, y: -12.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.empty, .empty, .two],
+//            [.empty, .empty, .one],
+//            [.two,   .one,   .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_withHoles_noIntersection_multiPolygonInsidePolygonHole() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -10.0, y: 3.0), (x: -10.0, y: 13.0), (x: -2.0, y: 13.0), (x: -2.0, y: 3.0)], [[(x: -9.0, y: 12.0), (x: -9.0, y: 10.0), (x: -7.0, y: 10.0), (x: -7.0, y: 12.0), (x: -9.0, y: 12.0)], [(x: -3.0, y: 4.0), (x: -3.0, y: 8.0), (x: -6.0, y: 8.0), (x: -6.0, y: 4.0), (x: -3.0, y: 4.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 20.0, y: -2.0)], [[(x: 11.0, y: -12.0), (x: 5.0, y: -18.0), (x: 11.0, y: -18.0), (x: 11.0, y: -12.0)], [(x: 12.0, y: -11.0), (x: 12.0, y: -19.0), (x: 19.0, y: -19.0), (x: 19.0, y: -11.0), (x: 12.0, y: -11.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 100.0, y: -100.0), (x: -100.0, y: -100.0), (x: -100.0, y: 100.0), (x: 100.0, y: 100.0), (x: 100.0, y: -100.0)], [[(x: 80.0, y: -80.0), (x: 80.0, y: 80.0), (x: -80.0, y: 80.0), (x: -80.0, y: -80.0), (x: 80.0, y: -80.0)]]), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.empty, .empty, .two],
+//            [.empty, .empty, .one],
+//            [.two,   .one,   .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_interiorsIntersect_firstPolygon() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -10.0, y: 3.0), (x: -10.0, y: 13.0), (x: -2.0, y: 13.0), (x: -2.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 8.0, y: -2.0), (x: 8.0, y: -8.0), (x: 2.0, y: -8.0), (x: 8.0, y: -2.0)], []))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 4.0, y: 0.0), (x: 0.0, y: 7.0), (x: -5.0, y: 5.0), (x: 4.0, y: 0.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.two, .one,  .two],
+//            [.one, .zero, .one],
+//            [.two, .one,  .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_interiorsIntersect_firstPolygon_withHole() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -20.0, y: 3.0), (x: -20.0, y: 20.0), (x: -2.0, y: 20.0), (x: -2.0, y: 3.0)], [[(x: -8.0, y: 9.0), (x: -16.0, y: 9.0), (x: -16.0, y: 16.0), (x: -8.0, y: 16.0), (x: -8.0, y: 9.0)]])), Polygon<Coordinate2D>(rings: ([(x: 8.0, y: -2.0), (x: 8.0, y: -8.0), (x: 2.0, y: -8.0), (x: 8.0, y: -2.0)], []))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -10.0, y: 10.0), (x: -10.0, y: 12.0), (x: -5.0, y: 10.0), (x: -10.0, y: 10.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.two, .one,  .two],
+//            [.one, .zero, .one],
+//            [.two, .one,  .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_interiorsIntersect_secondPolygon() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -10.0, y: 3.0), (x: -10.0, y: 13.0), (x: -2.0, y: 13.0), (x: -2.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 8.0, y: -2.0), (x: 8.0, y: -8.0), (x: 2.0, y: -8.0), (x: 8.0, y: -2.0)], []))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 0.0, y: 10.0), (x: 6.0, y: 0.0), (x: 6.0, y: -6.0), (x: 0.0, y: 10.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.two, .one,  .two],
+//            [.one, .zero, .one],
+//            [.two, .one,  .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_interiorsIntersect_secondPolygon_withHole() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -10.0, y: 3.0), (x: -10.0, y: 13.0), (x: -2.0, y: 13.0), (x: -2.0, y: 3.0)], [])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 20.0, y: -2.0)], [[(x: 16.0, y: -16.0), (x: 16.0, y: -12.0), (x: 12.0, y: -12.0), (x: 12.0, y: -16.0), (x: 16.0, y: -16.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 15.0, y: -15.0), (x: 14.0, y: -18.0), (x: 18.0, y: -18.0), (x: 15.0, y: -15.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.two, .one,  .two],
+//            [.one, .zero, .one],
+//            [.two, .one,  .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_interiorsIntersect_bothPolygons_withHoles() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -20.0, y: 3.0), (x: -20.0, y: 20.0), (x: -2.0, y: 20.0), (x: -2.0, y: 3.0)], [[(x: -8.0, y: 9.0), (x: -16.0, y: 9.0), (x: -16.0, y: 16.0), (x: -8.0, y: 16.0), (x: -8.0, y: 9.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 20.0, y: -2.0)], [[(x: 16.0, y: -16.0), (x: 16.0, y: -12.0), (x: 12.0, y: -12.0), (x: 12.0, y: -16.0), (x: 16.0, y: -16.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -3.0, y: 10.0), (x: 0.0, y: 12.0), (x: 10.0, y: -18.0), (x: -3.0, y: 10.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.two, .one,  .two],
+//            [.one, .zero, .one],
+//            [.two, .one,  .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -20.0, y: 3.0), (x: -20.0, y: 20.0), (x: -2.0, y: 20.0), (x: -2.0, y: 3.0)], [[(x: -8.0, y: 9.0), (x: -16.0, y: 9.0), (x: -16.0, y: 16.0), (x: -8.0, y: 16.0), (x: -8.0, y: 9.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 20.0, y: -2.0)], [[(x: 16.0, y: -16.0), (x: 16.0, y: -12.0), (x: 12.0, y: -12.0), (x: 12.0, y: -16.0), (x: 16.0, y: -16.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: -20.0, y: 18.0), (x: -30.0, y: 30.0), (x: -50.0, y: 0.0), (x: -20.0, y: 18.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.empty, .empty, .two],
+//            [.empty, .zero,  .one],
+//            [.two,   .one,   .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -20.0, y: 3.0), (x: -20.0, y: 20.0), (x: -2.0, y: 20.0), (x: -2.0, y: 3.0)], [[(x: -8.0, y: 9.0), (x: -16.0, y: 9.0), (x: -16.0, y: 16.0), (x: -8.0, y: 16.0), (x: -8.0, y: 9.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 20.0, y: -2.0)], [[(x: 16.0, y: -16.0), (x: 16.0, y: -12.0), (x: 12.0, y: -12.0), (x: 12.0, y: -16.0), (x: 16.0, y: -16.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 0.0, y: -40.0), (x: 22.0, y: -30.0), (x: 15.0, y: -20.0), (x: 0.0, y: -40.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.empty, .empty, .two],
+//            [.empty, .zero,  .one],
+//            [.two,   .one,   .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -20.0, y: 3.0), (x: -20.0, y: 20.0), (x: -2.0, y: 20.0), (x: -2.0, y: 3.0)], [[(x: -8.0, y: 9.0), (x: -16.0, y: 9.0), (x: -16.0, y: 16.0), (x: -8.0, y: 16.0), (x: -8.0, y: 9.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 20.0, y: -2.0)], [[(x: 16.0, y: -16.0), (x: 16.0, y: -12.0), (x: 12.0, y: -12.0), (x: 12.0, y: -16.0), (x: 16.0, y: -16.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -20.0), (x: 0.0, y: -50.0), (x: -100.0, y: 0.0), (x: -18.0, y: 3.0), (x: -18.0, y: -30.0), (x: 20.0, y: -20.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.empty, .empty, .two],
+//            [.empty, .zero,  .one],
+//            [.two,   .one,   .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -20.0, y: 3.0), (x: -20.0, y: 20.0), (x: -2.0, y: 20.0), (x: -2.0, y: 3.0)], [[(x: -8.0, y: 9.0), (x: -16.0, y: 9.0), (x: -16.0, y: 16.0), (x: -8.0, y: 16.0), (x: -8.0, y: 9.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 20.0, y: -2.0)], [[(x: 16.0, y: -16.0), (x: 16.0, y: -12.0), (x: 12.0, y: -12.0), (x: 12.0, y: -16.0), (x: 16.0, y: -16.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 21.0, y: -3.0), (x: 10.0, y: 8.0), (x: 5.0, y: 20.0), (x: -34.0, y: 20.0), (x: -34.0, y: 40.0), (x: 21.0, y: 40.0), (x: 21.0, y: -3.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.empty, .empty, .two],
+//            [.empty, .one,   .one],
+//            [.two,   .one,   .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_polygonIntersectsMultiPolygonInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -20.0, y: 3.0), (x: -20.0, y: 20.0), (x: -2.0, y: 20.0), (x: -2.0, y: 3.0)], [[(x: -8.0, y: 9.0), (x: -16.0, y: 9.0), (x: -16.0, y: 16.0), (x: -8.0, y: 16.0), (x: -8.0, y: 9.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 20.0, y: -2.0)], [[(x: 16.0, y: -16.0), (x: 16.0, y: -12.0), (x: 12.0, y: -12.0), (x: 12.0, y: -16.0), (x: 16.0, y: -16.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 21.0, y: -3.0), (x: 10.0, y: 8.0), (x: 5.0, y: 20.0), (x: -34.0, y: 20.0), (x: -12.0, y: 12.0), (x: 21.0, y: -3.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.two, .one, .two],
+//            [.one, .one, .one],
+//            [.two, .one, .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
+//
+//    func testMultiPolygon_Polygon_polygonIntersectsMultiPolygonInteriorAndBoundary_withHoles() {
+//
+//        let geometry1 = MultiPolygon<Coordinate2D>(elements: [Polygon<Coordinate2D>(rings: ([(x: -2.0, y: 3.0), (x: -20.0, y: 3.0), (x: -20.0, y: 20.0), (x: -2.0, y: 20.0), (x: -2.0, y: 3.0)], [[(x: -8.0, y: 9.0), (x: -16.0, y: 9.0), (x: -16.0, y: 16.0), (x: -8.0, y: 16.0), (x: -8.0, y: 9.0)]])), Polygon<Coordinate2D>(rings: ([(x: 20.0, y: -2.0), (x: 20.0, y: -20.0), (x: 2.0, y: -20.0), (x: 2.0, y: -2.0), (x: 20.0, y: -2.0)], [[(x: 16.0, y: -16.0), (x: 16.0, y: -12.0), (x: 12.0, y: -12.0), (x: 12.0, y: -16.0), (x: 16.0, y: -16.0)]]))], precision: precision, coordinateSystem: cs)
+//        let geometry2 = Polygon<Coordinate2D>(rings: ([(x: 21.0, y: -3.0), (x: 10.0, y: 8.0), (x: 5.0, y: 20.0), (x: -34.0, y: 20.0), (x: -8.0, y: 9.0), (x: 21.0, y: -3.0)], []), precision: precision, coordinateSystem: cs)
+//
+//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+//
+//        let expected  = IntersectionMatrix(arrayLiteral: [
+//            [.two, .one, .two],
+//            [.one, .one, .one],
+//            [.two, .one, .two]
+//            ])
+//
+//        XCTAssertEqual(matrix, expected)
+//    }
 }
