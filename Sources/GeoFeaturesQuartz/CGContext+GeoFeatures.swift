@@ -51,6 +51,122 @@ public extension CGContext {
 public extension CGContext {
 
     ///
+    /// Draws the `Point`.
+    ///
+    /// - Parameters:
+    ///     - point: The Point geometry to draw.
+    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
+    ///
+    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
+    ///
+    public func draw(_ point: Point, using mode: CGPathDrawingMode? = nil) {
+        self.add(point)
+        self.drawPath(using: mode ?? .fillStroke)
+    }
+
+    ///
+    /// Draws the `LineString`.
+    ///
+    /// - Parameters:
+    ///     - lineString: The LineString geometry to draw.
+    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
+    ///
+    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
+    ///
+    public func draw(_ lineString: LineString, using mode: CGPathDrawingMode? = nil) {
+        self.add(lineString)
+        self.drawPath(using: mode ?? (lineString.isClosed() ? .fillStroke : .stroke))
+    }
+
+    ///
+    /// Draws the `LinearRing`.
+    ///
+    /// - Parameters:
+    ///     - linearRing: The LinearRing geometry to draw.
+    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
+    ///
+    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
+    ///
+    public func draw(_ linearRing: LinearRing, using mode: CGPathDrawingMode? = nil) {
+        self.add(linearRing)
+        self.drawPath(using: mode ?? (linearRing.isClosed() ? .fillStroke : .stroke))
+    }
+
+    ///
+    /// Draws the `Polygon`.
+    ///
+    /// - Parameters:
+    ///     - polygon: The Polygon geometry to draw.
+    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
+    ///
+    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
+    ///
+    public func draw(_ polygon: Polygon, using mode: CGPathDrawingMode? = nil) {
+        self.add(polygon)
+        self.drawPath(using: mode ?? .fillStroke)
+    }
+
+    ///
+    /// Draws the `MultiPoint`.
+    ///
+    /// - Parameters:
+    ///     - multiPoint: The MultiPoint geometry to draw.
+    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
+    ///
+    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
+    ///
+    public func draw(_ multiPoint: MultiPoint, using mode: CGPathDrawingMode? = nil) {
+        for point in multiPoint {
+            self.draw(point, using: mode)
+        }
+    }
+
+    ///
+    /// Draws the `MultiLineString`.
+    ///
+    /// - Parameters:
+    ///     - multiLineString: The MultiLineString geometry to draw.
+    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
+    ///
+    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
+    ///
+    public func draw(_ multiLineString: MultiLineString, using mode: CGPathDrawingMode? = nil) {
+        for lineString in multiLineString {
+            self.draw(lineString, using: mode)
+        }
+    }
+
+    ///
+    /// Draws the `MultiPolygon`.
+    ///
+    /// - Parameters:
+    ///     - multiPolygon: The MultiPolygon geometry to draw.
+    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
+    ///
+    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
+    ///
+    public func draw(_ multiPolygon: MultiPolygon, using mode: CGPathDrawingMode? = nil) {
+        for polygon in multiPolygon {
+            self.draw(polygon, using: mode)
+        }
+    }
+
+    ///
+    /// Draws the `GeometryCollection`.
+    ///
+    /// - Parameters:
+    ///     - geometryCollection: The GeometryCollection geometry to draw.
+    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
+    ///
+    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
+    ///
+    public func draw(_ geometryCollection: GeometryCollection, using mode: CGPathDrawingMode? = nil) {
+        for geometry in geometryCollection {
+            self.draw(geometry, using: mode)
+        }
+    }
+
+    ///
     /// Draws the `Geometry`.
     ///
     /// - Parameters:
@@ -70,122 +186,6 @@ public extension CGContext {
         case let multiPolygon       as MultiPolygon:        self.draw(multiPolygon, using: mode);       break
         case let geometryCollection as GeometryCollection:  self.draw(geometryCollection, using: mode); break
         default: break
-        }
-    }
-
-    ///
-    /// Draws the `Point`.
-    ///
-    /// - Parameters:
-    ///     - point: The Point geometry to draw.
-    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
-    ///
-    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
-    ///
-    private func draw(_ point: Point, using mode: CGPathDrawingMode? = nil) {
-        self.add(point)
-        self.drawPath(using: mode ?? .fillStroke)
-    }
-
-    ///
-    /// Draws the `LineString`.
-    ///
-    /// - Parameters:
-    ///     - lineString: The LineString geometry to draw.
-    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
-    ///
-    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
-    ///
-    private func draw(_ lineString: LineString, using mode: CGPathDrawingMode? = nil) {
-        self.add(lineString)
-        self.drawPath(using: mode ?? (lineString.isClosed() ? .fillStroke : .stroke))
-    }
-
-    ///
-    /// Draws the `LinearRing`.
-    ///
-    /// - Parameters:
-    ///     - linearRing: The LinearRing geometry to draw.
-    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
-    ///
-    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
-    ///
-    private func draw(_ linearRing: LinearRing, using mode: CGPathDrawingMode? = nil) {
-        self.add(linearRing)
-        self.drawPath(using: mode ?? (linearRing.isClosed() ? .fillStroke : .stroke))
-    }
-
-    ///
-    /// Draws the `Polygon`.
-    ///
-    /// - Parameters:
-    ///     - polygon: The Polygon geometry to draw.
-    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
-    ///
-    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
-    ///
-    private func draw(_ polygon: Polygon, using mode: CGPathDrawingMode? = nil) {
-        self.add(polygon)
-        self.drawPath(using: mode ?? .fillStroke)
-    }
-
-    ///
-    /// Draws the `MultiPoint`.
-    ///
-    /// - Parameters:
-    ///     - multiPoint: The MultiPoint geometry to draw.
-    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
-    ///
-    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
-    ///
-    private func draw(_ multiPoint: MultiPoint, using mode: CGPathDrawingMode? = nil) {
-        for point in multiPoint {
-            self.draw(point, using: mode)
-        }
-    }
-
-    ///
-    /// Draws the `MultiLineString`.
-    ///
-    /// - Parameters:
-    ///     - multiLineString: The MultiLineString geometry to draw.
-    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
-    ///
-    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
-    ///
-    private func draw(_ multiLineString: MultiLineString, using mode: CGPathDrawingMode? = nil) {
-        for lineString in multiLineString {
-            self.draw(lineString, using: mode)
-        }
-    }
-
-    ///
-    /// Draws the `MultiPolygon`.
-    ///
-    /// - Parameters:
-    ///     - multiPolygon: The MultiPolygon geometry to draw.
-    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
-    ///
-    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
-    ///
-    private func draw(_ multiPolygon: MultiPolygon, using mode: CGPathDrawingMode? = nil) {
-        for polygon in multiPolygon {
-            self.draw(polygon, using: mode)
-        }
-    }
-
-    ///
-    /// Draws the `GeometryCollection`.
-    ///
-    /// - Parameters:
-    ///     - geometryCollection: The GeometryCollection geometry to draw.
-    ///     - mode: A `CGPathDrawingMode` drawing mode constant (fill, eoFill, stroke, fillStroke, or eoFillStroke) or nil for the default mode for the given shape.
-    ///
-    /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
-    ///
-    private func draw(_ geometryCollection: GeometryCollection, using mode: CGPathDrawingMode? = nil) {
-        for geometry in geometryCollection {
-            self.draw(geometry, using: mode)
         }
     }
 }
