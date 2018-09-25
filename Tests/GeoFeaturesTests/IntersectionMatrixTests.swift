@@ -60,42 +60,6 @@ class IntersectionMatrixTests: XCTestCase {
         XCTAssertEqual(matrix[.exterior, .exterior], Dimension.empty)
     }
 
-    func testTranspose() {
-
-        var input = IntersectionMatrix(arrayLiteral: [
-            [.empty, .zero,  .one],
-            [.two,   .empty, .zero],
-            [.one,   .two,   .empty]
-            ])
-
-        let expected  = IntersectionMatrix(arrayLiteral: [
-            [.empty, .two,  .one],
-            [.zero,  .empty, .two],
-            [.one,   .zero,   .empty]
-            ])
-
-        input.transpose()
-
-        XCTAssertEqual(input, expected)
-    }
-
-    func testTransposed() {
-
-        let input = IntersectionMatrix(arrayLiteral: [
-            [.empty, .zero,  .one],
-            [.two,   .empty, .zero],
-            [.one,   .two,   .empty]
-            ])
-
-        let expected  = IntersectionMatrix(arrayLiteral: [
-            [.empty, .two,   .one],
-            [.zero,  .empty, .two],
-            [.one,   .zero,  .empty]
-            ])
-
-        XCTAssertEqual(input.transposed(), expected)
-    }
-
     func testMakeIterator() {
         let expectedValues = [Dimension.empty, .zero, .one, .two, .empty, .zero, .one, .two, .empty]
 

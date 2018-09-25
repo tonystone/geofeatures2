@@ -19,37 +19,40 @@
 ///
 import Swift
 
-extension Polygon: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension Polygon {
 
-    public var dimension: Dimension { return .two }
-
-    public func isEmpty() -> Bool {
-        return self.outerRing.count == 0
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .two if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .two
     }
 
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
     ///
-    /// - Note: The boundary of a Polygon consists of an array of LinearRings that make up its exterior and interior boundaries.
-    ///         The first element of the array is the outer ring.
-    ///         The rest of the elements of the array are the inner rings, in no particular order.
+    /// - Note: The boundary of a Polygon consists of a set of LinearRings that make up its exterior and interior boundaries
     ///
     public func boundary() -> Geometry {
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Geometry in
+        let boundary = self.map({ LinearRing(converting: $0, precision: self.precision, coordinateSystem: self.coordinateSystem) })
 
-            var linearRingCollection = GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
-
-            for i in 0..<header.pointee.count {
-                linearRingCollection.append(LinearRing<CoordinateType>(elements: elements[i], precision: self.precision, coordinateSystem: self.coordinateSystem))
-            }
-            return linearRingCollection
-        }
+        return GeometryCollection(boundary, precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? Polygon<CoordinateType> {
-            return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing<CoordinateType>, rhs: LinearRing<CoordinateType>) -> Bool in
+        if let other = other as? Polygon {
+            return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing, rhs: LinearRing) -> Bool in
                 return lhs.equals(rhs)
             })
         }

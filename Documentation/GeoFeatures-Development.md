@@ -14,32 +14,34 @@ We highly recommend '**out of source**' builds for working with GeoFeatures.
 
 To create an out of source build, you can do the following.
 
-```
+```bash
 # cd <root of geofeatures>
-# mkdir .build && cd .build
+# mkdir cmake-build-debug && cd cmake-build-debug
 # cmake ../
 ```
-If all the dependent tools are installed, cmake will create the make files for development or any of the other tasks in this readme.
+> Note: You may name the directory whatever you'd like.  We chose `cmake-build-debug` because CLion uses that directory by default when you open the project directory. This allows seamless switching between CLion and the command line.
+
+If all the dependent tools are installed, cmake will create the make files for development and any of the other tasks in this readme.
 
 ### Swift build & test
 
 To build and test the code-line and run the appropriate tools, run the following commands.
 
 > Make sure you are in the same directory you ran cmake originally.
-```
+```bash
 # make
 ```
 If you want to build the code-line only, run:
-```
-# make geofeartures-build
+```bash
+# make build
 ```
 Or to specifically target the tests, run:
-```
-# make geofeartures-test
+```bash
+# make tests
 ```
 
 If you get stuck and need help, run:
-```
+```bash
 # make help
 ```
 
@@ -47,18 +49,20 @@ If you get stuck and need help, run:
 
 If you are using Clion, it will read the cmake files when you open the root of the GeoFeatures directory structure.
 
-You should  reconfigure it after initial start up for '**out of source**' builds so you can keep the same cmake configuration in Clion as on the command line. To do that, open Clion preferences and set the "Generation path" to `.build` as shown in the screenshot below.
+If you've used another directory other than `cmake-build-debug` when you followed the [Getting Started](#getting-started) section, you should reconfigure CLion after initial startup so you can keep the same cmake configuration in Clion as on the command line. To do that, open Clion preferences and set the "Generation path" to the directory name you chose as shown in the screenshot below.
 
 ![CLion Preferences](JetBrains-Clion-CMake-Preferences.png)
 
 
 ### Xcode
 
-If you'd like to have an xcode project for your development efforts, we've built in a command to do that.
+If you'd like to have an xcode project/workspace for your development efforts, we've built in a command to do that.
 
 > Make sure you are in the same directory you ran cmake originally.
-```
-# make geofeatures-xcode-project
+```bash
+# make xcode-workspace
 ```
 
-Will create a fully functioning Xcode project you can develop with.  We ignore the Xcode project files during git check-in (in the `.gitignore` file).
+This will create a fully functioning Xcode project and workspace you can develop with. The workspace will include the Playground and the Project file so that you can build and use the playground.
+
+> Note: We ignore the Xcode project and workspace files during git check-in (in the `.gitignore` file).

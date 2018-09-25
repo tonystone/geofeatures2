@@ -19,12 +19,20 @@
 ///
 import Swift
 
-extension MultiLineString: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension MultiLineString {
 
-    public var dimension: Dimension { return .one }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .one if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .one
     }
 
     ///
@@ -36,53 +44,53 @@ extension MultiLineString: Geometry {
     ///
     public func boundary() -> Geometry {
 
-        return self.buffer.withUnsafeMutablePointers { (header, elements) -> Geometry in
+        var endCoordinates = [Coordinate: Int]()
 
-            var endCoordinates = [CoordinateType: Int]()
+        for i in 0 ..< self.count {
+            let lineString = self[i]
 
-            for i in 0 ..< header.pointee.count {
-                let lineString = elements[i]
+            if lineString.count >= 2 && !lineString.isClosed() {
+                var i = 0
 
-                if lineString.count >= 2 && !lineString.isClosed() {
-                    var i = 0
+                /// Start point
+                if var count = endCoordinates[lineString[i]] {
+                    count += 1
 
-                    /// Start point
-                    if var count = endCoordinates[lineString[i]] {
-                        count += 1
+                    endCoordinates[lineString[i]] = count
 
-                        endCoordinates[lineString[i]] = count
+                } else {
+                    endCoordinates[lineString[i]] = 1
+                }
 
-                    } else {
-                        endCoordinates[lineString[i]] = 1
-                    }
+                i = lineString.count - 1
 
-                    i = lineString.count - 1
+                /// End point
+                if var count = endCoordinates[lineString[i]] {
+                    count += 1
 
-                    /// End point
-                    if var count = endCoordinates[lineString[i]] {
-                        count += 1
+                    endCoordinates[lineString[i]] = count
 
-                        endCoordinates[lineString[i]] = count
-
-                    } else {
-                        endCoordinates[lineString[i]] = 1
-                    }
+                } else {
+                    endCoordinates[lineString[i]] = 1
                 }
             }
-
-            var multiPoint = MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
-
-            for (coordinate, count) in endCoordinates {
-                if count % 2 == 1 {
-                    multiPoint.append(Point(coordinate: coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem, boundaryPoint: true))
-                }
-            }
-            return multiPoint
         }
+
+        var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
+
+        for (coordinate, count) in endCoordinates {
+            if count % 2 == 1 {
+                boundary.append(Point(coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem, boundaryPoint: true))
+            }
+        }
+        return boundary
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? MultiLineString<CoordinateType> {
+        if let other = other as? MultiLineString {
             return self.elementsEqual(other)
         }
         return false

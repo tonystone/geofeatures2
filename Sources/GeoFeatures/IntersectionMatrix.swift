@@ -73,10 +73,11 @@ extension IntersectionMatrix {
     ///
     /// - Parameter: arrayLiteral: [[Dimension]] Array of `Dimension` arrays.
     ///
-    /// - Requires: arrayLiteral.count == 3
-    /// - Requires: arrayLiteral[0].count == 3
-    /// - Requires: arrayLiteral[1].count == 3
-    /// - Requires: arrayLiteral[2].count == 3
+    /// - Requires:
+    ///     - `arrayLiteral.count == 3`
+    ///     - `arrayLiteral[0].count == 3`
+    ///     - `arrayLiteral[1].count == 3`
+    ///     - `arrayLiteral[2].count == 3`
     ///
     internal init(arrayLiteral elements: [[Dimension]]) {
         assert( elements.count == 3 &&

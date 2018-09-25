@@ -20,31 +20,31 @@
 import XCTest
 import GeoFeatures
 
-// MARK: - Coordinate2D, FloatingPrecision, Cartesian -
+// MARK: - Coordinate 2D, FloatingPrecision, Cartesian -
 
 class LineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testLengthTest1() {
-        XCTAssertEqual(LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 1, y: 1)], precision: precision, coordinateSystem: cs).length(), 1.4142135623730951)
+        XCTAssertEqual(LineString([[0, 0], [1, 1]], precision: precision, coordinateSystem: cs).length(), 1.4142135623730951)
     }
 
     func testLengthTest2() {
-        XCTAssertEqual(LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 0, y: 2)], precision: precision, coordinateSystem: cs).length(), 2.0)
+        XCTAssertEqual(LineString([[0, 0], [0, 2]], precision: precision, coordinateSystem: cs).length(), 2.0)
     }
 
     func testLengthTest3() {
-        XCTAssertEqual(LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 7, y:0)], precision: precision, coordinateSystem: cs).length(), 7.0)
+        XCTAssertEqual(LineString([[0, 0], [7, 0]], precision: precision, coordinateSystem: cs).length(), 7.0)
     }
 
     func testLengthTest4() {
-        XCTAssertEqual(LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 0, y: 2), (x: 0, y: 3), (x: 0, y: 4), (x: 0, y: 5)], precision: precision, coordinateSystem: cs).length(), 5.0)
+        XCTAssertEqual(LineString([[0, 0], [0, 2], [0, 3], [0, 4], [0, 5]], precision: precision, coordinateSystem: cs).length(), 5.0)
     }
 
     func testLengthPerformance() {
-        let lineString = LineString<Coordinate2D>(elements: [(x:0, y: 0), (x: 0, y: 2), (x: 0, y: 3), (x: 0, y: 4), (x: 0, y: 5)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[0, 0], [0, 2], [0, 3], [0, 4], [0, 5]], precision: precision, coordinateSystem: cs)
 
         self.measure {
 
@@ -55,27 +55,27 @@ class LineStringCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testIsClosedClosed() {
-        XCTAssertTrue(LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 0, y: 2), (x: 0, y: 3), (x: 2, y: 0), (x: 0, y: 0)], precision: precision, coordinateSystem: cs).isClosed())
+        XCTAssertTrue(LineString([[0, 0], [0, 2], [0, 3], [2, 0], [0, 0]], precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testIsClosedOpen() {
-        XCTAssertFalse(LineString<Coordinate2D>(elements: [(x: 0, y: 0), (x: 0, y: 2), (x: 0, y: 3), (x: 0, y: 4), (x: 0, y: 5)], precision: precision, coordinateSystem: cs).isClosed())
+        XCTAssertFalse(LineString([[0, 0], [0, 2], [0, 3], [0, 4], [0, 5]], precision: precision, coordinateSystem: cs).isClosed())
     }
 
     func testIsClosedEmpty() {
-        XCTAssertFalse(LineString<Coordinate2D>(precision: precision, coordinateSystem: cs).isClosed())
+        XCTAssertFalse(LineString(precision: precision, coordinateSystem: cs).isClosed())
     }
 }
 
-// MARK: - Coordinate3D, FloatingPrecision, Cartesian -
+// MARK: - Coordinate 3D, FloatingPrecision, Cartesian -
 
 class LineStringCurveCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
-    let precision = FloatingPrecision()
+    let precision = Floating()
     let cs       = Cartesian()
 
     func testPerformanceLength() {
-        let lineString = LineString<Coordinate3D>(elements: [(x:0, y: 0, z: 0), (x: 0, y: 2, z: 0), (x: 0, y: 3, z: 0), (x: 0, y: 4, z: 0), (x: 0, y: 5, z:0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[0, 0, 0], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0]], precision: precision, coordinateSystem: cs)
 
         self.measure {
 

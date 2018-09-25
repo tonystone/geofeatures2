@@ -19,7 +19,10 @@
 ///
 import Foundation
 
-extension Polygon: Surface {
+///
+/// `Surface` protocol implementation.
+///
+extension Polygon {
 
     ///
     /// Calculates the area of this `Polygon`
@@ -32,15 +35,13 @@ extension Polygon: Surface {
     /// - requires: isClosed == true for "outerRing" and all "innerRings"
     ///
     public func area() -> Double {
+        var area: Double = 0.0
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Double in
+        area += outerRing.area()
 
-            var area: Double = 0.0
-
-            for i in 0..<header.pointee.count {
-                area += elements[i].area()
-            }
-            return self.precision.convert(area)
+        for i in 0..<innerRings.count {
+            area += innerRings[i].area()
         }
+        return self.precision.convert(area)
     }
 }

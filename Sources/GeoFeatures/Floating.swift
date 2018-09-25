@@ -19,22 +19,41 @@
 ///
 import Swift
 
-public struct FloatingPrecision: Precision, Equatable, Hashable {
+///
+/// Floating precision corresponds to the standard Swift Double precision type. No conversion will be done.
+///
+public struct Floating: Precision {
+
+    public init() {}
+
+    @inline(__always)
+    public func convert(_ value: Double) -> Double {
+        return value
+    }
+
+    @inline(__always)
+    public func convert(_ value: Double?) -> Double? {
+        return value
+    }
+
+    public func convert(_ coordinate: Coordinate) -> Coordinate {
+        return coordinate
+    }
+}
+
+extension Floating: Hashable {
 
     public var hashValue: Int {
         return 31.hashValue
     }
-
-    public init() {}
-
-    public func convert(_ value: Double) -> Double {
-        return value
-    }
 }
-extension FloatingPrecision: CustomStringConvertible, CustomDebugStringConvertible {
+
+extension Floating:  Equatable {}
+
+extension Floating: CustomStringConvertible, CustomDebugStringConvertible {
 
     public var description: String {
-        return "\(type(of: self))"
+        return "\(type(of: self))()"
     }
 
     public var debugDescription: String {

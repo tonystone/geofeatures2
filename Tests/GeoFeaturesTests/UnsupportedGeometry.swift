@@ -1,5 +1,5 @@
 ///
-///  Intersector.swift
+///  UnsupportedGeometry
 ///
 ///  Copyright (c) 2016 Tony Stone
 ///
@@ -15,27 +15,30 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Tony Stone on 12/6/16.
+///  Created by Tony Stone on 12/17/16.
 ///
-import Foundation
+import Swift
+import GeoFeatures
 
-internal protocol Intersector {
+internal struct UnsupportedGeometry: Geometry {
 
-    associatedtype CoordinateType: Coordinate
+    let precision: Precision = Floating()
 
-    ///
-    ///
-    ///
-    func intersects(coordinates: [CoordinateType]) -> Bool
+    let coordinateSystem: CoordinateSystem = Cartesian()
 
-    ///
-    ///
-    ///
-    func intersections(coordinates: [CoordinateType]) -> [CoordinateType]
+    let dimension: GeoFeatures.Dimension = .one
 
-    ///
-    ///
-    ///
-    func intersectionMatrix(coordinates: [CoordinateType]) -> IntersectionMatrix
+    func isEmpty() -> Bool {
+        return true
+    }
 
+    func boundary() -> Geometry {
+        return GeometryCollection()
+    }
+
+    func bounds() -> Bounds? {
+        return nil
+    }
+
+    func equals(_ other: Geometry) -> Bool { return false }
 }

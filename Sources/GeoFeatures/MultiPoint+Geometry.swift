@@ -19,12 +19,20 @@
 ///
 import Swift
 
-extension MultiPoint: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension MultiPoint {
 
-    public var dimension: Dimension { return .zero }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .zero if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .zero
     }
 
     ///
@@ -33,11 +41,14 @@ extension MultiPoint: Geometry {
     /// - Note: The boundary of a MultiPoint is the empty set.
     ///
     public func boundary() -> Geometry {
-        return MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        return MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? MultiPoint<CoordinateType> {
+        if let other = other as? MultiPoint {
             return self.elementsEqual(other)
         }
         return false

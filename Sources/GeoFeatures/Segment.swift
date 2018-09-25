@@ -22,12 +22,12 @@ import Swift
 ///
 /// Low level type to represent a segment of a line used in geometric computations.
 ///
-internal class Segment<CoordinateType: Coordinate & CopyConstructable> {
+internal class Segment {
 
-    var leftCoordinate:  CoordinateType
-    var rightCoordinate: CoordinateType
+    var leftCoordinate:  Coordinate
+    var rightCoordinate: Coordinate
 
-    init(left: CoordinateType, right: CoordinateType) {
+    init(left: Coordinate, right: Coordinate) {
         self.leftCoordinate  = left
         self.rightCoordinate = right
     }

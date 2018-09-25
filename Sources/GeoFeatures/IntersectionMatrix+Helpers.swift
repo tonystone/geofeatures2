@@ -8,8 +8,6 @@
 
 import Foundation
 
-private typealias CoordinateType = Coordinate2D
-
 enum Subset: Int {
     case
     overlap = 0,            /// Indicates some parts of each geometry intersect the other and are outside the other
@@ -75,20 +73,6 @@ struct RelatedTo {
     }
 }
 
-///
-/// Low level type to represent a segment of a line used in geometric computations.
-///
-fileprivate class SweepLineSegment<CoordinateType: Coordinate & CopyConstructable> {
-
-    internal var leftCoordinate:  CoordinateType
-    internal var rightCoordinate: CoordinateType
-
-    init(leftEvent: LeftEvent<CoordinateType>) {
-        self.leftCoordinate  = leftEvent.coordinate
-        self.rightCoordinate = leftEvent.rightEvent.coordinate
-    }
-}
-
 extension IntersectionMatrix {
 
     static func generateMatrix(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
@@ -151,14 +135,14 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .zero
     fileprivate static func intersectionGeometryZeroZero(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let point1 = geometry1 as? Point<CoordinateType>, let point2 = geometry2 as? Point<CoordinateType> {
+        if let point1 = geometry1 as? Point, let point2 = geometry2 as? Point {
             return generateIntersection(point1, point2)
-        } else if let point = geometry1 as? Point<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType> {
+        } else if let point = geometry1 as? Point, let points = geometry2 as? MultiPoint {
             return generateIntersection(point, points)
-        } else if let points = geometry1 as? MultiPoint<CoordinateType>, let point = geometry2 as? Point<CoordinateType> {
+        } else if let points = geometry1 as? MultiPoint, let point = geometry2 as? Point {
             let (geometry, intersectionMatrix) = generateIntersection(point, points)
             return (geometry, intersectionMatrix.transposed())
-        } else if let points1 = geometry1 as? MultiPoint<CoordinateType>, let points2 = geometry2 as? MultiPoint<CoordinateType> {
+        } else if let points1 = geometry1 as? MultiPoint, let points2 = geometry2 as? MultiPoint {
             return generateIntersection(points1, points2)
         }
         return (nil, IntersectionMatrix())
@@ -167,17 +151,17 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .zero and .one, respectively.
     fileprivate static func intersectionGeometryZeroOne(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let point = geometry1 as? Point<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
+        if let point = geometry1 as? Point, let lineString = geometry2 as? LineString {
             return generateIntersection(point, lineString)
-        } else if let points = geometry1 as? MultiPoint<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
+        } else if let points = geometry1 as? MultiPoint, let lineString = geometry2 as? LineString {
             return generateIntersection(points, lineString)
-        } else if let point = geometry1 as? Point<CoordinateType>, let multilineString = geometry2 as? MultiLineString<CoordinateType> {
+        } else if let point = geometry1 as? Point, let multilineString = geometry2 as? MultiLineString {
             return generateIntersection(point, multilineString)
-        } else if let points = geometry1 as? MultiPoint<CoordinateType>, let multilineString = geometry2 as? MultiLineString<CoordinateType> {
+        } else if let points = geometry1 as? MultiPoint, let multilineString = geometry2 as? MultiLineString {
             return generateIntersection(points, multilineString)
-        } else if let point = geometry1 as? Point<CoordinateType>, let linearRing = geometry2 as? LinearRing<CoordinateType> {
+        } else if let point = geometry1 as? Point, let linearRing = geometry2 as? LinearRing {
             return generateIntersection(point, linearRing)
-        } else if let points = geometry1 as? MultiPoint<CoordinateType>, let linearRing = geometry2 as? LinearRing<CoordinateType> {
+        } else if let points = geometry1 as? MultiPoint, let linearRing = geometry2 as? LinearRing {
             return generateIntersection(points, linearRing)
         }
         return (nil, IntersectionMatrix())
@@ -186,13 +170,13 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .zero and .two, respectively.
     fileprivate static func intersectionGeometryZeroTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let point = geometry1 as? Point<CoordinateType>, let polygon = geometry2 as? Polygon<CoordinateType> {
+        if let point = geometry1 as? Point, let polygon = geometry2 as? Polygon {
             return generateIntersection(point, polygon)
-        } else if let points = geometry1 as? MultiPoint<CoordinateType>, let polygon = geometry2 as? Polygon<CoordinateType> {
+        } else if let points = geometry1 as? MultiPoint, let polygon = geometry2 as? Polygon {
             return generateIntersection(points, polygon)
-        } else if let point = geometry1 as? Point<CoordinateType>, let multipolygon = geometry2 as? MultiPolygon<CoordinateType> {
+        } else if let point = geometry1 as? Point, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(point, multipolygon)
-        } else if let points = geometry1 as? MultiPoint<CoordinateType>, let multipolygon = geometry2 as? MultiPolygon<CoordinateType> {
+        } else if let points = geometry1 as? MultiPoint, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(points, multipolygon)
         }
         return (nil, IntersectionMatrix())
@@ -201,22 +185,22 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .one and .zero, respectively.
     fileprivate static func intersectionGeometryOneZero(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let lineString = geometry1 as? LineString<CoordinateType>, let point = geometry2 as? Point<CoordinateType> {
+        if let lineString = geometry1 as? LineString, let point = geometry2 as? Point {
             let (geometry, intersectionMatrix) = generateIntersection(point, lineString)
             return (geometry, intersectionMatrix.transposed())
-        } else if let lineString = geometry1 as? LineString<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType> {
+        } else if let lineString = geometry1 as? LineString, let points = geometry2 as? MultiPoint {
             let (geometry, intersectionMatrix) = generateIntersection(points, lineString)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multilineString = geometry1 as? MultiLineString<CoordinateType>, let point = geometry2 as? Point<CoordinateType> {
+        } else if let multilineString = geometry1 as? MultiLineString, let point = geometry2 as? Point {
             let (geometry, intersectionMatrix) = generateIntersection(point, multilineString)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multilineString = geometry1 as? MultiLineString<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType> {
+        } else if let multilineString = geometry1 as? MultiLineString, let points = geometry2 as? MultiPoint {
             let (geometry, intersectionMatrix) = generateIntersection(points, multilineString)
             return (geometry, intersectionMatrix.transposed())
-        } else if let linearRing = geometry1 as? LinearRing<CoordinateType>, let point = geometry2 as? Point<CoordinateType> {
+        } else if let linearRing = geometry1 as? LinearRing, let point = geometry2 as? Point {
             let (geometry, intersectionMatrix) = generateIntersection(point, linearRing)
             return (geometry, intersectionMatrix.transposed())
-        } else if let linearRing = geometry1 as? LinearRing<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType> {
+        } else if let linearRing = geometry1 as? LinearRing, let points = geometry2 as? MultiPoint {
             let (geometry, intersectionMatrix) = generateIntersection(points, linearRing)
             return (geometry, intersectionMatrix.transposed())
         }
@@ -226,26 +210,26 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .one.
     fileprivate static func intersectionGeometryOneOne(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let lineString1 = geometry1 as? LineString<CoordinateType>, let lineString2 = geometry2 as? LineString<CoordinateType> {
+        if let lineString1 = geometry1 as? LineString, let lineString2 = geometry2 as? LineString {
             return generateIntersection(lineString1, lineString2)
-        } else if let lineString = geometry1 as? LineString<CoordinateType>, let multilineString = geometry2 as? MultiLineString<CoordinateType> {
+        } else if let lineString = geometry1 as? LineString, let multilineString = geometry2 as? MultiLineString {
             return generateIntersection(lineString, multilineString)
-        } else if let lineString = geometry1 as? LineString<CoordinateType>, let linearRing = geometry2 as? LinearRing<CoordinateType> {
+        } else if let lineString = geometry1 as? LineString, let linearRing = geometry2 as? LinearRing {
             return generateIntersection(lineString, linearRing)
-        } else if let multilineString = geometry1 as? MultiLineString<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
+        } else if let multilineString = geometry1 as? MultiLineString, let lineString = geometry2 as? LineString {
             let (geometry, intersectionMatrix) = generateIntersection(lineString, multilineString)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multilineString1 = geometry1 as? MultiLineString<CoordinateType>, let multilineString2 = geometry2 as? MultiLineString<CoordinateType> {
+        } else if let multilineString1 = geometry1 as? MultiLineString, let multilineString2 = geometry2 as? MultiLineString {
             return generateIntersection(multilineString1, multilineString2)
-        } else if let multilineString = geometry1 as? MultiLineString<CoordinateType>, let linearRing = geometry2 as? LinearRing<CoordinateType> {
+        } else if let multilineString = geometry1 as? MultiLineString, let linearRing = geometry2 as? LinearRing {
             let (geometry, intersectionMatrix) = generateIntersection(linearRing, multilineString)
             return (geometry, intersectionMatrix.transposed())
-        } else if let linearRing = geometry1 as? LinearRing<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
+        } else if let linearRing = geometry1 as? LinearRing, let lineString = geometry2 as? LineString {
             let (geometry, intersectionMatrix) = generateIntersection(lineString, linearRing)
             return (geometry, intersectionMatrix.transposed())
-        } else if let linearRing = geometry1 as? LinearRing<CoordinateType>, let multilineString = geometry2 as? MultiLineString<CoordinateType> {
+        } else if let linearRing = geometry1 as? LinearRing, let multilineString = geometry2 as? MultiLineString {
             return generateIntersection(linearRing, multilineString)
-        } else if let linearRing1 = geometry1 as? LinearRing<CoordinateType>, let linearRing2 = geometry2 as? LinearRing<CoordinateType> {
+        } else if let linearRing1 = geometry1 as? LinearRing, let linearRing2 = geometry2 as? LinearRing {
             return generateIntersection(linearRing1, linearRing2)
         }
         return (nil, IntersectionMatrix())
@@ -254,17 +238,17 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .one and .two, respectively.
     fileprivate static func intersectionGeometryOneTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let lineString = geometry1 as? LineString<CoordinateType>, let polygon = geometry2 as? Polygon<CoordinateType> {
+        if let lineString = geometry1 as? LineString, let polygon = geometry2 as? Polygon {
             return generateIntersection(lineString, polygon)
-        } else if let lineString = geometry1 as? LineString<CoordinateType>, let multipolygon = geometry2 as? MultiPolygon<CoordinateType> {
+        } else if let lineString = geometry1 as? LineString, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(lineString, multipolygon)
-        } else if let multilineString = geometry1 as? MultiLineString<CoordinateType>, let polygon = geometry2 as? Polygon<CoordinateType> {
+        } else if let multilineString = geometry1 as? MultiLineString, let polygon = geometry2 as? Polygon {
             return generateIntersection(multilineString, polygon)
-        } else if let multilineString = geometry1 as? MultiLineString<CoordinateType>, let multipolygon = geometry2 as? MultiPolygon<CoordinateType> {
+        } else if let multilineString = geometry1 as? MultiLineString, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(multilineString, multipolygon)
-        } else if let linearRing = geometry1 as? LinearRing<CoordinateType>, let polygon = geometry2 as? Polygon<CoordinateType> {
+        } else if let linearRing = geometry1 as? LinearRing, let polygon = geometry2 as? Polygon {
             return generateIntersection(linearRing, polygon)
-        } else if let linearRing = geometry1 as? LinearRing<CoordinateType>, let multipolygon = geometry2 as? MultiPolygon<CoordinateType> {
+        } else if let linearRing = geometry1 as? LinearRing, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(linearRing, multipolygon)
         }
         return (nil, IntersectionMatrix())
@@ -273,16 +257,16 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .two and .zero, respectively.
     fileprivate static func intersectionGeometryTwoZero(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let polgyon = geometry1 as? Polygon<CoordinateType>, let point = geometry2 as? Point<CoordinateType> {
+        if let polgyon = geometry1 as? Polygon, let point = geometry2 as? Point {
             let (geometry, intersectionMatrix) = generateIntersection(point, polgyon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let polgyon = geometry1 as? Polygon<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType> {
+        } else if let polgyon = geometry1 as? Polygon, let points = geometry2 as? MultiPoint {
             let (geometry, intersectionMatrix) = generateIntersection(points, polgyon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let point = geometry2 as? Point<CoordinateType> {
+        } else if let multipolygon = geometry1 as? MultiPolygon, let point = geometry2 as? Point {
             let (geometry, intersectionMatrix) = generateIntersection(point, multipolygon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let points = geometry2 as? MultiPoint<CoordinateType> {
+        } else if let multipolygon = geometry1 as? MultiPolygon, let points = geometry2 as? MultiPoint {
             let (geometry, intersectionMatrix) = generateIntersection(points, multipolygon)
             return (geometry, intersectionMatrix.transposed())
         }
@@ -292,22 +276,22 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .two and .one, respectively.
     fileprivate static func intersectionGeometryTwoOne(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let polgyon = geometry1 as? Polygon<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
+        if let polgyon = geometry1 as? Polygon, let lineString = geometry2 as? LineString {
             let (geometry, intersectionMatrix) = generateIntersection(lineString, polgyon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let polgyon = geometry1 as? Polygon<CoordinateType>, let multilineString = geometry2 as? MultiLineString<CoordinateType> {
+        } else if let polgyon = geometry1 as? Polygon, let multilineString = geometry2 as? MultiLineString {
             let (geometry, intersectionMatrix) = generateIntersection(multilineString, polgyon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let polgyon = geometry1 as? Polygon<CoordinateType>, let linearRing = geometry2 as? LinearRing<CoordinateType> {
+        } else if let polgyon = geometry1 as? Polygon, let linearRing = geometry2 as? LinearRing {
             let (geometry, intersectionMatrix) = generateIntersection(linearRing, polgyon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let lineString = geometry2 as? LineString<CoordinateType> {
+        } else if let multipolygon = geometry1 as? MultiPolygon, let lineString = geometry2 as? LineString {
             let (geometry, intersectionMatrix) = generateIntersection(lineString, multipolygon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let multilineString = geometry2 as? MultiLineString<CoordinateType> {
+        } else if let multipolygon = geometry1 as? MultiPolygon, let multilineString = geometry2 as? MultiLineString {
             let (geometry, intersectionMatrix) = generateIntersection(multilineString, multipolygon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let linearRing = geometry2 as? LinearRing<CoordinateType> {
+        } else if let multipolygon = geometry1 as? MultiPolygon, let linearRing = geometry2 as? LinearRing {
             let (geometry, intersectionMatrix) = generateIntersection(linearRing, multipolygon)
             return (geometry, intersectionMatrix.transposed())
         }
@@ -317,14 +301,14 @@ extension IntersectionMatrix {
     /// For the intersection of two geometries of dimension .two.
     fileprivate static func intersectionGeometryTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
 
-        if let polgyon1 = geometry1 as? Polygon<CoordinateType>, let polygon2 = geometry2 as? Polygon<CoordinateType> {
+        if let polgyon1 = geometry1 as? Polygon, let polygon2 = geometry2 as? Polygon {
             return generateIntersection(polgyon1, polygon2)
-        } else if let polgyon = geometry1 as? Polygon<CoordinateType>, let multipolygon = geometry2 as? MultiPolygon<CoordinateType> {
+        } else if let polgyon = geometry1 as? Polygon, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(polgyon, multipolygon)
-        } else if let multipolygon = geometry1 as? MultiPolygon<CoordinateType>, let polgyon = geometry2 as? Polygon<CoordinateType> {
+        } else if let multipolygon = geometry1 as? MultiPolygon, let polgyon = geometry2 as? Polygon {
             let (geometry, intersectionMatrix) = generateIntersection(polgyon, multipolygon)
             return (geometry, intersectionMatrix.transposed())
-        } else if let multipolygon1 = geometry1 as? MultiPolygon<CoordinateType>, let multipolygon2 = geometry2 as? MultiPolygon<CoordinateType> {
+        } else if let multipolygon1 = geometry1 as? MultiPolygon, let multipolygon2 = geometry2 as? MultiPolygon {
             return generateIntersection(multipolygon1, multipolygon2)
         }
         return (nil, IntersectionMatrix())
@@ -334,7 +318,7 @@ extension IntersectionMatrix {
     /// Dimension .zero and dimension .zero
     ///
 
-    fileprivate static func generateIntersection(_ point1: Point<CoordinateType>, _ point2: Point<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point1: Point, _ point2: Point) -> (Geometry?, IntersectionMatrix) {
 
         var matrixIntersects = IntersectionMatrix()
         matrixIntersects[.exterior, .exterior] = .two
@@ -349,7 +333,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ points: MultiPoint<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ points: MultiPoint) -> (Geometry?, IntersectionMatrix) {
 
         /// Identical
         var identical = IntersectionMatrix()
@@ -384,7 +368,7 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ point: Point<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ point: Point) -> (Geometry?, IntersectionMatrix) {
 
         /// Identical
         var identical = IntersectionMatrix()
@@ -418,7 +402,7 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func generateIntersection(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoint) -> (Geometry?, IntersectionMatrix) {
 
         /// Identical
         var identical = IntersectionMatrix()
@@ -456,8 +440,8 @@ extension IntersectionMatrix {
         var pointsMatched = false
         var pointInGeometry1NotMatched = false
         var pointInGeometry2NotMatched = false
-        var multiPointIntersection = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-        var multiPointGeometry2Matched = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var multiPointIntersection = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        var multiPointGeometry2Matched = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
         for tempPoint1 in points1 {
 
             var foundMatchingPoint = false
@@ -507,7 +491,7 @@ extension IntersectionMatrix {
     }
 
     /// Returns true if the first point is on the line segment defined by the next two points.
-    fileprivate static func coordinateIsOnLineSegment(_ coordinate: CoordinateType, segment: Segment<CoordinateType>) -> LocationType {
+    fileprivate static func coordinateIsOnLineSegment(_ coordinate: Coordinate, segment: Segment) -> LocationType {
 
         /// Will likely use precision later, but use EPSILON for now.
         let EPSILON = 0.01
@@ -551,11 +535,11 @@ extension IntersectionMatrix {
         return .onExterior
     }
 
-    fileprivate static func pointIsOnLineSegment(_ point: Point<CoordinateType>, segment: Segment<CoordinateType>) -> LocationType {
+    fileprivate static func pointIsOnLineSegment(_ point: Point, segment: Segment) -> LocationType {
         return coordinateIsOnLineSegment(point.coordinate, segment: segment)
     }
 
-    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ lineString: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ lineString: LineString) -> (Geometry?, IntersectionMatrix) {
 
         /// Point matches endpoint
         var matchesEndPoint = IntersectionMatrix()
@@ -590,7 +574,7 @@ extension IntersectionMatrix {
         for firstCoordIndex in 0..<lineString.count - 1 {
             let firstCoord  = lineString[firstCoordIndex]
             let secondCoord = lineString[firstCoordIndex + 1]
-            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment = Segment(left: firstCoord, right: secondCoord)
             if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                 return (point, pointOnInterior)
             }
@@ -600,7 +584,7 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ linearRing: LinearRing) -> (Geometry?, IntersectionMatrix) {
 
         /// Point on interior
         var pointOnInterior = IntersectionMatrix()
@@ -618,7 +602,7 @@ extension IntersectionMatrix {
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
-            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment = Segment(left: firstCoord, right: secondCoord)
             if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                 return (point, pointOnInterior)
             }
@@ -628,7 +612,7 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
 
         /// Point matches endpoint
         var matchesEndPoint = IntersectionMatrix()
@@ -666,7 +650,7 @@ extension IntersectionMatrix {
             for firstCoordIndex in 0..<lineString.count - 1 {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
-                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let segment = Segment(left: firstCoord, right: secondCoord)
                 if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                     return (point, pointOnInterior)
                 }
@@ -677,7 +661,7 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func subset(_ point: Point<CoordinateType>, _ points: MultiPoint<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ point: Point, _ points: MultiPoint) -> Bool {
 
         for tempPoint in points {
             if point == tempPoint {
@@ -687,7 +671,7 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func subset(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ points1: MultiPoint, _ points2: MultiPoint) -> Bool {
 
         for tempPoint in points1 {
             if subset(tempPoint, points2) {
@@ -699,12 +683,12 @@ extension IntersectionMatrix {
         return true
     }
 
-    fileprivate static func subset(_ point: Point<CoordinateType>, _ lineString: LineString<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ point: Point, _ lineString: LineString) -> Bool {
 
         for firstCoordIndex in 0..<lineString.count - 1 {
             let firstCoord  = lineString[firstCoordIndex]
             let secondCoord = lineString[firstCoordIndex + 1]
-            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment = Segment(left: firstCoord, right: secondCoord)
             let location = pointIsOnLineSegment(point, segment: segment)
             if location == .onInterior || location == .onBoundary {
                 return true
@@ -713,13 +697,13 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func subset(_ point: Point<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ point: Point, _ multiLineString: MultiLineString) -> Bool {
 
         for lineString in multiLineString {
             for firstCoordIndex in 0..<lineString.count - 1 {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
-                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let segment = Segment(left: firstCoord, right: secondCoord)
                 let location = pointIsOnLineSegment(point, segment: segment)
                 if location == .onInterior || location == .onBoundary {
                     return true
@@ -729,11 +713,11 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ lineString: LineString<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ points: MultiPoint, _ lineString: LineString) -> RelatedTo {
 
         var relatedTo = RelatedTo()
 
-        guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
                 return relatedTo
         }
 
@@ -756,7 +740,7 @@ extension IntersectionMatrix {
             for firstCoordIndex in 0..<lineString.count - 1 {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
-                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let segment = Segment(left: firstCoord, right: secondCoord)
                 let location = pointIsOnLineSegment(tempPoint, segment: segment)
                 if location == .onInterior {
                     relatedTo.firstInteriorTouchesSecondInterior = .zero
@@ -775,12 +759,12 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
-    fileprivate static func subset(_ point: Point<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ point: Point, _ linearRing: LinearRing) -> Bool {
 
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
-            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment = Segment(left: firstCoord, right: secondCoord)
             let location = pointIsOnLineSegment(point, segment: segment)
             if location == .onInterior || location == .onBoundary {
                 return true
@@ -789,7 +773,7 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ points: MultiPoint, _ linearRing: LinearRing) -> RelatedTo {
 
         var relatedTo = RelatedTo()
         for tempPoint in points {
@@ -797,7 +781,7 @@ extension IntersectionMatrix {
             for firstCoordIndex in 0..<linearRing.count - 1 {
                 let firstCoord  = linearRing[firstCoordIndex]
                 let secondCoord = linearRing[firstCoordIndex + 1]
-                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let segment = Segment(left: firstCoord, right: secondCoord)
                 let location = pointIsOnLineSegment(tempPoint, segment: segment)
                 if location == .onInterior {
                     pointIsOnExterior = false
@@ -829,13 +813,13 @@ extension IntersectionMatrix {
     }
 
     /// This assumes a GeometryCollection where all of the elements are LinearRings.
-    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ geometryCollection: GeometryCollection) -> RelatedTo {
+    fileprivate static func relatedTo(_ points: MultiPoint, _ geometryCollection: GeometryCollection) -> RelatedTo {
 
         var relatedTo = RelatedTo()
 
         for index in 0..<geometryCollection.count {
 
-            guard let linearRing = geometryCollection[index] as? LinearRing<CoordinateType> else {
+            guard let linearRing = geometryCollection[index] as? LinearRing else {
                 return relatedTo
             }
 
@@ -843,7 +827,7 @@ extension IntersectionMatrix {
                 for firstCoordIndex in 0..<linearRing.count - 1 {
                     let firstCoord  = linearRing[firstCoordIndex]
                     let secondCoord = linearRing[firstCoordIndex + 1]
-                    let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                    let segment = Segment(left: firstCoord, right: secondCoord)
                     let location = pointIsOnLineSegment(tempPoint, segment: segment)
                     if location == .onInterior {
                         relatedTo.firstInteriorTouchesSecondInterior = .zero
@@ -860,11 +844,11 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
-    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ points: MultiPoint, _ multiLineString: MultiLineString) -> RelatedTo {
 
         var relatedTo = RelatedTo()
 
-        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
             return relatedTo
         }
 
@@ -881,7 +865,7 @@ extension IntersectionMatrix {
                 for firstCoordIndex in 0..<lineString.count - 1 {
                     let firstCoord  = lineString[firstCoordIndex]
                     let secondCoord = lineString[firstCoordIndex + 1]
-                    let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                    let segment = Segment(left: firstCoord, right: secondCoord)
                     let location = pointIsOnLineSegment(tempPoint, segment: segment)
                     if location == .onInterior {
                         relatedTo.firstInteriorTouchesSecondInterior = .zero
@@ -903,12 +887,12 @@ extension IntersectionMatrix {
 
     /// This code parallels that of a point and a simple polygon.
     /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
-    fileprivate static func relatedTo(_ point: Point<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ point: Point, _ linearRing: LinearRing) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         /// Check if the point is on the boundary of the linear ring
-        var points = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var points = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
         points.append(point)
         let tempRelatedToResult = relatedTo(points, linearRing)
         if tempRelatedToResult.firstTouchesSecondInterior != .empty {
@@ -947,19 +931,19 @@ extension IntersectionMatrix {
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
     /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
     /// The algorithm was modified because we assume the polygon is defined as a LinearRing, whose first and last points are the same.
-    fileprivate static func relatedTo(_ point: Point<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ point: Point, _ simplePolygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return relatedToResult
         }
 
         /// Check if the point is on the boundary of the polygon
-        var points = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var points = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
         points.append(point)
         let tempRelatedToResult = relatedTo(points, outerLinearRing)
         if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
@@ -1011,33 +995,33 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    fileprivate static func relatedTo(_ coordinate: CoordinateType, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ coordinate: Coordinate, _ simplePolygon: Polygon) -> RelatedTo {
 
-        let point = Point<CoordinateType>(coordinate: coordinate, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        let point = Point(coordinate, precision: Floating(), coordinateSystem: Cartesian())
         return relatedTo(point, simplePolygon)
     }
 
-    fileprivate static func relatedTo(_ coordinate: CoordinateType, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ coordinate: Coordinate, _ linearRing: LinearRing) -> RelatedTo {
 
-        let point = Point<CoordinateType>(coordinate: coordinate, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        let point = Point(coordinate, precision: Floating(), coordinateSystem: Cartesian())
         return relatedTo(point, linearRing)
     }
 
     /// Assume here that the polygon is a general polygon with holes.
     /// Note we've changed the name so as not to conflict with the simple polygon case.  This may change later.
-    fileprivate static func relatedToGeneral(_ point: Point<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedToGeneral(_ point: Point, _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return relatedToResult
         }
 
         /// Get the relationship between the point and the main polygon
-        let tempPolygon = Polygon<CoordinateType>(outerRing: outerLinearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        let tempPolygon = Polygon(outerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
         let pointRelatedToResult = relatedTo(point, tempPolygon)
 
         /// Check if the point is on the exterior of the main polygon
@@ -1055,13 +1039,13 @@ extension IntersectionMatrix {
 
         for index in 1..<polygonBoundary.count {
             
-            guard let innerLinearRing = polygonBoundary[index] as? LinearRing<CoordinateType>,
+            guard let innerLinearRing = polygonBoundary[index] as? LinearRing,
                 innerLinearRing.count > 0 else {
                     return pointRelatedToResult
             }
 
             /// Get the relationship between the point and the hole
-            let tempPolygon = Polygon<CoordinateType>(outerRing: innerLinearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            let tempPolygon = Polygon(innerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
             let pointRelatedToResult = relatedTo(point, tempPolygon)
 
             /// Check if the point is on the interior of the hole
@@ -1084,7 +1068,7 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that the multi polygon is a general multi polygon with a collection of non-intersecting general polygons.
-    fileprivate static func relatedTo(_ point: Point<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ point: Point, _ multipolygon: MultiPolygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1211,7 +1195,7 @@ extension IntersectionMatrix {
     }
 
     /// The polygon is a general polygon.  This polygon has holes.
-    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ points: MultiPoint, _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1229,9 +1213,9 @@ extension IntersectionMatrix {
             relatedToResult.firstInteriorTouchesSecondBoundary = .zero
         }
 
-        var pointsOnInteriorOfMainRing      = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-        var pointsOnInteriorOfInnerRings    = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
-        var pointsOnBoundaryOfInnerRings    = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var pointsOnInteriorOfMainRing      = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        var pointsOnInteriorOfInnerRings    = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        var pointsOnBoundaryOfInnerRings    = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
 
         for tempPoint in points {
 
@@ -1239,11 +1223,11 @@ extension IntersectionMatrix {
 
             for element in polygonBoundary {
 
-                guard let linearRing = element as? LinearRing<CoordinateType> else {
+                guard let linearRing = element as? LinearRing else {
                     return relatedToResult
                 }
 
-                let tempPolygon = Polygon<CoordinateType>(outerRing: linearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+                let tempPolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
 
                 let tempRelatedToResult = relatedTo(tempPoint, tempPolygon)
 
@@ -1288,14 +1272,14 @@ extension IntersectionMatrix {
 
     /// Assume here that the polygon is a general polygon with holes.
     /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
-    fileprivate static func relatedToGeneral(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedToGeneral(_ points: MultiPoint, _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         /// Get the polygon boundary
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return relatedToResult
         }
@@ -1338,7 +1322,7 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that the multi polygon is a general multi polygon with holes.
-    fileprivate static func relatedTo(_ points: MultiPoint<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1356,14 +1340,14 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    fileprivate static func midpoint(_ coord1: CoordinateType, _ coord2: CoordinateType) -> CoordinateType {
+    fileprivate static func midpoint(_ coord1: Coordinate, _ coord2: Coordinate) -> Coordinate {
 
-        return CoordinateType(x: (coord1.x + coord2.x) / 2.0, y: (coord1.y + coord2.y) / 2.0)
+        return Coordinate(x: (coord1.x + coord2.x) / 2.0, y: (coord1.y + coord2.y) / 2.0)
 
     }
 
     /// This code parallels that where the second geometry is a simple polygon.
-    fileprivate static func relatedTo(_ segment: Segment<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ segment: Segment, _ linearRing: LinearRing) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1385,7 +1369,7 @@ extension IntersectionMatrix {
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
-            let segment2 = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment2 = Segment(left: firstCoord, right: secondCoord)
 
             let lineSegmentIntersection = intersection(segment: segment, other: segment2)
 
@@ -1435,31 +1419,31 @@ extension IntersectionMatrix {
 
         guard intersectionGeometries.count >= 2 else { return relatedToResult }
 
-        var midpointCoordinates = [CoordinateType]()
+        var midpointCoordinates = [Coordinate]()
 
         for firstGeometryIndex in 0..<intersectionGeometries.count - 1 {
             let intersectionGeometry1 = intersectionGeometries[firstGeometryIndex]
             let intersectionGeometry2 = intersectionGeometries[firstGeometryIndex + 1]
 
-            var midpointCoord1: CoordinateType?
-            var midpointCoord2: CoordinateType?
-            if let point1 = intersectionGeometry1 as? Point<CoordinateType>, let point2 = intersectionGeometry2 as? Point<CoordinateType> {
+            var midpointCoord1: Coordinate?
+            var midpointCoord2: Coordinate?
+            if let point1 = intersectionGeometry1 as? Point, let point2 = intersectionGeometry2 as? Point {
 
                 midpointCoord1 = midpoint(point1.coordinate, point2.coordinate)
 
-            } else if let point = intersectionGeometry1 as? Point<CoordinateType>, let segment = intersectionGeometry2 as? Segment<CoordinateType> {
+            } else if let point = intersectionGeometry1 as? Point, let segment = intersectionGeometry2 as? Segment {
 
                 /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
                 midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
                 midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
 
-            } else if let point = intersectionGeometry2 as? Point<CoordinateType>, let segment = intersectionGeometry1 as? Segment<CoordinateType> {
+            } else if let point = intersectionGeometry2 as? Point, let segment = intersectionGeometry1 as? Segment {
 
                 /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
                 midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
                 midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
 
-            } else if let segment1 = intersectionGeometry1 as? Segment<CoordinateType>, let segment2 = intersectionGeometry2 as? Segment<CoordinateType> {
+            } else if let segment1 = intersectionGeometry1 as? Segment, let segment2 = intersectionGeometry2 as? Segment {
 
                 /// Both line segments lie on a straight line.
                 /// The midpoint of interest lies either (1) between the leftCoordinate of the first and the rightCoordinate of the second or
@@ -1504,13 +1488,13 @@ extension IntersectionMatrix {
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
     /// The leftCoordinateBoundaryPoint and rightCoordinateBoundaryPoint flags apply to the segment.
-    fileprivate static func relatedTo(_ segment: Segment<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>, leftCoordinateBoundaryPoint: Bool = false, rightCoordinateBoundaryPoint: Bool = false) -> RelatedTo {
+    fileprivate static func relatedTo(_ segment: Segment, _ simplePolygon: Polygon, leftCoordinateBoundaryPoint: Bool = false, rightCoordinateBoundaryPoint: Bool = false) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let mainPolygon = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let mainPolygon = polygonBoundary[0] as? LinearRing,
             mainPolygon.count > 0 else {
                 return relatedToResult
         }
@@ -1538,7 +1522,7 @@ extension IntersectionMatrix {
         for firstCoordIndex in 0..<mainPolygon.count - 1 {
             let firstCoord  = mainPolygon[firstCoordIndex]
             let secondCoord = mainPolygon[firstCoordIndex + 1]
-            let segment2 = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment2 = Segment(left: firstCoord, right: secondCoord)
 
             /// Get the relationship between two segments
             let lineSegmentIntersection = intersection(segment: segment, other: segment2)
@@ -1547,7 +1531,7 @@ extension IntersectionMatrix {
             if let intersectionGeometry = lineSegmentIntersection.geometry {
                 /// Append the new geometry to the geometry array, only if the geometry does not currently exist in the array
                 let matchingGeometries = intersectionGeometries.filter{
-                    if ($0 as? Point<CoordinateType>) == (intersectionGeometry as? Point<CoordinateType>) {
+                    if ($0 as? Point) == (intersectionGeometry as? Point) {
                         return true
                     }
                     return false
@@ -1625,31 +1609,31 @@ extension IntersectionMatrix {
 
         guard intersectionGeometries.count >= 2 else { return relatedToResult }
 
-        var midpointCoordinates = [CoordinateType]()
+        var midpointCoordinates = [Coordinate]()
 
         for firstGeometryIndex in 0..<intersectionGeometries.count - 1 {
             let intersectionGeometry1 = intersectionGeometries[firstGeometryIndex]
             let intersectionGeometry2 = intersectionGeometries[firstGeometryIndex + 1]
 
-            var midpointCoord1: CoordinateType?
-            var midpointCoord2: CoordinateType?
-            if let point1 = intersectionGeometry1 as? Point<CoordinateType>, let point2 = intersectionGeometry2 as? Point<CoordinateType> {
+            var midpointCoord1: Coordinate?
+            var midpointCoord2: Coordinate?
+            if let point1 = intersectionGeometry1 as? Point, let point2 = intersectionGeometry2 as? Point {
 
                 midpointCoord1 = midpoint(point1.coordinate, point2.coordinate)
 
-            } else if let point = intersectionGeometry1 as? Point<CoordinateType>, let segment = intersectionGeometry2 as? Segment<CoordinateType> {
+            } else if let point = intersectionGeometry1 as? Point, let segment = intersectionGeometry2 as? Segment {
 
                 /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
                 midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
                 midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
 
-            } else if let point = intersectionGeometry2 as? Point<CoordinateType>, let segment = intersectionGeometry1 as? Segment<CoordinateType> {
+            } else if let point = intersectionGeometry2 as? Point, let segment = intersectionGeometry1 as? Segment {
 
                 /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
                 midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
                 midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
 
-            } else if let segment1 = intersectionGeometry1 as? Segment<CoordinateType>, let segment2 = intersectionGeometry2 as? Segment<CoordinateType> {
+            } else if let segment1 = intersectionGeometry1 as? Segment, let segment2 = intersectionGeometry2 as? Segment {
 
                 /// Both line segments lie on a straight line.
                 /// The midpoint of interest lies either (1) between the leftCoordinate of the first and the rightCoordinate of the second or
@@ -1693,21 +1677,21 @@ extension IntersectionMatrix {
     }
 
     /// This is very similar to the simple polygon case below.
-    fileprivate static func relatedTo(_ lineString: LineString<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ lineString: LineString, _ linearRing: LinearRing) -> RelatedTo {
 
-        let polygon = Polygon(outerRing: linearRing)
+        let polygon = Polygon(linearRing)
 
         return relatedTo(lineString, polygon)
     }
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-    fileprivate static func relatedTo(_ lineString: LineString<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ lineString: LineString, _ simplePolygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return relatedToResult
         }
@@ -1718,7 +1702,7 @@ extension IntersectionMatrix {
 
             let firstCoord  = lineString[firstCoordIndex]
             let secondCoord = lineString[firstCoordIndex + 1]
-            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment = Segment(left: firstCoord, right: secondCoord)
             var leftCoordinateBoundaryPoint = false
             var rightCoordinateBoundaryPoint = false
             if firstCoordIndex == 0 {
@@ -1759,7 +1743,7 @@ extension IntersectionMatrix {
     }
 
     /// These relationships will most often be used when relating parts of a polygon to one another.
-    fileprivate static func relatedTo(_ linearRing1: LinearRing<CoordinateType>, _ linearRing2: LinearRing<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1769,7 +1753,7 @@ extension IntersectionMatrix {
 
             let firstCoord  = linearRing1[firstCoordIndex]
             let secondCoord = linearRing1[firstCoordIndex + 1]
-            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment = Segment(left: firstCoord, right: secondCoord)
 
             let segmentRelatedToResult = relatedTo(segment, linearRing2)
 
@@ -1791,14 +1775,14 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-    fileprivate static func relatedTo(_ linearRing: LinearRing<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ linearRing: LinearRing, _ simplePolygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         /// Get the polygon boundary
         guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return relatedToResult
         }
@@ -1809,7 +1793,7 @@ extension IntersectionMatrix {
 
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
-            let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+            let segment = Segment(left: firstCoord, right: secondCoord)
 
             let segmentRelatedToResult = relatedTo(segment, simplePolygon)
 
@@ -1839,7 +1823,7 @@ extension IntersectionMatrix {
     }
 
     /// These relationships will most often be used when relating parts of a polygon to one another.
-    fileprivate static func relatedTo(_ linearRing1: LinearRing<CoordinateType>, _ linearRingArray: [LinearRing<CoordinateType>]) -> RelatedTo {
+    fileprivate static func relatedTo(_ linearRing1: LinearRing, _ linearRingArray: [LinearRing]) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1871,7 +1855,7 @@ extension IntersectionMatrix {
     }
 
     /// These relationships will most often be used when relating parts of a polygon to one another.
-    fileprivate static func relatedTo(_ linearRingArray1: [LinearRing<CoordinateType>], _ linearRingArray2: [LinearRing<CoordinateType>]) -> RelatedTo {
+    fileprivate static func relatedTo(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1903,13 +1887,13 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-    fileprivate static func relatedTo(_ multiLineString: MultiLineString<CoordinateType>, _ simplePolygon: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ multiLineString: MultiLineString, _ simplePolygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
         guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return relatedToResult
         }
@@ -1921,7 +1905,7 @@ extension IntersectionMatrix {
 
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
-                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let segment = Segment(left: firstCoord, right: secondCoord)
                 var leftCoordinateBoundaryPoint = false
                 var rightCoordinateBoundaryPoint = false
                 if firstCoordIndex == 0 {
@@ -1963,18 +1947,18 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that both polygons are simple polygons with no holes, just a single simple boundary.
-    fileprivate static func relatedTo(_ simplePolygon1: Polygon<CoordinateType>, _ simplePolygon2: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedTo(_ simplePolygon1: Polygon, _ simplePolygon2: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary1 = simplePolygon1.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary1 = simplePolygon1.boundary() as? MultiLineString,
             polygonBoundary1.count > 0,
             let mainPolygon1 = polygonBoundary1.first,
             mainPolygon1.count > 0 else {
                 return relatedToResult
         }
 
-        guard let polygonBoundary2 = simplePolygon2.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary2 = simplePolygon2.boundary() as? MultiLineString,
             polygonBoundary2.count > 0,
             let mainPolygon2 = polygonBoundary2.first,
             mainPolygon2.count > 0 else {
@@ -1996,7 +1980,7 @@ extension IntersectionMatrix {
 
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
-                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let segment = Segment(left: firstCoord, right: secondCoord)
 
                 let segmentRelatedToResult = relatedTo(segment, simplePolygon2)
 
@@ -2029,7 +2013,7 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    fileprivate static func disjoint(_ polygon1: Polygon<CoordinateType>, _ polygon2: Polygon<CoordinateType>) -> Bool {
+    fileprivate static func disjoint(_ polygon1: Polygon, _ polygon2: Polygon) -> Bool {
 
         /// Get the relationship of the outer ring of the first polygon to the second polygon.
         let (_, outerRing1ToSecondPolygonMatrix) = generateIntersection(polygon1.outerRing, polygon2)
@@ -2054,7 +2038,7 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that both polygons are full polygons with holes
-    fileprivate static func relatedToFull(_ polygon1: Polygon<CoordinateType>, _ polygon2: Polygon<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedToFull(_ polygon1: Polygon, _ polygon2: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -2170,16 +2154,16 @@ extension IntersectionMatrix {
     }
 
     /// Get the holes for a polygon.  This will be an array of linear rings.
-    fileprivate static func holes(_ polygon: Polygon<CoordinateType>) -> [LinearRing<CoordinateType>] {
+    fileprivate static func holes(_ polygon: Polygon) -> [LinearRing] {
 
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 1 else {
                 return []
         }
 
-        var innerLinearRings = [LinearRing<CoordinateType>]()
+        var innerLinearRings = [LinearRing]()
         for index in 1..<polygonBoundary.count {
-            guard let linearRing = polygonBoundary[index] as? LinearRing<CoordinateType> else { return [] }
+            guard let linearRing = polygonBoundary[index] as? LinearRing else { return [] }
             innerLinearRings.append(linearRing)
         }
 
@@ -2205,24 +2189,24 @@ extension IntersectionMatrix {
         return areMainPolygonBoundariesIdentical(relatedToPolygons)
     }
 
-    fileprivate static func areSimplePolygonsIdentical(_ simplePolygon1: Polygon<CoordinateType>, _ simplePolygon2: Polygon<CoordinateType>) -> Bool {
+    fileprivate static func areSimplePolygonsIdentical(_ simplePolygon1: Polygon, _ simplePolygon2: Polygon) -> Bool {
         let relatedToPolygons = relatedTo(simplePolygon1, simplePolygon2)
         return areMainPolygonBoundariesIdentical(relatedToPolygons)
     }
 
-    fileprivate static func countIdentical(_ linearRingArray1: [LinearRing<CoordinateType>], _ linearRingArray2: [LinearRing<CoordinateType>]) -> Bool {
+    fileprivate static func countIdentical(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> Bool {
 
         return linearRingArray1.count == linearRingArray2.count
     }
 
-    fileprivate static func holeCountIdentical(_ polygon1: Polygon<CoordinateType>, _ polygon2: Polygon<CoordinateType>) -> Bool {
+    fileprivate static func holeCountIdentical(_ polygon1: Polygon, _ polygon2: Polygon) -> Bool {
 
-        guard let polygonBoundary1 = polygon1.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary1 = polygon1.boundary() as? MultiLineString,
             polygonBoundary1.count > 0 else {
                 return false
         }
 
-        guard let polygonBoundary2 = polygon2.boundary() as? MultiLineString<CoordinateType>,
+        guard let polygonBoundary2 = polygon2.boundary() as? MultiLineString,
             polygonBoundary2.count > 0 else {
                 return false
         }
@@ -2231,7 +2215,7 @@ extension IntersectionMatrix {
     }
 
     /// Does the linear ring match any of the linear rings in the array?
-    fileprivate static func matchesOne(_ linearRing1: LinearRing<CoordinateType>, _ linearRingArray: [LinearRing<CoordinateType>]) -> Bool {
+    fileprivate static func matchesOne(_ linearRing1: LinearRing, _ linearRingArray: [LinearRing]) -> Bool {
 
         for linearRing2 in linearRingArray {
 
@@ -2246,7 +2230,7 @@ extension IntersectionMatrix {
     }
 
     /// Does the first array of linear rings match a subset of the linear rings in the second array?
-    fileprivate static func matchesSubset(_ linearRingArray1: [LinearRing<CoordinateType>], _ linearRingArray2: [LinearRing<CoordinateType>]) -> Bool {
+    fileprivate static func matchesSubset(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> Bool {
 
         for linearRing1 in linearRingArray1 {
 
@@ -2290,7 +2274,7 @@ extension IntersectionMatrix {
     }
 
     /// Does the simple polygon match any of the simple polygons in the array?
-    fileprivate static func matchesOne(_ simplePolygon1: Polygon<CoordinateType>, _ simplePolygonArray: [Polygon<CoordinateType>]) -> Bool {
+    fileprivate static func matchesOne(_ simplePolygon1: Polygon, _ simplePolygonArray: [Polygon]) -> Bool {
 
         for simplePolygon2 in simplePolygonArray {
 
@@ -2303,7 +2287,7 @@ extension IntersectionMatrix {
     }
 
     /// Does the first array of simple polygons match a subset of the simple polygons in the second array?
-    fileprivate static func matchesSubset(_ simplePolygonArray1: [Polygon<CoordinateType>], _ simplePolygonArray2: [Polygon<CoordinateType>]) -> Bool {
+    fileprivate static func matchesSubset(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> Bool {
 
         for simplePolygon1 in simplePolygonArray1 {
 
@@ -2320,20 +2304,20 @@ extension IntersectionMatrix {
     /// Does the first array of simple polygons match the second array of the simple polygons?
     /// Note that we assume the same polygon does not appear more than once in either array.
     /// TODO: Expand this to accommodate duplicates?
-    fileprivate static func matches(_ simplePolygonArray1: [Polygon<CoordinateType>], _ simplePolygonArray2: [Polygon<CoordinateType>]) -> Bool {
+    fileprivate static func matches(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> Bool {
 
         return matchesSubset(simplePolygonArray1, simplePolygonArray2) && simplePolygonArray1.count == simplePolygonArray2.count
     }
 
     /// Is the first simple polygon completely in the interior of the second simple polygon?
-    fileprivate static func isInInterior(_ simplePolygon1: Polygon<CoordinateType>, _ simplePolygon2: Polygon<CoordinateType>) -> Bool {
+    fileprivate static func isInInterior(_ simplePolygon1: Polygon, _ simplePolygon2: Polygon) -> Bool {
 
         let relatedToPolygons = relatedTo(simplePolygon1, simplePolygon2)
         return relatedToPolygons.firstTouchesSecondInterior > .empty && relatedToPolygons.firstTouchesSecondBoundary == .empty && relatedToPolygons.firstTouchesSecondExterior == .empty
     }
 
     /// Is the first simple polygon completely in the interior of any the simple polygons in the simple polygon array?
-    fileprivate static func isInInterior(_ simplePolygon1: Polygon<CoordinateType>, _ simplePolygonArray: [Polygon<CoordinateType>]) -> Bool {
+    fileprivate static func isInInterior(_ simplePolygon1: Polygon, _ simplePolygonArray: [Polygon]) -> Bool {
 
         for simplePolygon2 in simplePolygonArray {
             let relatedToPolygons = relatedTo(simplePolygon1, simplePolygon2)
@@ -2345,15 +2329,15 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func relatedToAsPolygon(_ lineString: LineString<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedToAsPolygon(_ lineString: LineString, _ linearRing: LinearRing) -> RelatedTo {
 
         /// Convert a linear ring to a simple polygon
-        let simplePolygon = Polygon<CoordinateType>(outerRing: linearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        let simplePolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
 
         return relatedTo(lineString, simplePolygon)
     }
 
-    fileprivate static func relatedToAsPolygon(_ lineString1: LineString<CoordinateType>, _ lineString2: LineString<CoordinateType>) -> RelatedTo {
+    fileprivate static func relatedToAsPolygon(_ lineString1: LineString, _ lineString2: LineString) -> RelatedTo {
 
         /// Convert the second line string to a simple polygon
         var tempLineString = lineString2
@@ -2363,13 +2347,13 @@ extension IntersectionMatrix {
             tempLineString.append(firstCoord)
         }
 
-        let linearRing = LinearRing<CoordinateType>(elements: tempLineString, precision: FloatingPrecision(), coordinateSystem: Cartesian())
-        let simplePolygon = Polygon<CoordinateType>(outerRing: linearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        let linearRing = LinearRing(converting: tempLineString, precision: Floating(), coordinateSystem: Cartesian())
+        let simplePolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
 
         return relatedTo(lineString1, simplePolygon)
     }
 
-    fileprivate static func intersect(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
+    fileprivate static func intersect(_ points1: MultiPoint, _ points2: MultiPoint) -> Bool {
 
         for tempPoint in points1 {
             if subset(tempPoint, points2) {
@@ -2379,7 +2363,7 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ lineString: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ lineString: LineString) -> (Geometry?, IntersectionMatrix) {
 
         /// Point matches endpoint
         var matrixIntersects = IntersectionMatrix()
@@ -2394,10 +2378,10 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Define the MultiPoint geometry that might be returned
-        var resultGeometry = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var resultGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
 
         /// Check if any of the points equals either of the two endpoints of the line string.
-        guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
             return (nil, disjoint)
         }
 
@@ -2424,7 +2408,7 @@ extension IntersectionMatrix {
             for firstCoordIndex in 0..<lineString.count - 1 {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
-                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let segment = Segment(left: firstCoord, right: secondCoord)
                 if pointIsOnLineSegment(point, segment: segment) == .onInterior {
                     pointOnInterior = true
                     resultGeometry.append(point)
@@ -2465,7 +2449,7 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ linearRing: LinearRing) -> (Geometry?, IntersectionMatrix) {
 
         /// Point matches endpoint
         var matrixIntersects = IntersectionMatrix()
@@ -2479,7 +2463,7 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Define the MultiPoint geometry that might be returned
-        var resultGeometry = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var resultGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
 
         /// Check for points on the interior or exterior of the linear ring.  There is no boundary.
         var pointOnInterior = false
@@ -2491,7 +2475,7 @@ extension IntersectionMatrix {
             for firstCoordIndex in 0..<linearRing.count - 1 {
                 let firstCoord  = linearRing[firstCoordIndex]
                 let secondCoord = linearRing[firstCoordIndex + 1]
-                let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                let segment = Segment(left: firstCoord, right: secondCoord)
                 let location = pointIsOnLineSegment(point, segment: segment)
                 if location == .onInterior || location == .onBoundary {
                     pointOnInterior = true
@@ -2525,7 +2509,7 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
 
         /// Point matches endpoint
         var matrixIntersects = IntersectionMatrix()
@@ -2540,10 +2524,10 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Define the MultiPoint geometry that might be returned
-        var resultGeometry = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var resultGeometry = MultiPoint(precision: points.precision, coordinateSystem: points.coordinateSystem)
 
         /// Check if any of the points equals any of the endpoints of the multiline string.
-        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
             return (nil, disjoint)
         }
 
@@ -2571,7 +2555,7 @@ extension IntersectionMatrix {
                 for firstCoordIndex in 0..<lineString.count - 1 {
                     let firstCoord  = lineString[firstCoordIndex]
                     let secondCoord = lineString[firstCoordIndex + 1]
-                    let segment = Segment<CoordinateType>(left: firstCoord, right: secondCoord)
+                    let segment = Segment(left: firstCoord, right: secondCoord)
                     if pointIsOnLineSegment(point, segment: segment)  == .onInterior {
                         pointOnInterior = true
                         resultGeometry.append(point)
@@ -2637,7 +2621,7 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -2645,7 +2629,7 @@ extension IntersectionMatrix {
         matrixIntersects[.exterior, .boundary] = .one
         matrixIntersects[.exterior, .exterior] = .two
 
-        var points = MultiPoint<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var points = MultiPoint(precision: point.precision, coordinateSystem: point.coordinateSystem)
         points.append(point)
 
         let tempRelatedToResult = relatedTo(points, polygon)
@@ -2661,7 +2645,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ point: Point<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
 
         let relatedToPointMP = relatedTo(point, multipolygon)
 
@@ -2670,7 +2654,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -2695,7 +2679,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
 
         let relatedToPointsMP = relatedTo(points, multipolygon)
 
@@ -2753,7 +2737,7 @@ extension IntersectionMatrix {
     ///
     /// Check if the bounding boxes overlap for two line segments
     ///
-    fileprivate static func boundingBoxesOverlap2D(segment: Segment<CoordinateType>, other: Segment<CoordinateType>) -> Bool {
+    fileprivate static func boundingBoxesOverlap2D(segment: Segment, other: Segment) -> Bool {
         let range1x = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
         let range1y = (Swift.min(segment.leftCoordinate.y, segment.rightCoordinate.y), Swift.max(segment.leftCoordinate.y, segment.rightCoordinate.y))
         let range2x = (Swift.min(other.leftCoordinate.x, other.rightCoordinate.x), Swift.max(other.leftCoordinate.x, other.rightCoordinate.x))
@@ -2782,11 +2766,9 @@ extension IntersectionMatrix {
     /// value = 0 implies p2 is on the line
     /// value < 0 implies p2 is to the right
     ///
-    fileprivate static func isLeft(p0: CoordinateType, p1: CoordinateType, p2: CoordinateType) -> Double {
+    fileprivate static func isLeft(p0: Coordinate, p1: Coordinate, p2: Coordinate) -> Double {
         return (p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y -  p0.y)
     }
-
-    fileprivate typealias SegmentType = SweepLineSegment<CoordinateType>
 
     ///
     /// Two line segments are passed in.
@@ -2795,9 +2777,9 @@ extension IntersectionMatrix {
     /// If the first coordinate of the second segment, "other", is a boundary point, firstCoordinateSecondSegmentBoundary should be true.
     /// If the second coordinate of the second segment, "other", is a boundary point, secondCoordinateSecondSegmentBoundary should be true.
     ///
-    fileprivate static func intersection(segment: Segment<CoordinateType>, other: Segment<CoordinateType>, firstCoordinateFirstSegmentBoundary: Bool = false, secondCoordinateFirstSegmentBoundary: Bool = false, firstCoordinateSecondSegmentBoundary: Bool = false, secondCoordinateSecondSegmentBoundary: Bool = false) -> LineSegmentIntersection {
+    fileprivate static func intersection(segment: Segment, other: Segment, firstCoordinateFirstSegmentBoundary: Bool = false, secondCoordinateFirstSegmentBoundary: Bool = false, firstCoordinateSecondSegmentBoundary: Bool = false, secondCoordinateSecondSegmentBoundary: Bool = false) -> LineSegmentIntersection {
 
-        let precsion = FloatingPrecision()
+        let precsion = Floating()
         let csystem  = Cartesian()
 
         ///
@@ -2830,70 +2812,70 @@ extension IntersectionMatrix {
 
             if (segment1Boundary1Location != .onExterior) &&  (segment1Boundary2Location != .onExterior) {
                 /// Segment is completely contained in other
-                lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem)
             } else if (segment2Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                 /// Other is completely contained in segment
-                lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem)
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
                 if !firstCoordinateFirstSegmentBoundary && !firstCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
                 if !firstCoordinateFirstSegmentBoundary && !secondCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
                 if !secondCoordinateFirstSegmentBoundary && !firstCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
                 if !secondCoordinateFirstSegmentBoundary && !secondCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
                       (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
             } else if oneLine {
                 /// If you reach here, the two line segments overlap by an amount > 0, but neither line segment is contained in the other.
                 if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {
                     /// Line segments overlap from segment left to other left
-                    lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.leftCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem)
                 } else if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                     /// Line segments overlap from segment left to other right
-                    lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.leftCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem)
                 } else if (segment1Boundary2Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {
                     /// Line segments overlap from segment left to other left
-                    lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.rightCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = LineString([segment.rightCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem)
                 } else if (segment1Boundary2Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                     /// Line segments overlap from segment left to other right
-                    lineSegmentIntersection.geometry = LineString<CoordinateType>(elements: [segment.rightCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = LineString([segment.rightCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem)
                 }
             } else {
                 /// If you reach here, the two line segments touch at a single point that is on the boundary of one segment and the interior of the other.
                 if segment1Boundary1Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
                     if !firstCoordinateFirstSegmentBoundary {
                         lineSegmentIntersection.interiorsTouchAtPoint = true
                     }
                 } else if segment1Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
                 } else if segment2Boundary1Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: other.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = Point(other.leftCoordinate, precision: precsion, coordinateSystem: csystem)
                 } else if segment2Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    lineSegmentIntersection.geometry = Point<CoordinateType>(coordinate: other.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = Point(other.rightCoordinate, precision: precsion, coordinateSystem: csystem)
                     if !secondCoordinateSecondSegmentBoundary {
                         lineSegmentIntersection.interiorsTouchAtPoint = true
                     }
@@ -2954,10 +2936,10 @@ extension IntersectionMatrix {
             interiorsIntersect = true
         }
 
-        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: interiorsIntersect, theGeometry: Point<CoordinateType>(coordinate: CoordinateType(array: [x, y]), precision: precsion, coordinateSystem: csystem))
+        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: interiorsIntersect, theGeometry: Point(Coordinate(x:x, y: y), precision: precsion, coordinateSystem: csystem))
     }
 
-    fileprivate static func intersects(_ points1: MultiPoint<CoordinateType>, _ points2: MultiPoint<CoordinateType>) -> Bool {
+    fileprivate static func intersects(_ points1: MultiPoint, _ points2: MultiPoint) -> Bool {
 
         for tempPoint in points1 {
             if subset(tempPoint, points2) {
@@ -2970,7 +2952,7 @@ extension IntersectionMatrix {
     /// Calculate the slope as a tuple.
     /// The first value is the slope, if the line is not vertical.
     /// The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
-    fileprivate static func slope(_ coordinate1: CoordinateType, _ coordinate2: CoordinateType) -> (Double, Bool) {
+    fileprivate static func slope(_ coordinate1: Coordinate, _ coordinate2: Coordinate) -> (Double, Bool) {
 
         /// Check for the vertical case
         guard coordinate1.x != coordinate2.x else {
@@ -2981,13 +2963,13 @@ extension IntersectionMatrix {
         return ((coordinate2.y - coordinate1.y) / (coordinate2.x - coordinate1.x), false)
     }
 
-    fileprivate static func slope(_ segment: Segment<CoordinateType>) -> (Double, Bool) {
+    fileprivate static func slope(_ segment: Segment) -> (Double, Bool) {
 
         return slope(segment.leftCoordinate, segment.rightCoordinate)
     }
 
     /// Reduces a line string to a sequence of points such that each consecutive line segment will have a different slope
-    fileprivate static func reduce(_ lineString: LineString<CoordinateType>) -> LineString<CoordinateType> {
+    fileprivate static func reduce(_ lineString: LineString) -> LineString {
 
         /// Must have at least 3 points or two lines segments for this algorithm to apply
         guard lineString.count >= 3 else {
@@ -2996,7 +2978,7 @@ extension IntersectionMatrix {
 
         var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
         var secondSlope: (Double, Bool)
-        var newLineString = LineString<CoordinateType>()
+        var newLineString = LineString()
         newLineString.append(lineString[0])
         for lsFirstCoordIndex in 0..<lineString.count - 2 {
             let lsFirstCoord  = lineString[lsFirstCoordIndex]
@@ -3017,9 +2999,9 @@ extension IntersectionMatrix {
     }
 
     /// Creates a new linear ring from an original linear ring that starts and ends at the second to last point of the original
-    fileprivate static func moveStartBackOne(_ linearRing: LinearRing<CoordinateType>) -> LinearRing<CoordinateType> {
+    fileprivate static func moveStartBackOne(_ linearRing: LinearRing) -> LinearRing {
 
-        var newLinearRing = LinearRing<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var newLinearRing = LinearRing(precision: Floating(), coordinateSystem: Cartesian())
 
         guard linearRing.count >= 2 else {
             return linearRing
@@ -3037,7 +3019,7 @@ extension IntersectionMatrix {
     }
 
     /// Reduces a linear ring to a sequence of points such that each consecutive line segment will have a different slope
-    fileprivate static func reduce(_ linearRing: LinearRing<CoordinateType>) -> LinearRing<CoordinateType> {
+    fileprivate static func reduce(_ linearRing: LinearRing) -> LinearRing {
 
         /// Must have at least 3 points or two lines segments for this algorithm to apply.
         /// Could insist on 4 so you ignore the case where the segments overlap.
@@ -3047,7 +3029,7 @@ extension IntersectionMatrix {
 
         var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
         var secondSlope: (Double, Bool)
-        var newLinearRing = LinearRing<CoordinateType>()
+        var newLinearRing = LinearRing()
         newLinearRing.append(linearRing[0])
         for lrFirstCoordIndex in 0..<linearRing.count - 2 {
             let lrFirstCoord  = linearRing[lrFirstCoordIndex]
@@ -3085,11 +3067,11 @@ extension IntersectionMatrix {
     /// This function can be extended to handle other geometry collections.
     fileprivate static func reduce(_ geometryCollection: GeometryCollection) -> GeometryCollection {
 
-        var reducedLinearRings = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var reducedLinearRings = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
 
         for index in 0..<geometryCollection.count {
 
-            guard let linearRing = geometryCollection[index] as? LinearRing<CoordinateType> else {
+            guard let linearRing = geometryCollection[index] as? LinearRing else {
                 return reducedLinearRings
             }
 
@@ -3103,10 +3085,10 @@ extension IntersectionMatrix {
     /// Reduces a multi line string to a sequence of points on each line string such that each consecutive line segment will have a different slope.
     /// Note that for this first pass, we will handle each line string separately.
     /// TODO: Reduce connections between possibly connected line strings.
-    fileprivate static func reduce(_ multiLineString: MultiLineString<CoordinateType>) -> MultiLineString<CoordinateType> {
+    fileprivate static func reduce(_ multiLineString: MultiLineString) -> MultiLineString {
 
         /// Define the MultiLineString geometry that might be returned
-        var resultMultiLineString = MultiLineString<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var resultMultiLineString = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
 
         /// Reduce each of the multi line string
         for lineString in multiLineString {
@@ -3119,7 +3101,7 @@ extension IntersectionMatrix {
 
             var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
             var secondSlope: (Double, Bool)
-            var newLineString = LineString<CoordinateType>()
+            var newLineString = LineString()
             newLineString.append(lineString[0])
             for lsFirstCoordIndex in 0..<lineString.count - 2 {
                 let lsFirstCoord  = lineString[lsFirstCoordIndex]
@@ -3145,10 +3127,10 @@ extension IntersectionMatrix {
 
     /// Reduces an array of linear rings to another array of linear rings such that each consecutive
     /// line segment of each linear ring will have a different slope.
-    fileprivate static func reduce(_ linearRingArray: [LinearRing<CoordinateType>]) -> [LinearRing<CoordinateType>] {
+    fileprivate static func reduce(_ linearRingArray: [LinearRing]) -> [LinearRing] {
 
         /// Define the inear ring array that might be returned
-        var resultLinearRingArray = [LinearRing<CoordinateType>(precision: FloatingPrecision(), coordinateSystem: Cartesian())]
+        var resultLinearRingArray = [LinearRing(precision: Floating(), coordinateSystem: Cartesian())]
 
         /// Reduce each of the linear rings
         for linearRing in linearRingArray {
@@ -3161,7 +3143,7 @@ extension IntersectionMatrix {
 
             var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
             var secondSlope: (Double, Bool)
-            var newLinearRing = LinearRing<CoordinateType>()
+            var newLinearRing = LinearRing()
             newLinearRing.append(linearRing[0])
             for lsFirstCoordIndex in 0..<linearRing.count - 2 {
                 let lsFirstCoord  = linearRing[lsFirstCoordIndex]
@@ -3187,12 +3169,12 @@ extension IntersectionMatrix {
 
     /// Reduces the linear rings of a polygon to another polygon whose linear rings are such that each consecutive
     /// line segment of each linear ring will have a different slope.
-    fileprivate static func reduce(_ polygon: Polygon<CoordinateType>) -> Polygon<CoordinateType> {
+    fileprivate static func reduce(_ polygon: Polygon) -> Polygon {
 
         /// Check there is a valid outer ring, else return the original polygon.
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return polygon
         }
@@ -3205,11 +3187,11 @@ extension IntersectionMatrix {
         let reducedHoles = reduce(holesArray)
 
         /// Construct the new polygon from the reduced pieces
-        return Polygon<CoordinateType>(outerRing: reducedMainLinearRing, innerRings: reducedHoles, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        return Polygon(reducedMainLinearRing, innerRings: reducedHoles, precision: Floating(), coordinateSystem: Cartesian())
     }
 
     /// Is segment1 contained in or a subset of segment2?
-    fileprivate static func subset(_ segment1: Segment<CoordinateType>, _ segment2: Segment<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ segment1: Segment, _ segment2: Segment) -> Bool {
 
         /// If the slopes are not the same one segment being contained in another is not possible
         let slope1 = slope(segment1)
@@ -3230,18 +3212,18 @@ extension IntersectionMatrix {
 
     /// Is line string 1 contained in or a subset of line string 2?
     /// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ lineString1: LineString<CoordinateType>, _ lineString2: LineString<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ lineString1: LineString, _ lineString2: LineString) -> Bool {
 
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
             let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
 
             var segment1IsSubsetOfOtherSegment = false
             for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
                 let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                 let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-                let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
 
                 if subset(segment1, segment2) {
                     segment1IsSubsetOfOtherSegment = true
@@ -3259,18 +3241,18 @@ extension IntersectionMatrix {
 
     /// Is the line string contained in or a subset of the linear ring?
     /// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ lineString: LineString<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ lineString: LineString, _ linearRing: LinearRing) -> Bool {
 
         for lsFirstCoordIndex in 0..<lineString.count - 1 {
             let lsFirstCoord  = lineString[lsFirstCoordIndex]
             let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: lsFirstCoord, right: lsSecondCoord)
+            let segment1 = Segment(left: lsFirstCoord, right: lsSecondCoord)
 
             var segment1IsSubsetOfOtherSegment = false
             for lrFirstCoordIndex in 0..<linearRing.count - 1 {
                 let lrFirstCoord  = linearRing[lrFirstCoordIndex]
                 let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
-                let segment2 = Segment<CoordinateType>(left: lrFirstCoord, right: lrSecondCoord)
+                let segment2 = Segment(left: lrFirstCoord, right: lrSecondCoord)
 
                 if subset(segment1, segment2) {
                     segment1IsSubsetOfOtherSegment = true
@@ -3288,18 +3270,18 @@ extension IntersectionMatrix {
 
     /// Is the first linear ring contained in or a subset of the second linear ring?
     /// The algorithm here assumes that both linear rings have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ linearRing1: LinearRing<CoordinateType>, _ linearRing2: LinearRing<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> Bool {
 
         for lr1FirstCoordIndex in 0..<linearRing1.count - 1 {
             let lr1FirstCoord  = linearRing1[lr1FirstCoordIndex]
             let lr1SecondCoord = linearRing1[lr1FirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: lr1FirstCoord, right: lr1SecondCoord)
+            let segment1 = Segment(left: lr1FirstCoord, right: lr1SecondCoord)
 
             var segment1IsSubsetOfOtherSegment = false
             for lr2FirstCoordIndex in 0..<linearRing2.count - 1 {
                 let lr2FirstCoord  = linearRing2[lr2FirstCoordIndex]
                 let lr2SecondCoord = linearRing2[lr2FirstCoordIndex + 1]
-                let segment2 = Segment<CoordinateType>(left: lr2FirstCoord, right: lr2SecondCoord)
+                let segment2 = Segment(left: lr2FirstCoord, right: lr2SecondCoord)
 
                 if subset(segment1, segment2) {
                     segment1IsSubsetOfOtherSegment = true
@@ -3318,12 +3300,12 @@ extension IntersectionMatrix {
     /// Is the line string contained in or a subset of the multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     /// TODO:
-    fileprivate static func subset(_ lineString1: LineString<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ lineString1: LineString, _ multiLineString: MultiLineString) -> Bool {
 
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
             let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
 
             var segment1IsSubsetOfOtherSegment = false
 
@@ -3331,7 +3313,7 @@ extension IntersectionMatrix {
                 for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
                     let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                     let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-                    let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                    let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
 
                     if subset(segment1, segment2) {
                         segment1IsSubsetOfOtherSegment = true
@@ -3356,12 +3338,12 @@ extension IntersectionMatrix {
     /// If the line string is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
     /// Note that being on the boundary of a polygon hole is acceptable.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ lineString: LineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ lineString: LineString, _ polygon: Polygon) -> Bool {
 
         /// Get the polygon boundary
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return false
         }
@@ -3396,12 +3378,12 @@ extension IntersectionMatrix {
     /// Is the linear ring contained in or a subset of the multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     /// TODO:
-    fileprivate static func subset(_ linearRing: LinearRing<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ linearRing: LinearRing, _ multiLineString: MultiLineString) -> Bool {
 
         for lrFirstCoordIndex in 0..<linearRing.count - 1 {
             let lrFirstCoord  = linearRing[lrFirstCoordIndex]
             let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: lrFirstCoord, right: lrSecondCoord)
+            let segment1 = Segment(left: lrFirstCoord, right: lrSecondCoord)
 
             var segment1IsSubsetOfOtherSegment = false
 
@@ -3409,7 +3391,7 @@ extension IntersectionMatrix {
                 for lsFirstCoordIndex in 0..<lineString.count - 1 {
                     let lsFirstCoord  = lineString[lsFirstCoordIndex]
                     let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
-                    let segment2 = Segment<CoordinateType>(left: lsFirstCoord, right: lsSecondCoord)
+                    let segment2 = Segment(left: lsFirstCoord, right: lsSecondCoord)
 
                     if subset(segment1, segment2) {
                         segment1IsSubsetOfOtherSegment = true
@@ -3433,11 +3415,11 @@ extension IntersectionMatrix {
     /// Is the linear ring contained in or a subset of the collection of linear rings?
     /// If the linear ring is a subset of the collection, it must match one of linear rings, although the sequence of points need not match.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ linearRing: LinearRing<CoordinateType>, _ geometryCollection: GeometryCollection) -> Bool {
+    fileprivate static func subset(_ linearRing: LinearRing, _ geometryCollection: GeometryCollection) -> Bool {
 
         for index in 0..<geometryCollection.count {
 
-            guard let linearRing2 = geometryCollection[index] as? LinearRing<CoordinateType> else {
+            guard let linearRing2 = geometryCollection[index] as? LinearRing else {
                 return false
             }
 
@@ -3453,12 +3435,12 @@ extension IntersectionMatrix {
     /// If the linear ring is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
     /// Note that being on the boundary of a polygon hole is acceptable.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ linearRing: LinearRing<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ linearRing: LinearRing, _ polygon: Polygon) -> Bool {
 
         /// Get the polygon boundary
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return false
         }
@@ -3492,7 +3474,7 @@ extension IntersectionMatrix {
 
     /// Is the multi line string contained in or a subset of the linear ring?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ multiLineString: MultiLineString<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ multiLineString: MultiLineString, _ linearRing: LinearRing) -> Bool {
 
         for lineString in multiLineString {
             if !subset(lineString, linearRing) {
@@ -3506,13 +3488,13 @@ extension IntersectionMatrix {
     /// Is the first multi line string contained in or a subset of the second multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     /// TODO:
-    fileprivate static func subset(_ multiLineString1: MultiLineString<CoordinateType>, _ multiLineString2: MultiLineString<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ multiLineString1: MultiLineString, _ multiLineString2: MultiLineString) -> Bool {
 
         for lineString1 in multiLineString1 {
             for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
                 let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
                 let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
-                let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+                let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
 
                 var segment1IsSubsetOfOtherSegment = false
 
@@ -3520,7 +3502,7 @@ extension IntersectionMatrix {
                     for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
                         let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                         let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-                        let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                        let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
 
                         if subset(segment1, segment2) {
                             segment1IsSubsetOfOtherSegment = true
@@ -3546,12 +3528,12 @@ extension IntersectionMatrix {
     /// If the multi line string is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
     /// Note that being on the boundary of a polygon hole is acceptable.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ multiLineString: MultiLineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> Bool {
+    fileprivate static func subset(_ multiLineString: MultiLineString, _ polygon: Polygon) -> Bool {
 
         /// Get the polygon boundary
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return false
         }
@@ -3590,13 +3572,13 @@ extension IntersectionMatrix {
     /// Is the multi line string contained in or a subset of the collection of linear rings?
     /// If the multi line string is a subset of the collection, each line string of the multi line string must be a subset of just one linear ring.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ multiLineString: MultiLineString<CoordinateType>, _ geometryCollection: GeometryCollection) -> Bool {
+    fileprivate static func subset(_ multiLineString: MultiLineString, _ geometryCollection: GeometryCollection) -> Bool {
         
         for lineString in multiLineString {
             var lineStringInsideLinearRing = false
             for index in 0..<geometryCollection.count {
                 
-                guard let linearRing = geometryCollection[index] as? LinearRing<CoordinateType> else {
+                guard let linearRing = geometryCollection[index] as? LinearRing else {
                     return false
                 }
                 
@@ -3614,7 +3596,7 @@ extension IntersectionMatrix {
         return true
     }
 
-    fileprivate static func generateIntersection(_ lineString1: LineString<CoordinateType>, _ lineString2: LineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString1: LineString, _ lineString2: LineString) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3629,8 +3611,8 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Check if any of the endpoints of the first line string equals either of the two endpoints of the second line string.
-        guard let lineStringBoundary1 = lineString1.boundary() as? MultiPoint<CoordinateType>,
-              let lineStringBoundary2 = lineString2.boundary() as? MultiPoint<CoordinateType> else {
+        guard let lineStringBoundary1 = lineString1.boundary() as? MultiPoint,
+              let lineStringBoundary2 = lineString2.boundary() as? MultiPoint else {
                 return (nil, disjoint)
         }
         let geometriesIntersect = intersects(lineStringBoundary1, lineStringBoundary2)
@@ -3651,14 +3633,14 @@ extension IntersectionMatrix {
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
             let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
             let firstBoundary = (ls1FirstCoordIndex == 0)
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
                 let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                 let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-                let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
                 let secondBoundary = (ls2FirstCoordIndex == lineString2.count - 2)
                 let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
 
@@ -3716,7 +3698,7 @@ extension IntersectionMatrix {
     }
 
     /// There is an assumption here that the line string is not a linear ring
-    fileprivate static func generateIntersection(_ lineString: LineString<CoordinateType>, _ linearRing: LinearRing<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString: LineString, _ linearRing: LinearRing) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3731,7 +3713,7 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Get the line string boundary
-        guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
                 return (nil, disjoint)
         }
 
@@ -3745,7 +3727,7 @@ extension IntersectionMatrix {
         for ls1FirstCoordIndex in 0..<lineString.count - 1 {
             let ls1FirstCoord  = lineString[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
             let firstBoundary = (ls1FirstCoordIndex == 0)
             let secondBoundary = (ls1FirstCoordIndex == lineString.count - 2)
 
@@ -3753,7 +3735,7 @@ extension IntersectionMatrix {
             for ls2FirstCoordIndex in 0..<linearRing.count - 1 {
                 let ls2FirstCoord  = linearRing[ls2FirstCoordIndex]
                 let ls2SecondCoord = linearRing[ls2FirstCoordIndex + 1]
-                let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
                 let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateFirstSegmentBoundary: secondBoundary)
 
                 /// Interior, interior
@@ -3790,7 +3772,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ lineString: LineString<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString: LineString, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3805,8 +3787,8 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Check if any of the endpoints of the line string equals any of the endpoints of the multi line string.
-        guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType>,
-            let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let lineStringBoundary = lineString.boundary() as? MultiPoint,
+            let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
                 return (nil, disjoint)
         }
 
@@ -3825,7 +3807,7 @@ extension IntersectionMatrix {
         for ls1FirstCoordIndex in 0..<lineString.count - 1 {
             let ls1FirstCoord  = lineString[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
             let firstBoundary = (ls1FirstCoordIndex == 0)
 
             /// Any intersection from here on is guaranteed to be in the interior.
@@ -3833,7 +3815,7 @@ extension IntersectionMatrix {
                 for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
                     let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                     let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-                    let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                    let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
                     let secondBoundary = (ls2FirstCoordIndex == lineString2.count - 2)
                     let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
 
@@ -3877,7 +3859,7 @@ extension IntersectionMatrix {
         }
 
         /// Exterior, interior
-        let reducedMls2 = MultiLineString<CoordinateType>(elements: [reducedLs], precision: reducedLs.precision, coordinateSystem: reducedLs.coordinateSystem)
+        let reducedMls2 = MultiLineString([reducedLs], precision: reducedLs.precision, coordinateSystem: reducedLs.coordinateSystem)
         if !subset(reducedMls, reducedMls2) {
             matrixIntersects[.exterior, .interior] = .one
         }
@@ -3892,7 +3874,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ linearRing1: LinearRing<CoordinateType>, _ linearRing2: LinearRing<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3914,14 +3896,14 @@ extension IntersectionMatrix {
         for lr1FirstCoordIndex in 0..<linearRing1.count - 1 {
             let lr1FirstCoord  = linearRing1[lr1FirstCoordIndex]
             let lr1SecondCoord = linearRing1[lr1FirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: lr1FirstCoord, right: lr1SecondCoord)
+            let segment1 = Segment(left: lr1FirstCoord, right: lr1SecondCoord)
 
             /// Note the linear rings have no boundary.
             /// Any intersection from here on is guaranteed to be in the interior.
             for lr2FirstCoordIndex in 0..<linearRing2.count - 1 {
                 let lr2FirstCoord  = linearRing2[lr2FirstCoordIndex]
                 let lr2SecondCoord = linearRing2[lr2FirstCoordIndex + 1]
-                let segment2 = Segment<CoordinateType>(left: lr2FirstCoord, right: lr2SecondCoord)
+                let segment2 = Segment(left: lr2FirstCoord, right: lr2SecondCoord)
                 let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
 
                 /// Interior, interior
@@ -3950,7 +3932,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ linearRing: LinearRing<CoordinateType>, _ multiLineString: MultiLineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3964,7 +3946,7 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Get the multi line string boundary
-        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
                 return (nil, disjoint)
         }
 
@@ -3978,7 +3960,7 @@ extension IntersectionMatrix {
         for lrFirstCoordIndex in 0..<linearRing.count - 1 {
             let lrFirstCoord  = linearRing[lrFirstCoordIndex]
             let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
-            let segment1 = Segment<CoordinateType>(left: lrFirstCoord, right: lrSecondCoord)
+            let segment1 = Segment(left: lrFirstCoord, right: lrSecondCoord)
             let firstBoundary = (lrFirstCoordIndex == 0)
 
             /// Any intersection from here on is guaranteed to be in the interior.
@@ -3986,7 +3968,7 @@ extension IntersectionMatrix {
                 for lsFirstCoordIndex in 0..<lineString.count - 1 {
                     let lsFirstCoord  = lineString[lsFirstCoordIndex]
                     let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
-                    let segment2 = Segment<CoordinateType>(left: lsFirstCoord, right: lsSecondCoord)
+                    let segment2 = Segment(left: lsFirstCoord, right: lsSecondCoord)
                     let secondBoundary = (lsFirstCoordIndex == lineString.count - 2)
                     let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
 
@@ -4028,7 +4010,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ multiLineString1: MultiLineString<CoordinateType>, _ multiLineString2: MultiLineString<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ multiLineString1: MultiLineString, _ multiLineString2: MultiLineString) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -4043,8 +4025,8 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Check if any of the endpoints of the first multi line string equals any of the endpoints of the second multi line string.
-        guard let multiLineStringBoundary1 = multiLineString1.boundary() as? MultiPoint<CoordinateType>,
-            let multiLineStringBoundary2 = multiLineString2.boundary() as? MultiPoint<CoordinateType> else {
+        guard let multiLineStringBoundary1 = multiLineString1.boundary() as? MultiPoint,
+            let multiLineStringBoundary2 = multiLineString2.boundary() as? MultiPoint else {
                 return (nil, disjoint)
         }
 
@@ -4064,7 +4046,7 @@ extension IntersectionMatrix {
             for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
                 let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
                 let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
-                let segment1 = Segment<CoordinateType>(left: ls1FirstCoord, right: ls1SecondCoord)
+                let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
                 let firstBoundary = (ls1FirstCoordIndex == 0)
 
                 /// Any intersection from here on is guaranteed to be in the interior.
@@ -4072,7 +4054,7 @@ extension IntersectionMatrix {
                     for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
                         let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                         let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-                        let segment2 = Segment<CoordinateType>(left: ls2FirstCoord, right: ls2SecondCoord)
+                        let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
                         let secondBoundary = (ls2FirstCoordIndex == lineString2.count - 2)
                         let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
 
@@ -4136,7 +4118,7 @@ extension IntersectionMatrix {
     ///
 
     /// The polygon here is a full polygon with holes
-    fileprivate static func generateIntersection(_ lineString: LineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString: LineString, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -4147,7 +4129,7 @@ extension IntersectionMatrix {
         /// Get the polygon boundary
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return (nil, matrixIntersects)
         }
@@ -4166,7 +4148,7 @@ extension IntersectionMatrix {
         /// Get the endpoints of the line string (the line string boundary).
         /// Assume for now that there are two boundary points.
 
-        guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
             return (nil, matrixIntersects)
         }
 
@@ -4188,8 +4170,8 @@ extension IntersectionMatrix {
         var isMainPolygon = true
         for element in polygonBoundary {
 
-            guard let linearRing = element as? LinearRing<CoordinateType> else { return (nil, matrixIntersects) }
-            let tempPolygon = Polygon<CoordinateType>(outerRing: linearRing)
+            guard let linearRing = element as? LinearRing else { return (nil, matrixIntersects) }
+            let tempPolygon = Polygon(linearRing)
 
             let boundaryPoint1RelatedToResult   = relatedTo(lineStringBoundaryPoint1, tempPolygon)
             let boundaryPoint2RelatedToResult   = relatedTo(lineStringBoundaryPoint2, tempPolygon)
@@ -4304,7 +4286,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ lineString: LineString<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString: LineString, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4324,7 +4306,7 @@ extension IntersectionMatrix {
         /// It's possible that the boundary of the line string exists in two different polygons.
         /// We have to check for that case and fix it from the above calculations.
 
-        guard let lineStringBoundary = lineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
             return (nil, matrixIntersects)
         }
         let (_, boundaryMatrix) = generateIntersection(lineStringBoundary, multipolygon)
@@ -4335,7 +4317,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ linearRing: LinearRing<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -4345,7 +4327,7 @@ extension IntersectionMatrix {
         /// Get the polygon boundary
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return (nil, matrixIntersects)
         }
@@ -4371,9 +4353,9 @@ extension IntersectionMatrix {
         var isMainPolygon = true
         for tempLinearRingPolygon in polygonBoundary {
 
-            guard let linearRingPolygon = tempLinearRingPolygon as? LinearRing<CoordinateType> else { return (nil, matrixIntersects) }
+            guard let linearRingPolygon = tempLinearRingPolygon as? LinearRing else { return (nil, matrixIntersects) }
 
-            let tempPolygon = Polygon<CoordinateType>(outerRing: linearRingPolygon, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            let tempPolygon = Polygon(linearRingPolygon, precision: Floating(), coordinateSystem: Cartesian())
 
             let linearRingRelatedToResult = relatedTo(linearRing, tempPolygon)
 
@@ -4427,7 +4409,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ linearRing: LinearRing<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4446,7 +4428,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ multiLineString: MultiLineString<CoordinateType>, _ polygon: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -4456,7 +4438,7 @@ extension IntersectionMatrix {
         /// Get the polygon boundary
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return (nil, matrixIntersects)
         }
@@ -4486,7 +4468,7 @@ extension IntersectionMatrix {
         /// Get the endpoints of the multi line string (the multi line string boundary) and their relationship to the polygon.
         /// Set some intersection matrix values depending on the result.
 
-        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
             return (nil, matrixIntersects)
         }
 
@@ -4509,16 +4491,16 @@ extension IntersectionMatrix {
         /// Relate the multi line string to the main polygon.
         /// Collect an array of line strings that touch the interior of the main polygon
         /// that will be used to check against the holes.
-        var interiorLineStrings = GeometryCollection(precision: FloatingPrecision(), coordinateSystem: Cartesian())
+        var interiorLineStrings = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
 
-        guard let mainLinearRing = polygonBoundary[0] as? LinearRing<CoordinateType>,
+        guard let mainLinearRing = polygonBoundary[0] as? LinearRing,
             mainLinearRing.count > 0 else {
             return (nil, matrixIntersects)
         }
 
         for lineString in multiLineString {
 
-            let tempPolygon = Polygon<CoordinateType>(outerRing: mainLinearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+            let tempPolygon = Polygon(mainLinearRing, precision: Floating(), coordinateSystem: Cartesian())
 
             let lineStringRelatedToResult = relatedTo(lineString, tempPolygon)
 
@@ -4548,7 +4530,7 @@ extension IntersectionMatrix {
 
         for tempLineString in interiorLineStrings {
 
-            guard let lineString = tempLineString as? LineString<CoordinateType>,
+            guard let lineString = tempLineString as? LineString,
                 lineString.count > 0 else {
                     return (nil, matrixIntersects)
             }
@@ -4561,7 +4543,7 @@ extension IntersectionMatrix {
                     return (nil, matrixIntersects)
                 }
 
-                let tempPolygon = Polygon<CoordinateType>(outerRing: linearRing, precision: FloatingPrecision(), coordinateSystem: Cartesian())
+                let tempPolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
 
                 let lineStringRelatedToResult = relatedTo(lineString, tempPolygon)
 
@@ -4591,7 +4573,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ multiLineString: MultiLineString<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4610,7 +4592,7 @@ extension IntersectionMatrix {
         /// The boundary points of the multi line string could be distributed over multiple polygons.
         /// Check the boundary points and adjust accordingly.
 
-        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint<CoordinateType> else {
+        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
             return (nil, matrixIntersects)
         }
 
@@ -4627,7 +4609,7 @@ extension IntersectionMatrix {
     /// Dimension .two and dimension .two
     ///
 
-    fileprivate static func generateIntersection(_ polygon1: Polygon<CoordinateType>, _ polygon2: Polygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) -> (Geometry?, IntersectionMatrix) {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -4650,7 +4632,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ polygon: Polygon<CoordinateType>, _ multipolygon: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ polygon: Polygon, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4669,7 +4651,7 @@ extension IntersectionMatrix {
         return (nil, matrixIntersects)
     }
 
-    fileprivate static func generateIntersection(_ multipolygon1: MultiPolygon<CoordinateType>, _ multipolygon2: MultiPolygon<CoordinateType>) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ multipolygon1: MultiPolygon, _ multipolygon2: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4693,18 +4675,8 @@ extension IntersectionMatrix {
     ///
     /// - see also: `LinearRing`
     ///
-    fileprivate static func outerRings(multipolygon: MultiPolygon<CoordinateType>) -> [LinearRing<CoordinateType>] {
-        if multipolygon.buffer.header.count > 1 {
-            return multipolygon.buffer.withUnsafeMutablePointers { header, elements in
-                var rings = [LinearRing<CoordinateType>]()
-
-                for i in stride(from: 1, to: header.pointee.count, by: 1) {
-                    rings.append(elements[i].outerRing)
-                }
-                return rings
-            }
-        }
-        return []
+    fileprivate static func outerRings(multipolygon: MultiPolygon) -> [LinearRing] {
+        return multipolygon.map( { $0.outerRing } )
     }
 
     ///
@@ -4712,17 +4684,12 @@ extension IntersectionMatrix {
     ///
     /// - see also: `LinearRing`
     ///
-    fileprivate static func innerRings(multipolygon: MultiPolygon<CoordinateType>) -> [[LinearRing<CoordinateType>]] {
-        if multipolygon.buffer.header.count > 1 {
-            return multipolygon.buffer.withUnsafeMutablePointers { header, elements in
-                var rings = [[LinearRing<CoordinateType>]]()
+    fileprivate static func innerRings(multipolygon: MultiPolygon) -> [[LinearRing]] {
+        var rings = [[LinearRing]]()
 
-                for i in stride(from: 1, to: header.pointee.count, by: 1) {
-                    rings.append(elements[i].innerRings)
-                }
-                return rings
-            }
+        for polygon in multipolygon {
+            rings.append(polygon.innerRings)
         }
-        return []
+        return rings
     }
 }

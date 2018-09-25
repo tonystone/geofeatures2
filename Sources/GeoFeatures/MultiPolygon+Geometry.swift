@@ -19,39 +19,46 @@
 ///
 import Swift
 
-extension MultiPolygon: Geometry {
+///
+/// `Geometry` protocol implementation.
+///
+extension MultiPolygon {
 
-    public var dimension: Dimension { return .two }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
+    ///
+    /// The spatial dimension of `self`.
+    ///
+    /// - Returns: .two if non-empty, or .empty otherwise.
+    ///
+    /// - SeeAlso: Dimension
+    ///
+    public var dimension: Dimension {
+        return self.isEmpty() ? .empty : .two
     }
 
     ///
     /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
     ///
-    /// - Note: The boundary of a MultiPolygon is a set of closed Curves (LineStrings) corresponding to the boundaries of its element Polygons. Each Curve in the boundary of the MultiPolygon is in the boundary of exactly 1 element Polygon, and every Curve in the boundary of an element Polygon is in the boundary of the MultiPolygon.
+    /// - Note: The boundary of a MultiPolygon is a set of closed Curves (LinearRings) corresponding to the boundaries of its element Polygons. Each Curve in the boundary of the MultiPolygon is in the boundary of exactly 1 element Polygon, and every Curve in the boundary of an element Polygon is in the boundary of the MultiPolygon.
     ///
     public func boundary() -> Geometry {
-        return self.buffer.withUnsafeMutablePointers({ (header, elements) -> Geometry in
-            var multiLineString = MultiLineString<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        var boundary = GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-            for i in 0..<header.pointee.count {
-
-                if let boundary = elements[i].boundary() as? MultiLineString<CoordinateType> {
-
-                    for lineString in boundary {
-                        multiLineString.append(lineString)
-                    }
+        for i in 0..<self.count {
+            if let elementBoundary = self[i].boundary() as? GeometryCollection {
+                for lineString in elementBoundary {
+                    boundary.append(lineString)
                 }
             }
-            return multiLineString
-        })
+        }
+        return boundary
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? MultiPolygon<CoordinateType> {
-            return self.elementsEqual(other, by: { (lhs: Polygon<CoordinateType>, rhs: Polygon<CoordinateType>) -> Bool in
+        if let other = other as? MultiPolygon{
+            return self.elementsEqual(other, by: { (lhs: Polygon, rhs: Polygon) -> Bool in
                 return lhs.equals(rhs)
             })
         }

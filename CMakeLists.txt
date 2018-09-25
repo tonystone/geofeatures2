@@ -6,8 +6,8 @@ message(STATUS "Configuring GeoFeatures for ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_
 message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "")
 
-# Git tag hash == 1.0.0
-set(BUILD_TOOLS_VERSION 1.0.0)
+# Git tag
+set(BUILD_TOOLS_VERSION 1.1.0)
 
 include(ExternalProject)
 
@@ -39,7 +39,7 @@ include(Gyb)
 #
 # Clean the sticky package
 #
-add_custom_target(geofeatures-build-clean
+add_custom_target(build-clean
         COMMAND swift package clean
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         )
@@ -47,10 +47,24 @@ add_custom_target(geofeatures-build-clean
 #
 # Build xcode project Target
 #
-add_custom_target(geofeatures-xcode-project
+add_custom_target(xcode-project
+        DEPENDS build-tools generate-source generate-tests
         COMMAND swift package generate-xcodeproj --enable-code-coverage
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
         SOURCES Package.swift)
+
+#
+# Build xcode workspace Target which includes the playground
+#
+add_custom_target(xcode-workspace
+        DEPENDS build-tools xcode-project GeoFeatures.playground
+        COMMAND "${BUILD_TOOLS_BIN}/xcworkspace_tool.rb" GeoFeatures GeoFeatures.xcodeproj GeoFeatures.playground
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
+add_custom_target(documentation
+        DEPENDS generate-source
+        COMMAND jazzy --clean
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
 add_subdirectory(Sources)
 add_subdirectory(Tests)

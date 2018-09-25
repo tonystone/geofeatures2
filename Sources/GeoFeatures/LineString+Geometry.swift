@@ -19,38 +19,18 @@
 ///
 import Swift
 
-extension LineString: Geometry {
-
-    public var dimension: Dimension { return .one }
-
-    public func isEmpty() -> Bool {
-        return self.count == 0
-    }
+///
+/// `Geometry` protocol implementation.
+///
+/// Note: See `CoordinateCollectionType` for func implementations not present here.
+///
+extension LineString {
 
     ///
-    /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
+    /// - Returns: true if `self` is equal to the `other`.
     ///
-    /// - Note: The boundary of a LineString if empty is the empty MultiPoint. If not empty it is the first and last point.
-    ///=
-    public func boundary() -> Geometry {
-
-        return self.buffer.withUnsafeMutablePointers { (header, elements) -> Geometry in
-
-            var multiPoint = MultiPoint<CoordinateType>(precision: self.precision, coordinateSystem: self.coordinateSystem)
-
-            if !self.isClosed() && header.pointee.count >= 2 {
-
-                /// Note: direct subscripts protected by self.count >= 2 above.
-                multiPoint.append(Point<CoordinateType>(coordinate: elements[0], precision: self.precision, coordinateSystem: self.coordinateSystem, boundaryPoint: true))
-                multiPoint.append(Point<CoordinateType>(coordinate: elements[header.pointee.count - 1], precision: self.precision, coordinateSystem: self.coordinateSystem, boundaryPoint: true))
-
-            }
-            return multiPoint
-        }
-    }
-
     public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? LineString<Iterator.Element> {
+        if let other = other as? LineString {
             return self.elementsEqual(other, by: { (lhs: Iterator.Element, rhs: Iterator.Element) -> Bool in
                 return lhs == rhs
             })

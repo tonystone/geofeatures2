@@ -25,41 +25,40 @@ import Swift
     import Darwin
 #endif
 
-extension MultiLineString: Curve {
+///
+/// `Curve` protocol implementation.
+///
+extension MultiLineString {
 
     ///
-    /// - Returns: True if all sub-elements are closed (begin and end coordinates are equal)
+    /// - Returns: True if all sub-self are closed (begin and end coordinates are equal)
     ///
     public func isClosed() -> Bool {
 
-        return buffer.withUnsafeMutablePointers { (header, elements) -> Bool in
-            if header.pointee.count == 0 { return false }
-
-            for i in 0..<header.pointee.count {
-                if !elements[i].isClosed() {
-                    return false
-                }
-            }
-            return true
+        if self.count == 0 {
+            return false
         }
+
+        for i in 0..<self.count {
+            if !self[i].isClosed() {
+                return false
+            }
+        }
+        return true
     }
 
     ///
-    /// - Returns: The length of this Curve calculated using the sum of the length of the sub-elements.
+    /// - Returns: The length of this Curve calculated using the sum of the length of the sub-self.
     ///
     public func length() -> Double {
 
-        let length: Double  = buffer.withUnsafeMutablePointers { (header, elements) -> Double in
+        var length: Double = 0.0
 
-            var length: Double = 0.0
+        if self.count > 0 {
 
-            if header.pointee.count > 0 {
-
-                for i in 0..<header.pointee.count {
-                    length += elements[i].length()
-                }
+            for i in 0..<self.count {
+                length += self[i].length()
             }
-            return length
         }
         return self.precision.convert(length)
     }

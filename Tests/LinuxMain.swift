@@ -8,143 +8,100 @@ import XCTest
 @testable import GeoFeaturesTests
 
 XCTMain([
-   testCase(MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(MultiPolygonSurfaceCoordinate2DFixedCartesianTests.allTests),
    testCase(PolygonCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(PolygonCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(PolygonCoordinate2DFixedCartesianTests.allTests),
    testCase(WKTWriterCoordinate2DTests.allTests),
    testCase(WKTWriterCoordinate2DMTests.allTests),
    testCase(WKTWriterCoordinate3DTests.allTests),
    testCase(WKTWriterCoordinate3DMTests.allTests),
-   testCase(EventQueueTests.allTests),
-   testCase(GeometryCollectionGeometryFloatingPrecisionCartesianTests.allTests),
-   testCase(GeometryCollectionGeometryFixedPrecisionCartesianTests.allTests),
+   testCase(FixedTests.allTests),
+   testCase(GeoJSONWriterCoordinate2DTests.allTests),
+   testCase(GeoJSONWriterCoordinate2DMTests.allTests),
+   testCase(GeoJSONWriterCoordinate3DTests.allTests),
+   testCase(GeoJSONWriterCoordinate3DMTests.allTests),
+   testCase(GeometryCollectionGeometryTests.allTests),
    testCase(GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(AVLTreeTests.allTests),
    testCase(GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(GeoJSONReaderCoordinate3DMFixedCartesianTests.allTests),
    testCase(GeoJSONReaderInternal.allTests),
    testCase(Coordinate2DTests.allTests),
    testCase(LineStringCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LineStringCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(LineStringCoordinate2DFixedCartesianTests.allTests),
+   testCase(LineStringCoordinate2DMFixedCartesianTests.allTests),
+   testCase(LineStringCoordinate3DFixedCartesianTests.allTests),
+   testCase(LineStringCoordinate3DMFixedCartesianTests.allTests),
    testCase(LinearRingCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(LinearRingCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(LinearRingCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(LinearRingCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(LinearRingCoordinate2DFixedCartesianTests.allTests),
+   testCase(LinearRingCoordinate2DMFixedCartesianTests.allTests),
+   testCase(LinearRingCoordinate3DFixedCartesianTests.allTests),
+   testCase(LinearRingCoordinate3DMFixedCartesianTests.allTests),
    testCase(TokenizerTests.allTests),
    testCase(WKTReaderCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(WKTReaderCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(WKTReaderCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(WKTReaderCoordinate3DMFloatingPrecisionCartesianTests.allTests),
+   testCase(BoundsTests.allTests),
    testCase(MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(MultiLineStringCurveCoordinate2DFixedCartesianTests.allTests),
    testCase(LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingCurveCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPolygonCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(FixedPrecisionTests.allTests),
-   testCase(PolygonSurfaceCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(PolygonSurfaceCoordinate2DFixedCartesianTests.allTests),
    testCase(PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(PolygonGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
-   testCase(PolygonGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
-   testCase(PolygonGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(PolygonGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(PolygonGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(PolygonGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(PolygonGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
    testCase(IntersectionMatrixTests.allTests),
-   testCase(FloatingPrecisionTests.allTests),
    testCase(CoordinateSystemCartesianTests.allTests),
    testCase(MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(MultiPointGeometryCoordinate2DFixedCartesianTests.allTests),
+   testCase(MultiPointGeometryCoordinate2DMFixedCartesianTests.allTests),
+   testCase(MultiPointGeometryCoordinate3DFixedCartesianTests.allTests),
+   testCase(MultiPointGeometryCoordinate3DMFixedCartesianTests.allTests),
    testCase(IntersectionMatrixHelperTests.allTests),
    testCase(LineStringCurveCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(LineStringCurveCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(LinearRingSurfaceCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingSurfaceCoordinate2DFixedPrecisionCartesianTests.allTests),
+   testCase(LinearRingSurfaceCoordinate2DFixedCartesianTests.allTests),
    testCase(Coordinate3DMTests.allTests),
    testCase(PointGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(PointGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(PointGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(PointGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(PointGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(PointGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(PointGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(PointGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
+   testCase(PointGeometryCoordinate2DFixedCartesianTests.allTests),
+   testCase(PointGeometryCoordinate2DMFixedCartesianTests.allTests),
+   testCase(PointGeometryCoordinate3DFixedCartesianTests.allTests),
+   testCase(PointGeometryCoordinate3DMFixedCartesianTests.allTests),
+   testCase(FloatingTests.allTests),
    testCase(MultiPointCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPointCoordinate2DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPointCoordinate3DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPointCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPointCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPointCoordinate3DMFixedPrecisionCartesianTests.allTests),
-   testCase(SweepLineIntersectorTests.allTests),
+   testCase(MultiPointCoordinate2DFixedCartesianTests.allTests),
    testCase(Coordinate3DTests.allTests),
    testCase(MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPolygonGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPolygonGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPolygonGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiPolygonGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPolygonGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPolygonGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiPolygonGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
    testCase(Coordinate2DMTests.allTests),
    testCase(MultiLineStringCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringCoordinate2DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringCoordinate2DMFixedPrecisionCartesianTests.allTests),
+   testCase(MultiLineStringCoordinate2DFixedCartesianTests.allTests),
    testCase(CoordinateSystemGeographicTests.allTests),
    testCase(LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(LinearRingGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
    testCase(MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(MultiLineStringGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
    testCase(LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests.allTests),
-   testCase(LineStringGeometryCoordinate2DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LineStringGeometryCoordinate3DFloatingPrecisionCartesianTests.allTests),
-   testCase(LineStringGeometryCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(LineStringGeometryCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringGeometryCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringGeometryCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(LineStringGeometryCoordinate3DMFixedPrecisionCartesianTests.allTests),
    testCase(PointCoordinate2DFloatingPrecisionCartesianTests.allTests),
    testCase(PointCoordinate2DMFloatingPrecisionCartesianTests.allTests),
    testCase(PointCoordinate3DFloatingPrecisionCartesianTests.allTests),
    testCase(PointCoordinate3DMFloatingPrecisionCartesianTests.allTests),
-   testCase(PointCoordinate2DFixedPrecisionCartesianTests.allTests),
-   testCase(PointCoordinate2DMFixedPrecisionCartesianTests.allTests),
-   testCase(PointCoordinate3DFixedPrecisionCartesianTests.allTests),
-   testCase(PointCoordinate3DMFixedPrecisionCartesianTests.allTests)
+   testCase(PointCoordinate2DFixedCartesianTests.allTests),
+   testCase(PointCoordinate2DMFixedCartesianTests.allTests),
+   testCase(PointCoordinate3DFixedCartesianTests.allTests),
+   testCase(PointCoordinate3DMFixedCartesianTests.allTests)
 ])
 
-extension MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonSurfaceCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPolygonSurfaceCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiPolygonSurfaceCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testAreaEmpty", testAreaEmpty),
                 ("testAreaWith2SamePolygons", testAreaWith2SamePolygons),
@@ -163,6 +120,14 @@ extension PolygonCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithCRS", testInitWithCRS),
                 ("testInitWithRings", testInitWithRings),
                 ("testInitWithTuple", testInitWithTuple),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
+                ("testSubscriptGet", testSubscriptGet),
+                ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
                 ("testDescriptionEmpty", testDescriptionEmpty),
@@ -172,8 +137,8 @@ extension PolygonCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension PolygonCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PolygonCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (PolygonCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitNoArg", testInitNoArg),
                 ("testInitWithNoArgDefaults", testInitWithNoArgDefaults),
@@ -181,7 +146,15 @@ extension PolygonCoordinate2DFixedPrecisionCartesianTests {
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
                 ("testInitWithRings", testInitWithRings),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitArrayLiteral", testInitArrayLiteral),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
+                ("testSubscriptGet", testSubscriptGet),
+                ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
                 ("testOperatorEqualWithGeometryAndPolygon", testOperatorEqualWithGeometryAndPolygon),
@@ -288,42 +261,112 @@ extension WKTWriterCoordinate3DMTests {
    }
 }
 
-extension EventQueueTests {
-   static var allTests: [(String, (EventQueueTests) -> () throws -> Void)] {
+extension FixedTests {
+   static var allTests: [(String, (FixedTests) -> () throws -> Void)] {
       return [
-                ("testInit", testInit),
-                ("testInsertToEmptyQueue", testInsertToEmptyQueue),
-                ("testInsertToEmptyQueueReverseInsert", testInsertToEmptyQueueReverseInsert)
+                ("testConvertWithScale10Lower", testConvertWithScale10Lower),
+                ("testConvertWithScale10Middle", testConvertWithScale10Middle),
+                ("testConvertWithScale10Upper", testConvertWithScale10Upper),
+                ("testConvertWithScale10Lower2", testConvertWithScale10Lower2),
+                ("testConvertWithScale10Middle2", testConvertWithScale10Middle2),
+                ("testConvertWithScale10Upper2", testConvertWithScale10Upper2),
+                ("testConvertOptionalWithScale10Lower", testConvertOptionalWithScale10Lower),
+                ("testConvertOptionalWithNil", testConvertOptionalWithNil),
+                ("testDescription", testDescription),
+                ("testDebugDescription", testDebugDescription),
+                ("testEqualTrue", testEqualTrue),
+                ("testEqualFalse", testEqualFalse),
+                ("testEqualFalseWithDifferentType", testEqualFalseWithDifferentType)
            ]
    }
 }
 
-extension GeometryCollectionGeometryFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (GeometryCollectionGeometryFloatingPrecisionCartesianTests) -> () throws -> Void)] {
+extension GeoJSONWriterCoordinate2DTests {
+   static var allTests: [(String, (GeoJSONWriterCoordinate2DTests) -> () throws -> Void)] {
+      return [
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWritePoint", testWritePoint),
+                ("testWriteLineString", testWriteLineString),
+                ("testWriteLinearRing", testWriteLinearRing),
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint),
+                ("testWriteMultiLineString", testWriteMultiLineString),
+                ("testWriteMultiPolygon", testWriteMultiPolygon),
+                ("testWriteGeometryCollection", testWriteGeometryCollection)
+           ]
+   }
+}
+
+extension GeoJSONWriterCoordinate2DMTests {
+   static var allTests: [(String, (GeoJSONWriterCoordinate2DMTests) -> () throws -> Void)] {
+      return [
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
+                ("testWritePoint", testWritePoint),
+                ("testWriteLineString", testWriteLineString),
+                ("testWriteLinearRing", testWriteLinearRing),
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint),
+                ("testWriteMultiLineString", testWriteMultiLineString),
+                ("testWriteMultiPolygon", testWriteMultiPolygon),
+                ("testWriteGeometryCollection", testWriteGeometryCollection)
+           ]
+   }
+}
+
+extension GeoJSONWriterCoordinate3DTests {
+   static var allTests: [(String, (GeoJSONWriterCoordinate3DTests) -> () throws -> Void)] {
+      return [
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
+                ("testWritePoint", testWritePoint),
+                ("testWriteLineString", testWriteLineString),
+                ("testWriteLinearRing", testWriteLinearRing),
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint),
+                ("testWriteMultiLineString", testWriteMultiLineString),
+                ("testWriteMultiPolygon", testWriteMultiPolygon),
+                ("testWriteGeometryCollection", testWriteGeometryCollection)
+           ]
+   }
+}
+
+extension GeoJSONWriterCoordinate3DMTests {
+   static var allTests: [(String, (GeoJSONWriterCoordinate3DMTests) -> () throws -> Void)] {
+      return [
+                ("testWriteUnsupportedGeometry", testWriteUnsupportedGeometry),
+                ("testWriteInvalidNumberOfCoordinates", testWriteInvalidNumberOfCoordinates),
+                ("testWritePoint", testWritePoint),
+                ("testWriteLineString", testWriteLineString),
+                ("testWriteLinearRing", testWriteLinearRing),
+                ("testWritePolygon", testWritePolygon),
+                ("testWriteMultiPoint", testWriteMultiPoint),
+                ("testWriteMultiLineString", testWriteMultiLineString),
+                ("testWriteMultiPolygon", testWriteMultiPolygon),
+                ("testWriteGeometryCollection", testWriteGeometryCollection)
+           ]
+   }
+}
+
+extension GeometryCollectionGeometryTests {
+   static var allTests: [(String, (GeometryCollectionGeometryTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testDimensionWithHomogeneousPoint", testDimensionWithHomogeneousPoint),
                 ("testDimensionWithHomogeneousLineString", testDimensionWithHomogeneousLineString),
+                ("testDimensionWithHomogeneousLineStringEmpty", testDimensionWithHomogeneousLineStringEmpty),
                 ("testDimensionWithHomogeneousPolygon", testDimensionWithHomogeneousPolygon),
+                ("testDimensionWithHomogeneousPolygonEmpty", testDimensionWithHomogeneousPolygonEmpty),
                 ("testDimensionWithNonHomogeneousPointPolygon", testDimensionWithNonHomogeneousPointPolygon),
+                ("testDimensionWithNonHomogeneousPointPolygonEmpty", testDimensionWithNonHomogeneousPointPolygonEmpty),
                 ("testDimensionWithNonHomogeneousPointLineString", testDimensionWithNonHomogeneousPointLineString),
+                ("testDimensionWithNonHomogeneousPointLineStringEmpty", testDimensionWithNonHomogeneousPointLineStringEmpty),
                 ("testBoundary", testBoundary),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualWithSameTypesFalse", testEqualWithSameTypesFalse),
                 ("testEqualWithDifferentTypesFalse", testEqualWithDifferentTypesFalse)
-           ]
-   }
-}
-
-extension GeometryCollectionGeometryFixedPrecisionCartesianTests {
-   static var allTests: [(String, (GeometryCollectionGeometryFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension),
-                ("testDimensionWithHomogeneousPoint", testDimensionWithHomogeneousPoint),
-                ("testDimensionWithHomogeneousLineString", testDimensionWithHomogeneousLineString),
-                ("testDimensionWithHomogeneousPolygon", testDimensionWithHomogeneousPolygon),
-                ("testDimensionWithNonHomogeneousPointPolygon", testDimensionWithNonHomogeneousPointPolygon),
-                ("testDimensionWithNonHomogeneousPointLineString", testDimensionWithNonHomogeneousPointLineString)
            ]
    }
 }
@@ -336,86 +379,22 @@ extension GeometryCollectionCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension AVLTreeTests {
-   static var allTests: [(String, (AVLTreeTests) -> () throws -> Void)] {
-      return [
-                ("testLeftRotation", testLeftRotation),
-                ("testRightRotation", testRightRotation),
-                ("testLeftRightRotation", testLeftRightRotation),
-                ("testRightLeftRotation", testRightLeftRotation),
-                ("testHeightEmptyTree", testHeightEmptyTree),
-                ("testHeight", testHeight),
-                ("testBalancedEmptyTree", testBalancedEmptyTree),
-                ("testBalanced9NodeTree", testBalanced9NodeTree),
-                ("testBalanced1NodeTree", testBalanced1NodeTree),
-                ("testBalanced2NodeTree", testBalanced2NodeTree),
-                ("testBalanced3NodeRightHeavyTree", testBalanced3NodeRightHeavyTree),
-                ("testHeight3NodeRightHeavyTree", testHeight3NodeRightHeavyTree),
-                ("testBalanced3NodeLeftHeavyTree", testBalanced3NodeLeftHeavyTree),
-                ("testHeight3NodeLeftHeavyTree", testHeight3NodeLeftHeavyTree),
-                ("testBalanced3NodeLeftRightHeavyTree", testBalanced3NodeLeftRightHeavyTree),
-                ("testHeight3NodeLeftRightHeavyTree", testHeight3NodeLeftRightHeavyTree),
-                ("testBalanced3NodeOrderedTree", testBalanced3NodeOrderedTree),
-                ("testInsertNonExisting30", testInsertNonExisting30),
-                ("testInsertLeftA", testInsertLeftA),
-                ("testInsertLeftnegative1", testInsertLeftnegative1),
-                ("testInsertExisting8", testInsertExisting8),
-                ("testDeleteNonExisting30", testDeleteNonExisting30),
-                ("testDeleteRoot1NodeTree", testDeleteRoot1NodeTree),
-                ("testDeleteRoot3NodeTree", testDeleteRoot3NodeTree),
-                ("testDeleteExisting1", testDeleteExisting1),
-                ("testDeleteExisting5", testDeleteExisting5),
-                ("testDeleteExisting7", testDeleteExisting7),
-                ("testDeleteExisting8", testDeleteExisting8),
-                ("testDeleteExisting10", testDeleteExisting10),
-                ("testDeleteExistingLeafNodesForceReBalance", testDeleteExistingLeafNodesForceReBalance),
-                ("testDeleteExistingLeafNodesNoReBalance", testDeleteExistingLeafNodesNoReBalance),
-                ("testDeleteExistingInnerNodes", testDeleteExistingInnerNodes),
-                ("testDeleteExistingSingleLeftNode", testDeleteExistingSingleLeftNode),
-                ("testDeleteExistingAllBut3", testDeleteExistingAllBut3),
-                ("testDeleteExistingAllBut1", testDeleteExistingAllBut1),
-                ("testDeleteExistingAll", testDeleteExistingAll),
-                ("testSearchExisting1", testSearchExisting1),
-                ("testSearchExisting8", testSearchExisting8),
-                ("testSearchExisting25", testSearchExisting25),
-                ("testSearchNonExisting0", testSearchNonExisting0),
-                ("testSearchNonExisting30", testSearchNonExisting30),
-                ("testNextOf1", testNextOf1),
-                ("testNextOf7", testNextOf7),
-                ("testNextOf8", testNextOf8),
-                ("testNextOf10", testNextOf10),
-                ("testNextOf15", testNextOf15),
-                ("testNextOf25", testNextOf25),
-                ("testPreviousOf1", testPreviousOf1),
-                ("testPreviousOf8", testPreviousOf8),
-                ("testPreviousOf10", testPreviousOf10),
-                ("testPreviousOf15", testPreviousOf15),
-                ("testPreviousOf17", testPreviousOf17),
-                ("testSearchPerformance", testSearchPerformance),
-                ("testInsertPerformance", testInsertPerformance),
-                ("testDeletePerformance", testDeletePerformance),
-                ("testInsertDeleteBestTimePerformance", testInsertDeleteBestTimePerformance),
-                ("testInsertDeleteWorstTimePerformance", testInsertDeleteWorstTimePerformance)
+                ("testCount", testCount)
            ]
    }
 }
@@ -429,7 +408,6 @@ extension GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests {
                 ("testReadWithUnsupportedType", testReadWithUnsupportedType),
                 ("testReadWithMissingCoordinates", testReadWithMissingCoordinates),
                 ("testReadWithInvalidCoordinateStructure", testReadWithInvalidCoordinateStructure),
-                ("testReadWithInvalidNumberOfCoordinates", testReadWithInvalidNumberOfCoordinates),
                 ("testReadWithMissingGeometries", testReadWithMissingGeometries),
                 ("testReadWithInvalidGeometriesStructure", testReadWithInvalidGeometriesStructure),
                 ("testReadWithValidPoint", testReadWithValidPoint),
@@ -443,10 +421,9 @@ extension GeoJSONReaderCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension GeoJSONReaderCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (GeoJSONReaderCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
-                ("testReadWithInvalidNumberOfCoordinates", testReadWithInvalidNumberOfCoordinates),
                 ("testReadWithValidPoint", testReadWithValidPoint),
                 ("testReadWithValidLineString", testReadWithValidLineString),
                 ("testReadWithValidPolygon", testReadWithValidPolygon),
@@ -461,11 +438,6 @@ extension GeoJSONReaderCoordinate3DMFixedPrecisionCartesianTests {
 extension GeoJSONReaderInternal {
    static var allTests: [(String, (GeoJSONReaderInternal) -> () throws -> Void)] {
       return [
-                ("testCoordinateWithDouble", testCoordinateWithDouble),
-                ("testCoordinateWithNSNumber", testCoordinateWithNSNumber),
-                ("testCoordinateWithInt", testCoordinateWithInt),
-                ("testCoordinateWithFloat", testCoordinateWithFloat),
-                ("testCoordinateWithString", testCoordinateWithString),
                 ("testCoordinateWithInvalidString", testCoordinateWithInvalidString),
                 ("testCoordinatesWithInvalidStructure", testCoordinatesWithInvalidStructure)
            ]
@@ -475,15 +447,15 @@ extension GeoJSONReaderInternal {
 extension Coordinate2DTests {
    static var allTests: [(String, (Coordinate2DTests) -> () throws -> Void)] {
       return [
-                ("testInitWithXY", testInitWithXY),
+                ("testInit", testInit),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitWithDictionaryLiteral", testInitWithDictionaryLiteral),
+                ("testInitWithDictionaryLiteralIncorrectElements", testInitWithDictionaryLiteralIncorrectElements),
+                ("testInitCopy", testInitCopy),
                 ("testX", testX),
                 ("testY", testY),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testTuple", testTuple),
-                ("testInit_Array", testInit_Array),
-                ("testInit_Array_Invalid", testInit_Array_Invalid),
-                ("testInitCopy", testInitCopy),
-                ("testInitCopyWithFixedPrecision", testInitCopyWithFixedPrecision),
+                ("testZ", testZ),
+                ("testM", testM),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
                 ("testEqual", testEqual),
@@ -500,29 +472,23 @@ extension LineStringCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -533,29 +499,23 @@ extension LineStringCoordinate2DMFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -566,29 +526,23 @@ extension LineStringCoordinate3DFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -599,161 +553,131 @@ extension LineStringCoordinate3DMFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension LineStringCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LineStringCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (LineStringCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension LineStringCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LineStringCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (LineStringCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension LineStringCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LineStringCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (LineStringCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension LineStringCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LineStringCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (LineStringCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -764,29 +688,23 @@ extension LinearRingCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -797,29 +715,23 @@ extension LinearRingCoordinate2DMFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -830,29 +742,23 @@ extension LinearRingCoordinate3DFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -863,161 +769,131 @@ extension LinearRingCoordinate3DMFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension LinearRingCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (LinearRingCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension LinearRingCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (LinearRingCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension LinearRingCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (LinearRingCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension LinearRingCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (LinearRingCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitConverting", testInitConverting),
                 ("testInitCopy", testInitCopy),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testAppendContentsOfCoordinates", testAppendContentsOfCoordinates),
-                ("testAppendContentsOfWithTuples", testAppendContentsOfWithTuples),
-                ("testInsertCoordinate", testInsertCoordinate),
-                ("testInsertTuple", testInsertTuple),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepingCapacity", testRemoveAllKeepingCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -1057,7 +933,6 @@ extension WKTReaderCoordinate2DFloatingPrecisionCartesianTests {
                 ("testReadUsingUTF8Data", testReadUsingUTF8Data),
                 ("testReadUsingUnicodeData", testReadUsingUnicodeData),
                 ("testReadDataNotConvertableUsingUTF8", testReadDataNotConvertableUsingUTF8),
-                ("testReadInvalidNumberOfCoordinates", testReadInvalidNumberOfCoordinates),
                 ("testReadInvalidGeometry", testReadInvalidGeometry),
                 ("testReadPointIntValid", testReadPointIntValid),
                 ("testReadPointValidExponentUpperCase", testReadPointValidExponentUpperCase),
@@ -1127,7 +1002,6 @@ extension WKTReaderCoordinate2DMFloatingPrecisionCartesianTests {
                 ("testReadPointInvalidCoordinateMissingM", testReadPointInvalidCoordinateMissingM),
                 ("testReadPointInvalidCoordinateNoSpaceAfterM", testReadPointInvalidCoordinateNoSpaceAfterM),
                 ("testReadPointInvalidCoordinateNoSpaceBeforeM", testReadPointInvalidCoordinateNoSpaceBeforeM),
-                ("testReadInvalidNumberOfCoordinates", testReadInvalidNumberOfCoordinates),
                 ("testReadGeometryCollectionValid", testReadGeometryCollectionValid),
                 ("testReadGeometryCollectionInvalidElementNoM", testReadGeometryCollectionInvalidElementNoM)
            ]
@@ -1163,6 +1037,24 @@ extension WKTReaderCoordinate3DMFloatingPrecisionCartesianTests {
    }
 }
 
+extension BoundsTests {
+   static var allTests: [(String, (BoundsTests) -> () throws -> Void)] {
+      return [
+                ("testInit", testInit),
+                ("testInitWithCoordinate", testInitWithCoordinate),
+                ("testMin", testMin),
+                ("testMax", testMax),
+                ("testMidWithOriginZero", testMidWithOriginZero),
+                ("testMidWithOriginNegative", testMidWithOriginNegative),
+                ("testExpand", testExpand),
+                ("testEqualTrue", testEqualTrue),
+                ("testEqualFalse", testEqualFalse),
+                ("testDescription", testDescription),
+                ("testDebugDescription", testDebugDescription)
+           ]
+   }
+}
+
 extension MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
@@ -1174,8 +1066,8 @@ extension MultiLineStringCurveCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringCurveCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiLineStringCurveCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiLineStringCurveCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testIsClosedClosed", testIsClosedClosed),
                 ("testIsClosedOpen", testIsClosedOpen),
@@ -1200,14 +1092,6 @@ extension LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension LinearRingCurveCoordinate3DFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingCurveCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testPerformanceLength", testPerformanceLength)
-           ]
-   }
-}
-
 extension MultiPolygonCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPolygonCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
@@ -1216,46 +1100,28 @@ extension MultiPolygonCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension FixedPrecisionTests {
-   static var allTests: [(String, (FixedPrecisionTests) -> () throws -> Void)] {
-      return [
-                ("testConvertWithScale10Lower", testConvertWithScale10Lower),
-                ("testConvertWithScale10Middle", testConvertWithScale10Middle),
-                ("testConvertWithScale10Upper", testConvertWithScale10Upper),
-                ("testConvertWithScale10Lower2", testConvertWithScale10Lower2),
-                ("testConvertWithScale10Middle2", testConvertWithScale10Middle2),
-                ("testConvertWithScale10Upper2", testConvertWithScale10Upper2),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testEqualTrue", testEqualTrue),
-                ("testEqualFalse", testEqualFalse),
-                ("testEqualFalseWithDifferentType", testEqualFalseWithDifferentType)
-           ]
-   }
-}
-
-extension PolygonSurfaceCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonSurfaceCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PolygonSurfaceCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (PolygonSurfaceCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testAreaEmpty", testAreaEmpty),
                 ("testAreaWithTriangle", testAreaWithTriangle),
@@ -1278,67 +1144,14 @@ extension PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWithOuterRing", testBoundaryWithOuterRing),
                 ("testBoundaryWithOuterRingAnd1InnerRing", testBoundaryWithOuterRingAnd1InnerRing),
                 ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
-           ]
-   }
-}
-
-extension PolygonGeometryCoordinate2DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonGeometryCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension PolygonGeometryCoordinate3DFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonGeometryCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension PolygonGeometryCoordinate3DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonGeometryCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension PolygonGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension PolygonGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension PolygonGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension PolygonGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PolygonGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
            ]
    }
 }
@@ -1348,8 +1161,6 @@ extension IntersectionMatrixTests {
       return [
                 ("testInit", testInit),
                 ("testInitWithArrayLiteral", testInitWithArrayLiteral),
-                ("testTranspose", testTranspose),
-                ("testTransposed", testTransposed),
                 ("testMakeIterator", testMakeIterator),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
@@ -1374,20 +1185,6 @@ extension IntersectionMatrixTests {
    }
 }
 
-extension FloatingPrecisionTests {
-   static var allTests: [(String, (FloatingPrecisionTests) -> () throws -> Void)] {
-      return [
-                ("testConvertEqual", testConvertEqual),
-                ("testConvertNotEqual1", testConvertNotEqual1),
-                ("testConvertNotEqual2", testConvertNotEqual2),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testEqualTrue", testEqualTrue),
-                ("testEqualFalseWithDifferentType", testEqualFalseWithDifferentType)
-           ]
-   }
-}
-
 extension CoordinateSystemCartesianTests {
    static var allTests: [(String, (CoordinateSystemCartesianTests) -> () throws -> Void)] {
       return [
@@ -1403,6 +1200,7 @@ extension MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1413,6 +1211,7 @@ extension MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1423,6 +1222,7 @@ extension MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
@@ -1433,36 +1233,40 @@ extension MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPointGeometryCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
    }
 }
 
-extension MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointGeometryCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiPointGeometryCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
    }
 }
 
-extension MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointGeometryCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (MultiPointGeometryCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty)
            ]
    }
 }
 
-extension MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointGeometryCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (MultiPointGeometryCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty),
                 ("testEqualTrue", testEqualTrue),
@@ -1471,10 +1275,11 @@ extension MultiPointGeometryCoordinate3DFixedPrecisionCartesianTests {
    }
 }
 
-extension MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointGeometryCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (MultiPointGeometryCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundary", testBoundary),
                 ("testBoundaryEmpty", testBoundaryEmpty),
                 ("testEqualTrue", testEqualTrue),
@@ -1491,14 +1296,6 @@ extension IntersectionMatrixHelperTests {
                 ("testPoint_MultiPoint_noIntersection", testPoint_MultiPoint_noIntersection),
                 ("testPoint_MultiPoint_firstProperSubsetOfSecond", testPoint_MultiPoint_firstProperSubsetOfSecond),
                 ("testPoint_MultiPoint_firstImproperSubsetOfSecond", testPoint_MultiPoint_firstImproperSubsetOfSecond),
-                ("testMultiPoint_Point_noIntersection", testMultiPoint_Point_noIntersection),
-                ("testMultiPoint_Point_secondProperSubsetOfFirst", testMultiPoint_Point_secondProperSubsetOfFirst),
-                ("testMultiPoint_Point_secondImproperSubsetOfFirst", testMultiPoint_Point_secondImproperSubsetOfFirst),
-                ("testMultiPoint_MultiPoint_noIntersection", testMultiPoint_MultiPoint_noIntersection),
-                ("testMultiPoint_MultiPoint_firstIntersectsSecondButNotSubset", testMultiPoint_MultiPoint_firstIntersectsSecondButNotSubset),
-                ("testMultiPoint_MultiPoint_firstProperSubsetOfSecond", testMultiPoint_MultiPoint_firstProperSubsetOfSecond),
-                ("testMultiPoint_MultiPoint_secondProperSubsetOfFirst", testMultiPoint_MultiPoint_secondProperSubsetOfFirst),
-                ("testMultiPoint_MultiPoint_firstImproperSubsetOfSecond", testMultiPoint_MultiPoint_firstImproperSubsetOfSecond),
                 ("testPoint_LineString_noIntersection", testPoint_LineString_noIntersection),
                 ("testPoint_LineString_firstSubsetOfSecondInterior", testPoint_LineString_firstSubsetOfSecondInterior),
                 ("testPoint_LineString_firstSubsetOfSecondBoundary", testPoint_LineString_firstSubsetOfSecondBoundary),
@@ -1507,6 +1304,30 @@ extension IntersectionMatrixHelperTests {
                 ("testPoint_MultiLineString_noIntersection", testPoint_MultiLineString_noIntersection),
                 ("testPoint_MultiLineString_firstSubsetOfSecondInterior", testPoint_MultiLineString_firstSubsetOfSecondInterior),
                 ("testPoint_MultiLineString_firstSubsetOfSecondBoundary", testPoint_MultiLineString_firstSubsetOfSecondBoundary),
+                ("testPoint_Polygon_outerRingOnly_noIntersection", testPoint_Polygon_outerRingOnly_noIntersection),
+                ("testPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection", testPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection),
+                ("testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection", testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection),
+                ("testPoint_Polygon_outerRingOnly_intersectsBoundary", testPoint_Polygon_outerRingOnly_intersectsBoundary),
+                ("testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary),
+                ("testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary),
+                ("testPoint_Polygon_outerRingOnly_intersectsInterior", testPoint_Polygon_outerRingOnly_intersectsInterior),
+                ("testPoint_Polygon_outerRingAndInnerRing_intersectsInterior", testPoint_Polygon_outerRingAndInnerRing_intersectsInterior),
+                ("testPoint_MultiPolygon_outerRingsOnly_noIntersection", testPoint_MultiPolygon_outerRingsOnly_noIntersection),
+                ("testPoint_MultiPolygon_outerRingAndInnerRings_outsideMainRings_noIntersection", testPoint_MultiPolygon_outerRingAndInnerRings_outsideMainRings_noIntersection),
+                ("testPoint_MultiPolygon_outerRingAndInnerRing_insideInnerRing_noIntersection", testPoint_MultiPolygon_outerRingAndInnerRing_insideInnerRing_noIntersection),
+                ("testPoint_MultiPolygon_outerRingOnly_intersectsBoundary", testPoint_MultiPolygon_outerRingOnly_intersectsBoundary),
+                ("testPoint_MultiPolygon_outerRingAndInnerRing_intersectsOuterBoundary", testPoint_MultiPolygon_outerRingAndInnerRing_intersectsOuterBoundary),
+                ("testPoint_MultiPolygon_outerRingAndInnerRing_intersectsInnerBoundary", testPoint_MultiPolygon_outerRingAndInnerRing_intersectsInnerBoundary),
+                ("testPoint_MultiPolygon_outerRingOnly_intersectsInterior", testPoint_MultiPolygon_outerRingOnly_intersectsInterior),
+                ("testPoint_MultiPolygon_outerRingAndInnerRing_intersectsInterior", testPoint_MultiPolygon_outerRingAndInnerRing_intersectsInterior),
+                ("testMultiPoint_Point_noIntersection", testMultiPoint_Point_noIntersection),
+                ("testMultiPoint_Point_secondProperSubsetOfFirst", testMultiPoint_Point_secondProperSubsetOfFirst),
+                ("testMultiPoint_Point_secondImproperSubsetOfFirst", testMultiPoint_Point_secondImproperSubsetOfFirst),
+                ("testMultiPoint_MultiPoint_noIntersection", testMultiPoint_MultiPoint_noIntersection),
+                ("testMultiPoint_MultiPoint_firstIntersectsSecondButNotSubset", testMultiPoint_MultiPoint_firstIntersectsSecondButNotSubset),
+                ("testMultiPoint_MultiPoint_firstProperSubsetOfSecond", testMultiPoint_MultiPoint_firstProperSubsetOfSecond),
+                ("testMultiPoint_MultiPoint_secondProperSubsetOfFirst", testMultiPoint_MultiPoint_secondProperSubsetOfFirst),
+                ("testMultiPoint_MultiPoint_firstImproperSubsetOfSecond", testMultiPoint_MultiPoint_firstImproperSubsetOfSecond),
                 ("testMultiPoint_LineString_noIntersection", testMultiPoint_LineString_noIntersection),
                 ("testMultiPoint_LineString_firstSubsetOfSecondInterior", testMultiPoint_LineString_firstSubsetOfSecondInterior),
                 ("testMultiPoint_LineString_firstProperSubsetOfSecondBoundary", testMultiPoint_LineString_firstProperSubsetOfSecondBoundary),
@@ -1532,22 +1353,6 @@ extension IntersectionMatrixHelperTests {
                 ("testMultiPoint_MultiLineString_firstCoversSecondBoundaryAndTouchesExterior", testMultiPoint_MultiLineString_firstCoversSecondBoundaryAndTouchesExterior),
                 ("testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundaryAndExterior", testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundaryAndExterior),
                 ("testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary", testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary),
-                ("testPoint_Polygon_outerRingOnly_noIntersection", testPoint_Polygon_outerRingOnly_noIntersection),
-                ("testPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection", testPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection),
-                ("testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection", testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection),
-                ("testPoint_Polygon_outerRingOnly_intersectsBoundary", testPoint_Polygon_outerRingOnly_intersectsBoundary),
-                ("testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary),
-                ("testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary", testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary),
-                ("testPoint_Polygon_outerRingOnly_intersectsInterior", testPoint_Polygon_outerRingOnly_intersectsInterior),
-                ("testPoint_Polygon_outerRingAndInnerRing_intersectsInterior", testPoint_Polygon_outerRingAndInnerRing_intersectsInterior),
-                ("testPoint_MultiPolygon_outerRingsOnly_noIntersection", testPoint_MultiPolygon_outerRingsOnly_noIntersection),
-                ("testPoint_MultiPolygon_outerRingAndInnerRings_outsideMainRings_noIntersection", testPoint_MultiPolygon_outerRingAndInnerRings_outsideMainRings_noIntersection),
-                ("testPoint_MultiPolygon_outerRingAndInnerRing_insideInnerRing_noIntersection", testPoint_MultiPolygon_outerRingAndInnerRing_insideInnerRing_noIntersection),
-                ("testPoint_MultiPolygon_outerRingOnly_intersectsBoundary", testPoint_MultiPolygon_outerRingOnly_intersectsBoundary),
-                ("testPoint_MultiPolygon_outerRingAndInnerRing_intersectsOuterBoundary", testPoint_MultiPolygon_outerRingAndInnerRing_intersectsOuterBoundary),
-                ("testPoint_MultiPolygon_outerRingAndInnerRing_intersectsInnerBoundary", testPoint_MultiPolygon_outerRingAndInnerRing_intersectsInnerBoundary),
-                ("testPoint_MultiPolygon_outerRingOnly_intersectsInterior", testPoint_MultiPolygon_outerRingOnly_intersectsInterior),
-                ("testPoint_MultiPolygon_outerRingAndInnerRing_intersectsInterior", testPoint_MultiPolygon_outerRingAndInnerRing_intersectsInterior),
                 ("testMultiPoint_Polygon_outerRingOnly_noIntersection", testMultiPoint_Polygon_outerRingOnly_noIntersection),
                 ("testMultiPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection", testMultiPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection),
                 ("testMultiPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection", testMultiPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection),
@@ -1671,7 +1476,496 @@ extension IntersectionMatrixHelperTests {
                 ("testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint_SecondLineString", testLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_FirstSubsetOfSecondAndTouchesNeitherBoundaryPoint_SecondLineString),
                 ("testLineString_MultiLineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap_FirstLineString", testLineString_MultiLineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap_FirstLineString),
                 ("testLineString_MultiLineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap_SecondLineString", testLineString_MultiLineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap_SecondLineString),
-                ("testLineString_MultiLineString_secondProperSubsetOfFirst", testLineString_MultiLineString_secondProperSubsetOfFirst)
+                ("testLineString_MultiLineString_secondProperSubsetOfFirst", testLineString_MultiLineString_secondProperSubsetOfFirst),
+                ("testLineString_Polygon_noIntersection", testLineString_Polygon_noIntersection),
+                ("testLineString_Polygon_withHole_noIntersection_lineStringOutsideMainPolygon", testLineString_Polygon_withHole_noIntersection_lineStringOutsideMainPolygon),
+                ("testLineString_Polygon_withHole_noIntersection_lineStringInsideHole", testLineString_Polygon_withHole_noIntersection_lineStringInsideHole),
+                ("testLineString_Polygon_interiorsIntersect_lineStringFirstSegment", testLineString_Polygon_interiorsIntersect_lineStringFirstSegment),
+                ("testLineString_Polygon_interiorsIntersect_lineStringSecondSegment", testLineString_Polygon_interiorsIntersect_lineStringSecondSegment),
+                ("testLineString_Polygon_interiorIntersectsBoundaryAtOnePoint_lineStringFirstSegment_doNotCross", testLineString_Polygon_interiorIntersectsBoundaryAtOnePoint_lineStringFirstSegment_doNotCross),
+                ("testLineString_Polygon_interiorIntersectsBoundaryAtOnePoint_lineStringInsideHole_doNotCross", testLineString_Polygon_interiorIntersectsBoundaryAtOnePoint_lineStringInsideHole_doNotCross),
+                ("testLineString_Polygon_boundaryIntersectsBoundaryAtOnePoint_doNotCross_lineStringOutsideMainLinearRing", testLineString_Polygon_boundaryIntersectsBoundaryAtOnePoint_doNotCross_lineStringOutsideMainLinearRing),
+                ("testLineString_Polygon_boundaryIntersectsBoundaryAtTwoPoints_doNotCross_lineStringOutsideMainLinearRing", testLineString_Polygon_boundaryIntersectsBoundaryAtTwoPoints_doNotCross_lineStringOutsideMainLinearRing),
+                ("testLineString_Polygon_boundaryIntersectsBoundaryAtOnePoint_doNotCross_lineStringInsideHole", testLineString_Polygon_boundaryIntersectsBoundaryAtOnePoint_doNotCross_lineStringInsideHole),
+                ("testLineString_Polygon_boundaryIntersectsBoundaryAtTwoPoints_doNotCross_lineStringInsideHole", testLineString_Polygon_boundaryIntersectsBoundaryAtTwoPoints_doNotCross_lineStringInsideHole),
+                ("testLineString_Polygon_intersectsPolygonBoundaryInteriorExterior", testLineString_Polygon_intersectsPolygonBoundaryInteriorExterior),
+                ("testLineString_Polygon_intersectsPolygonBoundaryInteriorAndExteriorInsideHole", testLineString_Polygon_intersectsPolygonBoundaryInteriorAndExteriorInsideHole),
+                ("testLineString_Polygon_intersectsPolygonBoundaryInteriorExterior_multipleTimes", testLineString_Polygon_intersectsPolygonBoundaryInteriorExterior_multipleTimes),
+                ("testLineString_Polygon_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole", testLineString_Polygon_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole),
+                ("testLineString_MultiPolygon_noIntersection", testLineString_MultiPolygon_noIntersection),
+                ("testLineString_MultiPolygon_withHoles_noIntersection_lineStringOutsideMainPolygon", testLineString_MultiPolygon_withHoles_noIntersection_lineStringOutsideMainPolygon),
+                ("testLineString_MultiPolygon_withHoles_noIntersection_lineStringInsideHole", testLineString_MultiPolygon_withHoles_noIntersection_lineStringInsideHole),
+                ("testLineString_MultiPolygon_interiorsIntersect_firstPolygon", testLineString_MultiPolygon_interiorsIntersect_firstPolygon),
+                ("testLineString_MultiPolygon_interiorsIntersect_firstPolygon_withHole", testLineString_MultiPolygon_interiorsIntersect_firstPolygon_withHole),
+                ("testLineString_MultiPolygon_interiorsIntersect_secondPolygon", testLineString_MultiPolygon_interiorsIntersect_secondPolygon),
+                ("testLineString_MultiPolygon_interiorsIntersect_secondPolygon_withHole", testLineString_MultiPolygon_interiorsIntersect_secondPolygon_withHole),
+                ("testLineString_MultiPolygon_interiorsIntersect_bothPolygons_withHoles", testLineString_MultiPolygon_interiorsIntersect_bothPolygons_withHoles),
+                ("testLineString_MultiPolygon_boundariesIntersect_firstPolygon_withHoles", testLineString_MultiPolygon_boundariesIntersect_firstPolygon_withHoles),
+                ("testLineString_MultiPolygon_boundariesIntersect_secondPolygon_withHoles", testLineString_MultiPolygon_boundariesIntersect_secondPolygon_withHoles),
+                ("testLineString_MultiPolygon_boundariesIntersect_bothPolygons_withHoles", testLineString_MultiPolygon_boundariesIntersect_bothPolygons_withHoles),
+                ("testLineString_MultiPolygon_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles", testLineString_MultiPolygon_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testLineString_MultiPolygon_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles", testLineString_MultiPolygon_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testLineString_MultiPolygon_interiorsIntersectAndBoundariesIntersect_withHoles", testLineString_MultiPolygon_interiorsIntersectAndBoundariesIntersect_withHoles),
+                ("testLineString_MultiPolygon_boundaryIntersectsInteriorAndBoundary_withHoles", testLineString_MultiPolygon_boundaryIntersectsInteriorAndBoundary_withHoles),
+                ("testLinearRing_Point_noIntersection", testLinearRing_Point_noIntersection),
+                ("testLinearRing_Point_secondSubsetOfFirstInterior_firstSegment", testLinearRing_Point_secondSubsetOfFirstInterior_firstSegment),
+                ("testLinearRing_Point_secondSubsetOfFirstInterior_lastSegment", testLinearRing_Point_secondSubsetOfFirstInterior_lastSegment),
+                ("testLinearRing_MultiPoint_noIntersection", testLinearRing_MultiPoint_noIntersection),
+                ("testLinearRing_MultiPoint_secondSubsetOfFirstInterior", testLinearRing_MultiPoint_secondSubsetOfFirstInterior),
+                ("testLinearRing_MultiPoint_secondTouchesFirstInteriorAndExterior", testLinearRing_MultiPoint_secondTouchesFirstInteriorAndExterior),
+                ("testLinearRing_LineString_noIntersection", testLinearRing_LineString_noIntersection),
+                ("testLinearRing_LineString_interiorsIntersectAtOnePointLineStringFirstSegment", testLinearRing_LineString_interiorsIntersectAtOnePointLineStringFirstSegment),
+                ("testLinearRing_LineString_interiorsIntersectAtOnePointSecondSegments", testLinearRing_LineString_interiorsIntersectAtOnePointSecondSegments),
+                ("testLinearRing_LineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross", testLinearRing_LineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross),
+                ("testLinearRing_LineString_interiorsIntersectAtTwoPointsBothSegments", testLinearRing_LineString_interiorsIntersectAtTwoPointsBothSegments),
+                ("testLinearRing_LineString_firstInteriorIntersectsSecondInteriorAtMultipleSegmentEndpoints", testLinearRing_LineString_firstInteriorIntersectsSecondInteriorAtMultipleSegmentEndpoints),
+                ("testLinearRing_LineString_secondBoundaryIntersectsFirstInterior_FirstBoundaryPoint", testLinearRing_LineString_secondBoundaryIntersectsFirstInterior_FirstBoundaryPoint),
+                ("testLinearRing_LineString_secondBoundaryIntersectsFirstInterior_SecondBoundaryPoint", testLinearRing_LineString_secondBoundaryIntersectsFirstInterior_SecondBoundaryPoint),
+                ("testLinearRing_LineString_secondBoundaryIntersectsFirstInterior_BothBoundaryPoints", testLinearRing_LineString_secondBoundaryIntersectsFirstInterior_BothBoundaryPoints),
+                ("testLinearRing_LineString_secondInteriorDoesNotIntersectFirstExterior_LineStringSubsetOfLinearRing", testLinearRing_LineString_secondInteriorDoesNotIntersectFirstExterior_LineStringSubsetOfLinearRing),
+                ("testLinearRing_LineString_secondInteriorDoesNotIntersectFirstExterior_LineStringSubsetOfLinearRing2", testLinearRing_LineString_secondInteriorDoesNotIntersectFirstExterior_LineStringSubsetOfLinearRing2),
+                ("testLinearRing_LineString_secondInteriorDoesNotIntersectFirstExterior_LineStringSubsetOfLinearRing3", testLinearRing_LineString_secondInteriorDoesNotIntersectFirstExterior_LineStringSubsetOfLinearRing3),
+                ("testLinearRing_LineString_secondInteriorDoesNotIntersectFirstExterior_LineStringSubsetOfLinearRing4", testLinearRing_LineString_secondInteriorDoesNotIntersectFirstExterior_LineStringSubsetOfLinearRing4),
+                ("testLinearRing_LineString_geometriesShareSingleLineSegment_lineStringBoundaryDoesNotTouch", testLinearRing_LineString_geometriesShareSingleLineSegment_lineStringBoundaryDoesNotTouch),
+                ("testLinearRing_LineString_geometriesShareSingleLineSegment_lineStringBoundaryTouchesAtPoint", testLinearRing_LineString_geometriesShareSingleLineSegment_lineStringBoundaryTouchesAtPoint),
+                ("testLinearRing_LinearRing_noIntersection", testLinearRing_LinearRing_noIntersection),
+                ("testLinearRing_LinearRing_noIntersection_firstInsideSecond", testLinearRing_LinearRing_noIntersection_firstInsideSecond),
+                ("testLinearRing_LinearRing_noIntersection_secondInsideFirst", testLinearRing_LinearRing_noIntersection_secondInsideFirst),
+                ("testLinearRing_LinearRing_interiorsIntersectAtTwoPoints", testLinearRing_LinearRing_interiorsIntersectAtTwoPoints),
+                ("testLinearRing_LinearRing_interiorsIntersectAtTwoPoints_DoNotCross", testLinearRing_LinearRing_interiorsIntersectAtTwoPoints_DoNotCross),
+                ("testLinearRing_LinearRing_firstInteriorIntersectsSecondInteriorAtThreeSegmentEndpoints", testLinearRing_LinearRing_firstInteriorIntersectsSecondInteriorAtThreeSegmentEndpoints),
+                ("testLinearRing_LinearRing_linearRingsMatch_samePointOrder", testLinearRing_LinearRing_linearRingsMatch_samePointOrder),
+                ("testLinearRing_LinearRing_linearRingsMatch_differentPointOrder", testLinearRing_LinearRing_linearRingsMatch_differentPointOrder),
+                ("testLinearRing_LinearRing_oneSegmentShared", testLinearRing_LinearRing_oneSegmentShared),
+                ("testLinearRing_MultiLineString_noIntersection", testLinearRing_MultiLineString_noIntersection),
+                ("testLinearRing_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsFirstLineString", testLinearRing_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsFirstLineString),
+                ("testLinearRing_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsSecondLineString", testLinearRing_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsSecondLineString),
+                ("testLinearRing_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsFirstLineString", testLinearRing_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsFirstLineString),
+                ("testLinearRing_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsSecondLineString", testLinearRing_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsSecondLineString),
+                ("testLinearRing_MultiLineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross", testLinearRing_MultiLineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross),
+                ("testLinearRing_MultiLineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings", testLinearRing_MultiLineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings),
+                ("testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString1", testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString1),
+                ("testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString2", testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundaryFirstLineString2),
+                ("testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString1", testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString1),
+                ("testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString2", testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundarySecondLineString2),
+                ("testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints_FirstLineString", testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints_FirstLineString),
+                ("testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints_SecondLineString", testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundary_BothBoundaryPoints_SecondLineString),
+                ("testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundary_AllBoundaryPoints", testLinearRing_MultiLineString_firstInteriorIntersectsSecondBoundary_AllBoundaryPoints),
+                ("testLinearRing_MultiLineString_firstLineStringInteriorDoesNotIntersectLinearRingExterior", testLinearRing_MultiLineString_firstLineStringInteriorDoesNotIntersectLinearRingExterior),
+                ("testLinearRing_MultiLineString_secondLineStringInteriorDoesNotIntersectLinearRingExterior", testLinearRing_MultiLineString_secondLineStringInteriorDoesNotIntersectLinearRingExterior),
+                ("testLinearRing_MultiLineString_neitherLineStringInteriorIntersectsLinearRingExterior", testLinearRing_MultiLineString_neitherLineStringInteriorIntersectsLinearRingExterior),
+                ("testLinearRing_MultiLineString_secondTouchesFirstInteriorAtLineSegmentAndPoint", testLinearRing_MultiLineString_secondTouchesFirstInteriorAtLineSegmentAndPoint),
+                ("testLinearRing_MultiLineString_firstLineStringInsideLinearRing_secondLineStringBoundaryTouchesLinearRing", testLinearRing_MultiLineString_firstLineStringInsideLinearRing_secondLineStringBoundaryTouchesLinearRing),
+                ("testLinearRing_MultiLineString_secondLineStringInsideLinearRing_firstLineStringBoundaryTouchesLinearRing", testLinearRing_MultiLineString_secondLineStringInsideLinearRing_firstLineStringBoundaryTouchesLinearRing),
+                ("testLinearRing_MultiLineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap_FirstLineString", testLinearRing_MultiLineString_firstIntersectsFirstBoundaryPointOfSecondAndInteriorsOverlap_FirstLineString),
+                ("testLinearRing_MultiLineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap_SecondLineString", testLinearRing_MultiLineString_firstIntersectsSecondBoundaryPointOfSecondAndInteriorsOverlap_SecondLineString),
+                ("testLinearRing_MultiLineString_secondProperSubsetOfFirst", testLinearRing_MultiLineString_secondProperSubsetOfFirst),
+                ("testLinearRing_MultiLineString_secondMostlyProperSubsetOfFirstButOneLineStringBoundaryPointNotIncluded", testLinearRing_MultiLineString_secondMostlyProperSubsetOfFirstButOneLineStringBoundaryPointNotIncluded),
+                ("testLinearRing_Polygon_noIntersection", testLinearRing_Polygon_noIntersection),
+                ("testLinearRing_Polygon_withHole_noIntersection_linearRingOutsideMainPolygon", testLinearRing_Polygon_withHole_noIntersection_linearRingOutsideMainPolygon),
+                ("testLinearRing_Polygon_withHole_noIntersection_linearRingInsideHole", testLinearRing_Polygon_withHole_noIntersection_linearRingInsideHole),
+                ("testLinearRing_Polygon_interiorsExteriorsIntersect1", testLinearRing_Polygon_interiorsExteriorsIntersect1),
+                ("testLinearRing_Polygon_interiorsExteriorsIntersect2", testLinearRing_Polygon_interiorsExteriorsIntersect2),
+                ("testLinearRing_Polygon_interiorIntersectsBoundaryAtOnePoint_linearRingFirstSegment_doNotCross", testLinearRing_Polygon_interiorIntersectsBoundaryAtOnePoint_linearRingFirstSegment_doNotCross),
+                ("testLinearRing_Polygon_interiorIntersectsBoundaryAtOnePoint_linearRingInsideHole_doNotCross", testLinearRing_Polygon_interiorIntersectsBoundaryAtOnePoint_linearRingInsideHole_doNotCross),
+                ("testLinearRing_Polygon_interiorIntersectsBoundaryAtTwoPoints_doNotCross_linearRingOutsideMainLinearRing", testLinearRing_Polygon_interiorIntersectsBoundaryAtTwoPoints_doNotCross_linearRingOutsideMainLinearRing),
+                ("testLinearRing_Polygon_interiorIntersectsBoundaryAtTwoPoints_doNotCross_linearRingInsideHole", testLinearRing_Polygon_interiorIntersectsBoundaryAtTwoPoints_doNotCross_linearRingInsideHole),
+                ("testLinearRing_Polygon_interiorIntersectsBoundaryAtLineSegment_doNotCross_linearRingOutsideMainLinearRing", testLinearRing_Polygon_interiorIntersectsBoundaryAtLineSegment_doNotCross_linearRingOutsideMainLinearRing),
+                ("testLinearRing_Polygon_interiorIntersectsBoundaryAtLineSegment_doNotCross_linearRingInsideHole", testLinearRing_Polygon_interiorIntersectsBoundaryAtLineSegment_doNotCross_linearRingInsideHole),
+                ("testLinearRing_Polygon_intersectsPolygonBoundaryInteriorExterior", testLinearRing_Polygon_intersectsPolygonBoundaryInteriorExterior),
+                ("testLinearRing_Polygon_intersectsPolygonBoundaryInteriorAndExteriorInsideHole", testLinearRing_Polygon_intersectsPolygonBoundaryInteriorAndExteriorInsideHole),
+                ("testLinearRing_Polygon_intersectsPolygonBoundaryInteriorExterior_multipleTimes", testLinearRing_Polygon_intersectsPolygonBoundaryInteriorExterior_multipleTimes),
+                ("testLinearRing_Polygon_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole", testLinearRing_Polygon_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole),
+                ("testLinearRing_MultiPolygon_noIntersection", testLinearRing_MultiPolygon_noIntersection),
+                ("testLinearRing_MultiPolygon_withHoles_noIntersection_linearRingOutsideMainPolygon", testLinearRing_MultiPolygon_withHoles_noIntersection_linearRingOutsideMainPolygon),
+                ("testLinearRing_MultiPolygon_withHoles_noIntersection_linearRingInsideHole", testLinearRing_MultiPolygon_withHoles_noIntersection_linearRingInsideHole),
+                ("testLinearRing_MultiPolygon_withHoles_noIntersection_multiPolygonInsideLinearRing", testLinearRing_MultiPolygon_withHoles_noIntersection_multiPolygonInsideLinearRing),
+                ("testLinearRing_MultiPolygon_interiorsIntersect_firstPolygon", testLinearRing_MultiPolygon_interiorsIntersect_firstPolygon),
+                ("testLinearRing_MultiPolygon_interiorsIntersect_firstPolygon_withHole", testLinearRing_MultiPolygon_interiorsIntersect_firstPolygon_withHole),
+                ("testLinearRing_MultiPolygon_interiorsIntersect_secondPolygon", testLinearRing_MultiPolygon_interiorsIntersect_secondPolygon),
+                ("testLinearRing_MultiPolygon_interiorsIntersect_secondPolygon_withHole", testLinearRing_MultiPolygon_interiorsIntersect_secondPolygon_withHole),
+                ("testLinearRing_MultiPolygon_interiorsIntersect_bothPolygons_withHoles", testLinearRing_MultiPolygon_interiorsIntersect_bothPolygons_withHoles),
+                ("testLinearRing_MultiPolygon_interiorIntersectsBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles", testLinearRing_MultiPolygon_interiorIntersectsBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles),
+                ("testLinearRing_MultiPolygon_interiorIntersectsBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles", testLinearRing_MultiPolygon_interiorIntersectsBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles),
+                ("testLinearRing_MultiPolygon_interiorIntersectsBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles", testLinearRing_MultiPolygon_interiorIntersectsBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles),
+                ("testLinearRing_MultiPolygon_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles", testLinearRing_MultiPolygon_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testLinearRing_MultiPolygon_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles", testLinearRing_MultiPolygon_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testLinearRing_MultiPolygon_interiorIntersectsInteriorAndBoundary_withHoles", testLinearRing_MultiPolygon_interiorIntersectsInteriorAndBoundary_withHoles),
+                ("testMultiLineString_Point_noIntersection", testMultiLineString_Point_noIntersection),
+                ("testMultiLineString_Point_secondSubsetOfFirstInterior", testMultiLineString_Point_secondSubsetOfFirstInterior),
+                ("testMultiLineString_Point_secondSubsetOfFirstBoundary", testMultiLineString_Point_secondSubsetOfFirstBoundary),
+                ("testMultiLineString_MultiPoint_noIntersection", testMultiLineString_MultiPoint_noIntersection),
+                ("testMultiLineString_MultiPoint_secondSubsetOfFirstInterior", testMultiLineString_MultiPoint_secondSubsetOfFirstInterior),
+                ("testMultiLineString_MultiPoint_secondProperSubsetOfFirstBoundary", testMultiLineString_MultiPoint_secondProperSubsetOfFirstBoundary),
+                ("testMultiLineString_MultiPoint_secondImproperSubsetOfFirstBoundary", testMultiLineString_MultiPoint_secondImproperSubsetOfFirstBoundary),
+                ("testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndBoundary", testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndBoundary),
+                ("testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndCoversBoundary", testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndCoversBoundary),
+                ("testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndExterior", testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndExterior),
+                ("testMultiLineString_MultiPoint_secondTouchesFirstBoundaryAndExterior", testMultiLineString_MultiPoint_secondTouchesFirstBoundaryAndExterior),
+                ("testMultiLineString_MultiPoint_secondCoversFirstBoundaryAndTouchesExterior", testMultiLineString_MultiPoint_secondCoversFirstBoundaryAndTouchesExterior),
+                ("testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndBoundaryAndExterior", testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndBoundaryAndExterior),
+                ("testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndExteriorAndCoversBoundary", testMultiLineString_MultiPoint_secondTouchesFirstInteriorAndExteriorAndCoversBoundary),
+                ("testMultiLineString_LineString_noIntersection", testMultiLineString_LineString_noIntersection),
+                ("testMultiLineString_LineString_interiorsIntersectAtOnePointFirstSegmentsFirstLineString", testMultiLineString_LineString_interiorsIntersectAtOnePointFirstSegmentsFirstLineString),
+                ("testMultiLineString_LineString_interiorsIntersectAtOnePointFirstSegmentsSecondLineString", testMultiLineString_LineString_interiorsIntersectAtOnePointFirstSegmentsSecondLineString),
+                ("testMultiLineString_LineString_interiorsIntersectAtOnePointSecondSegmentsFirstLineString", testMultiLineString_LineString_interiorsIntersectAtOnePointSecondSegmentsFirstLineString),
+                ("testMultiLineString_LineString_interiorsIntersectAtOnePointSecondSegmentsSecondLineString", testMultiLineString_LineString_interiorsIntersectAtOnePointSecondSegmentsSecondLineString),
+                ("testMultiLineString_LineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross", testMultiLineString_LineString_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross),
+                ("testMultiLineString_LineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings", testMultiLineString_LineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings),
+                ("testMultiLineString_LineString_secondInteriorIntersectsFirstBoundaryFirstLineString1", testMultiLineString_LineString_secondInteriorIntersectsFirstBoundaryFirstLineString1),
+                ("testMultiLineString_LineString_secondInteriorIntersectsFirstBoundaryFirstLineString2", testMultiLineString_LineString_secondInteriorIntersectsFirstBoundaryFirstLineString2),
+                ("testMultiLineString_LineString_secondInteriorIntersectsFirstBoundarySecondLineString1", testMultiLineString_LineString_secondInteriorIntersectsFirstBoundarySecondLineString1),
+                ("testMultiLineString_LineString_secondInteriorIntersectsFirstBoundarySecondLineString2", testMultiLineString_LineString_secondInteriorIntersectsFirstBoundarySecondLineString2),
+                ("testMultiLineString_LineString_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_FirstLineString", testMultiLineString_LineString_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_FirstLineString),
+                ("testMultiLineString_LineString_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_SecondLineString", testMultiLineString_LineString_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_SecondLineString),
+                ("testMultiLineString_LineString_secondInteriorIntersectsFirstBoundary_AllBoundaryPoints", testMultiLineString_LineString_secondInteriorIntersectsFirstBoundary_AllBoundaryPoints),
+                ("testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_FirstLineString", testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_FirstLineString),
+                ("testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_SecondLineString", testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_SecondLineString),
+                ("testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_SecondSubsetOfFirstAndTouchesFirstBoundaryPointOfSecondLineString", testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_SecondSubsetOfFirstAndTouchesFirstBoundaryPointOfSecondLineString),
+                ("testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_SecondSubsetOfFirstAndTouchesSecondBoundaryPointOfFirstLineString", testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_SecondSubsetOfFirstAndTouchesSecondBoundaryPointOfFirstLineString),
+                ("testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_SecondSubsetOfFirstAndTouchesNeitherBoundaryPoint_FirstLineString", testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_SecondSubsetOfFirstAndTouchesNeitherBoundaryPoint_FirstLineString),
+                ("testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_SecondSubsetOfFirstAndTouchesNeitherBoundaryPoint_SecondLineString", testMultiLineString_LineString_secondInteriorDoesNotIntersectFirstExterior_SecondSubsetOfFirstAndTouchesNeitherBoundaryPoint_SecondLineString),
+                ("testMultiLineString_LineString_secondIntersectsFirstBoundaryPointOfFirstAndInteriorsOverlap_FirstLineString", testMultiLineString_LineString_secondIntersectsFirstBoundaryPointOfFirstAndInteriorsOverlap_FirstLineString),
+                ("testMultiLineString_LineString_secondIntersectsSecondBoundaryPointOfFirstAndInteriorsOverlap_SecondLineString", testMultiLineString_LineString_secondIntersectsSecondBoundaryPointOfFirstAndInteriorsOverlap_SecondLineString),
+                ("testMultiLineString_LineString_firstProperSubsetOfSecond", testMultiLineString_LineString_firstProperSubsetOfSecond),
+                ("testMultiLineString_LinearRing_noIntersection", testMultiLineString_LinearRing_noIntersection),
+                ("testMultiLineString_LinearRing_interiorsIntersectAtOnePointFirstSegmentsFirstLineString", testMultiLineString_LinearRing_interiorsIntersectAtOnePointFirstSegmentsFirstLineString),
+                ("testMultiLineString_LinearRing_interiorsIntersectAtOnePointFirstSegmentsSecondLineString", testMultiLineString_LinearRing_interiorsIntersectAtOnePointFirstSegmentsSecondLineString),
+                ("testMultiLineString_LinearRing_interiorsIntersectAtOnePointSecondSegmentsFirstLineString", testMultiLineString_LinearRing_interiorsIntersectAtOnePointSecondSegmentsFirstLineString),
+                ("testMultiLineString_LinearRing_interiorsIntersectAtOnePointSecondSegmentsSecondLineString", testMultiLineString_LinearRing_interiorsIntersectAtOnePointSecondSegmentsSecondLineString),
+                ("testMultiLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross", testMultiLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross),
+                ("testMultiLineString_LinearRing_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings", testMultiLineString_LinearRing_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings),
+                ("testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundaryFirstLineString1", testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundaryFirstLineString1),
+                ("testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundaryFirstLineString2", testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundaryFirstLineString2),
+                ("testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundarySecondLineString1", testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundarySecondLineString1),
+                ("testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundarySecondLineString2", testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundarySecondLineString2),
+                ("testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_FirstLineString", testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_FirstLineString),
+                ("testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_SecondLineString", testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_SecondLineString),
+                ("testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_AllBoundaryPoints", testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_AllBoundaryPoints),
+                ("testMultiLineString_LinearRing_firstLineStringInteriorDoesNotIntersectLinearRingExterior", testMultiLineString_LinearRing_firstLineStringInteriorDoesNotIntersectLinearRingExterior),
+                ("testMultiLineString_LinearRing_secondLineStringInteriorDoesNotIntersectLinearRingExterior", testMultiLineString_LinearRing_secondLineStringInteriorDoesNotIntersectLinearRingExterior),
+                ("testMultiLineString_LinearRing_neitherLineStringInteriorIntersectsLinearRingExterior", testMultiLineString_LinearRing_neitherLineStringInteriorIntersectsLinearRingExterior),
+                ("testMultiLineString_LinearRing_firstTouchesSecondInteriorAtLineSegmentAndPoint", testMultiLineString_LinearRing_firstTouchesSecondInteriorAtLineSegmentAndPoint),
+                ("testMultiLineString_LinearRing_firstLineStringInsideLinearRing_secondLineStringBoundaryTouchesLinearRing", testMultiLineString_LinearRing_firstLineStringInsideLinearRing_secondLineStringBoundaryTouchesLinearRing),
+                ("testMultiLineString_LinearRing_secondLineStringInsideLinearRing_firstLineStringBoundaryTouchesLinearRing", testMultiLineString_LinearRing_secondLineStringInsideLinearRing_firstLineStringBoundaryTouchesLinearRing),
+                ("testMultiLineString_LinearRing_secondIntersectsFirstBoundaryPointOfFirstAndInteriorsOverlap_FirstLineString", testMultiLineString_LinearRing_secondIntersectsFirstBoundaryPointOfFirstAndInteriorsOverlap_FirstLineString),
+                ("testMultiLineString_LinearRing_secondIntersectsSecondBoundaryPointOfFirstAndInteriorsOverlap_SecondLineString", testMultiLineString_LinearRing_secondIntersectsSecondBoundaryPointOfFirstAndInteriorsOverlap_SecondLineString),
+                ("testMultiLineString_LinearRing_firstProperSubsetOfSecond", testMultiLineString_LinearRing_firstProperSubsetOfSecond),
+                ("testMultiLineString_LinearRing_firstMostlyProperSubsetOfSecondButOneLineStringBoundaryPointNotIncluded", testMultiLineString_LinearRing_firstMostlyProperSubsetOfSecondButOneLineStringBoundaryPointNotIncluded),
+                ("testMultiLineString_MultiLineString_noIntersection", testMultiLineString_MultiLineString_noIntersection),
+                ("testMultiLineString_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsFirstLineString", testMultiLineString_MultiLineString_interiorsIntersectAtOnePointFirstSegmentsFirstLineString),
+                ("testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint1", testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint1),
+                ("testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint2", testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint2),
+                ("testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint3", testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint3),
+                ("testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint_DoNotCross_firstInteriorEndpointTouchesSecondInteriorPoint", testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint_DoNotCross_firstInteriorEndpointTouchesSecondInteriorPoint),
+                ("testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint_DoNotCross_firstInteriorEndpointTouchesSecondInteriorEndpoint", testMultiLineString_MultiLineString_interiorsIntersectAtOnePoint_DoNotCross_firstInteriorEndpointTouchesSecondInteriorEndpoint),
+                ("testMultiLineString_MultiLineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings_interiorPoints", testMultiLineString_MultiLineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings_interiorPoints),
+                ("testMultiLineString_MultiLineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings_endpoints", testMultiLineString_MultiLineString_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings_endpoints),
+                ("testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundaryFirstLineString1", testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundaryFirstLineString1),
+                ("testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundaryFirstLineString2", testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundaryFirstLineString2),
+                ("testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundarySecondLineString1", testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundarySecondLineString1),
+                ("testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundarySecondLineString2", testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundarySecondLineString2),
+                ("testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_FirstLineString", testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_FirstLineString),
+                ("testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_SecondLineString", testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_SecondLineString),
+                ("testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundary_AllBoundaryPoints", testMultiLineString_MultiLineString_secondInteriorIntersectsFirstBoundary_AllBoundaryPoints),
+                ("testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_SameOrder", testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_SameOrder),
+                ("testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_DifferentOrder", testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_IdenticalLineStrings_DifferentOrder),
+                ("testMultiLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_firstSubsetOfSecond", testMultiLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExterior_firstSubsetOfSecond),
+                ("testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_secondSubsetOfFirst", testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExterior_secondSubsetOfFirst),
+                ("testMultiLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExteriorOrBoundary_firstSubsetOfSecond", testMultiLineString_MultiLineString_firstInteriorDoesNotIntersectSecondExteriorOrBoundary_firstSubsetOfSecond),
+                ("testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExteriorOrBoundary_secondSubsetOfFirst", testMultiLineString_MultiLineString_secondInteriorDoesNotIntersectFirstExteriorOrBoundary_secondSubsetOfFirst),
+                ("testMultiLineString_MultiLineString_secondIntersectsFirstBoundaryPointOfFirstAndInteriorsOverlap_FirstLineStrings", testMultiLineString_MultiLineString_secondIntersectsFirstBoundaryPointOfFirstAndInteriorsOverlap_FirstLineStrings),
+                ("testMultiLineString_MultiLineString_secondIntersectsSecondBoundaryPointOfFirstAndInteriorsOverlap_SecondLineStrings", testMultiLineString_MultiLineString_secondIntersectsSecondBoundaryPointOfFirstAndInteriorsOverlap_SecondLineStrings),
+                ("testMultiLineString_MultiLineString_firstProperSubsetOfSecond", testMultiLineString_MultiLineString_firstProperSubsetOfSecond),
+                ("testMultiLineString_MultiLineString_secondProperSubsetOfFirst", testMultiLineString_MultiLineString_secondProperSubsetOfFirst),
+                ("testMultiLineString_Polygon_noIntersection", testMultiLineString_Polygon_noIntersection),
+                ("testMultiLineString_Polygon_withHole_noIntersection_multiLineStringOutsideMainPolygon", testMultiLineString_Polygon_withHole_noIntersection_multiLineStringOutsideMainPolygon),
+                ("testMultiLineString_Polygon_withHole_noIntersection_multiLineStringInsideHole", testMultiLineString_Polygon_withHole_noIntersection_multiLineStringInsideHole),
+                ("testMultiLineString_Polygon_withHoles_noIntersection_multiLineStringInsideTwoHoles", testMultiLineString_Polygon_withHoles_noIntersection_multiLineStringInsideTwoHoles),
+                ("testMultiLineString_Polygon_withHoles_noIntersection_multiLineStringInsideTwoHolesAndOutsideMainLinearRing", testMultiLineString_Polygon_withHoles_noIntersection_multiLineStringInsideTwoHolesAndOutsideMainLinearRing),
+                ("testMultiLineString_Polygon_interiorsIntersect_firstLineString", testMultiLineString_Polygon_interiorsIntersect_firstLineString),
+                ("testMultiLineString_Polygon_interiorsIntersect_secondLineString", testMultiLineString_Polygon_interiorsIntersect_secondLineString),
+                ("testMultiLineString_Polygon_firstInteriorIntersectsSecondBoundaryAtOnePoint_firstLineString_doNotCross", testMultiLineString_Polygon_firstInteriorIntersectsSecondBoundaryAtOnePoint_firstLineString_doNotCross),
+                ("testMultiLineString_Polygon_firstInteriorIntersectsSecondBoundaryAtOnePoint_lineStringInsideHole_doNotCross", testMultiLineString_Polygon_firstInteriorIntersectsSecondBoundaryAtOnePoint_lineStringInsideHole_doNotCross),
+                ("testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtOnePoint_doNotCross_multiLineStringOutsideMainLinearRing", testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtOnePoint_doNotCross_multiLineStringOutsideMainLinearRing),
+                ("testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtTwoPoints_doNotCross_mulitLineStringOutsideMainLinearRing", testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtTwoPoints_doNotCross_mulitLineStringOutsideMainLinearRing),
+                ("testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtThreePoints_doNotCross_mulitLineStringOutsideMainLinearRing", testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtThreePoints_doNotCross_mulitLineStringOutsideMainLinearRing),
+                ("testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtFourPoints_doNotCross_mulitLineStringOutsideMainLinearRing", testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtFourPoints_doNotCross_mulitLineStringOutsideMainLinearRing),
+                ("testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtOnePoint_doNotCross_multiLineStringInsideHole", testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtOnePoint_doNotCross_multiLineStringInsideHole),
+                ("testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtTwoPoints_doNotCross_multiLineStringInsideHole", testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtTwoPoints_doNotCross_multiLineStringInsideHole),
+                ("testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtThreePoints_doNotCross_multiLineStringInsideHole", testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtThreePoints_doNotCross_multiLineStringInsideHole),
+                ("testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtFourPoints_doNotCross_multiLineStringInsideHole", testMultiLineString_Polygon_firstBoundaryIntersectsSecondBoundaryAtFourPoints_doNotCross_multiLineStringInsideHole),
+                ("testMultiLineString_Polygon_intersectsPolygonBoundaryInteriorExterior", testMultiLineString_Polygon_intersectsPolygonBoundaryInteriorExterior),
+                ("testMultiLineString_Polygon_intersectsPolygonBoundaryInteriorAndExteriorInsideHole", testMultiLineString_Polygon_intersectsPolygonBoundaryInteriorAndExteriorInsideHole),
+                ("testMultiLineString_Polygon_intersectsPolygonBoundaryInteriorExterior_multipleTimes", testMultiLineString_Polygon_intersectsPolygonBoundaryInteriorExterior_multipleTimes),
+                ("testMultiLineString_Polygon_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole", testMultiLineString_Polygon_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole),
+                ("testMultiLineString_MultiPolygon_noIntersection", testMultiLineString_MultiPolygon_noIntersection),
+                ("testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringOutsideMainPolygon", testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringOutsideMainPolygon),
+                ("testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringInsideOneHole", testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringInsideOneHole),
+                ("testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringInsideTwoHoles", testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringInsideTwoHoles),
+                ("testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringInsideTwoHolesInTwoDifferentPolygonsAndOutsideAllPolygons", testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringInsideTwoHolesInTwoDifferentPolygonsAndOutsideAllPolygons),
+                ("testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringInsideTwoHolesAndOutsideAllPolygons", testMultiLineString_MultiPolygon_withHoles_noIntersection_multiLineStringInsideTwoHolesAndOutsideAllPolygons),
+                ("testMultiLineString_MultiPolygon_interiorsIntersect_firstPolygon", testMultiLineString_MultiPolygon_interiorsIntersect_firstPolygon),
+                ("testMultiLineString_MultiPolygon_interiorsIntersect_firstPolygon_withHole", testMultiLineString_MultiPolygon_interiorsIntersect_firstPolygon_withHole),
+                ("testMultiLineString_MultiPolygon_interiorsIntersect_secondPolygon", testMultiLineString_MultiPolygon_interiorsIntersect_secondPolygon),
+                ("testMultiLineString_MultiPolygon_interiorsIntersect_secondPolygon_withHole", testMultiLineString_MultiPolygon_interiorsIntersect_secondPolygon_withHole),
+                ("testMultiLineString_MultiPolygon_interiorsIntersect_bothPolygons_withHoles", testMultiLineString_MultiPolygon_interiorsIntersect_bothPolygons_withHoles),
+                ("testMultiLineString_MultiPolygon_interiorsIntersect_bothPolygons_withHoles_differentLineStrings", testMultiLineString_MultiPolygon_interiorsIntersect_bothPolygons_withHoles_differentLineStrings),
+                ("testMultiLineString_MultiPolygon_boundariesIntersect_firstPolygon_withHoles", testMultiLineString_MultiPolygon_boundariesIntersect_firstPolygon_withHoles),
+                ("testMultiLineString_MultiPolygon_boundariesIntersect_secondPolygon_withHoles", testMultiLineString_MultiPolygon_boundariesIntersect_secondPolygon_withHoles),
+                ("testMultiLineString_MultiPolygon_boundariesIntersect_bothPolygons_withHoles", testMultiLineString_MultiPolygon_boundariesIntersect_bothPolygons_withHoles),
+                ("testMultiLineString_MultiPolygon_boundariesIntersectAtAllFourBoundaryPoints_bothPolygons_withHoles", testMultiLineString_MultiPolygon_boundariesIntersectAtAllFourBoundaryPoints_bothPolygons_withHoles),
+                ("testMultiLineString_MultiPolygon_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiLineString_MultiPolygon_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiLineString_MultiPolygon_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiLineString_MultiPolygon_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiLineString_MultiPolygon_interiorsIntersectAndBoundariesIntersect_withHoles", testMultiLineString_MultiPolygon_interiorsIntersectAndBoundariesIntersect_withHoles),
+                ("testMultiLineString_MultiPolygon_boundaryIntersectsInteriorAndBoundary_withHoles", testMultiLineString_MultiPolygon_boundaryIntersectsInteriorAndBoundary_withHoles),
+                ("testMultiLineString_MultiPolygon_boundaryIntersectsInteriorAndBoundaryAtAllFourBoundaryPoints_withHoles", testMultiLineString_MultiPolygon_boundaryIntersectsInteriorAndBoundaryAtAllFourBoundaryPoints_withHoles),
+                ("testPolygon_Point_outerRingOnly_noIntersection", testPolygon_Point_outerRingOnly_noIntersection),
+                ("testPolygon_Point_outerRingAndInnerRing_outsideMainRing_noIntersection", testPolygon_Point_outerRingAndInnerRing_outsideMainRing_noIntersection),
+                ("testPolygon_Point_outerRingAndInnerRing_insideInnerRing_noIntersection", testPolygon_Point_outerRingAndInnerRing_insideInnerRing_noIntersection),
+                ("testPolygon_Point_outerRingOnly_intersectsBoundary", testPolygon_Point_outerRingOnly_intersectsBoundary),
+                ("testPolygon_Point_outerRingAndInnerRing_intersectsOuterBoundary", testPolygon_Point_outerRingAndInnerRing_intersectsOuterBoundary),
+                ("testPolygon_Point_outerRingAndInnerRing_intersectsInnerBoundary", testPolygon_Point_outerRingAndInnerRing_intersectsInnerBoundary),
+                ("testPolygon_Point_outerRingOnly_intersectsInterior", testPolygon_Point_outerRingOnly_intersectsInterior),
+                ("testPolygon_Point_outerRingAndInnerRing_intersectsInterior", testPolygon_Point_outerRingAndInnerRing_intersectsInterior),
+                ("testPolygon_MultiPoint_outerRingOnly_noIntersection", testPolygon_MultiPoint_outerRingOnly_noIntersection),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_outsideMainRing_noIntersection", testPolygon_MultiPoint_outerRingAndInnerRing_outsideMainRing_noIntersection),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_insideInnerRing_noIntersection", testPolygon_MultiPoint_outerRingAndInnerRing_insideInnerRing_noIntersection),
+                ("testPolygon_MultiPoint_outerRingAndMultipleInnerRings_outsideMainRingAndInsideInnerRings_noIntersection", testPolygon_MultiPoint_outerRingAndMultipleInnerRings_outsideMainRingAndInsideInnerRings_noIntersection),
+                ("testPolygon_MultiPoint_outerRingOnly_intersectsBoundaryOnly", testPolygon_MultiPoint_outerRingOnly_intersectsBoundaryOnly),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsOuterBoundaryOnly", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsOuterBoundaryOnly),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInnerBoundaryOnly", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInnerBoundaryOnly),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsOuterAndInnerBoundaries", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsOuterAndInnerBoundaries),
+                ("testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries", testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries),
+                ("testPolygon_MultiPoint_outerRingOnly_intersectsInteriorOnly", testPolygon_MultiPoint_outerRingOnly_intersectsInteriorOnly),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorOnly", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorOnly),
+                ("testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorOnly", testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorOnly),
+                ("testPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndBoundary", testPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndBoundary),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndOuterBoundary", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndOuterBoundary),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndInnerBoundary", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndInnerBoundary),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndOuterAndInnerBoundaries", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndOuterAndInnerBoundaries),
+                ("testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries", testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries),
+                ("testPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndExterior", testPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndExterior),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndExteriorOfMainRing", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndExteriorOfMainRing),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndExteriorWithinInnerRing", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndExteriorWithinInnerRing),
+                ("testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndExteriorOfMainRingAndWithinInnerRings", testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndExteriorOfMainRingAndWithinInnerRings),
+                ("testPolygon_MultiPoint_outerRingOnly_intersectsBoundaryAndExterior", testPolygon_MultiPoint_outerRingOnly_intersectsBoundaryAndExterior),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsBoundaryAndExteriorOfMainRing", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsBoundaryAndExteriorOfMainRing),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsBoundaryAndExteriorWithinInnerRing", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsBoundaryAndExteriorWithinInnerRing),
+                ("testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsBoundaryAndExteriorOfMainRingAndWithinInnerRings", testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsBoundaryAndExteriorOfMainRingAndWithinInnerRings),
+                ("testPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndBoundaryAndExterior", testPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndBoundaryAndExterior),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndMainBoundaryAndExteriorOfMainRing", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndMainBoundaryAndExteriorOfMainRing),
+                ("testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndBothMainAndInnerBoundaryAndExteriorWithinInnerRingAndOutsideMainRing", testPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndBothMainAndInnerBoundaryAndExteriorWithinInnerRingAndOutsideMainRing),
+                ("testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings", testPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings),
+                ("testPolygon_LineString_noIntersection", testPolygon_LineString_noIntersection),
+                ("testPolygon_LineString_withHole_noIntersection_lineStringOutsideMainPolygon", testPolygon_LineString_withHole_noIntersection_lineStringOutsideMainPolygon),
+                ("testPolygon_LineString_withHole_noIntersection_lineStringInsideHole", testPolygon_LineString_withHole_noIntersection_lineStringInsideHole),
+                ("testPolygon_LineString_interiorsIntersect_lineStringFirstSegment", testPolygon_LineString_interiorsIntersect_lineStringFirstSegment),
+                ("testPolygon_LineString_interiorsIntersect_lineStringSecondSegment", testPolygon_LineString_interiorsIntersect_lineStringSecondSegment),
+                ("testPolygon_LineString_interiorIntersectsBoundaryAtOnePoint_lineStringFirstSegment_doNotCross", testPolygon_LineString_interiorIntersectsBoundaryAtOnePoint_lineStringFirstSegment_doNotCross),
+                ("testPolygon_LineString_interiorIntersectsBoundaryAtOnePoint_lineStringInsideHole_doNotCross", testPolygon_LineString_interiorIntersectsBoundaryAtOnePoint_lineStringInsideHole_doNotCross),
+                ("testPolygon_LineString_boundaryIntersectsBoundaryAtOnePoint_doNotCross_lineStringOutsideMainLinearRing", testPolygon_LineString_boundaryIntersectsBoundaryAtOnePoint_doNotCross_lineStringOutsideMainLinearRing),
+                ("testPolygon_LineString_boundaryIntersectsBoundaryAtTwoPoints_doNotCross_lineStringOutsideMainLinearRing", testPolygon_LineString_boundaryIntersectsBoundaryAtTwoPoints_doNotCross_lineStringOutsideMainLinearRing),
+                ("testPolygon_LineString_boundaryIntersectsBoundaryAtOnePoint_doNotCross_lineStringInsideHole", testPolygon_LineString_boundaryIntersectsBoundaryAtOnePoint_doNotCross_lineStringInsideHole),
+                ("testPolygon_LineString_boundaryIntersectsBoundaryAtTwoPoints_doNotCross_lineStringInsideHole", testPolygon_LineString_boundaryIntersectsBoundaryAtTwoPoints_doNotCross_lineStringInsideHole),
+                ("testPolygon_LineString_intersectsPolygonBoundaryInteriorExterior", testPolygon_LineString_intersectsPolygonBoundaryInteriorExterior),
+                ("testPolygon_LineString_intersectsPolygonBoundaryInteriorAndExteriorInsideHole", testPolygon_LineString_intersectsPolygonBoundaryInteriorAndExteriorInsideHole),
+                ("testPolygon_LineString_intersectsPolygonBoundaryInteriorExterior_multipleTimes", testPolygon_LineString_intersectsPolygonBoundaryInteriorExterior_multipleTimes),
+                ("testPolygon_LineString_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole", testPolygon_LineString_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole),
+                ("testPolygon_LinearRing_noIntersection", testPolygon_LinearRing_noIntersection),
+                ("testPolygon_LinearRing_withHole_noIntersection_linearRingOutsideMainPolygon", testPolygon_LinearRing_withHole_noIntersection_linearRingOutsideMainPolygon),
+                ("testPolygon_LinearRing_withHole_noIntersection_linearRingInsideHole", testPolygon_LinearRing_withHole_noIntersection_linearRingInsideHole),
+                ("testPolygon_LinearRing_interiorsExteriorsIntersect1", testPolygon_LinearRing_interiorsExteriorsIntersect1),
+                ("testPolygon_LinearRing_interiorsExteriorsIntersect2", testPolygon_LinearRing_interiorsExteriorsIntersect2),
+                ("testPolygon_LinearRing_interiorIntersectsBoundaryAtOnePoint_linearRingFirstSegment_doNotCross", testPolygon_LinearRing_interiorIntersectsBoundaryAtOnePoint_linearRingFirstSegment_doNotCross),
+                ("testPolygon_LinearRing_interiorIntersectsBoundaryAtOnePoint_linearRingInsideHole_doNotCross", testPolygon_LinearRing_interiorIntersectsBoundaryAtOnePoint_linearRingInsideHole_doNotCross),
+                ("testPolygon_LinearRing_interiorIntersectsBoundaryAtTwoPoints_doNotCross_linearRingOutsideMainLinearRing", testPolygon_LinearRing_interiorIntersectsBoundaryAtTwoPoints_doNotCross_linearRingOutsideMainLinearRing),
+                ("testPolygon_LinearRing_interiorIntersectsBoundaryAtTwoPoints_doNotCross_linearRingInsideHole", testPolygon_LinearRing_interiorIntersectsBoundaryAtTwoPoints_doNotCross_linearRingInsideHole),
+                ("testPolygon_LinearRing_interiorIntersectsBoundaryAtLineSegment_doNotCross_linearRingOutsideMainLinearRing", testPolygon_LinearRing_interiorIntersectsBoundaryAtLineSegment_doNotCross_linearRingOutsideMainLinearRing),
+                ("testPolygon_LinearRing_interiorIntersectsBoundaryAtLineSegment_doNotCross_linearRingInsideHole", testPolygon_LinearRing_interiorIntersectsBoundaryAtLineSegment_doNotCross_linearRingInsideHole),
+                ("testPolygon_LinearRing_intersectsPolygonBoundaryInteriorExterior", testPolygon_LinearRing_intersectsPolygonBoundaryInteriorExterior),
+                ("testPolygon_LinearRing_intersectsPolygonBoundaryInteriorAndExteriorInsideHole", testPolygon_LinearRing_intersectsPolygonBoundaryInteriorAndExteriorInsideHole),
+                ("testPolygon_LinearRing_intersectsPolygonBoundaryInteriorExterior_multipleTimes", testPolygon_LinearRing_intersectsPolygonBoundaryInteriorExterior_multipleTimes),
+                ("testPolygon_LinearRing_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole", testPolygon_LinearRing_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole),
+                ("testPolygon_MultiLineString_noIntersection", testPolygon_MultiLineString_noIntersection),
+                ("testPolygon_MultiLineString_withHole_noIntersection_multiLineStringOutsideMainPolygon", testPolygon_MultiLineString_withHole_noIntersection_multiLineStringOutsideMainPolygon),
+                ("testPolygon_MultiLineString_withHole_noIntersection_multiLineStringInsideHole", testPolygon_MultiLineString_withHole_noIntersection_multiLineStringInsideHole),
+                ("testPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHoles", testPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHoles),
+                ("testPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHolesAndOutsideMainLinearRing", testPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHolesAndOutsideMainLinearRing),
+                ("testPolygon_MultiLineString_interiorsIntersect_firstLineString", testPolygon_MultiLineString_interiorsIntersect_firstLineString),
+                ("testPolygon_MultiLineString_interiorsIntersect_secondLineString", testPolygon_MultiLineString_interiorsIntersect_secondLineString),
+                ("testPolygon_MultiLineString_secondInteriorIntersectsFirstBoundaryAtOnePoint_firstLineString_doNotCross", testPolygon_MultiLineString_secondInteriorIntersectsFirstBoundaryAtOnePoint_firstLineString_doNotCross),
+                ("testPolygon_MultiLineString_secondInteriorIntersectsFirstBoundaryAtOnePoint_lineStringInsideHole_doNotCross", testPolygon_MultiLineString_secondInteriorIntersectsFirstBoundaryAtOnePoint_lineStringInsideHole_doNotCross),
+                ("testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtOnePoint_doNotCross_multiLineStringOutsideMainLinearRing", testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtOnePoint_doNotCross_multiLineStringOutsideMainLinearRing),
+                ("testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtTwoPoints_doNotCross_mulitLineStringOutsideMainLinearRing", testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtTwoPoints_doNotCross_mulitLineStringOutsideMainLinearRing),
+                ("testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtThreePoints_doNotCross_mulitLineStringOutsideMainLinearRing", testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtThreePoints_doNotCross_mulitLineStringOutsideMainLinearRing),
+                ("testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtFourPoints_doNotCross_mulitLineStringOutsideMainLinearRing", testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtFourPoints_doNotCross_mulitLineStringOutsideMainLinearRing),
+                ("testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtOnePoint_doNotCross_multiLineStringInsideHole", testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtOnePoint_doNotCross_multiLineStringInsideHole),
+                ("testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtTwoPoints_doNotCross_multiLineStringInsideHole", testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtTwoPoints_doNotCross_multiLineStringInsideHole),
+                ("testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtThreePoints_doNotCross_multiLineStringInsideHole", testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtThreePoints_doNotCross_multiLineStringInsideHole),
+                ("testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtFourPoints_doNotCross_multiLineStringInsideHole", testPolygon_MultiLineString_secondBoundaryIntersectsFirstBoundaryAtFourPoints_doNotCross_multiLineStringInsideHole),
+                ("testPolygon_MultiLineString_intersectsPolygonBoundaryInteriorExterior", testPolygon_MultiLineString_intersectsPolygonBoundaryInteriorExterior),
+                ("testPolygon_MultiLineString_intersectsPolygonBoundaryInteriorAndExteriorInsideHole", testPolygon_MultiLineString_intersectsPolygonBoundaryInteriorAndExteriorInsideHole),
+                ("testPolygon_MultiLineString_intersectsPolygonBoundaryInteriorExterior_multipleTimes", testPolygon_MultiLineString_intersectsPolygonBoundaryInteriorExterior_multipleTimes),
+                ("testPolygon_MultiLineString_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole", testPolygon_MultiLineString_intersectsPolygonBoundaryInteriorAndExterior_bothInsideAndOutsideHole),
+                ("testPolygon_Polgyon_noIntersection", testPolygon_Polgyon_noIntersection),
+                ("testPolygon_Polygon_firstWithHole_noIntersection_polygonsOutsideOfEachOther", testPolygon_Polygon_firstWithHole_noIntersection_polygonsOutsideOfEachOther),
+                ("testPolygon_Polygon_firstWithHole_noIntersection_secondPolygonInsideHole", testPolygon_Polygon_firstWithHole_noIntersection_secondPolygonInsideHole),
+                ("testPolygon_Polygon_bothWithHoles_noIntersection_firstPolygonInsideSecondHole", testPolygon_Polygon_bothWithHoles_noIntersection_firstPolygonInsideSecondHole),
+                ("testPolygon_Polygon_secondInsideFirst", testPolygon_Polygon_secondInsideFirst),
+                ("testPolygon_Polygon_firstInsideSecond", testPolygon_Polygon_firstInsideSecond),
+                ("testPolygon_Polygon_interiorsExteriorsIntersect1", testPolygon_Polygon_interiorsExteriorsIntersect1),
+                ("testPolygon_Polygon_interiorsExteriorsIntersect2", testPolygon_Polygon_interiorsExteriorsIntersect2),
+                ("testPolygon_Polygon_interiorIntersectsBoundaryAtOnePoint_firstPolygonFirstSegment_doNotCross", testPolygon_Polygon_interiorIntersectsBoundaryAtOnePoint_firstPolygonFirstSegment_doNotCross),
+                ("testPolygon_Polygon_secondPolygonIntersectsFirstBoundaryAtOnePointInsideHole_doNotCross", testPolygon_Polygon_secondPolygonIntersectsFirstBoundaryAtOnePointInsideHole_doNotCross),
+                ("testPolygon_Polygon_firstPolygonIntersectsSecondBoundaryAtTwoPoints_doNotCross", testPolygon_Polygon_firstPolygonIntersectsSecondBoundaryAtTwoPoints_doNotCross),
+                ("testPolygon_Polygon_secondPolygonIntersectsFirstBoundaryAtTwoPoints_doNotCross_secondPolygonInsideHole", testPolygon_Polygon_secondPolygonIntersectsFirstBoundaryAtTwoPoints_doNotCross_secondPolygonInsideHole),
+                ("testPolygon_Polygon_boundariesIntersectAtLineSegment_doNotCross", testPolygon_Polygon_boundariesIntersectAtLineSegment_doNotCross),
+                ("testPolygon_Polygon_boundariesIntersectsAtLineSegment_doNotCross_secondPolygonInsideHole", testPolygon_Polygon_boundariesIntersectsAtLineSegment_doNotCross_secondPolygonInsideHole),
+                ("testPolygon_Polygon_intersectsBoundaryInteriorExterior", testPolygon_Polygon_intersectsBoundaryInteriorExterior),
+                ("testPolygon_Polygon_intersectsBoundaryInteriorAndExteriorInsideHole", testPolygon_Polygon_intersectsBoundaryInteriorAndExteriorInsideHole),
+                ("testPolygon_Polygon_intersectsBoundaryInteriorExterior_multipleTimes", testPolygon_Polygon_intersectsBoundaryInteriorExterior_multipleTimes),
+                ("testPolygon_Polygon_intersectsBoundaryInteriorAndExterior_bothInsideAndOutsideHole", testPolygon_Polygon_intersectsBoundaryInteriorAndExterior_bothInsideAndOutsideHole),
+                ("testPolygon_Polygon_identicalPolygons", testPolygon_Polygon_identicalPolygons),
+                ("testPolygon_Polygon_identicalPolygons_differentPointOrder", testPolygon_Polygon_identicalPolygons_differentPointOrder),
+                ("testPolygon_Polygon_identicalPolygons_withHoles", testPolygon_Polygon_identicalPolygons_withHoles),
+                ("testPolygon_Polygon_identicalPolygons_withHoles_differentPointOrder", testPolygon_Polygon_identicalPolygons_withHoles_differentPointOrder),
+                ("testPolygon_Polygon_withHoles_secondSameAsFirstButWithOneExtraHole", testPolygon_Polygon_withHoles_secondSameAsFirstButWithOneExtraHole),
+                ("testPolygon_Polygon_withHoles_firstSameAsSecondButWithOneExtraHole", testPolygon_Polygon_withHoles_firstSameAsSecondButWithOneExtraHole),
+                ("testPolygon_MultiPolygon_noIntersection", testPolygon_MultiPolygon_noIntersection),
+                ("testPolygon_MultiPolygon_withHoles_noIntersection_PolygonOutsideMultiPolygon", testPolygon_MultiPolygon_withHoles_noIntersection_PolygonOutsideMultiPolygon),
+                ("testPolygon_MultiPolygon_withHoles_noIntersection_polygonInsideHole", testPolygon_MultiPolygon_withHoles_noIntersection_polygonInsideHole),
+                ("testPolygon_MultiPolygon_withHoles_noIntersection_multiPolygonInsidePolygonHole", testPolygon_MultiPolygon_withHoles_noIntersection_multiPolygonInsidePolygonHole),
+                ("testPolygon_MultiPolygon_interiorsIntersect_firstPolygon", testPolygon_MultiPolygon_interiorsIntersect_firstPolygon),
+                ("testPolygon_MultiPolygon_interiorsIntersect_firstPolygon_withHole", testPolygon_MultiPolygon_interiorsIntersect_firstPolygon_withHole),
+                ("testPolygon_MultiPolygon_interiorsIntersect_secondPolygon", testPolygon_MultiPolygon_interiorsIntersect_secondPolygon),
+                ("testPolygon_MultiPolygon_interiorsIntersect_secondPolygon_withHole", testPolygon_MultiPolygon_interiorsIntersect_secondPolygon_withHole),
+                ("testPolygon_MultiPolygon_interiorsIntersect_bothPolygons_withHoles", testPolygon_MultiPolygon_interiorsIntersect_bothPolygons_withHoles),
+                ("testPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles", testPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles),
+                ("testPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles", testPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles),
+                ("testPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles", testPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles),
+                ("testPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles", testPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testPolygon_MultiPolygon_polygonIntersectsMultiPolygonInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles", testPolygon_MultiPolygon_polygonIntersectsMultiPolygonInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testPolygon_MultiPolygon_polygonIntersectsMultiPolygonInteriorAndBoundary_withHoles", testPolygon_MultiPolygon_polygonIntersectsMultiPolygonInteriorAndBoundary_withHoles),
+                ("testMultiPolygon_Point_outerRingsOnly_noIntersection", testMultiPolygon_Point_outerRingsOnly_noIntersection),
+                ("testMultiPolygon_Point_outerRingAndInnerRings_outsideMainRings_noIntersection", testMultiPolygon_Point_outerRingAndInnerRings_outsideMainRings_noIntersection),
+                ("testMultiPolygon_Point_outerRingAndInnerRing_insideInnerRing_noIntersection", testMultiPolygon_Point_outerRingAndInnerRing_insideInnerRing_noIntersection),
+                ("testMultiPolygon_Point_outerRingOnly_intersectsBoundary", testMultiPolygon_Point_outerRingOnly_intersectsBoundary),
+                ("testMultiPolygon_Point_outerRingAndInnerRing_intersectsOuterBoundary", testMultiPolygon_Point_outerRingAndInnerRing_intersectsOuterBoundary),
+                ("testMultiPolygon_Point_outerRingAndInnerRing_intersectsInnerBoundary", testMultiPolygon_Point_outerRingAndInnerRing_intersectsInnerBoundary),
+                ("testMultiPolygon_Point_outerRingOnly_intersectsInterior", testMultiPolygon_Point_outerRingOnly_intersectsInterior),
+                ("testMultiPolygon_Point_outerRingAndInnerRing_intersectsInterior", testMultiPolygon_Point_outerRingAndInnerRing_intersectsInterior),
+                ("testMultiPolygon_MultiPoint_outerRingOnly_noIntersection", testMultiPolygon_MultiPoint_outerRingOnly_noIntersection),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_outsideMainRing_noIntersection", testMultiPolygon_MultiPoint_outerRingAndInnerRing_outsideMainRing_noIntersection),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_insideInnerRing_noIntersection", testMultiPolygon_MultiPoint_outerRingAndInnerRing_insideInnerRing_noIntersection),
+                ("testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_outsideMainRingAndInsideInnerRings_noIntersection", testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_outsideMainRingAndInsideInnerRings_noIntersection),
+                ("testMultiPolygon_MultiPoint_outerRingOnly_intersectsBoundaryOnly", testMultiPolygon_MultiPoint_outerRingOnly_intersectsBoundaryOnly),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsOuterBoundaryOnly", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsOuterBoundaryOnly),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInnerBoundaryOnly", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInnerBoundaryOnly),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsOuterAndInnerBoundaries", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsOuterAndInnerBoundaries),
+                ("testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries", testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries),
+                ("testMultiPolygon_MultiPoint_outerRingOnly_intersectsInteriorOnly", testMultiPolygon_MultiPoint_outerRingOnly_intersectsInteriorOnly),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorOnly", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorOnly),
+                ("testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorOnly", testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorOnly),
+                ("testMultiPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndBoundary", testMultiPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndBoundary),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndOuterBoundary", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndOuterBoundary),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndInnerBoundary", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndInnerBoundary),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndOuterAndInnerBoundaries", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndOuterAndInnerBoundaries),
+                ("testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries", testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries),
+                ("testMultiPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndExterior", testMultiPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndExterior),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndExteriorOfMainRing", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndExteriorOfMainRing),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndExteriorWithinInnerRing", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndExteriorWithinInnerRing),
+                ("testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndExteriorOfMainRingAndWithinInnerRings", testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndExteriorOfMainRingAndWithinInnerRings),
+                ("testMultiPolygon_MultiPoint_outerRingOnly_intersectsBoundaryAndExterior", testMultiPolygon_MultiPoint_outerRingOnly_intersectsBoundaryAndExterior),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsBoundaryAndExteriorOfMainRing", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsBoundaryAndExteriorOfMainRing),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsBoundaryAndExteriorWithinInnerRing", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsBoundaryAndExteriorWithinInnerRing),
+                ("testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsBoundaryAndExteriorOfMainRingAndWithinInnerRings", testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsBoundaryAndExteriorOfMainRingAndWithinInnerRings),
+                ("testMultiPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndBoundaryAndExterior", testMultiPolygon_MultiPoint_outerRingOnly_intersectsInteriorAndBoundaryAndExterior),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndMainBoundaryAndExteriorOfMainRing", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndMainBoundaryAndExteriorOfMainRing),
+                ("testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndBothMainAndInnerBoundaryAndExteriorWithinInnerRingAndOutsideMainRing", testMultiPolygon_MultiPoint_outerRingAndInnerRing_intersectsInteriorAndBothMainAndInnerBoundaryAndExteriorWithinInnerRingAndOutsideMainRing),
+                ("testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings", testMultiPolygon_MultiPoint_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings),
+                ("testMultiPolygon_LineString_noIntersection", testMultiPolygon_LineString_noIntersection),
+                ("testMultiPolygon_LineString_withHoles_noIntersection_lineStringOutsideMainPolygon", testMultiPolygon_LineString_withHoles_noIntersection_lineStringOutsideMainPolygon),
+                ("testMultiPolygon_LineString_withHoles_noIntersection_lineStringInsideHole", testMultiPolygon_LineString_withHoles_noIntersection_lineStringInsideHole),
+                ("testMultiPolygon_LineString_interiorsIntersect_firstPolygon", testMultiPolygon_LineString_interiorsIntersect_firstPolygon),
+                ("testMultiPolygon_LineString_interiorsIntersect_firstPolygon_withHole", testMultiPolygon_LineString_interiorsIntersect_firstPolygon_withHole),
+                ("testMultiPolygon_LineString_interiorsIntersect_secondPolygon", testMultiPolygon_LineString_interiorsIntersect_secondPolygon),
+                ("testMultiPolygon_LineString_interiorsIntersect_secondPolygon_withHole", testMultiPolygon_LineString_interiorsIntersect_secondPolygon_withHole),
+                ("testMultiPolygon_LineString_interiorsIntersect_bothPolygons_withHoles", testMultiPolygon_LineString_interiorsIntersect_bothPolygons_withHoles),
+                ("testMultiPolygon_LineString_boundariesIntersect_firstPolygon_withHoles", testMultiPolygon_LineString_boundariesIntersect_firstPolygon_withHoles),
+                ("testMultiPolygon_LineString_boundariesIntersect_secondPolygon_withHoles", testMultiPolygon_LineString_boundariesIntersect_secondPolygon_withHoles),
+                ("testMultiPolygon_LineString_boundariesIntersect_bothPolygons_withHoles", testMultiPolygon_LineString_boundariesIntersect_bothPolygons_withHoles),
+                ("testMultiPolygon_LineString_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_LineString_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_LineString_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_LineString_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_LineString_interiorsIntersectAndBoundariesIntersect_withHoles", testMultiPolygon_LineString_interiorsIntersectAndBoundariesIntersect_withHoles),
+                ("testMultiPolygon_LineString_boundaryIntersectsInteriorAndBoundary_withHoles", testMultiPolygon_LineString_boundaryIntersectsInteriorAndBoundary_withHoles),
+                ("testMultiPolygon_LinearRing_noIntersection", testMultiPolygon_LinearRing_noIntersection),
+                ("testMultiPolygon_LinearRing_withHoles_noIntersection_linearRingOutsideMainPolygon", testMultiPolygon_LinearRing_withHoles_noIntersection_linearRingOutsideMainPolygon),
+                ("testMultiPolygon_LinearRing_withHoles_noIntersection_linearRingInsideHole", testMultiPolygon_LinearRing_withHoles_noIntersection_linearRingInsideHole),
+                ("testMultiPolygon_LinearRing_withHoles_noIntersection_multiPolygonInsideLinearRing", testMultiPolygon_LinearRing_withHoles_noIntersection_multiPolygonInsideLinearRing),
+                ("testMultiPolygon_LinearRing_interiorsIntersect_firstPolygon", testMultiPolygon_LinearRing_interiorsIntersect_firstPolygon),
+                ("testMultiPolygon_LinearRing_interiorsIntersect_firstPolygon_withHole", testMultiPolygon_LinearRing_interiorsIntersect_firstPolygon_withHole),
+                ("testMultiPolygon_LinearRing_interiorsIntersect_secondPolygon", testMultiPolygon_LinearRing_interiorsIntersect_secondPolygon),
+                ("testMultiPolygon_LinearRing_interiorsIntersect_secondPolygon_withHole", testMultiPolygon_LinearRing_interiorsIntersect_secondPolygon_withHole),
+                ("testMultiPolygon_LinearRing_interiorsIntersect_bothPolygons_withHoles", testMultiPolygon_LinearRing_interiorsIntersect_bothPolygons_withHoles),
+                ("testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles", testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles),
+                ("testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles", testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles),
+                ("testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles", testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles),
+                ("testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonInteriorAndBoundary_withHoles", testMultiPolygon_LinearRing_interiorIntersectsMultiPolygonInteriorAndBoundary_withHoles),
+                ("testMultiPolygon_MultiLineString_noIntersection", testMultiPolygon_MultiLineString_noIntersection),
+                ("testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringOutsidePolygons", testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringOutsidePolygons),
+                ("testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideOneHole", testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideOneHole),
+                ("testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHoles", testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHoles),
+                ("testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHolesInTwoDifferentPolygonsAndOutsideAllPolygons", testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHolesInTwoDifferentPolygonsAndOutsideAllPolygons),
+                ("testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHolesAndOutsideAllPolygons", testMultiPolygon_MultiLineString_withHoles_noIntersection_multiLineStringInsideTwoHolesAndOutsideAllPolygons),
+                ("testMultiPolygon_MultiLineString_interiorsIntersect_firstPolygon", testMultiPolygon_MultiLineString_interiorsIntersect_firstPolygon),
+                ("testMultiPolygon_MultiLineString_interiorsIntersect_firstPolygon_withHole", testMultiPolygon_MultiLineString_interiorsIntersect_firstPolygon_withHole),
+                ("testMultiPolygon_MultiLineString_interiorsIntersect_secondPolygon", testMultiPolygon_MultiLineString_interiorsIntersect_secondPolygon),
+                ("testMultiPolygon_MultiLineString_interiorsIntersect_secondPolygon_withHole", testMultiPolygon_MultiLineString_interiorsIntersect_secondPolygon_withHole),
+                ("testMultiPolygon_MultiLineString_interiorsIntersect_bothPolygons_withHoles", testMultiPolygon_MultiLineString_interiorsIntersect_bothPolygons_withHoles),
+                ("testMultiPolygon_MultiLineString_interiorsIntersect_bothPolygons_withHoles_differentLineStrings", testMultiPolygon_MultiLineString_interiorsIntersect_bothPolygons_withHoles_differentLineStrings),
+                ("testMultiPolygon_MultiLineString_boundariesIntersect_firstPolygon_withHoles", testMultiPolygon_MultiLineString_boundariesIntersect_firstPolygon_withHoles),
+                ("testMultiPolygon_MultiLineString_boundariesIntersect_secondPolygon_withHoles", testMultiPolygon_MultiLineString_boundariesIntersect_secondPolygon_withHoles),
+                ("testMultiPolygon_MultiLineString_boundariesIntersect_bothPolygons_withHoles", testMultiPolygon_MultiLineString_boundariesIntersect_bothPolygons_withHoles),
+                ("testMultiPolygon_MultiLineString_boundariesIntersectAtAllFourBoundaryPoints_bothPolygons_withHoles", testMultiPolygon_MultiLineString_boundariesIntersectAtAllFourBoundaryPoints_bothPolygons_withHoles),
+                ("testMultiPolygon_MultiLineString_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_MultiLineString_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_MultiLineString_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_MultiLineString_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_MultiLineString_interiorsIntersectAndBoundariesIntersect_withHoles", testMultiPolygon_MultiLineString_interiorsIntersectAndBoundariesIntersect_withHoles),
+                ("testMultiPolygon_MultiLineString_boundaryIntersectsInteriorAndBoundary_withHoles", testMultiPolygon_MultiLineString_boundaryIntersectsInteriorAndBoundary_withHoles),
+                ("testMultiPolygon_MultiLineString_boundaryIntersectsInteriorAndBoundaryAtAllFourBoundaryPoints_withHoles", testMultiPolygon_MultiLineString_boundaryIntersectsInteriorAndBoundaryAtAllFourBoundaryPoints_withHoles),
+                ("testMultiPolygon_Polygon_noIntersection", testMultiPolygon_Polygon_noIntersection),
+                ("testMultiPolygon_Polygon_withHoles_noIntersection_PolygonOutsideMultiPolygon", testMultiPolygon_Polygon_withHoles_noIntersection_PolygonOutsideMultiPolygon),
+                ("testMultiPolygon_Polygon_withHoles_noIntersection_polygonInsideHole", testMultiPolygon_Polygon_withHoles_noIntersection_polygonInsideHole),
+                ("testMultiPolygon_Polygon_withHoles_noIntersection_multiPolygonInsidePolygonHole", testMultiPolygon_Polygon_withHoles_noIntersection_multiPolygonInsidePolygonHole),
+                ("testMultiPolygon_Polygon_interiorsIntersect_firstPolygon", testMultiPolygon_Polygon_interiorsIntersect_firstPolygon),
+                ("testMultiPolygon_Polygon_interiorsIntersect_firstPolygon_withHole", testMultiPolygon_Polygon_interiorsIntersect_firstPolygon_withHole),
+                ("testMultiPolygon_Polygon_interiorsIntersect_secondPolygon", testMultiPolygon_Polygon_interiorsIntersect_secondPolygon),
+                ("testMultiPolygon_Polygon_interiorsIntersect_secondPolygon_withHole", testMultiPolygon_Polygon_interiorsIntersect_secondPolygon_withHole),
+                ("testMultiPolygon_Polygon_interiorsIntersect_bothPolygons_withHoles", testMultiPolygon_Polygon_interiorsIntersect_bothPolygons_withHoles),
+                ("testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles", testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_firstPolygon_withHoles),
+                ("testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles", testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtOnePoint_doNotCross_secondPolygon_withHoles),
+                ("testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles", testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundaryAtTwoPoints_doNotCross_bothPolygons_withHoles),
+                ("testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_Polygon_polygonBoundaryIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_Polygon_polygonIntersectsMultiPolygonInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_Polygon_polygonIntersectsMultiPolygonInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_Polygon_polygonIntersectsMultiPolygonInteriorAndBoundary_withHoles", testMultiPolygon_Polygon_polygonIntersectsMultiPolygonInteriorAndBoundary_withHoles),
+                ("testMultiPolygon_MultiPolygon_noIntersection", testMultiPolygon_MultiPolygon_noIntersection),
+                ("testMultiPolygon_MultiPolygon_withHoles_noIntersection_MultiPolygonsOutsideEachOther", testMultiPolygon_MultiPolygon_withHoles_noIntersection_MultiPolygonsOutsideEachOther),
+                ("testMultiPolygon_MultiPolygon_withHoles_noIntersection_polygonInsideHole", testMultiPolygon_MultiPolygon_withHoles_noIntersection_polygonInsideHole),
+                ("testMultiPolygon_MultiPolygon_withHoles_noIntersection_multiPolygonInsideOnePolygonHole", testMultiPolygon_MultiPolygon_withHoles_noIntersection_multiPolygonInsideOnePolygonHole),
+                ("testMultiPolygon_MultiPolygon_withHoles_noIntersection_multiPolygonInsideTwoPolygonHoles", testMultiPolygon_MultiPolygon_withHoles_noIntersection_multiPolygonInsideTwoPolygonHoles),
+                ("testMultiPolygon_MultiPolygon_interiorsIntersect_firstPolygons", testMultiPolygon_MultiPolygon_interiorsIntersect_firstPolygons),
+                ("testMultiPolygon_MultiPolygon_interiorsIntersect_firstPolygons_withHoles", testMultiPolygon_MultiPolygon_interiorsIntersect_firstPolygons_withHoles),
+                ("testMultiPolygon_MultiPolygon_interiorsIntersect_secondPolygons", testMultiPolygon_MultiPolygon_interiorsIntersect_secondPolygons),
+                ("testMultiPolygon_MultiPolygon_interiorsIntersect_secondPolygons_withHoles_boundariesOverlapOnLineSegment", testMultiPolygon_MultiPolygon_interiorsIntersect_secondPolygons_withHoles_boundariesOverlapOnLineSegment),
+                ("testMultiPolygon_MultiPolygon_interiorsIntersect_bothPolygons_withHoles_boundariesShareSegment", testMultiPolygon_MultiPolygon_interiorsIntersect_bothPolygons_withHoles_boundariesShareSegment),
+                ("testMultiPolygon_MultiPolygon_boundariesIntersectAtOnePoint_doNotCross_firstPolygon_withHoles", testMultiPolygon_MultiPolygon_boundariesIntersectAtOnePoint_doNotCross_firstPolygon_withHoles),
+                ("testMultiPolygon_MultiPolygon_boundariesIntersectAtOnePoint_doNotCross_secondPolygon_withHoles", testMultiPolygon_MultiPolygon_boundariesIntersectAtOnePoint_doNotCross_secondPolygon_withHoles),
+                ("testMultiPolygon_MultiPolygon_boundariesIntersectAtTwoPoints_doNotCross_bothPolygonsOfFirstMultiPolygonTouched_withHoles", testMultiPolygon_MultiPolygon_boundariesIntersectAtTwoPoints_doNotCross_bothPolygonsOfFirstMultiPolygonTouched_withHoles),
+                ("testMultiPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles", testMultiPolygon_MultiPolygon_polygonBoundaryIntersectsMultiPolygonBoundary_bothPolygons_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_MultiPolygon_boundariesIntersectAtInteriorAndBoundary_bothPolygonsOfFirstPolygon_atPointAndLineSegment_withHoles", testMultiPolygon_MultiPolygon_boundariesIntersectAtInteriorAndBoundary_bothPolygonsOfFirstPolygon_atPointAndLineSegment_withHoles),
+                ("testMultiPolygon_MultiPolygon_boundariesIntersectAtInteriorAndBoundary_withHoles", testMultiPolygon_MultiPolygon_boundariesIntersectAtInteriorAndBoundary_withHoles)
            ]
    }
 }
@@ -1719,8 +2013,8 @@ extension LinearRingSurfaceCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension LinearRingSurfaceCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingSurfaceCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension LinearRingSurfaceCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (LinearRingSurfaceCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testAreaEmpty", testAreaEmpty),
                 ("testAreaWithTriangle", testAreaWithTriangle),
@@ -1743,16 +2037,13 @@ extension Coordinate3DMTests {
    static var allTests: [(String, (Coordinate3DMTests) -> () throws -> Void)] {
       return [
                 ("testInitWithXYZM", testInitWithXYZM),
+                ("testInitWithArrayLiteral3DM", testInitWithArrayLiteral3DM),
+                ("testInitWithDictionaryLiteral3DM", testInitWithDictionaryLiteral3DM),
+                ("testInitCopy", testInitCopy),
                 ("testX", testX),
                 ("testY", testY),
                 ("testZ", testZ),
                 ("testM", testM),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testTuple", testTuple),
-                ("testInit_Array", testInit_Array),
-                ("testInit_Array_Invalid", testInit_Array_Invalid),
-                ("testInitCopy", testInitCopy),
-                ("testInitCopyWithFixedPrecision", testInitCopyWithFixedPrecision),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
                 ("testEqual", testEqual),
@@ -1767,6 +2058,7 @@ extension PointGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (PointGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testBounds", testBounds),
                 ("testIsEmpty", testIsEmpty),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
@@ -1781,6 +2073,7 @@ extension PointGeometryCoordinate2DMFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1794,6 +2087,7 @@ extension PointGeometryCoordinate3DFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1807,6 +2101,7 @@ extension PointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1815,11 +2110,12 @@ extension PointGeometryCoordinate3DMFloatingPrecisionCartesianTests {
    }
 }
 
-extension PointGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointGeometryCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (PointGeometryCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1828,11 +2124,12 @@ extension PointGeometryCoordinate2DFixedPrecisionCartesianTests {
    }
 }
 
-extension PointGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointGeometryCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (PointGeometryCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1841,11 +2138,12 @@ extension PointGeometryCoordinate2DMFixedPrecisionCartesianTests {
    }
 }
 
-extension PointGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointGeometryCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (PointGeometryCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
@@ -1854,15 +2152,35 @@ extension PointGeometryCoordinate3DFixedPrecisionCartesianTests {
    }
 }
 
-extension PointGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointGeometryCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (PointGeometryCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
                 ("testIsEmpty", testIsEmpty),
+                ("testBounds", testBounds),
                 ("testEqualsWithIntOneTrue", testEqualsWithIntOneTrue),
                 ("testEqualsWithIntOneFalse", testEqualsWithIntOneFalse),
                 ("testEqualsWithPointNonPointFalse", testEqualsWithPointNonPointFalse),
                 ("testBoundary", testBoundary)
+           ]
+   }
+}
+
+extension FloatingTests {
+   static var allTests: [(String, (FloatingTests) -> () throws -> Void)] {
+      return [
+                ("testConvertEqual", testConvertEqual),
+                ("testConvertNotEqual1", testConvertNotEqual1),
+                ("testConvertNotEqual2", testConvertNotEqual2),
+                ("testConvertOptionalEqual", testConvertOptionalEqual),
+                ("testConvertOptionalNotEqual1", testConvertOptionalNotEqual1),
+                ("testConvertOptionalNotEqual2", testConvertOptionalNotEqual2),
+                ("testConvertOptionalNilEqual", testConvertOptionalNilEqual),
+                ("testConvertOptionalNilNotEqual", testConvertOptionalNilNotEqual),
+                ("testDescription", testDescription),
+                ("testDebugDescription", testDebugDescription),
+                ("testEqualTrue", testEqualTrue),
+                ("testEqualFalseWithDifferentType", testEqualFalseWithDifferentType)
            ]
    }
 }
@@ -1875,260 +2193,50 @@ extension MultiPointCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension MultiPointCoordinate2DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiPointCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiPointCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithNoArg", testInitWithNoArg),
                 ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension MultiPointCoordinate3DFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testInitWithNoArg", testInitWithNoArg),
-                ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
-                ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
-                ("testInitWithPrecision", testInitWithPrecision),
-                ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
-                ("testSubscriptGet", testSubscriptGet),
-                ("testSubscriptSet", testSubscriptSet),
-                ("testEquals", testEquals),
-                ("testIsEmpty", testIsEmpty),
-                ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension MultiPointCoordinate3DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testInitWithNoArg", testInitWithNoArg),
-                ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
-                ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
-                ("testInitWithPrecision", testInitWithPrecision),
-                ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
-                ("testSubscriptGet", testSubscriptGet),
-                ("testSubscriptSet", testSubscriptSet),
-                ("testEquals", testEquals),
-                ("testIsEmpty", testIsEmpty),
-                ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension MultiPointCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testInitWithNoArg", testInitWithNoArg),
-                ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
-                ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
-                ("testInitWithPrecision", testInitWithPrecision),
-                ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
-                ("testSubscriptGet", testSubscriptGet),
-                ("testSubscriptSet", testSubscriptSet),
-                ("testEquals", testEquals),
-                ("testIsEmpty", testIsEmpty),
-                ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension MultiPointCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testInitWithNoArg", testInitWithNoArg),
-                ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
-                ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
-                ("testInitWithPrecision", testInitWithPrecision),
-                ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
-                ("testSubscriptGet", testSubscriptGet),
-                ("testSubscriptSet", testSubscriptSet),
-                ("testEquals", testEquals),
-                ("testIsEmpty", testIsEmpty),
-                ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension MultiPointCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testInitWithNoArg", testInitWithNoArg),
-                ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
-                ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
-                ("testInitWithPrecision", testInitWithPrecision),
-                ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
-                ("testSubscriptGet", testSubscriptGet),
-                ("testSubscriptSet", testSubscriptSet),
-                ("testEquals", testEquals),
-                ("testIsEmpty", testIsEmpty),
-                ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension MultiPointCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPointCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testInitWithNoArg", testInitWithNoArg),
-                ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
-                ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
-                ("testInitWithPrecision", testInitWithPrecision),
-                ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
-                ("testSubscriptGet", testSubscriptGet),
-                ("testSubscriptSet", testSubscriptSet),
-                ("testEquals", testEquals),
-                ("testIsEmpty", testIsEmpty),
-                ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension SweepLineIntersectorTests {
-   static var allTests: [(String, (SweepLineIntersectorTests) -> () throws -> Void)] {
-      return [
-                ("testIntersects", testIntersects),
-                ("testIntersections_lineString_noIntersection", testIntersections_lineString_noIntersection),
-                ("testIntersections_lineString_selfIntersectsOnePoint_Fails", testIntersections_lineString_selfIntersectsOnePoint_Fails)
+                ("testCount", testCount)
            ]
    }
 }
@@ -2136,16 +2244,14 @@ extension SweepLineIntersectorTests {
 extension Coordinate3DTests {
    static var allTests: [(String, (Coordinate3DTests) -> () throws -> Void)] {
       return [
-                ("testInitXYZ", testInitXYZ),
+                ("test", test),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitWithDictionaryLiteral", testInitWithDictionaryLiteral),
+                ("testInitCopy", testInitCopy),
                 ("testX", testX),
                 ("testY", testY),
                 ("testZ", testZ),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testTuple", testTuple),
-                ("testInit_Array", testInit_Array),
-                ("testInit_Array_Invalid", testInit_Array_Invalid),
-                ("testInitCopy", testInitCopy),
-                ("testInitCopyWithFixedPrecision", testInitCopyWithFixedPrecision),
+                ("testM", testM),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
                 ("testEqual", testEqual),
@@ -2160,6 +2266,7 @@ extension MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWithSinglePolygonNoInnerRings", testBoundaryWithSinglePolygonNoInnerRings),
                 ("testBoundaryWithSinglePolygonInnerRings", testBoundaryWithSinglePolygonInnerRings),
                 ("testBoundaryWithMultiplePolygons", testBoundaryWithMultiplePolygons),
@@ -2171,75 +2278,17 @@ extension MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests {
    }
 }
 
-extension MultiPolygonGeometryCoordinate2DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonGeometryCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiPolygonGeometryCoordinate3DFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonGeometryCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiPolygonGeometryCoordinate3DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonGeometryCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiPolygonGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiPolygonGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiPolygonGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiPolygonGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiPolygonGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
 extension Coordinate2DMTests {
    static var allTests: [(String, (Coordinate2DMTests) -> () throws -> Void)] {
       return [
-                ("testInitWithXYM", testInitWithXYM),
+                ("testInit", testInit),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitWithDictionaryLiteral", testInitWithDictionaryLiteral),
                 ("testX", testX),
                 ("testY", testY),
+                ("testZ", testZ),
                 ("testM", testM),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testTuple", testTuple),
-                ("testInit_Array", testInit_Array),
-                ("testInit_Array_Invalid", testInit_Array_Invalid),
                 ("testInitCopy", testInitCopy),
-                ("testInitCopyWithFixedPrecision", testInitCopyWithFixedPrecision),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
                 ("testEqual", testEqual),
@@ -2258,122 +2307,50 @@ extension MultiLineStringCoordinate2DFloatingPrecisionCartesianTests {
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
 
-extension MultiLineStringCoordinate2DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
+extension MultiLineStringCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (MultiLineStringCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInitWithNoArg", testInitWithNoArg),
                 ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
                 ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
                 ("testInitWithPrecision", testInitWithPrecision),
                 ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitCopy", testInitCopy),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
                 ("testSubscriptGet", testSubscriptGet),
                 ("testSubscriptSet", testSubscriptSet),
+                ("testReplaceSubrangeAppend", testReplaceSubrangeAppend),
+                ("testReplaceSubrangeInsert", testReplaceSubrangeInsert),
+                ("testReplaceSubrangeReplace", testReplaceSubrangeReplace),
                 ("testEquals", testEquals),
                 ("testIsEmpty", testIsEmpty),
                 ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension MultiLineStringCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testInitWithNoArg", testInitWithNoArg),
-                ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
-                ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
-                ("testInitWithPrecision", testInitWithPrecision),
-                ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
-                ("testSubscriptGet", testSubscriptGet),
-                ("testSubscriptSet", testSubscriptSet),
-                ("testEquals", testEquals),
-                ("testIsEmpty", testIsEmpty),
-                ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
-           ]
-   }
-}
-
-extension MultiLineStringCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testInitWithNoArg", testInitWithNoArg),
-                ("testInitWithNoArgAndDefaults", testInitWithNoArgAndDefaults),
-                ("testInitWithPrecisionAndCRS", testInitWithPrecisionAndCRS),
-                ("testInitWithPrecision", testInitWithPrecision),
-                ("testInitWithCRS", testInitWithCRS),
-                ("testInitWithTuple", testInitWithTuple),
-                ("testDescription", testDescription),
-                ("testDebugDescription", testDebugDescription),
-                ("testReserveCapacity", testReserveCapacity),
-                ("testAppend", testAppend),
-                ("testAppendContentsOf", testAppendContentsOf),
-                ("testInsert2ExistingElements", testInsert2ExistingElements),
-                ("testInsert1ExistingElements", testInsert1ExistingElements),
-                ("testRemove", testRemove),
-                ("testRemoveLast", testRemoveLast),
-                ("testRemoveAll", testRemoveAll),
-                ("testRemoveAllKeepCapacity", testRemoveAllKeepCapacity),
-                ("testSubscriptGet", testSubscriptGet),
-                ("testSubscriptSet", testSubscriptSet),
-                ("testEquals", testEquals),
-                ("testIsEmpty", testIsEmpty),
-                ("testIsEmptyFalse", testIsEmptyFalse),
-                ("testCount", testCount),
-                ("testEnsureUniquelyReferenced", testEnsureUniquelyReferenced),
-                ("testResizeIfNeeded", testResizeIfNeeded)
+                ("testCount", testCount)
            ]
    }
 }
@@ -2393,69 +2370,16 @@ extension LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWith1ElementInvalid", testBoundaryWith1ElementInvalid),
                 ("testBoundaryWith2Element", testBoundaryWith2Element),
                 ("testBoundaryWith3ElementOpen", testBoundaryWith3ElementOpen),
                 ("testBoundaryWith4ElementClosed", testBoundaryWith4ElementClosed),
                 ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate2DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate3DFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate3DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LinearRingGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LinearRingGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
            ]
    }
 }
@@ -2464,6 +2388,7 @@ extension MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWith1ElementInvalid", testBoundaryWith1ElementInvalid),
                 ("testBoundaryWith2Element", testBoundaryWith2Element),
                 ("testBoundaryWith3ElementOpen", testBoundaryWith3ElementOpen),
@@ -2474,64 +2399,10 @@ extension MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests {
                 ("testBoundaryWithOGCMultiCurveB", testBoundaryWithOGCMultiCurveB),
                 ("testBoundaryWithOGCMultiCurveC", testBoundaryWithOGCMultiCurveC),
                 ("testBoundaryWithOddIntersection", testBoundaryWithOddIntersection),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
-           ]
-   }
-}
-
-extension MultiLineStringGeometryCoordinate2DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringGeometryCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiLineStringGeometryCoordinate3DFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringGeometryCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiLineStringGeometryCoordinate3DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringGeometryCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiLineStringGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiLineStringGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiLineStringGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension MultiLineStringGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (MultiLineStringGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
            ]
    }
 }
@@ -2540,69 +2411,16 @@ extension LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testDimension", testDimension),
+                ("testDimensionEmpty", testDimensionEmpty),
                 ("testBoundaryWith1ElementInvalid", testBoundaryWith1ElementInvalid),
                 ("testBoundaryWith2Element", testBoundaryWith2Element),
                 ("testBoundaryWith3ElementOpen", testBoundaryWith3ElementOpen),
                 ("testBoundaryWith4ElementClosed", testBoundaryWith4ElementClosed),
                 ("testBoundaryEmpty", testBoundaryEmpty),
+                ("testBoundsEmpty", testBoundsEmpty),
+                ("testBoundsWithElements", testBoundsWithElements),
                 ("testEqualTrue", testEqualTrue),
                 ("testEqualFalse", testEqualFalse)
-           ]
-   }
-}
-
-extension LineStringGeometryCoordinate2DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringGeometryCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LineStringGeometryCoordinate3DFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringGeometryCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LineStringGeometryCoordinate3DMFloatingPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringGeometryCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LineStringGeometryCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringGeometryCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LineStringGeometryCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringGeometryCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LineStringGeometryCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringGeometryCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
-           ]
-   }
-}
-
-extension LineStringGeometryCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (LineStringGeometryCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
-      return [
-                ("testDimension", testDimension)
            ]
    }
 }
@@ -2611,6 +2429,14 @@ extension PointCoordinate2DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (PointCoordinate2DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitWithDictionaryLiteral", testInitWithDictionaryLiteral),
+                ("testInitWithDictionaryLiteralIncorrectElements", testInitWithDictionaryLiteralIncorrectElements),
+                ("testStartIndex", testStartIndex),
+                ("testEndIndex", testEndIndex),
+                ("testIndexAfter", testIndexAfter),
+                ("testSubscriptGet", testSubscriptGet),
+                ("testSubscriptSet", testSubscriptSet),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription)
            ]
@@ -2621,6 +2447,8 @@ extension PointCoordinate2DMFloatingPrecisionCartesianTests {
    static var allTests: [(String, (PointCoordinate2DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit),
+                ("testInitWithArrayLiteral", testInitWithArrayLiteral),
+                ("testInitWithDictionaryLiteral", testInitWithDictionaryLiteral),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription)
            ]
@@ -2631,6 +2459,8 @@ extension PointCoordinate3DFloatingPrecisionCartesianTests {
    static var allTests: [(String, (PointCoordinate3DFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit),
+                ("testInitWithArrayLiteral3D", testInitWithArrayLiteral3D),
+                ("testInitWithDictionaryLiteral3D", testInitWithDictionaryLiteral3D),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription)
            ]
@@ -2641,38 +2471,40 @@ extension PointCoordinate3DMFloatingPrecisionCartesianTests {
    static var allTests: [(String, (PointCoordinate3DMFloatingPrecisionCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit),
+                ("testInitWithArrayLiteral3DM", testInitWithArrayLiteral3DM),
+                ("testInitWithDictionaryLiteral3DM", testInitWithDictionaryLiteral3DM),
                 ("testDescription", testDescription),
                 ("testDebugDescription", testDebugDescription)
            ]
    }
 }
 
-extension PointCoordinate2DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointCoordinate2DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointCoordinate2DFixedCartesianTests {
+   static var allTests: [(String, (PointCoordinate2DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
            ]
    }
 }
 
-extension PointCoordinate2DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointCoordinate2DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointCoordinate2DMFixedCartesianTests {
+   static var allTests: [(String, (PointCoordinate2DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
            ]
    }
 }
 
-extension PointCoordinate3DFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointCoordinate3DFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointCoordinate3DFixedCartesianTests {
+   static var allTests: [(String, (PointCoordinate3DFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
            ]
    }
 }
 
-extension PointCoordinate3DMFixedPrecisionCartesianTests {
-   static var allTests: [(String, (PointCoordinate3DMFixedPrecisionCartesianTests) -> () throws -> Void)] {
+extension PointCoordinate3DMFixedCartesianTests {
+   static var allTests: [(String, (PointCoordinate3DMFixedCartesianTests) -> () throws -> Void)] {
       return [
                 ("testInit", testInit)
            ]

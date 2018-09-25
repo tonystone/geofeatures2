@@ -1,5 +1,5 @@
 ///
-///  FixedPrecision.swift
+///  Fixed.swift
 ///
 ///  Copyright (c) 2016 Tony Stone
 ///
@@ -25,23 +25,46 @@ import Swift
     import Darwin
 #endif
 
-public struct FixedPrecision: Precision, Equatable, Hashable  {
+///
+/// Fixed Precision ensures coordinates have a fixed number of decimal places.
+///
+/// - Remarks: The number of decimal places is determined by the scale passed.
+///
+public struct Fixed: Precision {
 
     public let scale: Double
-
-    public var hashValue: Int {
-        return 31.hashValue + scale.hashValue
-    }
 
     public init(scale: Double) {
         self.scale = abs(scale)
     }
 
+    @inline(__always)
     public func convert(_ value: Double) -> Double {
         return round(value * scale) / scale
     }
+
+    @inline(__always)
+    public func convert(_ value: Double?) -> Double? {
+        guard let value = value
+            else { return nil }
+        return convert(value)
+    }
+
+    public func convert(_ coordinate: Coordinate) -> Coordinate {
+        return Coordinate(x: self.convert(coordinate.x), y: self.convert(coordinate.y), z: self.convert(coordinate.z), m: self.convert(coordinate.m))
+    }
 }
-extension FixedPrecision: CustomStringConvertible, CustomDebugStringConvertible {
+
+extension Fixed: Hashable {
+
+    public var hashValue: Int {
+        return 31.hashValue + scale.hashValue
+    }
+}
+
+extension Fixed: Equatable {}
+
+extension Fixed: CustomStringConvertible, CustomDebugStringConvertible {
 
     public var description: String {
         return "\(type(of: self))(scale: \(self.scale))"
