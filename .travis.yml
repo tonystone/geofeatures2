@@ -53,7 +53,7 @@ matrix:
       osx_image: xcode9.4
       env:
          - BUILD="xcodebuild"
-         - TEST_DEST="platform=iOS Simulator,OS=11.2,name=iPhone 8"
+         - TEST_DEST="platform=iOS Simulator,OS=11.4,name=iPhone 8"
          - TEST_SDK=iphonesimulator
 
 
