@@ -43,8 +43,8 @@ import GeoFeaturesQuartz
 @IBDesignable
 internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizationViewBaseType {
 
-    static let strokeColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [77/255.0,  169/255.0, 255/255.0, 1.0] as [CGFloat])
-    static let fillColor   = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [204/255.0,  230/255.0, 255/255.0, 1.0] as [CGFloat])
+    private static let strokeColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [77/255.0,  169/255.0, 255/255.0, 1.0] as [CGFloat])
+    private static let fillColor   = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [204/255.0,  230/255.0, 255/255.0, 1.0] as [CGFloat])
 
     private let geometry: Geometry
 
@@ -53,7 +53,7 @@ internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizatio
     @IBInspectable var xOffset: CGFloat = 0.0
     @IBInspectable var yOffset: CGFloat = 0.0
 
-    init(geometry: Geometry) {
+    public init(geometry: Geometry) {
         self.geometry = geometry
 
         let viewBounds = Bounds(min: (x: 0, y: 0), max: (x: 200, y: 200))
@@ -75,9 +75,14 @@ internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizatio
         super.init(coder: coder)
     }
 
-    override func draw(_ dirtyRect: CGRect) {
+    override func draw(_ dirtyRect: NSRect) {
+        self.draw(dirtyRect, context: currentContext())
+    }
 
-        guard let context = currentContext()
+    internal /* @testable */
+    func draw(_ dirtyRect: CGRect, context: CGContext?) {
+
+        guard let context = context
             else { return }
 
         context.saveGState()
