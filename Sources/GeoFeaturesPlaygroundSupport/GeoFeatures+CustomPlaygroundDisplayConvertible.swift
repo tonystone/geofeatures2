@@ -31,250 +31,118 @@
 import GeoFeatures
 import GeoFeaturesQuartz
 
-#if swift(>=4.1) || swift(>=3.3) && !swift(>=4.0)
+///
+/// Point CustomPlaygroundDisplayConvertible implementation
+///
+extension Point: CustomPlaygroundDisplayConvertible {
 
-    // With Swift 4.1 and later (including Swift 3.3 and later), implement CustomPlaygroundDisplayConvertible.
-    // extension MyType: CustomPlaygroundDisplayConvertible { /…/ }
-
-    ///
-    /// Point CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension Point: CustomPlaygroundDisplayConvertible {
-
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
+}
+///
+/// LineString CustomPlaygroundDisplayConvertible implementation
+///
+extension LineString: CustomPlaygroundDisplayConvertible {
 
-    ///
-    /// LineString CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension LineString: CustomPlaygroundDisplayConvertible {
-
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
+}
+///
+/// LinearRing CustomPlaygroundDisplayConvertible implementation
+///
+extension LinearRing: CustomPlaygroundDisplayConvertible {
 
-    ///
-    /// LinearRing CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension LinearRing: CustomPlaygroundDisplayConvertible {
-
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
+}
+///
+/// Polygon CustomPlaygroundDisplayConvertible implementation
+///
+extension Polygon: CustomPlaygroundDisplayConvertible {
 
-    ///
-    /// Polygon CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension Polygon: CustomPlaygroundDisplayConvertible {
-
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
+}
+///
+/// MultiPoint CustomPlaygroundDisplayConvertible implementation
+///
+extension MultiPoint: CustomPlaygroundDisplayConvertible {
 
-    ///
-    /// MultiPoint CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension MultiPoint: CustomPlaygroundDisplayConvertible {
-
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
+}
+///
+/// MultiLineString CustomPlaygroundDisplayConvertible implementation
+///
+extension MultiLineString: CustomPlaygroundDisplayConvertible {
 
-    ///
-    /// MultiLineString CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension MultiLineString: CustomPlaygroundDisplayConvertible {
-
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
+}
+///
+/// MultiPolygon CustomPlaygroundDisplayConvertible implementation
+///
+extension MultiPolygon: CustomPlaygroundDisplayConvertible {
 
-    ///
-    /// MultiPolygon CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension MultiPolygon: CustomPlaygroundDisplayConvertible {
-
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
+}
+///
+/// GeometryCollection CustomPlaygroundDisplayConvertible implementation
+///
+extension GeometryCollection: CustomPlaygroundDisplayConvertible {
 
-    ///
-    /// GeometryCollection CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension GeometryCollection: CustomPlaygroundDisplayConvertible {
-
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
-
-
-#else
-    // Otherwise, on Swift 4.0 and Swift 3.2 and earlier, implement CustomPlaygroundQuickLookable.
-    // extension MyType: CustomPlaygroundQuickLookable { /…/ }
-
-    ///
-    /// Point CustomPlaygroundQuickLookable implementation
-    ///
-    extension Point: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-    ///
-    /// LineString CustomPlaygroundQuickLookable implementation
-    ///
-    extension LineString: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-    ///
-    /// LinearRing CustomPlaygroundQuickLookable implementation
-    ///
-    extension LinearRing: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-    ///
-    /// Polygon CustomPlaygroundQuickLookable implementation
-    ///
-    extension Polygon: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-    ///
-    /// MultiPoint CustomPlaygroundQuickLookable implementation
-    ///
-    extension MultiPoint: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-    ///
-    /// MultiLineString CustomPlaygroundQuickLookable implementation
-    ///
-    extension MultiLineString: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-    ///
-    /// MultiPolygon CustomPlaygroundQuickLookable implementation
-    ///
-    extension MultiPolygon: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-    ///
-    /// GeometryCollection CustomPlaygroundQuickLookable implementation
-    ///
-    extension GeometryCollection: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-
-#endif
+}
 
 #endif
 

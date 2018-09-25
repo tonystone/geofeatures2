@@ -43,51 +43,22 @@
 import GeoFeatures
 import GeoFeaturesQuartz
 
-#if swift(>=4.1) || swift(>=3.3) && !swift(>=4.0)
-
-    // With Swift 4.1 and later (including Swift 3.3 and later), implement CustomPlaygroundDisplayConvertible.
-    // extension MyType: CustomPlaygroundDisplayConvertible { /…/ }
-
 % for Type in variants:
-    ///
-    /// ${Type} CustomPlaygroundDisplayConvertible implementation
-    ///
-    extension ${Type}: CustomPlaygroundDisplayConvertible {
+///
+/// ${Type} CustomPlaygroundDisplayConvertible implementation
+///
+extension ${Type}: CustomPlaygroundDisplayConvertible {
 
-        public var playgroundDescription: Any {
-            switch self.coordinateSystem {
-            case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
-            }
+    public var playgroundDescription: Any {
+        switch self.coordinateSystem {
+        case is Cartesian:  return CartesianGeometryVisualizationView(geometry: self)
+        case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
+        default:
+            return String(describing: self)  /// Defaults to the default description should the coordinate system not be supported.
         }
     }
-
+}
 % end
-
-#else
-    // Otherwise, on Swift 4.0 and Swift 3.2 and earlier, implement CustomPlaygroundQuickLookable.
-    // extension MyType: CustomPlaygroundQuickLookable { /…/ }
-
-% for Type in variants:
-    ///
-    /// ${Type} CustomPlaygroundQuickLookable implementation
-    ///
-    extension ${Type}: CustomPlaygroundQuickLookable {
-
-        public var customPlaygroundQuickLook: PlaygroundQuickLook  {
-            switch self.coordinateSystem {
-            case is Cartesian:  return .view( CartesianGeometryVisualizationView(geometry: self))
-            case is Geographic: fallthrough      /// Fallthrough to default implementation until Map support is available.
-            default:
-                return .text(String(describing: self))  /// Defaults to the default description should the coordinate system not be supported.
-            }
-        }
-    }
-% end
-
-#endif
 
 #endif
 
