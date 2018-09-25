@@ -75,7 +75,7 @@ internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizatio
         super.init(coder: coder)
     }
 
-    override func draw(_ dirtyRect: NSRect) {
+    override func draw(_ dirtyRect: CGRect) {
         self.draw(dirtyRect, context: currentContext())
     }
 
