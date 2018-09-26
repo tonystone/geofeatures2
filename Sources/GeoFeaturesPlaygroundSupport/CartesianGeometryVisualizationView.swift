@@ -80,7 +80,7 @@ internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizatio
     }
 
     internal /* @testable */
-    func draw(_ dirtyRect: CGRect, context: CGContext?) {
+    func draw(_ dirtyRect: CGRect, context: CGContext?, blendMode: CGBlendMode = .normal) {
 
         guard let context = context
             else { return }
@@ -92,6 +92,7 @@ internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizatio
         context.scaleBy(x: scale, y: scale)
         context.setLineCap(CGLineCap.round)
         context.setLineWidth(2.0)
+        context.setBlendMode(blendMode)
 
         if let color = CartesianGeometryVisualizationView.strokeColor {
             context.setStrokeColor(color)
