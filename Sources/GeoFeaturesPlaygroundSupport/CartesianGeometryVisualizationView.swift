@@ -20,6 +20,10 @@
 
 #if os(OSX) || os(iOS)
 
+import CoreGraphics
+import GeoFeatures
+import GeoFeaturesQuartz
+
 #if os(OSX)
     import AppKit
     typealias CartesianGeometryVisualizationViewBaseType = NSView
@@ -35,10 +39,6 @@
         return UIGraphicsGetCurrentContext()
     }
 #endif
-
-import CoreGraphics
-import GeoFeatures
-import GeoFeaturesQuartz
 
 @IBDesignable
 internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizationViewBaseType {
@@ -86,13 +86,15 @@ internal class CartesianGeometryVisualizationView: CartesianGeometryVisualizatio
             else { return }
 
         context.saveGState()
+        
+        context.setBlendMode(blendMode)
 
         /// Apply the transforms to scale and center the paths
         context.translateBy(x: xOffset, y: yOffset)
         context.scaleBy(x: scale, y: scale)
         context.setLineCap(CGLineCap.round)
         context.setLineWidth(2.0)
-        context.setBlendMode(blendMode)
+
 
         if let color = CartesianGeometryVisualizationView.strokeColor {
             context.setStrokeColor(color)
