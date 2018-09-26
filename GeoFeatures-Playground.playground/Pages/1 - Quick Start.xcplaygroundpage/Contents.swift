@@ -19,7 +19,7 @@ Fixed4 == floatingPrecision1
 
 //: ## Usage scenarios
 
-/// LinearRing created with simple tuble array
+/// LinearRing created with simple array
 LinearRing([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
 
 LinearRing([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]])
