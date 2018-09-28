@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.2
 ///
 ///  Package.swift
 ///
@@ -39,5 +39,6 @@ let package = Package(
         .testTarget(
             name: "GeoFeaturesTests",
             dependencies: ["GeoFeatures"])
-        ]
+        ],
+    swiftLanguageVersions: [.version("4.0"), .version("4.2")]
 )
