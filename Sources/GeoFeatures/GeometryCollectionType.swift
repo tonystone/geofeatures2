@@ -48,7 +48,7 @@ extension Geometry where Self: GeometryCollectionType, Self.Element: Geometry {
 
     public func bounds() -> Bounds? {
 
-        let bounds = self.flatMap { $0.bounds() }
+        let bounds = self.compactMap { $0.bounds() }
 
         guard bounds.count > 0
             else { return nil }
@@ -67,7 +67,7 @@ extension Geometry where Self: GeometryCollectionType, Self.Element == Geometry 
 
     public func bounds() -> Bounds? {
 
-        let bounds = self.flatMap { $0.bounds() }
+        let bounds = self.compactMap { $0.bounds() }
 
         guard bounds.count > 0
             else { return nil }

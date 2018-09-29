@@ -37,7 +37,7 @@ public struct Bounds {
     public let max: (x: Double, y: Double)
 
     ///
-    /// Mid x Y values
+    /// Mid X Y values
     ///
     public var mid: (x: Double, y: Double) {
         return (x: (min.x + max.x) / 2, y: (min.y + max.y) / 2)

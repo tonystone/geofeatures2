@@ -1,5 +1,6 @@
 import Swift
 import GeoFeatures
+import GeoFeaturesPlaygroundSupport
 
 let Fixed1 = Fixed(scale: 10)
 let Fixed2 = Fixed(scale: 10)
@@ -18,7 +19,7 @@ Fixed4 == floatingPrecision1
 
 //: ## Usage scenarios
 
-/// LinearRing created with simple tuble array
+/// LinearRing created with simple array
 LinearRing([[0, 0], [0, 7], [4, 2], [2, 0], [0, 0]])
 
 LinearRing([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]])
@@ -58,6 +59,8 @@ LineString([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]]).isEmpty()
 
 GeometryCollection().isEmpty()
 GeometryCollection([Point([1, 1]), LineString([[0, 0, 0], [0, 7, 0], [4, 2, 0], [2, 0, 0], [0, 0, 0]])])
+
+GeometryCollection([Point([1, 1])])
 
 /// Comparison of points
 let pointsMatch1 = Point([1.4, 2.3]) == Point([1.4, 2.3])
