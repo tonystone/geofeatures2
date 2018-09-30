@@ -6,7 +6,7 @@
         <page name='3 - LineStrings'/>
         <page name='4 - LinearRings'/>
         <page name='5 - Polygons'/>
-        <page name='6 - MultipPoints'/>
+        <page name='6 - MultiPoints'/>
         <page name='7 - MultiLineStrings'/>
         <page name='8 - MultiPolygons'/>
         <page name='9 - GeometryCollections'/>
