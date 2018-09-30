@@ -41,5 +41,5 @@ let package = Package(
         .testTarget(name: "GeoFeaturesQuartzTests",            dependencies: ["GeoFeatures", "GeoFeaturesQuartz"]),
         .testTarget(name: "GeoFeaturesPlaygroundSupportTests", dependencies: ["GeoFeatures", "GeoFeaturesQuartz", "GeoFeaturesPlaygroundSupport"])
         ],
-    swiftLanguageVersions: [4]
+    swiftLanguageVersions: [.version("4.0"), .version("4.2")]
 )
