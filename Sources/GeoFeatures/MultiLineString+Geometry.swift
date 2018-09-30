@@ -45,6 +45,7 @@ extension MultiLineString {
     public func boundary() -> Geometry {
 
         var endCoordinates = [Coordinate: Int]()
+        var endCoordinatesOrdered = [Coordinate]()
 
         for i in 0 ..< self.count {
             let lineString = self[i]
@@ -60,6 +61,7 @@ extension MultiLineString {
 
                 } else {
                     endCoordinates[lineString[i]] = 1
+                    endCoordinatesOrdered.append(lineString[i])
                 }
 
                 i = lineString.count - 1
@@ -72,15 +74,19 @@ extension MultiLineString {
 
                 } else {
                     endCoordinates[lineString[i]] = 1
+                    endCoordinatesOrdered.append(lineString[i])
                 }
             }
         }
 
         var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
-        for (coordinate, count) in endCoordinates {
-            if count % 2 == 1 {
-                boundary.append(Point(coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
+        for coordinate in endCoordinatesOrdered {
+            if let count = endCoordinates[coordinate] {
+
+                if count % 2 == 1 {
+                    boundary.append(Point(coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
+                }
             }
         }
         return boundary
