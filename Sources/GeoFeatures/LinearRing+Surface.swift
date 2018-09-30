@@ -35,7 +35,7 @@ extension LinearRing {
     public func area() -> Double {
         var area: Double = 0.0
 
-        if self.count > 0 {
+        if self.count > 0 && self.isClosed() {
 
             var c1 = self[0]
 

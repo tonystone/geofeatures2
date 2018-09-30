@@ -33,5 +33,4 @@ public protocol Curve {
     /// The length of this Curve calculated using its associated CoordinateSystem.
     ///
     func length() -> Double
-
 }

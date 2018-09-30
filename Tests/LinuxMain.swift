@@ -6,6 +6,8 @@
 import XCTest
 
 @testable import GeoFeaturesTests
+@testable import GeoFeaturesQuartzTests
+@testable import GeoFeaturesPlaygroundSupportTests
 
 XCTMain([
    testCase(MultiPolygonSurfaceCoordinate2DFixedCartesianTests.allTests),

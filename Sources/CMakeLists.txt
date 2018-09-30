@@ -23,6 +23,9 @@ add_custom_target(build ALL
 #
 set(GYB_COMMON_FLAGS --line-directive "''")
 
+#
+# GeoFeatures
+#
 add_gyb_target(generate-LinearRing
         SOURCE GeoFeatures/CoordinateCollectionTypes.swift.gyb
         OUTPUT GeoFeatures/LinearRing.swift
@@ -65,8 +68,18 @@ add_gyb_target(generate-MultiPolygon
         DEPENDS GeoFeatures/GeometryCollectionTypes.swift.gyb build-tools
         )
 
+#
+# GeoFeaturesPlaygroundSupport
+#
+add_gyb_target(generate-GeoFeatures-CustomPlaygroundDisplayConvertible
+        SOURCE GeoFeaturesPlaygroundSupport/GeoFeatures+CustomPlaygroundDisplayConvertible.swift.gyb
+        OUTPUT GeoFeaturesPlaygroundSupport/GeoFeatures+CustomPlaygroundDisplayConvertible.swift
+        FLAGS ${GYB_COMMON_FLAGS}
+        DEPENDS build-tools
+        )
+
 add_custom_target(generate-source
-        DEPENDS generate-LinearRing generate-LineString generate-GeometryCollection generate-MultiPoint generate-MultiLineString generate-MultiPolygon
+        DEPENDS generate-LinearRing generate-LineString generate-GeometryCollection generate-MultiPoint generate-MultiLineString generate-MultiPolygon generate-GeoFeatures-CustomPlaygroundDisplayConvertible
         )
 
 add_dependencies(build generate-source)
