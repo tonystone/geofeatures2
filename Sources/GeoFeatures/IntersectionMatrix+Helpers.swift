@@ -368,40 +368,6 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint, _ point: Point) -> (Geometry?, IntersectionMatrix) {
-
-        /// Identical
-        var identical = IntersectionMatrix()
-        identical[.exterior, .exterior] = .two
-
-        /// Second in first
-        var secondInFirst = IntersectionMatrix()
-        secondInFirst[.interior, .interior] = .zero
-        secondInFirst[.interior, .exterior] = .zero
-        secondInFirst[.exterior, .exterior] = .two
-
-        /// Disjoint
-        var disjoint = IntersectionMatrix()
-        disjoint[.interior, .exterior] = .zero
-        disjoint[.exterior, .interior] = .zero
-        disjoint[.exterior, .exterior] = .two
-
-        for tempPoint in points {
-
-            if tempPoint == point {
-
-                if points.count > 1 {
-                    return (point, secondInFirst)
-                } else {
-                    return (point, identical)
-                }
-
-            }
-
-        }
-        return (nil, disjoint)
-    }
-
     fileprivate static func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoint) -> (Geometry?, IntersectionMatrix) {
 
         /// Identical
@@ -1886,66 +1852,6 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-    fileprivate static func relatedTo(_ multiLineString: MultiLineString, _ simplePolygon: Polygon) -> RelatedTo {
-
-        var relatedToResult = RelatedTo()
-
-        guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
-            polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-            outerLinearRing.count > 0 else {
-                return relatedToResult
-        }
-
-        /// Check the relationships between each line segment of the line string and the simple polygon
-
-        for lineString in multiLineString {
-            for firstCoordIndex in 0..<lineString.count - 1 {
-
-                let firstCoord  = lineString[firstCoordIndex]
-                let secondCoord = lineString[firstCoordIndex + 1]
-                let segment = Segment(left: firstCoord, right: secondCoord)
-                var leftCoordinateBoundaryPoint = false
-                var rightCoordinateBoundaryPoint = false
-                if firstCoordIndex == 0 {
-                    leftCoordinateBoundaryPoint = true
-                } else if firstCoordIndex == lineString.count - 2 {
-                    rightCoordinateBoundaryPoint = true
-                }
-                
-                let segmentRelatedToResult = relatedTo(segment, simplePolygon, leftCoordinateBoundaryPoint: leftCoordinateBoundaryPoint, rightCoordinateBoundaryPoint: rightCoordinateBoundaryPoint)
-
-                if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
-                    relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
-                }
-
-                if segmentRelatedToResult.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
-                    relatedToResult.firstBoundaryTouchesSecondInterior = segmentRelatedToResult.firstBoundaryTouchesSecondInterior
-                }
-
-                if segmentRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
-                    relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
-                }
-
-                if segmentRelatedToResult.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
-                    relatedToResult.firstBoundaryTouchesSecondBoundary = segmentRelatedToResult.firstBoundaryTouchesSecondBoundary
-                }
-
-                if segmentRelatedToResult.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
-                    relatedToResult.firstInteriorTouchesSecondExterior = segmentRelatedToResult.firstInteriorTouchesSecondExterior
-                }
-
-                if segmentRelatedToResult.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
-                    relatedToResult.firstBoundaryTouchesSecondExterior = segmentRelatedToResult.firstBoundaryTouchesSecondExterior
-                }
-
-            }
-        }
-
-        return relatedToResult
-    }
-
     /// Assume here that both polygons are simple polygons with no holes, just a single simple boundary.
     fileprivate static func relatedTo(_ simplePolygon1: Polygon, _ simplePolygon2: Polygon) -> RelatedTo {
 
@@ -2182,13 +2088,6 @@ extension IntersectionMatrix {
         return relatedToPolygons.firstTouchesSecondInterior == .empty && relatedToPolygons.firstTouchesSecondExterior == .empty
     }
 
-    /// It is assumed that a RelatedTo structure has been generated for two polgyons,
-    /// and now we want to know if the main boundaries of the polygons are match.
-    /// This is the same as areMainPolygonBoundariesIdentical.
-    fileprivate static func areMainPolygonsIdentical(_ relatedToPolygons: RelatedTo) -> Bool {
-        return areMainPolygonBoundariesIdentical(relatedToPolygons)
-    }
-
     fileprivate static func areSimplePolygonsIdentical(_ simplePolygon1: Polygon, _ simplePolygon2: Polygon) -> Bool {
         let relatedToPolygons = relatedTo(simplePolygon1, simplePolygon2)
         return areMainPolygonBoundariesIdentical(relatedToPolygons)
@@ -2197,21 +2096,6 @@ extension IntersectionMatrix {
     fileprivate static func countIdentical(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> Bool {
 
         return linearRingArray1.count == linearRingArray2.count
-    }
-
-    fileprivate static func holeCountIdentical(_ polygon1: Polygon, _ polygon2: Polygon) -> Bool {
-
-        guard let polygonBoundary1 = polygon1.boundary() as? MultiLineString,
-            polygonBoundary1.count > 0 else {
-                return false
-        }
-
-        guard let polygonBoundary2 = polygon2.boundary() as? MultiLineString,
-            polygonBoundary2.count > 0 else {
-                return false
-        }
-
-        return polygonBoundary1.count == polygonBoundary2.count
     }
 
     /// Does the linear ring match any of the linear rings in the array?
@@ -2244,35 +2128,6 @@ extension IntersectionMatrix {
         return true
     }
 
-    /// Using a RelatedTo structure which compares two sets of linear ring arrays,
-    /// does the first array of linear rings match a subset of the linear rings in the second array?
-    fileprivate static func matchesSubset(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
-
-        return relatedToLinearRingArrays.firstBoundaryTouchesSecondBoundary > .empty &&
-            relatedToLinearRingArrays.firstTouchesSecondInterior == .empty &&
-            relatedToLinearRingArrays.firstTouchesSecondExterior == .empty
-    }
-
-    /// Using a RelatedTo structure which compares two sets of linear ring arrays,
-    /// is the first array of linear rings completely inside a subset of the linear rings in the second array?
-    /// This means the two sets do not touch on a boundary.
-    fileprivate static func firstInsideSecond(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
-
-        return relatedToLinearRingArrays.firstBoundaryTouchesSecondBoundary == .empty &&
-            relatedToLinearRingArrays.firstTouchesSecondInterior > .empty &&
-            relatedToLinearRingArrays.firstTouchesSecondExterior == .empty
-    }
-
-    /// Using a RelatedTo structure which compares two sets of linear ring arrays,
-    /// is the first array of linear rings completely outside of the linear rings in the second array?
-    /// This means the two sets do not touch on a boundary.
-    fileprivate static func firstOutsideSecond(_ relatedToLinearRingArrays: RelatedTo) -> Bool {
-
-        return relatedToLinearRingArrays.firstBoundaryTouchesSecondBoundary == .empty &&
-            relatedToLinearRingArrays.firstTouchesSecondInterior == .empty &&
-            relatedToLinearRingArrays.firstTouchesSecondExterior > .empty
-    }
-
     /// Does the simple polygon match any of the simple polygons in the array?
     fileprivate static func matchesOne(_ simplePolygon1: Polygon, _ simplePolygonArray: [Polygon]) -> Bool {
 
@@ -2299,68 +2154,6 @@ extension IntersectionMatrix {
         }
 
         return true
-    }
-
-    /// Does the first array of simple polygons match the second array of the simple polygons?
-    /// Note that we assume the same polygon does not appear more than once in either array.
-    /// TODO: Expand this to accommodate duplicates?
-    fileprivate static func matches(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> Bool {
-
-        return matchesSubset(simplePolygonArray1, simplePolygonArray2) && simplePolygonArray1.count == simplePolygonArray2.count
-    }
-
-    /// Is the first simple polygon completely in the interior of the second simple polygon?
-    fileprivate static func isInInterior(_ simplePolygon1: Polygon, _ simplePolygon2: Polygon) -> Bool {
-
-        let relatedToPolygons = relatedTo(simplePolygon1, simplePolygon2)
-        return relatedToPolygons.firstTouchesSecondInterior > .empty && relatedToPolygons.firstTouchesSecondBoundary == .empty && relatedToPolygons.firstTouchesSecondExterior == .empty
-    }
-
-    /// Is the first simple polygon completely in the interior of any the simple polygons in the simple polygon array?
-    fileprivate static func isInInterior(_ simplePolygon1: Polygon, _ simplePolygonArray: [Polygon]) -> Bool {
-
-        for simplePolygon2 in simplePolygonArray {
-            let relatedToPolygons = relatedTo(simplePolygon1, simplePolygon2)
-            if relatedToPolygons.firstTouchesSecondInterior > .empty && relatedToPolygons.firstTouchesSecondBoundary == .empty && relatedToPolygons.firstTouchesSecondExterior == .empty {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    fileprivate static func relatedToAsPolygon(_ lineString: LineString, _ linearRing: LinearRing) -> RelatedTo {
-
-        /// Convert a linear ring to a simple polygon
-        let simplePolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
-
-        return relatedTo(lineString, simplePolygon)
-    }
-
-    fileprivate static func relatedToAsPolygon(_ lineString1: LineString, _ lineString2: LineString) -> RelatedTo {
-
-        /// Convert the second line string to a simple polygon
-        var tempLineString = lineString2
-        let firstCoord  = tempLineString[0]
-        let lastCoord   = tempLineString[tempLineString.count - 1]
-        if firstCoord != lastCoord {
-            tempLineString.append(firstCoord)
-        }
-
-        let linearRing = LinearRing(converting: tempLineString, precision: Floating(), coordinateSystem: Cartesian())
-        let simplePolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
-
-        return relatedTo(lineString1, simplePolygon)
-    }
-
-    fileprivate static func intersect(_ points1: MultiPoint, _ points2: MultiPoint) -> Bool {
-
-        for tempPoint in points1 {
-            if subset(tempPoint, points2) {
-                return true
-            }
-        }
-        return false
     }
 
     fileprivate static func generateIntersection(_ points: MultiPoint, _ lineString: LineString) -> (Geometry?, IntersectionMatrix) {
@@ -3431,47 +3224,6 @@ extension IntersectionMatrix {
         return false
     }
 
-    /// Is the linear ring contained in or a subset of the polygon?
-    /// If the linear ring is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
-    /// Note that being on the boundary of a polygon hole is acceptable.
-    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ linearRing: LinearRing, _ polygon: Polygon) -> Bool {
-
-        /// Get the polygon boundary
-        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-            polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-            outerLinearRing.count > 0 else {
-                return false
-        }
-
-        /// Check if the linear ring is inside the main linear ring
-        guard subset(linearRing, outerLinearRing) else { return false }
-
-        /// At this point, the line string is inside the main boundary.
-        /// If there are no holes, we are done.
-        let holesArray = holes(polygon)
-        guard holesArray.count > 1 else { return true }
-
-        /// There are holes.  Check each one to see if the line string is in the interior of any.
-        /// Being on the boundary of a hole is okay.
-        for holeLinearRing in holesArray {
-
-            guard holeLinearRing.count > 0 else { continue }
-
-            /// Get the relationship between the linear ring and the hole linear ring
-            let relatedToResult = relatedTo(linearRing, holeLinearRing)
-
-            /// Check if the linear ring is on the interior of the hole
-            if relatedToResult.firstTouchesSecondInterior > .empty {
-                return false
-            }
-        }
-
-        /// The linear ring is not in the interior of any hole.
-        return true
-    }
-
     /// Is the multi line string contained in or a subset of the linear ring?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     fileprivate static func subset(_ multiLineString: MultiLineString, _ linearRing: LinearRing) -> Bool {
@@ -3524,51 +3276,6 @@ extension IntersectionMatrix {
         return true
     }
 
-    /// Is the multi line string contained in or a subset of the polygon?
-    /// If the multi line string is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
-    /// Note that being on the boundary of a polygon hole is acceptable.
-    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    fileprivate static func subset(_ multiLineString: MultiLineString, _ polygon: Polygon) -> Bool {
-
-        /// Get the polygon boundary
-        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-            polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-            outerLinearRing.count > 0 else {
-                return false
-        }
-
-        /// Check if each line string of the multi line string is inside the main linear ring
-        for lineString in multiLineString {
-            guard subset(lineString, outerLinearRing) else { return false }
-        }
-
-        /// At this point, the multi line string is inside the main boundary.
-        /// If there are no holes, we are done.
-        let holesArray = holes(polygon)
-        guard holesArray.count > 1 else { return true }
-
-        /// There are holes.  Check each one to see if each line string of the multi line string is in the interior of any.
-        /// Being on the boundary of a hole is okay.
-        for lineString in multiLineString {
-            for linearRing in holesArray {
-
-                guard linearRing.count > 0 else { continue }
-
-                /// Get the relationship between the point and the hole
-                let relatedToResult = relatedTo(lineString, linearRing)
-
-                /// Check if the line string is on the interior of the hole
-                if relatedToResult.firstTouchesSecondInterior > .empty {
-                    return false
-                }
-            }
-        }
-
-        /// The multi line string is not in the interior of any hole.
-        return true
-    }
-    
     /// Is the multi line string contained in or a subset of the collection of linear rings?
     /// If the multi line string is a subset of the collection, each line string of the multi line string must be a subset of just one linear ring.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
@@ -4668,28 +4375,5 @@ extension IntersectionMatrix {
         }
 
         return (nil, matrixIntersects)
-    }
-
-    ///
-    /// - returns: An Array of `LinearRing`s representing the outerRings of this MultiPolygon
-    ///
-    /// - see also: `LinearRing`
-    ///
-    fileprivate static func outerRings(multipolygon: MultiPolygon) -> [LinearRing] {
-        return multipolygon.map( { $0.outerRing } )
-    }
-
-    ///
-    /// - returns: An Array of `LinearRing`s representing the innerRings of this MultiPolygon
-    ///
-    /// - see also: `LinearRing`
-    ///
-    fileprivate static func innerRings(multipolygon: MultiPolygon) -> [[LinearRing]] {
-        var rings = [[LinearRing]]()
-
-        for polygon in multipolygon {
-            rings.append(polygon.innerRings)
-        }
-        return rings
     }
 }
