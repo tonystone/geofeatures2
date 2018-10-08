@@ -80,7 +80,7 @@ extension MultiLineString {
 
         for (coordinate, count) in endCoordinates {
             if count % 2 == 1 {
-                boundary.append(Point(coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem, boundaryPoint: true))
+                boundary.append(Point(coordinate, precision: self.precision, coordinateSystem: self.coordinateSystem))
             }
         }
         return boundary

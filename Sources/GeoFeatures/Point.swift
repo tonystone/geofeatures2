@@ -66,9 +66,6 @@ public struct Point: Geometry {
         return coordinate.m
     }
 
-    @available(*, deprecated, message: "This should be removed before merging to master.")
-    public var boundaryPoint: Bool = false
-
     ///
     /// Construct a Point from another Point (copy constructor).
     ///
@@ -87,8 +84,8 @@ public struct Point: Geometry {
     ///     - precision: The `Precision` model this `Point` should use in calculations on it's coordinate.
     ///     - coordinateSystem: The 'CoordinateSystem` this `Pont` should use in calculations on it's coordinate.
 	///
-    internal init(other: Point, precision: Precision, coordinateSystem: CoordinateSystem, boundaryPoint: Bool = false) {
-        self.init(other.coordinate, precision: precision, coordinateSystem: coordinateSystem, boundaryPoint:  other.boundaryPoint || boundaryPoint)
+    internal init(other: Point, precision: Precision, coordinateSystem: CoordinateSystem) {
+        self.init(other.coordinate, precision: precision, coordinateSystem: coordinateSystem)
     }
 
     ///
@@ -99,12 +96,11 @@ public struct Point: Geometry {
     ///     - precision: The `Precision` model this `Point` should use in calculations on it's coordinate.
     ///     - coordinateSystem: The 'CoordinateSystem` this `Pont` should use in calculations on it's coordinate.
 	///
-    public init(_ coordinate: Coordinate, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem, boundaryPoint: Bool = false) {
+    public init(_ coordinate: Coordinate, precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
 
         self.precision        = precision
         self.coordinateSystem = coordinateSystem
         self.coordinate       = precision.convert(coordinate)
-        self.boundaryPoint    = boundaryPoint
     }
 
     internal private(set) var coordinate: Coordinate
