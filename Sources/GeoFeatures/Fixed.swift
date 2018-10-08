@@ -58,7 +58,7 @@ public struct Fixed: Precision {
 extension Fixed: Hashable {
 
     public var hashValue: Int {
-        return 31.hashValue + scale.hashValue
+        return 31.hashValue &+ scale.hashValue
     }
 }
 
