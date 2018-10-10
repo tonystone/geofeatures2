@@ -456,13 +456,13 @@ extension IntersectionMatrix {
         case onBoundary, onInterior, onExterior
     }
 
-    /// Returns true if the first point is on the line segment defined by the next two points.
+    /// Returns true if the coordinate is on the line segment.
     fileprivate static func coordinateIsOnLineSegment(_ coordinate: Coordinate, segment: Segment) -> LocationType {
 
         /// Will likely use precision later, but use EPSILON for now.
         let EPSILON = 0.01
 
-        /// Check if the point is in between the other two points in both x and y.
+        /// Check if the coordinate is in between the line segment endpoints in both x and y.
         let segmentLeft     = segment.leftCoordinate
         let segmentRight    = segment.rightCoordinate
         let leftX           = segmentLeft.x
@@ -476,7 +476,7 @@ extension IntersectionMatrix {
             return .onExterior
         }
 
-        /// Check if the point is on the boundary of the line segment
+        /// Check if the coordinate is on the boundary of the line segment
         if (coordinate == segmentLeft) || (coordinate == segmentRight) {
             return .onBoundary
         }
@@ -499,10 +499,6 @@ extension IntersectionMatrix {
         }
 
         return .onExterior
-    }
-
-    fileprivate static func pointIsOnLineSegment(_ point: Point, segment: Segment) -> LocationType {
-        return coordinateIsOnLineSegment(point.coordinate, segment: segment)
     }
 
     fileprivate static func generateIntersection(_ point: Point, _ lineString: LineString) -> (Geometry?, IntersectionMatrix) {
@@ -529,10 +525,11 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Check if the point equals either of the two endpoints of the line string.
+        let mainCoord = point.coordinate
         let firstCoord = lineString.first
         let secondCoord  = lineString[lineString.count - 1]
 
-        if point.coordinate == firstCoord || point.coordinate == secondCoord {
+        if mainCoord == firstCoord || mainCoord == secondCoord {
             return (point, matchesEndPoint)
         }
 
@@ -541,7 +538,7 @@ extension IntersectionMatrix {
             let firstCoord  = lineString[firstCoordIndex]
             let secondCoord = lineString[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
-            if pointIsOnLineSegment(point, segment: segment) == .onInterior {
+            if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
                 return (point, pointOnInterior)
             }
         }
@@ -565,11 +562,12 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Check if the point is on any of the line segments in the line string.
+        let mainCoord = point.coordinate
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
-            if pointIsOnLineSegment(point, segment: segment) == .onInterior {
+            if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
                 return (point, pointOnInterior)
             }
         }
@@ -602,11 +600,12 @@ extension IntersectionMatrix {
         disjoint[.exterior, .exterior] = .two
 
         /// Check if the point equals any of the endpoints of any line string.
+        let mainCoord = point.coordinate
         for lineString in multiLineString {
             let firstCoord = lineString.first
             let secondCoord  = lineString[lineString.count - 1]
 
-            if point.coordinate == firstCoord || point.coordinate == secondCoord {
+            if mainCoord == firstCoord || mainCoord == secondCoord {
                 return (point, matchesEndPoint)
             }
         }
@@ -617,7 +616,7 @@ extension IntersectionMatrix {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment(left: firstCoord, right: secondCoord)
-                if pointIsOnLineSegment(point, segment: segment) == .onInterior {
+                if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
                     return (point, pointOnInterior)
                 }
             }
@@ -627,20 +626,20 @@ extension IntersectionMatrix {
         return (nil, disjoint)
     }
 
-    fileprivate static func subset(_ point: Point, _ points: MultiPoint) -> Bool {
+    fileprivate static func subset(_ coordinate: Coordinate, _ coordinates: [Coordinate]) -> Bool {
 
-        for tempPoint in points {
-            if point == tempPoint {
+        for tempCoordinate in coordinates {
+            if coordinate == tempCoordinate {
                 return true
             }
         }
         return false
     }
 
-    fileprivate static func subset(_ points1: MultiPoint, _ points2: MultiPoint) -> Bool {
+    fileprivate static func subset(_ coordinates1: [Coordinate], _ coordinates2: [Coordinate]) -> Bool {
 
-        for tempPoint in points1 {
-            if subset(tempPoint, points2) {
+        for tempCoordinate in coordinates1 {
+            if subset(tempCoordinate, coordinates2) {
                 continue
             } else {
                 return false
@@ -649,13 +648,13 @@ extension IntersectionMatrix {
         return true
     }
 
-    fileprivate static func subset(_ point: Point, _ lineString: LineString) -> Bool {
+    fileprivate static func subset(_ coordinate: Coordinate, _ lineString: LineString) -> Bool {
 
         for firstCoordIndex in 0..<lineString.count - 1 {
             let firstCoord  = lineString[firstCoordIndex]
             let secondCoord = lineString[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
-            let location = pointIsOnLineSegment(point, segment: segment)
+            let location = coordinateIsOnLineSegment(coordinate, segment: segment)
             if location == .onInterior || location == .onBoundary {
                 return true
             }
@@ -663,14 +662,14 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func subset(_ point: Point, _ multiLineString: MultiLineString) -> Bool {
+    fileprivate static func subset(_ coordinate: Coordinate, _ multiLineString: MultiLineString) -> Bool {
 
         for lineString in multiLineString {
             for firstCoordIndex in 0..<lineString.count - 1 {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment(left: firstCoord, right: secondCoord)
-                let location = pointIsOnLineSegment(point, segment: segment)
+                let location = coordinateIsOnLineSegment(coordinate, segment: segment)
                 if location == .onInterior || location == .onBoundary {
                     return true
                 }
@@ -679,7 +678,7 @@ extension IntersectionMatrix {
         return false
     }
 
-    fileprivate static func relatedTo(_ points: MultiPoint, _ lineString: LineString) -> RelatedTo {
+    fileprivate static func relatedTo(_ coordinates: [Coordinate], _ lineString: LineString) -> RelatedTo {
 
         var relatedTo = RelatedTo()
 
@@ -687,27 +686,29 @@ extension IntersectionMatrix {
                 return relatedTo
         }
 
+        let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
+
         relatedTo.firstExteriorTouchesSecondInterior = .one
 
-        if subset(lineStringBoundary, points) {
+        if subset(lineStringBoundaryCoordinateArray, coordinates) {
             relatedTo.firstExteriorTouchesSecondBoundary = .empty
         } else {
             relatedTo.firstExteriorTouchesSecondBoundary = .zero
         }
 
-        for tempPoint in points {
+        for tempCoordinate in coordinates {
 
-            if subset(tempPoint, lineStringBoundary) {
+            if subset(tempCoordinate, lineStringBoundaryCoordinateArray) {
                 relatedTo.firstInteriorTouchesSecondBoundary = .zero
                 continue
             }
 
-            /// If this point is reached, a point that touches the boundary of the line string has been removed
+            /// If this line is reached, a coordinate that touches the boundary of the line string has been removed
             for firstCoordIndex in 0..<lineString.count - 1 {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment(left: firstCoord, right: secondCoord)
-                let location = pointIsOnLineSegment(tempPoint, segment: segment)
+                let location = coordinateIsOnLineSegment(tempCoordinate, segment: segment)
                 if location == .onInterior {
                     relatedTo.firstInteriorTouchesSecondInterior = .zero
                     break
@@ -725,13 +726,13 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
-    fileprivate static func subset(_ point: Point, _ linearRing: LinearRing) -> Bool {
+    fileprivate static func subset(_ coordinate: Coordinate, _ linearRing: LinearRing) -> Bool {
 
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
-            let location = pointIsOnLineSegment(point, segment: segment)
+            let location = coordinateIsOnLineSegment(coordinate, segment: segment)
             if location == .onInterior || location == .onBoundary {
                 return true
             }
@@ -739,18 +740,18 @@ extension IntersectionMatrix {
         return false
     }
 
-    /// The points array consists of a collection of tuples where each item contains a Point and a boolean indicating
-    /// whether the Point is a boundary point.
-    fileprivate static func relatedTo(_ points: [(Point, Bool)], _ linearRing: LinearRing) -> RelatedTo {
+    /// The coordinates array consists of a collection of tuples where each item contains a Coordinate and a boolean indicating
+    /// whether the Coordinate is a boundary point.
+    fileprivate static func relatedTo(_ coordinates: [(Coordinate, Bool)], _ linearRing: LinearRing) -> RelatedTo {
 
         var relatedTo = RelatedTo()
-        for (tempPoint, isBoundaryPoint) in points {
+        for (tempCoordinate, isBoundaryPoint) in coordinates {
             var pointIsOnExterior = true // The point cannot touch the boundary or interior of any segment to be on the exterior
             for firstCoordIndex in 0..<linearRing.count - 1 {
                 let firstCoord  = linearRing[firstCoordIndex]
                 let secondCoord = linearRing[firstCoordIndex + 1]
                 let segment = Segment(left: firstCoord, right: secondCoord)
-                let location = pointIsOnLineSegment(tempPoint, segment: segment)
+                let location = coordinateIsOnLineSegment(tempCoordinate, segment: segment)
                 if location == .onInterior {
                     pointIsOnExterior = false
                     if isBoundaryPoint {
@@ -781,8 +782,8 @@ extension IntersectionMatrix {
     }
 
     /// This assumes a GeometryCollection where all of the elements are LinearRings.
-    /// The points array is a collection of Point, Bool tuples, where the Bool is a flag indicating whether the point is a boundary point.
-    fileprivate static func relatedTo(_ points: [(Point, Bool)], _ geometryCollection: GeometryCollection) -> RelatedTo {
+    /// The coordinates array is a collection of Point, Bool tuples, where the Bool is a flag indicating whether the point is a boundary point.
+    fileprivate static func relatedTo(_ coordinates: [(Coordinate, Bool)], _ geometryCollection: GeometryCollection) -> RelatedTo {
 
         var relatedTo = RelatedTo()
 
@@ -792,12 +793,12 @@ extension IntersectionMatrix {
                 return relatedTo
             }
 
-            for (tempPoint, _) in points {
+            for (tempCoordinate, _) in coordinates {
                 for firstCoordIndex in 0..<linearRing.count - 1 {
                     let firstCoord  = linearRing[firstCoordIndex]
                     let secondCoord = linearRing[firstCoordIndex + 1]
                     let segment = Segment(left: firstCoord, right: secondCoord)
-                    let location = pointIsOnLineSegment(tempPoint, segment: segment)
+                    let location = coordinateIsOnLineSegment(tempCoordinate, segment: segment)
                     if location == .onInterior {
                         relatedTo.firstInteriorTouchesSecondInterior = .zero
                     } else if location == .onBoundary {
@@ -813,7 +814,7 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
-    fileprivate static func relatedTo(_ points: MultiPoint, _ multiLineString: MultiLineString) -> RelatedTo {
+    fileprivate static func relatedTo(_ coordinates: [Coordinate], _ multiLineString: MultiLineString) -> RelatedTo {
 
         var relatedTo = RelatedTo()
 
@@ -821,9 +822,11 @@ extension IntersectionMatrix {
             return relatedTo
         }
 
-        for tempPoint in points {
+        let multiLineStringCoordinateArray = multiPointToCoordinateArray(multiLineStringBoundary)
 
-            if subset(tempPoint, multiLineStringBoundary) {
+        for tempCoordinate in coordinates {
+
+            if subset(tempCoordinate, multiLineStringCoordinateArray) {
                 relatedTo.firstInteriorTouchesSecondBoundary = .zero
                 continue
             }
@@ -835,7 +838,7 @@ extension IntersectionMatrix {
                     let firstCoord  = lineString[firstCoordIndex]
                     let secondCoord = lineString[firstCoordIndex + 1]
                     let segment = Segment(left: firstCoord, right: secondCoord)
-                    let location = pointIsOnLineSegment(tempPoint, segment: segment)
+                    let location = coordinateIsOnLineSegment(tempCoordinate, segment: segment)
                     if location == .onInterior {
                         relatedTo.firstInteriorTouchesSecondInterior = .zero
                         tempPointNotTouchingAnyLineString = false
@@ -856,21 +859,21 @@ extension IntersectionMatrix {
 
     /// This code parallels that of a point and a simple polygon.
     /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
-    /// The point is a Point object and a flag indicating whether it is a boundary point.
-    fileprivate static func relatedTo(_ point: (Point, Bool), _ linearRing: LinearRing) -> RelatedTo {
+    /// The coordinate is a Coordinate object and a flag indicating whether it is a boundary point.
+    fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ linearRing: LinearRing) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
-        /// Check if the point is on the boundary of the linear ring
-        var points = [(Point, Bool)]()
-        points.append(point)
-        let tempRelatedToResult = relatedTo(points, linearRing)
+        /// Check if the coordinate is on the boundary of the linear ring
+        var coordinates = [(Coordinate, Bool)]()
+        coordinates.append(coordinateTuple)
+        let tempRelatedToResult = relatedTo(coordinates, linearRing)
         if tempRelatedToResult.firstTouchesSecondInterior != .empty {
             relatedToResult.firstInteriorTouchesSecondInterior = .zero
             return relatedToResult
         }
 
-        let pointCoord = point.0.coordinate
+        let coordinate = coordinateTuple.0
 
         var secondCoord = linearRing[linearRing.count - 1]
 
@@ -879,8 +882,8 @@ extension IntersectionMatrix {
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
 
-            if ((firstCoord.y >= pointCoord.y) != (secondCoord.y >= pointCoord.y)) &&
-                (pointCoord.x <= (secondCoord.x - firstCoord.x) * (pointCoord.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
+            if ((firstCoord.y >= coordinate.y) != (secondCoord.y >= coordinate.y)) &&
+                (coordinate.x <= (secondCoord.x - firstCoord.x) * (coordinate.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
                 isSubset = !isSubset
             }
 
@@ -901,8 +904,8 @@ extension IntersectionMatrix {
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
     /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
     /// The algorithm was modified because we assume the polygon is defined as a LinearRing, whose first and last points are the same.
-    /// The point is a Point object and a flag indicating whether it is a boundary point.
-    fileprivate static func relatedTo(_ point: (Point, Bool), _ simplePolygon: Polygon) -> RelatedTo {
+    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ simplePolygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -914,10 +917,10 @@ extension IntersectionMatrix {
         }
 
         /// Check if the point is on the boundary of the polygon
-        var points = [(Point, Bool)]()
-        points.append(point)
-        let tempRelatedToResult = relatedTo(points, outerLinearRing)
-        let isBoundaryPoint = point.1
+        var coordinatesTupleArray = [(Coordinate, Bool)]()
+        coordinatesTupleArray.append(coordinateTuple)
+        let tempRelatedToResult = relatedTo(coordinatesTupleArray, outerLinearRing)
+        let isBoundaryPoint = coordinateTuple.1
         if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
             if isBoundaryPoint {
                 relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
@@ -930,7 +933,7 @@ extension IntersectionMatrix {
         }
 
         /// Point does not touch the polygon boundary
-        let pointCoord = point.0.coordinate
+        let coordinate = coordinateTuple.0
 
         var isSubset = false
 
@@ -939,11 +942,11 @@ extension IntersectionMatrix {
         for firstCoordIndex in 1..<outerLinearRing.count {
             let secondCoord = outerLinearRing[firstCoordIndex]
 
-            if ((secondCoord.y >= pointCoord.y) != (firstCoord.y >= pointCoord.y)) &&
-                (pointCoord.x <= (firstCoord.x - secondCoord.x) * (pointCoord.y - secondCoord.y) / (firstCoord.y - secondCoord.y) + secondCoord.x) {
+            if ((secondCoord.y >= coordinate.y) != (firstCoord.y >= coordinate.y)) &&
+                (coordinate.x <= (firstCoord.x - secondCoord.x) * (coordinate.y - secondCoord.y) / (firstCoord.y - secondCoord.y) + secondCoord.x) {
                 isSubset = !isSubset
             }
-            
+
             firstCoord = secondCoord
         }
 
@@ -969,20 +972,18 @@ extension IntersectionMatrix {
 
     fileprivate static func relatedTo(_ coordinate: Coordinate, _ simplePolygon: Polygon) -> RelatedTo {
 
-        let point = Point(coordinate, precision: Floating(), coordinateSystem: Cartesian())
-        return relatedTo((point, false), simplePolygon)
+        return relatedTo((coordinate, false), simplePolygon)
     }
 
     fileprivate static func relatedTo(_ coordinate: Coordinate, _ linearRing: LinearRing) -> RelatedTo {
 
-        let point = Point(coordinate, precision: Floating(), coordinateSystem: Cartesian())
-        return relatedTo((point, false), linearRing)
+        return relatedTo((coordinate, false), linearRing)
     }
 
     /// Assume here that the polygon is a general polygon with holes.
     /// Note we've changed the name so as not to conflict with the simple polygon case.  This may change later.
-    /// The point is a Point object and a flag indicating whether it is a boundary point.
-    fileprivate static func relatedToGeneral(_ point: (Point, Bool), _ polygon: Polygon) -> RelatedTo {
+    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    fileprivate static func relatedToGeneral(_ coordinateTuple: (Coordinate, Bool), _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -993,90 +994,92 @@ extension IntersectionMatrix {
                 return relatedToResult
         }
 
-        /// Get the relationship between the point and the main polygon
+        /// Get the relationship between the coordinate and the main polygon
         let tempPolygon = Polygon(outerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
-        let pointRelatedToResult = relatedTo(point, tempPolygon)
+        let coordinateRelatedToResult = relatedTo(coordinateTuple, tempPolygon)
 
-        /// Check if the point is on the exterior of the main polygon
-        if pointRelatedToResult.firstTouchesSecondExterior > .empty {
-            return pointRelatedToResult
+        /// Check if the coordinate is on the exterior of the main polygon
+        if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
+            return coordinateRelatedToResult
         }
 
-        /// Check if the point is on the boundary of the main polygon
-        if pointRelatedToResult.firstTouchesSecondBoundary > .empty {
-            return pointRelatedToResult
+        /// Check if the coordinate is on the boundary of the main polygon
+        if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
+            return coordinateRelatedToResult
         }
 
-        /// From this point on, the point must be on the interior of the main polygon.
-        /// Now we have to check to see if the point is on the boundary or interior of any holes.
+        /// From this coordinate on, the coordinate must be on the interior of the main polygon.
+        /// Now we have to check to see if the coordinate is on the boundary or interior of any holes.
 
         for index in 1..<polygonBoundary.count {
-            
+
             guard let innerLinearRing = polygonBoundary[index] as? LinearRing,
                 innerLinearRing.count > 0 else {
-                    return pointRelatedToResult
+                    return coordinateRelatedToResult
             }
 
-            /// Get the relationship between the point and the hole
+            /// Get the relationship between the coordinate and the hole
             let tempPolygon = Polygon(innerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
-            let pointRelatedToResult = relatedTo(point, tempPolygon)
+            /// Flag the line below.
+            /// This variable name is the same as one outside the loop.  Check this.
+            let coordinateRelatedToResult = relatedTo(coordinateTuple, tempPolygon)
 
-            /// Check if the point is on the interior of the hole
-            if pointRelatedToResult.firstTouchesSecondInterior > .empty {
+            /// Check if the coordinate is on the interior of the hole
+            if coordinateRelatedToResult.firstTouchesSecondInterior > .empty {
                 relatedToResult.firstInteriorTouchesSecondExterior = .zero
                 return relatedToResult
             }
 
-            /// Check if the point is on the boundary of the hole
-            if pointRelatedToResult.firstTouchesSecondBoundary > .empty {
-                return pointRelatedToResult
+            /// Check if the coordinate is on the boundary of the hole
+            if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
+                return coordinateRelatedToResult
             }
 
         }
 
-        /// If we've gotten this far, the point must on the interior of the polygon
+        /// If we've gotten this far, the coordinate must on the interior of the polygon
         relatedToResult.firstInteriorTouchesSecondInterior = .zero
 
         return relatedToResult
     }
 
     /// Assume here that the multi polygon is a general multi polygon with a collection of non-intersecting general polygons.
-    /// The point is a Point object and a flag indicating whether it is a boundary point.
-    fileprivate static func relatedTo(_ point: (Point, Bool), _ multipolygon: MultiPolygon) -> RelatedTo {
+    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ multipolygon: MultiPolygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
-        /// There is a special case where a point touches the exterior of a MultiPolygon only when it
+        /// There is a special case where a coordinate touches the exterior of a MultiPolygon only when it
         /// touches the exterior of every Polygon in the MultiPolygon.  Therefore, we will track the
         /// total number of times the point touches the exterior of a Polygon.
-        var pointTouchesExteriorOfPolygonCount = 0
+        var coordinateTouchesExteriorOfPolygonCount = 0
 
         /// Loop over the polygons and update the relatedToResult struct as needed on each pass.
 
         for polygon in multipolygon {
 
-            /// Get the relationship between the point and the polygon
-            let pointRelatedToResult = relatedToGeneral(point, polygon)
+            /// Get the relationship between the coordinate and the polygon
+            let coordinateRelatedToResult = relatedToGeneral(coordinateTuple, polygon)
 
             /// Update the exterior count
-            if pointRelatedToResult.firstTouchesSecondExterior > .empty {
-                pointTouchesExteriorOfPolygonCount += 1
+            if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
+                coordinateTouchesExteriorOfPolygonCount += 1
             }
 
             /// Update the relatedToResult as needed
-            update(relatedToBase: &relatedToResult, relatedToNew: pointRelatedToResult)
+            update(relatedToBase: &relatedToResult, relatedToNew: coordinateRelatedToResult)
 
         }
 
         /// Update the interior, exterior or boundary, exterior parameter
-        if point.1 { // Is this a boundary point?
+        if coordinateTuple.1 { // Is this a boundary point?
             relatedToResult.firstBoundaryTouchesSecondExterior = .empty
-            if pointTouchesExteriorOfPolygonCount == multipolygon.count {
+            if coordinateTouchesExteriorOfPolygonCount == multipolygon.count {
                 relatedToResult.firstBoundaryTouchesSecondExterior = .zero
             }
         } else {
             relatedToResult.firstInteriorTouchesSecondExterior = .empty
-            if pointTouchesExteriorOfPolygonCount == multipolygon.count {
+            if coordinateTouchesExteriorOfPolygonCount == multipolygon.count {
                 relatedToResult.firstInteriorTouchesSecondExterior = .zero
             }
         }
@@ -1169,8 +1172,8 @@ extension IntersectionMatrix {
     }
 
     /// The polygon is a general polygon.  This polygon has holes.
-    /// The points array consists of a tuple of Point and Bool, where the Bool is a flag indicating whether the point is a boundary point.
-    fileprivate static func relatedTo(_ points: [(Point, Bool)], _ polygon: Polygon) -> RelatedTo {
+    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    fileprivate static func relatedTo(_ coordinatesTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1182,17 +1185,17 @@ extension IntersectionMatrix {
             return relatedToResult
         }
 
-        /// Check if any of the points are on the boundary
-        let pointsRelatedToBoundary = relatedTo(points, polygonBoundary)
-        if pointsRelatedToBoundary.firstTouchesSecondInterior != .empty || pointsRelatedToBoundary.firstTouchesSecondBoundary != .empty {
+        /// Check if any of the coordinates are on the boundary
+        let coordinatesRelatedToBoundary = relatedTo(coordinatesTupleArray, polygonBoundary)
+        if coordinatesRelatedToBoundary.firstTouchesSecondInterior != .empty || coordinatesRelatedToBoundary.firstTouchesSecondBoundary != .empty {
             relatedToResult.firstInteriorTouchesSecondBoundary = .zero
         }
 
-        var pointsOnInteriorOfMainRing      = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
-        var pointsOnInteriorOfInnerRings    = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
-        var pointsOnBoundaryOfInnerRings    = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        var coordinatesOnInteriorOfMainRing     = [Coordinate]()
+        var coordinatesOnInteriorOfInnerRings   = [Coordinate]()
+        var coordinatesOnBoundaryOfInnerRings   = [Coordinate]()
 
-        for (tempPoint, boundaryPoint) in points {
+        for (tempCoordinate, boundaryPoint) in coordinatesTupleArray {
 
             var firstTime = true
 
@@ -1204,7 +1207,7 @@ extension IntersectionMatrix {
 
                 let tempPolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
 
-                let tempRelatedToResult = relatedTo((tempPoint, boundaryPoint), tempPolygon)
+                let tempRelatedToResult = relatedTo((tempCoordinate, boundaryPoint), tempPolygon)
 
                 /// The first linear ring is the outer boundary of the polygon
                 if firstTime {
@@ -1215,22 +1218,22 @@ extension IntersectionMatrix {
                         relatedToResult.firstInteriorTouchesSecondBoundary = .zero
                         break
                     } else {
-                        pointsOnInteriorOfMainRing.append(tempPoint)
+                        coordinatesOnInteriorOfMainRing.append(tempCoordinate)
                     }
                     firstTime = false
 
                 } else {
-                    /// The algorithm will only reach this point if the point is on the interior of the main polygon.
+                    /// The algorithm will only reach this point if the coordinate is on the interior of the main polygon.
                     /// Note, too, that the tempPolygon above now refers to one of the main polygon's holes.
-                    /// If the point is on the interior of a hole, it is on the exterior of the main polygon.
+                    /// If the coordinate is on the interior of a hole, it is on the exterior of the main polygon.
                     if tempRelatedToResult.firstTouchesSecondInterior > .empty {
-                        pointsOnInteriorOfInnerRings.append(tempPoint)
+                        coordinatesOnInteriorOfInnerRings.append(tempCoordinate)
                         relatedToResult.firstInteriorTouchesSecondExterior = .zero
                         break
                     }
 
                     if tempRelatedToResult.firstTouchesSecondBoundary > .empty {
-                        pointsOnBoundaryOfInnerRings.append(tempPoint)
+                        coordinatesOnBoundaryOfInnerRings.append(tempCoordinate)
                         relatedToResult.firstInteriorTouchesSecondBoundary = .zero
                         break
                     }
@@ -1238,7 +1241,7 @@ extension IntersectionMatrix {
             }
         }
 
-        if pointsOnInteriorOfMainRing.count > pointsOnInteriorOfInnerRings.count + pointsOnBoundaryOfInnerRings.count {
+        if coordinatesOnInteriorOfMainRing.count > coordinatesOnInteriorOfInnerRings.count + coordinatesOnBoundaryOfInnerRings.count {
             relatedToResult.firstInteriorTouchesSecondInterior = .zero
         }
 
@@ -1247,8 +1250,8 @@ extension IntersectionMatrix {
 
     /// Assume here that the polygon is a general polygon with holes.
     /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
-    /// The points array consists of a tuple of Point and Bool, where the Bool is a flag indicating whether the point is a boundary point.
-    fileprivate static func relatedToGeneral(_ points: [(Point, Bool)], _ polygon: Polygon) -> RelatedTo {
+    /// The coordinate tuple array consists of a tuple of Point and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    fileprivate static func relatedToGeneral(_ coordinateTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1260,13 +1263,13 @@ extension IntersectionMatrix {
                 return relatedToResult
         }
 
-        for (point, boundaryPoint) in points {
+        for (coordinate, boundaryPoint) in coordinateTupleArray {
 
-            /// Get the relationships between each point and the general polygon
-            let pointRelatedToResult = relatedToGeneral((point, boundaryPoint), polygon)
+            /// Get the relationships between each coordinate and the general polygon
+            let coordinateRelatedToResult = relatedToGeneral((coordinate, boundaryPoint), polygon)
 
-            /// Check if the point is on the interior of the polygon
-            if pointRelatedToResult.firstTouchesSecondInterior > .empty {
+            /// Check if the coordinate is on the interior of the polygon
+            if coordinateRelatedToResult.firstTouchesSecondInterior > .empty {
                 if boundaryPoint {
                     relatedToResult.firstBoundaryTouchesSecondInterior = .zero
                 } else {
@@ -1274,8 +1277,8 @@ extension IntersectionMatrix {
                 }
             }
 
-            /// Check if the point is on the boundary of the polygon
-            if pointRelatedToResult.firstTouchesSecondBoundary > .empty {
+            /// Check if the coordinate is on the boundary of the polygon
+            if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
                 if boundaryPoint {
                     relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
                 } else {
@@ -1283,8 +1286,8 @@ extension IntersectionMatrix {
                 }
             }
 
-            /// Check if the point is on the exterior of the polygon
-            if pointRelatedToResult.firstTouchesSecondExterior > .empty {
+            /// Check if the coordinate is on the exterior of the polygon
+            if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
                 if boundaryPoint {
                     relatedToResult.firstBoundaryTouchesSecondExterior = .zero
                 } else {
@@ -1298,17 +1301,17 @@ extension IntersectionMatrix {
     }
 
     /// Assume here that the multi polygon is a general multi polygon with holes.
-    /// The points array consists of a tuple of Point and Bool, where the Bool is a flag indicating whether the point is a boundary point.
-    fileprivate static func relatedTo(_ points: [(Point, Bool)], _ multipolygon: MultiPolygon) -> RelatedTo {
+    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    fileprivate static func relatedTo(_ coordinateTupleArray: [(Coordinate, Bool)], _ multipolygon: MultiPolygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
-        /// Loop over the points and update the relatedToResult struct as needed on each pass.
+        /// Loop over the coordinate tuples and update the relatedToResult struct as needed on each pass.
 
-        for point in points {
+        for coodinateTuple in coordinateTupleArray {
 
-            /// Get the relationships between each point and the general multipolygon
-            let pointRelatedToResult = relatedTo(point, multipolygon)
+            /// Get the relationships between each coordinate tuple and the general multipolygon
+            let pointRelatedToResult = relatedTo(coodinateTuple, multipolygon)
 
             /// Update the relatedToResult as needed
             update(relatedToBase: &relatedToResult, relatedToNew: pointRelatedToResult)
@@ -2181,30 +2184,33 @@ extension IntersectionMatrix {
         disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
-        /// Define the MultiPoint geometry that might be returned
-        var resultGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        /// Define the coordinate array that might be returned as a Geometry
+        var resultCoordinateArray = [Coordinate]()
 
         /// Check if any of the points equals either of the two endpoints of the line string.
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
             return (nil, disjoint)
         }
 
-        var pointOnBoundary = false
-        var pointOnInterior = false
-        var pointOnExterior = false
+        let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
+        let coordinateArray = multiPointToCoordinateArray(points)
 
-        for point in points {
-            if subset(point, lineStringBoundary) {
-                pointOnBoundary = true
-                resultGeometry.append(point)
+        var coordinateOnBoundary = false
+        var coordinateOnInterior = false
+        var coordinateOnExterior = false
+
+        for coordinate in coordinateArray {
+            if subset(coordinate, lineStringBoundaryCoordinateArray) {
+                coordinateOnBoundary = true
+                resultCoordinateArray.append(coordinate)
             }
         }
 
-        /// Check if any of the points is on any of the line segments in the line string.
-        for point in points {
-            /// Ignore points that intersect the boundary of the line string.
+        /// Check if any of the coordinates is on any of the line segments in the line string.
+        for coordinate in coordinateArray {
+            /// Ignore coordinates that intersect the boundary of the line string.
             /// These were just calculated.
-            if subset(point, resultGeometry) {
+            if subset(coordinate, resultCoordinateArray) {
                 continue
             }
 
@@ -2213,39 +2219,40 @@ extension IntersectionMatrix {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment(left: firstCoord, right: secondCoord)
-                if pointIsOnLineSegment(point, segment: segment) == .onInterior {
-                    pointOnInterior = true
-                    resultGeometry.append(point)
+                if coordinateIsOnLineSegment(coordinate, segment: segment) == .onInterior {
+                    coordinateOnInterior = true
+                    resultCoordinateArray.append(coordinate)
                 }
             }
         }
 
-        /// Check if any of the points is not on the line string.
-        for point in points {
-            if !subset(point, lineString) {
-                pointOnExterior = true
+        /// Check if any of the coordinates is not on the line string.
+        for coordinate in coordinateArray {
+            if !subset(coordinate, lineString) {
+                coordinateOnExterior = true
                 break
             }
         }
 
         /// Complete the matrix as needed and return the geometry and matrix if an intersection exists
-        if pointOnInterior {
+        if coordinateOnInterior {
             matrixIntersects[.interior, .interior] = .zero
         }
 
-        if pointOnBoundary {
+        if coordinateOnBoundary {
             matrixIntersects[.interior, .boundary] = .zero
         }
 
-        if pointOnExterior {
+        if coordinateOnExterior {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        if !subset(lineStringBoundary, points) {
+        if !subset(lineStringBoundaryCoordinateArray, coordinateArray) {
             matrixIntersects[.exterior, .boundary] = .zero
         }
 
-        if pointOnBoundary || pointOnInterior {
+        let resultGeometry = coordinateArrayToMultiPoint(resultCoordinateArray)
+        if coordinateOnBoundary || coordinateOnInterior {
             return (resultGeometry, matrixIntersects)
         }
 
@@ -2266,46 +2273,49 @@ extension IntersectionMatrix {
         disjoint[.exterior, .interior] = .one
         disjoint[.exterior, .exterior] = .two
 
-        /// Define the MultiPoint geometry that might be returned
-        var resultGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        /// Define the coordinate array that might be returned as a Geometry
+        var resultCoordinateArray = [Coordinate]()
 
-        /// Check for points on the interior or exterior of the linear ring.  There is no boundary.
-        var pointOnInterior = false
-        var pointOnExterior = false
+        /// Check for coordinates on the interior or exterior of the linear ring.  There is no boundary.
+        let coordinateArray = multiPointToCoordinateArray(points)
+
+        var coordinateOnInterior = false
+        var coordinateOnExterior = false
 
         /// Check if any of the points is on any of the line segments in the linear ring.
-        for point in points {
+        for coordinate in coordinateArray {
             /// Any intersection from here is guaranteed to be in the interior.
             for firstCoordIndex in 0..<linearRing.count - 1 {
                 let firstCoord  = linearRing[firstCoordIndex]
                 let secondCoord = linearRing[firstCoordIndex + 1]
                 let segment = Segment(left: firstCoord, right: secondCoord)
-                let location = pointIsOnLineSegment(point, segment: segment)
+                let location = coordinateIsOnLineSegment(coordinate, segment: segment)
                 if location == .onInterior || location == .onBoundary {
-                    pointOnInterior = true
-                    resultGeometry.append(point)
+                    coordinateOnInterior = true
+                    resultCoordinateArray.append(coordinate)
                 }
             }
         }
 
-        /// Check if any of the points is not on the linear ring.
-        for point in points {
-            if !subset(point, linearRing) {
-                pointOnExterior = true
+        /// Check if any of the coordinates is not on the linear ring.
+        for coordinate in coordinateArray {
+            if !subset(coordinate, linearRing) {
+                coordinateOnExterior = true
                 break
             }
         }
 
         /// Complete the matrix as needed and return the geometry and matrix if an intersection exists
-        if pointOnInterior {
+        if coordinateOnInterior {
             matrixIntersects[.interior, .interior] = .zero
         }
 
-        if pointOnExterior {
+        if coordinateOnExterior {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        if pointOnInterior {
+        let resultGeometry = coordinateArrayToMultiPoint(resultCoordinateArray)
+        if coordinateOnInterior {
             return (resultGeometry, matrixIntersects)
         }
 
@@ -2327,30 +2337,33 @@ extension IntersectionMatrix {
         disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
 
-        /// Define the MultiPoint geometry that might be returned
-        var resultGeometry = MultiPoint(precision: points.precision, coordinateSystem: points.coordinateSystem)
+        /// Define the coordinate array that might be returned as a Geometry
+        var resultCoordinateArray = [Coordinate]()
 
         /// Check if any of the points equals any of the endpoints of the multiline string.
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
             return (nil, disjoint)
         }
 
-        var pointOnBoundary = false
-        var pointOnInterior = false
-        var pointOnExterior = false
+        let multiLineStringBoundaryCoordinateArray = multiPointToCoordinateArray(multiLineStringBoundary)
+        let coordinateArray = multiPointToCoordinateArray(points)
+        
+        var coordinateOnBoundary = false
+        var coordinateOnInterior = false
+        var coordinateOnExterior = false
 
-        for point in points {
-            if subset(point, multiLineStringBoundary) {
-                pointOnBoundary = true
-                resultGeometry.append(point)
+        for coordinate in coordinateArray {
+            if subset(coordinate, multiLineStringBoundaryCoordinateArray) {
+                coordinateOnBoundary = true
+                resultCoordinateArray.append(coordinate)
             }
         }
 
-        /// Check if any of the points is on any of the line segments in the multiline string.
-        for point in points {
-            /// Ignore points that intersect the boundary of the multiline string.
+        /// Check if any of the coordinates is on any of the line segments in the multiline string.
+        for coordinate in coordinateArray {
+            /// Ignore coordinates that intersect the boundary of the multiline string.
             /// These were just calculated.
-            if subset(point, resultGeometry) {
+            if subset(coordinate, resultCoordinateArray) {
                 continue
             }
 
@@ -2360,40 +2373,41 @@ extension IntersectionMatrix {
                     let firstCoord  = lineString[firstCoordIndex]
                     let secondCoord = lineString[firstCoordIndex + 1]
                     let segment = Segment(left: firstCoord, right: secondCoord)
-                    if pointIsOnLineSegment(point, segment: segment)  == .onInterior {
-                        pointOnInterior = true
-                        resultGeometry.append(point)
+                    if coordinateIsOnLineSegment(coordinate, segment: segment)  == .onInterior {
+                        coordinateOnInterior = true
+                        resultCoordinateArray.append(coordinate)
                     }
                 }
             }
         }
 
-        /// Check if any of the points is not on the multiline string.
-        for point in points {
-            if !subset(point, multiLineString) {
-                pointOnExterior = true
+        /// Check if any of the coordinates is not on the multiline string.
+        for coordinate in coordinateArray {
+            if !subset(coordinate, multiLineString) {
+                coordinateOnExterior = true
                 break
             }
         }
 
         /// Complete the matrix as needed and return the geometry and matrix if an intersection exists
-        if pointOnInterior {
+        if coordinateOnInterior {
             matrixIntersects[.interior, .interior] = .zero
         }
 
-        if pointOnBoundary {
+        if coordinateOnBoundary {
             matrixIntersects[.interior, .boundary] = .zero
         }
 
-        if pointOnExterior {
+        if coordinateOnExterior {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        if !subset(multiLineStringBoundary, points) {
+        if !subset(multiLineStringBoundaryCoordinateArray, coordinateArray) {
             matrixIntersects[.exterior, .boundary] = .zero
         }
 
-        if pointOnBoundary || pointOnInterior {
+        let resultGeometry = coordinateArrayToMultiPoint(resultCoordinateArray)
+        if coordinateOnBoundary || coordinateOnInterior {
             return (resultGeometry, matrixIntersects)
         }
 
@@ -2433,10 +2447,10 @@ extension IntersectionMatrix {
         matrixIntersects[.exterior, .boundary] = .one
         matrixIntersects[.exterior, .exterior] = .two
 
-        var points = [(Point, Bool)]()
-        points.append((point, false))
+        var coordinates = [(Coordinate, Bool)]()
+        coordinates.append((point.coordinate, false))
 
-        let tempRelatedToResult = relatedTo(points, polygon)
+        let tempRelatedToResult = relatedTo(coordinates, polygon)
 
         if tempRelatedToResult.firstTouchesSecondInterior != .empty {
             matrixIntersects[.interior, .interior] = .zero
@@ -2451,20 +2465,48 @@ extension IntersectionMatrix {
 
     fileprivate static func generateIntersection(_ point: Point, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
 
-        let relatedToPointMP = relatedTo((point, false), multipolygon)
+        let relatedToCoordinateMP = relatedTo((point.coordinate, false), multipolygon)
 
-        let matrixIntersects = intersectionMatrix(from: relatedToPointMP)
+        let matrixIntersects = intersectionMatrix(from: relatedToCoordinateMP)
 
         return (nil, matrixIntersects)
     }
-    
+
     fileprivate static func multiPointToTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Point, Bool)] {
-        
+
         var tupleArray = [(Point, Bool)]()
         for point in points {
             tupleArray.append((point, allBoundaryPoints))
         }
         return tupleArray
+    }
+
+    fileprivate static func multiPointToCoordinateTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Coordinate, Bool)] {
+
+        var tupleArray = [(Coordinate, Bool)]()
+        for point in points {
+            tupleArray.append((point.coordinate, allBoundaryPoints))
+        }
+        return tupleArray
+    }
+
+    fileprivate static func multiPointToCoordinateArray(_ points: MultiPoint) -> [Coordinate] {
+
+        var coordinateArray = [Coordinate]()
+        for point in points {
+            coordinateArray.append(point.coordinate)
+        }
+        return coordinateArray
+    }
+
+    fileprivate static func coordinateArrayToMultiPoint(_ coordinates: [Coordinate]) -> MultiPoint {
+
+        var multiPoint = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        for coordinate in coordinates {
+            let point = Point(coordinate)
+            multiPoint.append(point)
+        }
+        return multiPoint
     }
 
     fileprivate static func generateIntersection(_ points: MultiPoint, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
@@ -2474,10 +2516,10 @@ extension IntersectionMatrix {
         matrixIntersects[.exterior, .interior] = .two
         matrixIntersects[.exterior, .boundary] = .one
         matrixIntersects[.exterior, .exterior] = .two
-        
-        let pointsTupleArray = multiPointToTupleArray(points)
 
-        let tempRelatedToResult = relatedTo(pointsTupleArray, polygon)
+        let coordinateTupleArray = multiPointToCoordinateTupleArray(points, false)
+
+        let tempRelatedToResult = relatedTo(coordinateTupleArray, polygon)
 
         if tempRelatedToResult.firstTouchesSecondInterior != .empty {
             matrixIntersects[.interior, .interior] = .zero
@@ -2495,12 +2537,12 @@ extension IntersectionMatrix {
     }
 
     fileprivate static func generateIntersection(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
-        
-        let pointsTupleArray = multiPointToTupleArray(points)
 
-        let relatedToPointsMP = relatedTo(pointsTupleArray, multipolygon)
+        let coordinateTupleArray = multiPointToCoordinateTupleArray(points, false)
 
-        let matrixIntersects = intersectionMatrix(from: relatedToPointsMP)
+        let relatedToCoordinatesMP = relatedTo(coordinateTupleArray, multipolygon)
+
+        let matrixIntersects = intersectionMatrix(from: relatedToCoordinatesMP)
 
         /// No intersection
         return (nil, matrixIntersects)
@@ -2758,8 +2800,15 @@ extension IntersectionMatrix {
 
     fileprivate static func intersects(_ points1: MultiPoint, _ points2: MultiPoint) -> Bool {
 
-        for tempPoint in points1 {
-            if subset(tempPoint, points2) {
+        let coordinates1 = multiPointToCoordinateArray(points1)
+        let coordinates2 = multiPointToCoordinateArray(points2)
+        return intersects(coordinates1, coordinates2)
+    }
+
+    fileprivate static func intersects(_ coordinates1: [Coordinate], _ coordinates2: [Coordinate]) -> Bool {
+
+        for tempCoordinate in coordinates1 {
+            if subset(tempCoordinate, coordinates2) {
                 return true
             }
         }
@@ -3346,7 +3395,11 @@ extension IntersectionMatrix {
               let lineStringBoundary2 = lineString2.boundary() as? MultiPoint else {
                 return (nil, disjoint)
         }
-        let geometriesIntersect = intersects(lineStringBoundary1, lineStringBoundary2)
+
+        let lineStringBoundaryCoordinateArray1 = multiPointToCoordinateArray(lineStringBoundary1)
+        let lineStringBoundaryCoordinateArray2 = multiPointToCoordinateArray(lineStringBoundary2)
+
+        let geometriesIntersect = intersects(lineStringBoundaryCoordinateArray1, lineStringBoundaryCoordinateArray2)
         if geometriesIntersect {
             matrixIntersects[.boundary, .boundary] = .zero
         }
@@ -3385,7 +3438,7 @@ extension IntersectionMatrix {
         }
 
         /// Interior, boundary
-        let relatedB2Ls1 = relatedTo(lineStringBoundary2, lineString1)
+        let relatedB2Ls1 = relatedTo(lineStringBoundaryCoordinateArray2, lineString1)
         if relatedB2Ls1.firstTouchesSecondInterior != .empty {
             matrixIntersects[.interior, .boundary] = .zero
         }
@@ -3398,7 +3451,7 @@ extension IntersectionMatrix {
         }
 
         /// Boundary, interior
-        let relatedB1Ls2 = relatedTo(lineStringBoundary1, lineString2)
+        let relatedB1Ls2 = relatedTo(lineStringBoundaryCoordinateArray1, lineString2)
         if relatedB1Ls2.firstTouchesSecondInterior != .empty {
             matrixIntersects[.boundary, .interior] = .zero
         }
@@ -3447,8 +3500,8 @@ extension IntersectionMatrix {
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
                 return (nil, disjoint)
         }
-        
-        let lineStringBoundaryTupleArray = multiPointToTupleArray(lineStringBoundary, true)
+
+        let lineStringBoundaryCoordinateTupleArray = multiPointToCoordinateTupleArray(lineStringBoundary, true)
 
         ///
         /// Need to know the following:
@@ -3490,7 +3543,7 @@ extension IntersectionMatrix {
         }
 
         /// Boundary, interior
-        let relatedBlsLr = relatedTo(lineStringBoundaryTupleArray, linearRing)
+        let relatedBlsLr = relatedTo(lineStringBoundaryCoordinateTupleArray, linearRing)
         if relatedBlsLr.firstTouchesSecondInterior != .empty {
             matrixIntersects[.boundary, .interior] = .zero
         }
@@ -3525,7 +3578,10 @@ extension IntersectionMatrix {
                 return (nil, disjoint)
         }
 
-        let geometriesIntersect = intersects(lineStringBoundary, multiLineStringBoundary)
+        let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
+        let multiLineStringBoundaryCoordinateArray = multiPointToCoordinateArray(multiLineStringBoundary)
+
+        let geometriesIntersect = intersects(lineStringBoundaryCoordinateArray, multiLineStringBoundaryCoordinateArray)
         if geometriesIntersect {
             matrixIntersects[.boundary, .boundary] = .zero
         }
@@ -3563,7 +3619,7 @@ extension IntersectionMatrix {
         }
 
         /// Interior, boundary
-        let relatedBmlsLs = relatedTo(multiLineStringBoundary, lineString)
+        let relatedBmlsLs = relatedTo(multiLineStringBoundaryCoordinateArray, lineString)
         if relatedBmlsLs.firstTouchesSecondInterior != .empty {
             matrixIntersects[.interior, .boundary] = .zero
         }
@@ -3576,7 +3632,7 @@ extension IntersectionMatrix {
         }
 
         /// Boundary, interior
-        let relatedBlsMls = relatedTo(lineStringBoundary, multiLineString)
+        let relatedBlsMls = relatedTo(lineStringBoundaryCoordinateArray, multiLineString)
         if relatedBlsMls.firstTouchesSecondInterior != .empty {
             matrixIntersects[.boundary, .interior] = .zero
         }
@@ -3682,8 +3738,8 @@ extension IntersectionMatrix {
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
                 return (nil, disjoint)
         }
-        
-        let multiLineStringBoundaryTupleArray = multiPointToTupleArray(multiLineStringBoundary, true)
+
+        let multiLineStringBoundaryCoordinateTupleArray = multiPointToCoordinateTupleArray(multiLineStringBoundary, true)
 
         ///
         /// Need to know the following:
@@ -3718,7 +3774,7 @@ extension IntersectionMatrix {
         }
 
         /// Interior, boundary
-        let relatedBmlsLr = relatedTo(multiLineStringBoundaryTupleArray, linearRing)
+        let relatedBmlsLr = relatedTo(multiLineStringBoundaryCoordinateTupleArray, linearRing)
         if relatedBmlsLr.firstTouchesSecondInterior != .empty {
             matrixIntersects[.interior, .boundary] = .zero
         }
@@ -3765,6 +3821,9 @@ extension IntersectionMatrix {
                 return (nil, disjoint)
         }
 
+        let multiLineStringBoundaryCoordinateArray1 = multiPointToCoordinateArray(multiLineStringBoundary1)
+        let multiLineStringBoundaryCoordinateArray2 = multiPointToCoordinateArray(multiLineStringBoundary2)
+
         let geometriesIntersect = intersects(multiLineStringBoundary1, multiLineStringBoundary2)
         if geometriesIntersect {
             matrixIntersects[.boundary, .boundary] = .zero
@@ -3805,7 +3864,7 @@ extension IntersectionMatrix {
         }
 
         /// Interior, boundary
-        let relatedBmls2MLs1 = relatedTo(multiLineStringBoundary2, multiLineString1)
+        let relatedBmls2MLs1 = relatedTo(multiLineStringBoundaryCoordinateArray2, multiLineString1)
         if relatedBmls2MLs1.firstTouchesSecondInterior != .empty {
             matrixIntersects[.interior, .boundary] = .zero
         }
@@ -3818,7 +3877,7 @@ extension IntersectionMatrix {
         }
 
         /// Boundary, interior
-        let relatedBmls1Mls2 = relatedTo(multiLineStringBoundary1, multiLineString2)
+        let relatedBmls1Mls2 = relatedTo(multiLineStringBoundaryCoordinateArray1, multiLineString2)
         if relatedBmls1Mls2.firstTouchesSecondInterior != .empty {
             matrixIntersects[.boundary, .interior] = .zero
         }
@@ -3887,8 +3946,10 @@ extension IntersectionMatrix {
             return (nil, matrixIntersects)
         }
 
-        let lineStringBoundaryPoint1 = lineStringBoundary[0]
-        let lineStringBoundaryPoint2 = lineStringBoundary[1]
+        let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
+
+        let lineStringBoundaryCoordinate1 = lineStringBoundaryCoordinateArray[0]
+        let lineStringBoundaryCoordinate2 = lineStringBoundaryCoordinateArray[1]
 
         /// Must add an algorithm here to check whether a line segment is inside a polygon
         var lineStringInsideMainPolygon     = false /// Implies part of the line string lies inside the polygon
@@ -3906,9 +3967,9 @@ extension IntersectionMatrix {
             guard let linearRing = element as? LinearRing else { return (nil, matrixIntersects) }
             let tempPolygon = Polygon(linearRing)
 
-            let boundaryPoint1RelatedToResult   = relatedTo([(lineStringBoundaryPoint1, true)], tempPolygon)
-            let boundaryPoint2RelatedToResult   = relatedTo([(lineStringBoundaryPoint2, true)], tempPolygon)
-            let lineStringRelatedToResult       = relatedTo(lineString, tempPolygon)
+            let boundaryCoordinate1RelatedToResult  = relatedTo([(lineStringBoundaryCoordinate1, true)], tempPolygon)
+            let boundaryCoordinate2RelatedToResult  = relatedTo([(lineStringBoundaryCoordinate2, true)], tempPolygon)
+            let lineStringRelatedToResult           = relatedTo(lineString, tempPolygon)
 
             if isMainPolygon {
 
@@ -3933,22 +3994,22 @@ extension IntersectionMatrix {
                     matrixIntersects[.boundary, .boundary] = lineStringRelatedToResult.firstBoundaryTouchesSecondBoundary
                 }
 
-                if boundaryPoint1RelatedToResult.firstTouchesSecondBoundary > .empty {
+                if boundaryCoordinate1RelatedToResult.firstTouchesSecondBoundary > .empty {
                     boundaryPoint1OnPolygonBoundary = true
                     matrixIntersects[.boundary, .boundary] = .zero
                 }
 
-                if boundaryPoint2RelatedToResult.firstTouchesSecondBoundary > .empty {
+                if boundaryCoordinate2RelatedToResult.firstTouchesSecondBoundary > .empty {
                     boundaryPoint2OnPolygonBoundary = true
                     matrixIntersects[.boundary, .boundary] = .zero
                 }
 
-                if boundaryPoint1RelatedToResult.firstTouchesSecondExterior > .empty {
+                if boundaryCoordinate1RelatedToResult.firstTouchesSecondExterior > .empty {
                     boundaryPoint1OutsidePolygon = true
                     matrixIntersects[.boundary, .exterior] = .zero
                 }
 
-                if boundaryPoint2RelatedToResult.firstTouchesSecondExterior > .empty {
+                if boundaryCoordinate2RelatedToResult.firstTouchesSecondExterior > .empty {
                     boundaryPoint2OutsidePolygon = true
                     matrixIntersects[.boundary, .exterior] = .zero
                 }
@@ -3986,22 +4047,22 @@ extension IntersectionMatrix {
                     matrixIntersects[.boundary, .boundary] = lineStringRelatedToResult.firstBoundaryTouchesSecondBoundary
                 }
 
-                if boundaryPoint1RelatedToResult.firstTouchesSecondBoundary > .empty {
+                if boundaryCoordinate1RelatedToResult.firstTouchesSecondBoundary > .empty {
                     boundaryPoint1OnPolygonBoundary = true
                     matrixIntersects[.boundary, .boundary] = .zero
                 }
 
-                if boundaryPoint2RelatedToResult.firstTouchesSecondBoundary > .empty {
+                if boundaryCoordinate2RelatedToResult.firstTouchesSecondBoundary > .empty {
                     boundaryPoint2OnPolygonBoundary = true
                     matrixIntersects[.boundary, .boundary] = .zero
                 }
 
-                if boundaryPoint1RelatedToResult.firstTouchesSecondInterior > .empty {
+                if boundaryCoordinate1RelatedToResult.firstTouchesSecondInterior > .empty {
                     boundaryPoint1OutsidePolygon = true
                     matrixIntersects[.boundary, .exterior] = .zero
                 }
 
-                if boundaryPoint2RelatedToResult.firstTouchesSecondInterior > .empty {
+                if boundaryCoordinate2RelatedToResult.firstTouchesSecondInterior > .empty {
                     boundaryPoint2OutsidePolygon = true
                     matrixIntersects[.boundary, .exterior] = .zero
                 }
@@ -4204,21 +4265,21 @@ extension IntersectionMatrix {
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
             return (nil, matrixIntersects)
         }
-        
-        let multiLineStringBoundaryTupleArray = multiPointToTupleArray(multiLineStringBoundary, true)
 
-        let boundaryPointsRelatedToResult = relatedToGeneral(multiLineStringBoundaryTupleArray, polygon)
+        let multiLineStringBoundaryCoordindateTupleArray = multiPointToCoordinateTupleArray(multiLineStringBoundary, true)
 
-        if boundaryPointsRelatedToResult.firstBoundaryTouchesSecondInterior > .empty {
-            matrixIntersects[.boundary, .interior] = boundaryPointsRelatedToResult.firstBoundaryTouchesSecondInterior
+        let boundaryCoordinatesRelatedToResult = relatedToGeneral(multiLineStringBoundaryCoordindateTupleArray, polygon)
+
+        if boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondInterior > .empty {
+            matrixIntersects[.boundary, .interior] = boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondInterior
         }
 
-        if boundaryPointsRelatedToResult.firstBoundaryTouchesSecondBoundary > .empty {
-            matrixIntersects[.boundary, .boundary] = boundaryPointsRelatedToResult.firstBoundaryTouchesSecondBoundary
+        if boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondBoundary > .empty {
+            matrixIntersects[.boundary, .boundary] = boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondBoundary
         }
 
-        if boundaryPointsRelatedToResult.firstTouchesSecondExterior > .empty {
-            matrixIntersects[.boundary, .exterior] = boundaryPointsRelatedToResult.firstTouchesSecondExterior
+        if boundaryCoordinatesRelatedToResult.firstTouchesSecondExterior > .empty {
+            matrixIntersects[.boundary, .exterior] = boundaryCoordinatesRelatedToResult.firstTouchesSecondExterior
         }
 
         var multiLineStringInsideMainPolygon = false /// Implies part of the multi line string lies inside the polygon
@@ -4330,13 +4391,13 @@ extension IntersectionMatrix {
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
             return (nil, matrixIntersects)
         }
-        
-        let multiLineStringBoundaryTupleArray = multiPointToTupleArray(multiLineStringBoundary, true)
 
-        let boundaryPointsRelatedToResult = relatedTo(multiLineStringBoundaryTupleArray, multipolygon)
-        
-        if boundaryPointsRelatedToResult.firstBoundaryTouchesSecondExterior < matrixIntersects[.boundary, .exterior] {
-            matrixIntersects[.boundary, .exterior] = boundaryPointsRelatedToResult.firstBoundaryTouchesSecondExterior
+        let multiLineStringBoundaryCoordinateTupleArray = multiPointToCoordinateTupleArray(multiLineStringBoundary, true)
+
+        let boundaryCoordinatesRelatedToResult = relatedTo(multiLineStringBoundaryCoordinateTupleArray, multipolygon)
+
+        if boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondExterior < matrixIntersects[.boundary, .exterior] {
+            matrixIntersects[.boundary, .exterior] = boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondExterior
         }
 
         return (nil, matrixIntersects)
