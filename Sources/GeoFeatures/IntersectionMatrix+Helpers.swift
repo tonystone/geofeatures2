@@ -782,7 +782,7 @@ extension IntersectionMatrix {
     }
 
     /// This assumes a GeometryCollection where all of the elements are LinearRings.
-    /// The coordinates array is a collection of Point, Bool tuples, where the Bool is a flag indicating whether the point is a boundary point.
+    /// The coordinates array is a collection of Coordinate, Bool tuples, where the Bool is a flag indicating whether the point is a boundary point.
     fileprivate static func relatedTo(_ coordinates: [(Coordinate, Bool)], _ geometryCollection: GeometryCollection) -> RelatedTo {
 
         var relatedTo = RelatedTo()
@@ -932,7 +932,7 @@ extension IntersectionMatrix {
             return relatedToResult
         }
 
-        /// Point does not touch the polygon boundary
+        /// Coordinate does not touch the polygon boundary
         let coordinate = coordinateTuple.0
 
         var isSubset = false
@@ -1250,7 +1250,7 @@ extension IntersectionMatrix {
 
     /// Assume here that the polygon is a general polygon with holes.
     /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
-    /// The coordinate tuple array consists of a tuple of Point and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    /// Each element of the coordinate tuple array consists of a Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
     fileprivate static func relatedToGeneral(_ coordinateTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -2172,7 +2172,7 @@ extension IntersectionMatrix {
 
     fileprivate static func generateIntersection(_ points: MultiPoint, _ lineString: LineString) -> (Geometry?, IntersectionMatrix) {
 
-        /// Point matches endpoint
+        /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
         matrixIntersects[.exterior, .interior] = .one
         matrixIntersects[.exterior, .exterior] = .two
@@ -2262,7 +2262,7 @@ extension IntersectionMatrix {
 
     fileprivate static func generateIntersection(_ points: MultiPoint, _ linearRing: LinearRing) -> (Geometry?, IntersectionMatrix) {
 
-        /// Point matches endpoint
+        /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
         matrixIntersects[.exterior, .interior] = .one
         matrixIntersects[.exterior, .exterior] = .two
@@ -2325,7 +2325,7 @@ extension IntersectionMatrix {
 
     fileprivate static func generateIntersection(_ points: MultiPoint, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
 
-        /// Point matches endpoint
+        /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
         matrixIntersects[.exterior, .interior] = .one
         matrixIntersects[.exterior, .exterior] = .two
@@ -2470,15 +2470,6 @@ extension IntersectionMatrix {
         let matrixIntersects = intersectionMatrix(from: relatedToCoordinateMP)
 
         return (nil, matrixIntersects)
-    }
-
-    fileprivate static func multiPointToTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Point, Bool)] {
-
-        var tupleArray = [(Point, Bool)]()
-        for point in points {
-            tupleArray.append((point, allBoundaryPoints))
-        }
-        return tupleArray
     }
 
     fileprivate static func multiPointToCoordinateTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Coordinate, Bool)] {
