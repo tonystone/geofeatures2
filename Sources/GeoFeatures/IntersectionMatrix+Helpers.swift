@@ -77,14 +77,14 @@ extension IntersectionMatrix {
 
     static func generateMatrix(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
-        let (_, resultIntersectionMatrix) = IntersectionMatrix.intersectionGeometry(geometry1, geometry2)
+        let resultIntersectionMatrix = IntersectionMatrix.intersectionGeometry(geometry1, geometry2)
 
         return resultIntersectionMatrix
     }
 
     /// Returns the intersection geometry and the intersection matrix.
     /// Note that in general the intersection of two geometries will result in a set of geometries, not just one.
-    fileprivate static func intersectionGeometry(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometry(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         switch geometry1.dimension {
 
@@ -129,27 +129,27 @@ extension IntersectionMatrix {
         default: break
         }
 
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .zero
-    fileprivate static func intersectionGeometryZeroZero(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryZeroZero(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let point1 = geometry1 as? Point, let point2 = geometry2 as? Point {
             return generateIntersection(point1, point2)
         } else if let point = geometry1 as? Point, let points = geometry2 as? MultiPoint {
             return generateIntersection(point, points)
         } else if let points = geometry1 as? MultiPoint, let point = geometry2 as? Point {
-            let (geometry, intersectionMatrix) = generateIntersection(point, points)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(point, points)
+            return intersectionMatrix.transposed()
         } else if let points1 = geometry1 as? MultiPoint, let points2 = geometry2 as? MultiPoint {
             return generateIntersection(points1, points2)
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .zero and .one, respectively.
-    fileprivate static func intersectionGeometryZeroOne(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryZeroOne(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let point = geometry1 as? Point, let lineString = geometry2 as? LineString {
             return generateIntersection(point, lineString)
@@ -164,11 +164,11 @@ extension IntersectionMatrix {
         } else if let points = geometry1 as? MultiPoint, let linearRing = geometry2 as? LinearRing {
             return generateIntersection(points, linearRing)
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .zero and .two, respectively.
-    fileprivate static func intersectionGeometryZeroTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryZeroTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let point = geometry1 as? Point, let polygon = geometry2 as? Polygon {
             return generateIntersection(point, polygon)
@@ -179,36 +179,36 @@ extension IntersectionMatrix {
         } else if let points = geometry1 as? MultiPoint, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(points, multipolygon)
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .one and .zero, respectively.
-    fileprivate static func intersectionGeometryOneZero(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryOneZero(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let lineString = geometry1 as? LineString, let point = geometry2 as? Point {
-            let (geometry, intersectionMatrix) = generateIntersection(point, lineString)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(point, lineString)
+            return intersectionMatrix.transposed()
         } else if let lineString = geometry1 as? LineString, let points = geometry2 as? MultiPoint {
-            let (geometry, intersectionMatrix) = generateIntersection(points, lineString)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(points, lineString)
+            return intersectionMatrix.transposed()
         } else if let multilineString = geometry1 as? MultiLineString, let point = geometry2 as? Point {
-            let (geometry, intersectionMatrix) = generateIntersection(point, multilineString)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(point, multilineString)
+            return intersectionMatrix.transposed()
         } else if let multilineString = geometry1 as? MultiLineString, let points = geometry2 as? MultiPoint {
-            let (geometry, intersectionMatrix) = generateIntersection(points, multilineString)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(points, multilineString)
+            return intersectionMatrix.transposed()
         } else if let linearRing = geometry1 as? LinearRing, let point = geometry2 as? Point {
-            let (geometry, intersectionMatrix) = generateIntersection(point, linearRing)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(point, linearRing)
+            return intersectionMatrix.transposed()
         } else if let linearRing = geometry1 as? LinearRing, let points = geometry2 as? MultiPoint {
-            let (geometry, intersectionMatrix) = generateIntersection(points, linearRing)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(points, linearRing)
+            return intersectionMatrix.transposed()
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .one.
-    fileprivate static func intersectionGeometryOneOne(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryOneOne(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let lineString1 = geometry1 as? LineString, let lineString2 = geometry2 as? LineString {
             return generateIntersection(lineString1, lineString2)
@@ -217,26 +217,26 @@ extension IntersectionMatrix {
         } else if let lineString = geometry1 as? LineString, let linearRing = geometry2 as? LinearRing {
             return generateIntersection(lineString, linearRing)
         } else if let multilineString = geometry1 as? MultiLineString, let lineString = geometry2 as? LineString {
-            let (geometry, intersectionMatrix) = generateIntersection(lineString, multilineString)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(lineString, multilineString)
+            return intersectionMatrix.transposed()
         } else if let multilineString1 = geometry1 as? MultiLineString, let multilineString2 = geometry2 as? MultiLineString {
             return generateIntersection(multilineString1, multilineString2)
         } else if let multilineString = geometry1 as? MultiLineString, let linearRing = geometry2 as? LinearRing {
-            let (geometry, intersectionMatrix) = generateIntersection(linearRing, multilineString)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(linearRing, multilineString)
+            return intersectionMatrix.transposed()
         } else if let linearRing = geometry1 as? LinearRing, let lineString = geometry2 as? LineString {
-            let (geometry, intersectionMatrix) = generateIntersection(lineString, linearRing)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(lineString, linearRing)
+            return intersectionMatrix.transposed()
         } else if let linearRing = geometry1 as? LinearRing, let multilineString = geometry2 as? MultiLineString {
             return generateIntersection(linearRing, multilineString)
         } else if let linearRing1 = geometry1 as? LinearRing, let linearRing2 = geometry2 as? LinearRing {
             return generateIntersection(linearRing1, linearRing2)
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .one and .two, respectively.
-    fileprivate static func intersectionGeometryOneTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryOneTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let lineString = geometry1 as? LineString, let polygon = geometry2 as? Polygon {
             return generateIntersection(lineString, polygon)
@@ -251,89 +251,89 @@ extension IntersectionMatrix {
         } else if let linearRing = geometry1 as? LinearRing, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(linearRing, multipolygon)
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .two and .zero, respectively.
-    fileprivate static func intersectionGeometryTwoZero(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryTwoZero(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let polgyon = geometry1 as? Polygon, let point = geometry2 as? Point {
-            let (geometry, intersectionMatrix) = generateIntersection(point, polgyon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(point, polgyon)
+            return intersectionMatrix.transposed()
         } else if let polgyon = geometry1 as? Polygon, let points = geometry2 as? MultiPoint {
-            let (geometry, intersectionMatrix) = generateIntersection(points, polgyon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(points, polgyon)
+            return intersectionMatrix.transposed()
         } else if let multipolygon = geometry1 as? MultiPolygon, let point = geometry2 as? Point {
-            let (geometry, intersectionMatrix) = generateIntersection(point, multipolygon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(point, multipolygon)
+            return intersectionMatrix.transposed()
         } else if let multipolygon = geometry1 as? MultiPolygon, let points = geometry2 as? MultiPoint {
-            let (geometry, intersectionMatrix) = generateIntersection(points, multipolygon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(points, multipolygon)
+            return intersectionMatrix.transposed()
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .two and .one, respectively.
-    fileprivate static func intersectionGeometryTwoOne(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryTwoOne(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let polgyon = geometry1 as? Polygon, let lineString = geometry2 as? LineString {
-            let (geometry, intersectionMatrix) = generateIntersection(lineString, polgyon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(lineString, polgyon)
+            return intersectionMatrix.transposed()
         } else if let polgyon = geometry1 as? Polygon, let multilineString = geometry2 as? MultiLineString {
-            let (geometry, intersectionMatrix) = generateIntersection(multilineString, polgyon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(multilineString, polgyon)
+            return intersectionMatrix.transposed()
         } else if let polgyon = geometry1 as? Polygon, let linearRing = geometry2 as? LinearRing {
-            let (geometry, intersectionMatrix) = generateIntersection(linearRing, polgyon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(linearRing, polgyon)
+            return intersectionMatrix.transposed()
         } else if let multipolygon = geometry1 as? MultiPolygon, let lineString = geometry2 as? LineString {
-            let (geometry, intersectionMatrix) = generateIntersection(lineString, multipolygon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(lineString, multipolygon)
+            return intersectionMatrix.transposed()
         } else if let multipolygon = geometry1 as? MultiPolygon, let multilineString = geometry2 as? MultiLineString {
-            let (geometry, intersectionMatrix) = generateIntersection(multilineString, multipolygon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(multilineString, multipolygon)
+            return intersectionMatrix.transposed()
         } else if let multipolygon = geometry1 as? MultiPolygon, let linearRing = geometry2 as? LinearRing {
-            let (geometry, intersectionMatrix) = generateIntersection(linearRing, multipolygon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(linearRing, multipolygon)
+            return intersectionMatrix.transposed()
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     /// For the intersection of two geometries of dimension .two.
-    fileprivate static func intersectionGeometryTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func intersectionGeometryTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let polgyon1 = geometry1 as? Polygon, let polygon2 = geometry2 as? Polygon {
             return generateIntersection(polgyon1, polygon2)
         } else if let polgyon = geometry1 as? Polygon, let multipolygon = geometry2 as? MultiPolygon {
             return generateIntersection(polgyon, multipolygon)
         } else if let multipolygon = geometry1 as? MultiPolygon, let polgyon = geometry2 as? Polygon {
-            let (geometry, intersectionMatrix) = generateIntersection(polgyon, multipolygon)
-            return (geometry, intersectionMatrix.transposed())
+            let intersectionMatrix = generateIntersection(polgyon, multipolygon)
+            return intersectionMatrix.transposed()
         } else if let multipolygon1 = geometry1 as? MultiPolygon, let multipolygon2 = geometry2 as? MultiPolygon {
             return generateIntersection(multipolygon1, multipolygon2)
         }
-        return (nil, IntersectionMatrix())
+        return IntersectionMatrix()
     }
 
     ///
     /// Dimension .zero and dimension .zero
     ///
 
-    fileprivate static func generateIntersection(_ point1: Point, _ point2: Point) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point1: Point, _ point2: Point) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
         matrixIntersects[.exterior, .exterior] = .two
 
         if point1 == point2 {
             matrixIntersects[.interior, .interior] = .zero
-            return (point1, matrixIntersects)
+            return matrixIntersects
         }
 
         matrixIntersects[.interior, .exterior] = .zero
         matrixIntersects[.exterior, .interior] = .zero
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ point: Point, _ points: MultiPoint) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ points: MultiPoint) -> IntersectionMatrix {
 
         /// Identical
         var identical = IntersectionMatrix()
@@ -357,18 +357,18 @@ extension IntersectionMatrix {
             if tempPoint == point {
 
                 if points.count > 1 {
-                    return (point, firstInSecond)
+                    return firstInSecond
                 } else {
-                    return (point, identical)
+                    return identical
                 }
 
             }
 
         }
-        return (nil, disjoint)
+        return disjoint
     }
 
-    fileprivate static func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoint) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoint) -> IntersectionMatrix {
 
         /// Identical
         var identical = IntersectionMatrix()
@@ -434,16 +434,16 @@ extension IntersectionMatrix {
 
         switch (pointInGeometry1NotMatched, pointInGeometry2NotMatched) {
         case (false, false):
-            return (multiPointIntersection, identical)
+            return identical
         case (false, true):
-            return (multiPointIntersection, firstInSecond)
+            return firstInSecond
         case (true, false):
-            return (multiPointIntersection, secondInFirst)
+            return secondInFirst
         case (true, true):
             if pointsMatched {
-                return (multiPointIntersection, overlap)
+                return overlap
             } else {
-                return (multiPointIntersection, disjoint)
+                return disjoint
             }
         }
     }
@@ -501,7 +501,7 @@ extension IntersectionMatrix {
         return .onExterior
     }
 
-    fileprivate static func generateIntersection(_ point: Point, _ lineString: LineString) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ lineString: LineString) -> IntersectionMatrix {
 
         /// Point matches endpoint
         var matchesEndPoint = IntersectionMatrix()
@@ -530,7 +530,7 @@ extension IntersectionMatrix {
         let secondCoord  = lineString[lineString.count - 1]
 
         if mainCoord == firstCoord || mainCoord == secondCoord {
-            return (point, matchesEndPoint)
+            return matchesEndPoint
         }
 
         /// Check if the point is on any of the line segments in the line string.
@@ -539,15 +539,15 @@ extension IntersectionMatrix {
             let secondCoord = lineString[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
             if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
-                return (point, pointOnInterior)
+                return pointOnInterior
             }
         }
 
         /// No intersection
-        return (nil, disjoint)
+        return disjoint
     }
 
-    fileprivate static func generateIntersection(_ point: Point, _ linearRing: LinearRing) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ linearRing: LinearRing) -> IntersectionMatrix {
 
         /// Point on interior
         var pointOnInterior = IntersectionMatrix()
@@ -568,15 +568,15 @@ extension IntersectionMatrix {
             let secondCoord = linearRing[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
             if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
-                return (point, pointOnInterior)
+                return pointOnInterior
             }
         }
 
         /// No intersection
-        return (nil, disjoint)
+        return disjoint
     }
 
-    fileprivate static func generateIntersection(_ point: Point, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 
         /// Point matches endpoint
         var matchesEndPoint = IntersectionMatrix()
@@ -606,7 +606,7 @@ extension IntersectionMatrix {
             let secondCoord  = lineString[lineString.count - 1]
 
             if mainCoord == firstCoord || mainCoord == secondCoord {
-                return (point, matchesEndPoint)
+                return matchesEndPoint
             }
         }
 
@@ -617,13 +617,13 @@ extension IntersectionMatrix {
                 let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment(left: firstCoord, right: secondCoord)
                 if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
-                    return (point, pointOnInterior)
+                    return pointOnInterior
                 }
             }
         }
 
         /// No intersection
-        return (nil, disjoint)
+        return disjoint
     }
 
     fileprivate static func subset(_ coordinate: Coordinate, _ coordinates: [Coordinate]) -> Bool {
@@ -1936,7 +1936,7 @@ extension IntersectionMatrix {
     fileprivate static func disjoint(_ polygon1: Polygon, _ polygon2: Polygon) -> Bool {
 
         /// Get the relationship of the outer ring of the first polygon to the second polygon.
-        let (_, outerRing1ToSecondPolygonMatrix) = generateIntersection(polygon1.outerRing, polygon2)
+        let outerRing1ToSecondPolygonMatrix = generateIntersection(polygon1.outerRing, polygon2)
 
         /// Check whether there is any overlap between the first outer ring and the second polygon.
         if outerRing1ToSecondPolygonMatrix[.interior, .interior] > .empty || outerRing1ToSecondPolygonMatrix[.interior, .boundary] > .empty ||
@@ -1945,7 +1945,7 @@ extension IntersectionMatrix {
         }
 
         /// Get the relationship of the outer ring of the second polygon to the first polygon.
-        let (_, outerRing2ToFirstPolygonMatrix)  = generateIntersection(polygon2.outerRing, polygon1)
+        let outerRing2ToFirstPolygonMatrix = generateIntersection(polygon2.outerRing, polygon1)
 
         /// Check whether there is any overlap between the second outer ring and the first polygon.
         if outerRing2ToFirstPolygonMatrix[.interior, .interior] > .empty || outerRing2ToFirstPolygonMatrix[.interior, .boundary] > .empty ||
@@ -2032,10 +2032,10 @@ extension IntersectionMatrix {
         /// are the same may not be needed.  Check that.
 
         /// Get the relationship of the outer ring of the first polygon to the second polygon.
-        let (_, outerRing1ToSecondPolygonMatrix) = generateIntersection(polygon1.outerRing, polygon2)
+        let outerRing1ToSecondPolygonMatrix = generateIntersection(polygon1.outerRing, polygon2)
 
         /// Get the relationship of the outer ring of the second polygon to the first polygon.
-        let (_, outerRing2ToFirstPolygonMatrix)  = generateIntersection(polygon2.outerRing, polygon1)
+        let outerRing2ToFirstPolygonMatrix = generateIntersection(polygon2.outerRing, polygon1)
 
         if outerRing1ToSecondPolygonMatrix[.interior, .interior] > .empty {
             relatedToResult.firstInteriorTouchesSecondInterior = .two
@@ -2170,7 +2170,7 @@ extension IntersectionMatrix {
         return true
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint, _ lineString: LineString) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ lineString: LineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -2189,7 +2189,7 @@ extension IntersectionMatrix {
 
         /// Check if any of the points equals either of the two endpoints of the line string.
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
-            return (nil, disjoint)
+            return disjoint
         }
 
         let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
@@ -2251,16 +2251,15 @@ extension IntersectionMatrix {
             matrixIntersects[.exterior, .boundary] = .zero
         }
 
-        let resultGeometry = coordinateArrayToMultiPoint(resultCoordinateArray)
         if coordinateOnBoundary || coordinateOnInterior {
-            return (resultGeometry, matrixIntersects)
+            return matrixIntersects
         }
 
         /// No intersection
-        return (nil, disjoint)
+        return disjoint
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint, _ linearRing: LinearRing) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ linearRing: LinearRing) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -2314,16 +2313,15 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        let resultGeometry = coordinateArrayToMultiPoint(resultCoordinateArray)
         if coordinateOnInterior {
-            return (resultGeometry, matrixIntersects)
+            return matrixIntersects
         }
 
         /// No intersection
-        return (nil, disjoint)
+        return disjoint
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -2342,7 +2340,7 @@ extension IntersectionMatrix {
 
         /// Check if any of the points equals any of the endpoints of the multiline string.
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
-            return (nil, disjoint)
+            return disjoint
         }
 
         let multiLineStringBoundaryCoordinateArray = multiPointToCoordinateArray(multiLineStringBoundary)
@@ -2406,13 +2404,12 @@ extension IntersectionMatrix {
             matrixIntersects[.exterior, .boundary] = .zero
         }
 
-        let resultGeometry = coordinateArrayToMultiPoint(resultCoordinateArray)
         if coordinateOnBoundary || coordinateOnInterior {
-            return (resultGeometry, matrixIntersects)
+            return matrixIntersects
         }
 
         /// No intersection
-        return (nil, disjoint)
+        return disjoint
     }
 
     ///
@@ -2439,7 +2436,7 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ point: Point, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -2460,16 +2457,16 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ point: Point, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ point: Point, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         let relatedToCoordinateMP = relatedTo((point.coordinate, false), multipolygon)
 
         let matrixIntersects = intersectionMatrix(from: relatedToCoordinateMP)
 
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
     fileprivate static func multiPointToCoordinateTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Coordinate, Bool)] {
@@ -2500,7 +2497,7 @@ extension IntersectionMatrix {
         return multiPoint
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -2524,10 +2521,10 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         let coordinateTupleArray = multiPointToCoordinateTupleArray(points, false)
 
@@ -2536,7 +2533,7 @@ extension IntersectionMatrix {
         let matrixIntersects = intersectionMatrix(from: relatedToCoordinatesMP)
 
         /// No intersection
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
     ///
@@ -3367,7 +3364,7 @@ extension IntersectionMatrix {
         return true
     }
 
-    fileprivate static func generateIntersection(_ lineString1: LineString, _ lineString2: LineString) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString1: LineString, _ lineString2: LineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3384,7 +3381,7 @@ extension IntersectionMatrix {
         /// Check if any of the endpoints of the first line string equals either of the two endpoints of the second line string.
         guard let lineStringBoundary1 = lineString1.boundary() as? MultiPoint,
               let lineStringBoundary2 = lineString2.boundary() as? MultiPoint else {
-                return (nil, disjoint)
+                return disjoint
         }
 
         let lineStringBoundaryCoordinateArray1 = multiPointToCoordinateArray(lineStringBoundary1)
@@ -3469,11 +3466,11 @@ extension IntersectionMatrix {
 
         /// Return the matrix.
         /// We will not calculate and return the geometry now.
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
     /// There is an assumption here that the line string is not a linear ring
-    fileprivate static func generateIntersection(_ lineString: LineString, _ linearRing: LinearRing) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString: LineString, _ linearRing: LinearRing) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3489,7 +3486,7 @@ extension IntersectionMatrix {
 
         /// Get the line string boundary
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
-                return (nil, disjoint)
+                return disjoint
         }
 
         let lineStringBoundaryCoordinateTupleArray = multiPointToCoordinateTupleArray(lineStringBoundary, true)
@@ -3546,10 +3543,10 @@ extension IntersectionMatrix {
 
         /// Return the matrix.
         /// We will not calculate and return the geometry now.
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ lineString: LineString, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString: LineString, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3566,7 +3563,7 @@ extension IntersectionMatrix {
         /// Check if any of the endpoints of the line string equals any of the endpoints of the multi line string.
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint,
             let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
-                return (nil, disjoint)
+                return disjoint
         }
 
         let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
@@ -3651,10 +3648,10 @@ extension IntersectionMatrix {
 
         /// Return the matrix.
         /// We will not calculate and return the geometry now.
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3709,10 +3706,10 @@ extension IntersectionMatrix {
 
         /// Return the matrix.
         /// We will not calculate and return the geometry now.
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multiLineString: MultiLineString) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3727,7 +3724,7 @@ extension IntersectionMatrix {
 
         /// Get the multi line string boundary
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
-                return (nil, disjoint)
+                return disjoint
         }
 
         let multiLineStringBoundaryCoordinateTupleArray = multiPointToCoordinateTupleArray(multiLineStringBoundary, true)
@@ -3789,10 +3786,10 @@ extension IntersectionMatrix {
 
         /// Return the matrix.
         /// We will not calculate and return the geometry now.
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ multiLineString1: MultiLineString, _ multiLineString2: MultiLineString) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ multiLineString1: MultiLineString, _ multiLineString2: MultiLineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3809,7 +3806,7 @@ extension IntersectionMatrix {
         /// Check if any of the endpoints of the first multi line string equals any of the endpoints of the second multi line string.
         guard let multiLineStringBoundary1 = multiLineString1.boundary() as? MultiPoint,
             let multiLineStringBoundary2 = multiLineString2.boundary() as? MultiPoint else {
-                return (nil, disjoint)
+                return disjoint
         }
 
         let multiLineStringBoundaryCoordinateArray1 = multiPointToCoordinateArray(multiLineStringBoundary1)
@@ -3895,7 +3892,7 @@ extension IntersectionMatrix {
 
         /// Return the matrix.
         /// We will not calculate and return the geometry now.
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
     ///
@@ -3903,7 +3900,7 @@ extension IntersectionMatrix {
     ///
 
     /// The polygon here is a full polygon with holes
-    fileprivate static func generateIntersection(_ lineString: LineString, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString: LineString, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -3916,7 +3913,7 @@ extension IntersectionMatrix {
             polygonBoundary.count > 0,
             let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
-                return (nil, matrixIntersects)
+                return matrixIntersects
         }
 
         /// Check whether the line string is completely contained in the polygon boundary
@@ -3925,7 +3922,7 @@ extension IntersectionMatrix {
         if subset(reducedLs, reducedPolygon) {
             matrixIntersects[.interior, .boundary] = .one
             matrixIntersects[.boundary, .boundary] = .zero
-            return (nil, matrixIntersects)
+            return matrixIntersects
         }
 
         /// From here on we know the line string is not completely contained in the polygon boundary
@@ -3934,7 +3931,7 @@ extension IntersectionMatrix {
         /// Assume for now that there are two boundary points.
 
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
-            return (nil, matrixIntersects)
+            return matrixIntersects
         }
 
         let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
@@ -3955,7 +3952,7 @@ extension IntersectionMatrix {
         var isMainPolygon = true
         for element in polygonBoundary {
 
-            guard let linearRing = element as? LinearRing else { return (nil, matrixIntersects) }
+            guard let linearRing = element as? LinearRing else { return matrixIntersects }
             let tempPolygon = Polygon(linearRing)
 
             let boundaryCoordinate1RelatedToResult  = relatedTo([(lineStringBoundaryCoordinate1, true)], tempPolygon)
@@ -4009,7 +4006,7 @@ extension IntersectionMatrix {
 
                 /// If the line string does not touch the interior of the main polygon, we're done.
                 if !lineStringInsideMainPolygon {
-                    return (nil, matrixIntersects)
+                    return matrixIntersects
                 }
 
             } else {
@@ -4068,10 +4065,10 @@ extension IntersectionMatrix {
         }
 
         /// No intersection
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ lineString: LineString, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ lineString: LineString, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4080,7 +4077,7 @@ extension IntersectionMatrix {
         for polygon in multipolygon {
 
             /// Get the relationship between the line string and the polygon
-            let (_, intersectionMatrixResult) = generateIntersection(lineString, polygon)
+            let intersectionMatrixResult = generateIntersection(lineString, polygon)
 
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
@@ -4092,17 +4089,17 @@ extension IntersectionMatrix {
         /// We have to check for that case and fix it from the above calculations.
 
         guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
-            return (nil, matrixIntersects)
+            return matrixIntersects
         }
-        let (_, boundaryMatrix) = generateIntersection(lineStringBoundary, multipolygon)
+        let boundaryMatrix = generateIntersection(lineStringBoundary, multipolygon)
         if boundaryMatrix[.boundary, .exterior] <  matrixIntersects[.boundary, .exterior] {
             matrixIntersects[.boundary, .exterior] = boundaryMatrix[.interior, .exterior]
         }
 
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -4114,7 +4111,7 @@ extension IntersectionMatrix {
             polygonBoundary.count > 0,
             let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
-                return (nil, matrixIntersects)
+                return matrixIntersects
         }
 
         /// Check whether the linear ring is completely contained in the polygon boundary.
@@ -4123,7 +4120,7 @@ extension IntersectionMatrix {
         let reducedPB = reduce(polygonBoundary)
         if subset(reducedLr, reducedPB) {
             matrixIntersects[.interior, .boundary] = .one
-            return (nil, matrixIntersects)
+            return matrixIntersects
         } else {
             matrixIntersects[.exterior, .boundary] = .one
         }
@@ -4138,7 +4135,7 @@ extension IntersectionMatrix {
         var isMainPolygon = true
         for tempLinearRingPolygon in polygonBoundary {
 
-            guard let linearRingPolygon = tempLinearRingPolygon as? LinearRing else { return (nil, matrixIntersects) }
+            guard let linearRingPolygon = tempLinearRingPolygon as? LinearRing else { return matrixIntersects }
 
             let tempPolygon = Polygon(linearRingPolygon, precision: Floating(), coordinateSystem: Cartesian())
 
@@ -4163,7 +4160,7 @@ extension IntersectionMatrix {
                 /// If the linear ring does not touch the interior of the main polygon, we're done.
                 /// Also, if there are no holes and the linear ring is inside the main polygon, the interiors overlap.
                 if !linearRingInsideMainPolygon {
-                    return (nil, matrixIntersects)
+                    return matrixIntersects
                 }
 
             } else {
@@ -4191,10 +4188,10 @@ extension IntersectionMatrix {
         }
 
         /// No intersection
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4203,17 +4200,17 @@ extension IntersectionMatrix {
         for polygon in multipolygon {
 
             /// Get the relationship between the point and the polygon
-            let (_, intersectionMatrixResult) = generateIntersection(linearRing, polygon)
+            let intersectionMatrixResult = generateIntersection(linearRing, polygon)
 
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
         }
 
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ polygon: Polygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -4225,7 +4222,7 @@ extension IntersectionMatrix {
             polygonBoundary.count > 0,
             let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
-                return (nil, matrixIntersects)
+                return matrixIntersects
         }
 
         /// Check whether the multi line string is completely contained in the polygon boundary
@@ -4234,7 +4231,7 @@ extension IntersectionMatrix {
         if subset(reducedMls, reducedPB) {
             matrixIntersects[.interior, .boundary] = .one
             matrixIntersects[.boundary, .boundary] = .zero
-            return (nil, matrixIntersects)
+            return matrixIntersects
         }
 
         /// Check whether the polygon boundary is completely contained in the multi line string.
@@ -4254,7 +4251,7 @@ extension IntersectionMatrix {
         /// Set some intersection matrix values depending on the result.
 
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
-            return (nil, matrixIntersects)
+            return matrixIntersects
         }
 
         let multiLineStringBoundaryCoordindateTupleArray = multiPointToCoordinateTupleArray(multiLineStringBoundary, true)
@@ -4282,7 +4279,7 @@ extension IntersectionMatrix {
 
         guard let mainLinearRing = polygonBoundary[0] as? LinearRing,
             mainLinearRing.count > 0 else {
-            return (nil, matrixIntersects)
+            return matrixIntersects
         }
 
         for lineString in multiLineString {
@@ -4307,7 +4304,7 @@ extension IntersectionMatrix {
 
         /// If the multi line string does not touch the interior of the main polygon, we're done.
         if !multiLineStringInsideMainPolygon {
-            return (nil, matrixIntersects)
+            return matrixIntersects
         }
 
         /// At least one line string touches the interior of the main linear ring.
@@ -4319,7 +4316,7 @@ extension IntersectionMatrix {
 
             guard let lineString = tempLineString as? LineString,
                 lineString.count > 0 else {
-                    return (nil, matrixIntersects)
+                    return matrixIntersects
             }
 
             var lineStringTouchesInterior = true
@@ -4327,7 +4324,7 @@ extension IntersectionMatrix {
             for linearRing in holesArray {
 
                 guard linearRing.count > 0 else {
-                    return (nil, matrixIntersects)
+                    return matrixIntersects
                 }
 
                 let tempPolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
@@ -4357,10 +4354,10 @@ extension IntersectionMatrix {
         }
 
         /// Return
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4369,7 +4366,7 @@ extension IntersectionMatrix {
         for polygon in multipolygon {
 
             /// Get the relationship between the point and the polygon
-            let (_, intersectionMatrixResult) = generateIntersection(multiLineString, polygon)
+            let intersectionMatrixResult = generateIntersection(multiLineString, polygon)
 
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
@@ -4380,7 +4377,7 @@ extension IntersectionMatrix {
         /// Check the boundary points and adjust accordingly.
 
         guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
-            return (nil, matrixIntersects)
+            return matrixIntersects
         }
 
         let multiLineStringBoundaryCoordinateTupleArray = multiPointToCoordinateTupleArray(multiLineStringBoundary, true)
@@ -4391,14 +4388,14 @@ extension IntersectionMatrix {
             matrixIntersects[.boundary, .exterior] = boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondExterior
         }
 
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
     ///
     /// Dimension .two and dimension .two
     ///
 
-    fileprivate static func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
@@ -4418,10 +4415,10 @@ extension IntersectionMatrix {
         matrixIntersects[.exterior, .exterior] = relatedTo.firstExteriorTouchesSecondExterior
 
         /// No intersection
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ polygon: Polygon, _ multipolygon: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ polygon: Polygon, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4430,17 +4427,17 @@ extension IntersectionMatrix {
         for polygonFromMP in multipolygon {
 
             /// Get the relationship between the point and the polygon
-            let (_, intersectionMatrixResult) = generateIntersection(polygon, polygonFromMP)
+            let intersectionMatrixResult = generateIntersection(polygon, polygonFromMP)
 
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
         }
 
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 
-    fileprivate static func generateIntersection(_ multipolygon1: MultiPolygon, _ multipolygon2: MultiPolygon) -> (Geometry?, IntersectionMatrix) {
+    fileprivate static func generateIntersection(_ multipolygon1: MultiPolygon, _ multipolygon2: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
 
@@ -4449,13 +4446,13 @@ extension IntersectionMatrix {
         for polygonFromMP in multipolygon1 {
 
             /// Get the relationship between the point and the polygon
-            let (_, intersectionMatrixResult) = generateIntersection(polygonFromMP, multipolygon2)
+            let intersectionMatrixResult = generateIntersection(polygonFromMP, multipolygon2)
 
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
         }
 
-        return (nil, matrixIntersects)
+        return matrixIntersects
     }
 }
