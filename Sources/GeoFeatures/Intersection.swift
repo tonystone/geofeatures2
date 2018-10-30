@@ -136,9 +136,8 @@ fileprivate func intersectionZeroZero(_ geometry1: Geometry, _ geometry2: Geomet
         return generateIntersection(point1, point2)
     } else if let point = geometry1 as? Point, let points = geometry2 as? MultiPoint {
         return generateIntersection(point, points)
-//    } else if let points = geometry1 as? MultiPoint, let point = geometry2 as? Point {
-//        let intersectionMatrix = generateIntersection(point, points)
-//        return intersectionMatrix.transposed()
+    } else if let points = geometry1 as? MultiPoint, let point = geometry2 as? Point {
+        return generateIntersection(point, points)
 //    } else if let points1 = geometry1 as? MultiPoint, let points2 = geometry2 as? MultiPoint {
 //        return generateIntersection(points1, points2)
     }
