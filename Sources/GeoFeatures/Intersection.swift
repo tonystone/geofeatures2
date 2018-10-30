@@ -134,8 +134,8 @@ fileprivate func intersectionZeroZero(_ geometry1: Geometry, _ geometry2: Geomet
 
     if let point1 = geometry1 as? Point, let point2 = geometry2 as? Point {
         return generateIntersection(point1, point2)
-//    } else if let point = geometry1 as? Point, let points = geometry2 as? MultiPoint {
-//        return generateIntersection(point, points)
+    } else if let point = geometry1 as? Point, let points = geometry2 as? MultiPoint {
+        return generateIntersection(point, points)
 //    } else if let points = geometry1 as? MultiPoint, let point = geometry2 as? Point {
 //        let intersectionMatrix = generateIntersection(point, points)
 //        return intersectionMatrix.transposed()
@@ -324,41 +324,19 @@ fileprivate func generateIntersection(_ point1: Point, _ point2: Point) -> Geome
     return GeometryCollection()
 }
 
-//    fileprivate static func generateIntersection(_ point: Point, _ points: MultiPoint) -> IntersectionMatrix {
-//
-//        /// Identical
-//        var identical = IntersectionMatrix()
-//        identical[.interior, .interior] = .zero
-//        identical[.exterior, .exterior] = .two
-//
-//        /// First in second
-//        var firstInSecond = IntersectionMatrix()
-//        firstInSecond[.interior, .interior] = .zero
-//        firstInSecond[.exterior, .interior] = .zero /// Assuming there are at least two distinct points in the points collection
-//        firstInSecond[.exterior, .exterior] = .two
-//
-//        /// Disjoint
-//        var disjoint = IntersectionMatrix()
-//        disjoint[.interior, .exterior] = .zero
-//        disjoint[.exterior, .interior] = .zero
-//        disjoint[.exterior, .exterior] = .two
-//
-//        for tempPoint in points {
-//
-//            if tempPoint == point {
-//
-//                if points.count > 1 {
-//                    return firstInSecond
-//                } else {
-//                    return identical
-//                }
-//
-//            }
-//
-//        }
-//        return disjoint
-//    }
-//
+fileprivate func generateIntersection(_ point: Point, _ points: MultiPoint) -> Geometry {
+
+    for tempPoint in points {
+
+        if tempPoint == point {
+            return point
+        }
+
+    }
+
+    return GeometryCollection()
+}
+
 //    fileprivate static func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoint) -> IntersectionMatrix {
 //
 //        /// Identical
