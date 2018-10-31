@@ -151,8 +151,8 @@ fileprivate func intersectionZeroOne(_ geometry1: Geometry, _ geometry2: Geometr
         return generateIntersection(point, lineString)
 //    } else if let points = geometry1 as? MultiPoint, let lineString = geometry2 as? LineString {
 //        return generateIntersection(points, lineString)
-//    } else if let point = geometry1 as? Point, let multilineString = geometry2 as? MultiLineString {
-//        return generateIntersection(point, multilineString)
+    } else if let point = geometry1 as? Point, let multilineString = geometry2 as? MultiLineString {
+        return generateIntersection(point, multilineString)
 //    } else if let points = geometry1 as? MultiPoint, let multilineString = geometry2 as? MultiLineString {
 //        return generateIntersection(points, multilineString)
     } else if let point = geometry1 as? Point, let linearRing = geometry2 as? LinearRing {
@@ -451,56 +451,25 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
         return GeometryCollection()
     }
 
-//    fileprivate static func generateIntersection(_ point: Point, _ multiLineString: MultiLineString) -> IntersectionMatrix {
-//
-//        /// Point matches endpoint
-//        var matchesEndPoint = IntersectionMatrix()
-//        matchesEndPoint[.interior, .boundary] = .zero
-//        matchesEndPoint[.exterior, .interior] = .one
-//        matchesEndPoint[.exterior, .boundary] = .zero
-//        matchesEndPoint[.exterior, .exterior] = .two
-//
-//        /// Point on interior
-//        var pointOnInterior = IntersectionMatrix()
-//        pointOnInterior[.interior, .interior] = .zero
-//        pointOnInterior[.exterior, .interior] = .one
-//        pointOnInterior[.exterior, .boundary] = .zero
-//        pointOnInterior[.exterior, .exterior] = .two
-//
-//        /// Disjoint
-//        var disjoint = IntersectionMatrix()
-//        disjoint[.interior, .exterior] = .zero
-//        disjoint[.exterior, .interior] = .one
-//        disjoint[.exterior, .boundary] = .zero
-//        disjoint[.exterior, .exterior] = .two
-//
-//        /// Check if the point equals any of the endpoints of any line string.
-//        let mainCoord = point.coordinate
-//        for lineString in multiLineString {
-//            let firstCoord = lineString.first
-//            let secondCoord  = lineString[lineString.count - 1]
-//
-//            if mainCoord == firstCoord || mainCoord == secondCoord {
-//                return matchesEndPoint
-//            }
-//        }
-//
-//        /// Check if the point is on any of the line segments in any of the line strings.
-//        for lineString in multiLineString {
-//            for firstCoordIndex in 0..<lineString.count - 1 {
-//                let firstCoord  = lineString[firstCoordIndex]
-//                let secondCoord = lineString[firstCoordIndex + 1]
-//                let segment = Segment(left: firstCoord, right: secondCoord)
-//                if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
-//                    return pointOnInterior
-//                }
-//            }
-//        }
-//
-//        /// No intersection
-//        return disjoint
-//    }
-//
+    fileprivate func generateIntersection(_ point: Point, _ multiLineString: MultiLineString) -> Geometry {
+
+        /// Check if the point is on any of the line segments in any of the line strings.
+        let mainCoord = point.coordinate
+        for lineString in multiLineString {
+            for firstCoordIndex in 0..<lineString.count - 1 {
+                let firstCoord  = lineString[firstCoordIndex]
+                let secondCoord = lineString[firstCoordIndex + 1]
+                let segment = Segment(left: firstCoord, right: secondCoord)
+                if coordinateIsOnLineSegment(mainCoord, segment: segment) != .onExterior {
+                    return point
+                }
+            }
+        }
+
+        /// No intersection
+        return GeometryCollection()
+    }
+
 //    fileprivate static func subset(_ coordinate: Coordinate, _ coordinates: [Coordinate]) -> Bool {
 //
 //        for tempCoordinate in coordinates {
