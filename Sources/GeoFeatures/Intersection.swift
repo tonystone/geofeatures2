@@ -155,8 +155,8 @@ fileprivate func intersectionZeroOne(_ geometry1: Geometry, _ geometry2: Geometr
 //        return generateIntersection(point, multilineString)
 //    } else if let points = geometry1 as? MultiPoint, let multilineString = geometry2 as? MultiLineString {
 //        return generateIntersection(points, multilineString)
-//    } else if let point = geometry1 as? Point, let linearRing = geometry2 as? LinearRing {
-//        return generateIntersection(point, linearRing)
+    } else if let point = geometry1 as? Point, let linearRing = geometry2 as? LinearRing {
+        return generateIntersection(point, linearRing)
 //    } else if let points = geometry1 as? MultiPoint, let linearRing = geometry2 as? LinearRing {
 //        return generateIntersection(points, linearRing)
     }
@@ -434,35 +434,23 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
         return GeometryCollection()
     }
 
-//    fileprivate static func generateIntersection(_ point: Point, _ linearRing: LinearRing) -> IntersectionMatrix {
-//
-//        /// Point on interior
-//        var pointOnInterior = IntersectionMatrix()
-//        pointOnInterior[.interior, .interior] = .zero
-//        pointOnInterior[.exterior, .interior] = .one
-//        pointOnInterior[.exterior, .exterior] = .two
-//
-//        /// Disjoint
-//        var disjoint = IntersectionMatrix()
-//        disjoint[.interior, .exterior] = .zero
-//        disjoint[.exterior, .interior] = .one
-//        disjoint[.exterior, .exterior] = .two
-//
-//        /// Check if the point is on any of the line segments in the line string.
-//        let mainCoord = point.coordinate
-//        for firstCoordIndex in 0..<linearRing.count - 1 {
-//            let firstCoord  = linearRing[firstCoordIndex]
-//            let secondCoord = linearRing[firstCoordIndex + 1]
-//            let segment = Segment(left: firstCoord, right: secondCoord)
-//            if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
-//                return pointOnInterior
-//            }
-//        }
-//
-//        /// No intersection
-//        return disjoint
-//    }
-//
+    fileprivate func generateIntersection(_ point: Point, _ linearRing: LinearRing) -> Geometry {
+
+        /// Check if the point is on any of the line segments in the linear ring.
+        let mainCoord = point.coordinate
+        for firstCoordIndex in 0..<linearRing.count - 1 {
+            let firstCoord  = linearRing[firstCoordIndex]
+            let secondCoord = linearRing[firstCoordIndex + 1]
+            let segment = Segment(left: firstCoord, right: secondCoord)
+            if coordinateIsOnLineSegment(mainCoord, segment: segment) != .onExterior {
+                return point
+            }
+        }
+
+        /// No intersection
+        return GeometryCollection()
+    }
+
 //    fileprivate static func generateIntersection(_ point: Point, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 //
 //        /// Point matches endpoint
