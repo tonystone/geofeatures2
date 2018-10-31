@@ -138,8 +138,8 @@ fileprivate func intersectionZeroZero(_ geometry1: Geometry, _ geometry2: Geomet
         return generateIntersection(point, points)
     } else if let points = geometry1 as? MultiPoint, let point = geometry2 as? Point {
         return generateIntersection(point, points)
-//    } else if let points1 = geometry1 as? MultiPoint, let points2 = geometry2 as? MultiPoint {
-//        return generateIntersection(points1, points2)
+    } else if let points1 = geometry1 as? MultiPoint, let points2 = geometry2 as? MultiPoint {
+        return generateIntersection(points1, points2)
     }
     return GeometryCollection()
 }
@@ -336,86 +336,34 @@ fileprivate func generateIntersection(_ point: Point, _ points: MultiPoint) -> G
     return GeometryCollection()
 }
 
-//    fileprivate static func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoint) -> IntersectionMatrix {
-//
-//        /// Identical
-//        var identical = IntersectionMatrix()
-//        identical[.interior, .interior] = .zero
-//        identical[.exterior, .exterior] = .two
-//
-//        /// Intersect but neither is a subset of the other
-//        var overlap = IntersectionMatrix()
-//        overlap[.interior, .interior] = .zero
-//        overlap[.interior, .exterior] = .zero
-//        overlap[.exterior, .interior] = .zero
-//        overlap[.exterior, .exterior] = .two
-//
-//        /// First in second
-//        var firstInSecond = IntersectionMatrix()
-//        firstInSecond[.interior, .interior] = .zero
-//        firstInSecond[.exterior, .interior] = .zero
-//        firstInSecond[.exterior, .exterior] = .two
-//
-//        /// Second in first
-//        var secondInFirst = IntersectionMatrix()
-//        secondInFirst[.interior, .interior] = .zero
-//        secondInFirst[.interior, .exterior] = .zero
-//        secondInFirst[.exterior, .exterior] = .two
-//
-//        /// Disjoint
-//        var disjoint = IntersectionMatrix()
-//        disjoint[.interior, .exterior] = .zero
-//        disjoint[.exterior, .interior] = .zero
-//        disjoint[.exterior, .exterior] = .two
-//
-//        /// Should use Set here, if possible.  That would simplify a lot of the calculations.
-//        /// Let's assume points1 and points2 are both a unique set of points.
-//
-//        var pointsMatched = false
-//        var pointInGeometry1NotMatched = false
-//        var pointInGeometry2NotMatched = false
-//        var multiPointIntersection = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
-//        var multiPointGeometry2Matched = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
-//        for tempPoint1 in points1 {
-//
-//            var foundMatchingPoint = false
-//            for tempPoint2 in points2 {
-//
-//                if tempPoint1 == tempPoint2 {
-//                    multiPointIntersection.append(tempPoint1)
-//                    multiPointGeometry2Matched.append(tempPoint2)
-//                    foundMatchingPoint = true
-//                    pointsMatched = true
-//                    break
-//                }
-//
-//            }
-//            if !foundMatchingPoint {
-//                pointInGeometry1NotMatched = true
-//            }
-//
-//        }
-//
-//        if points2.count != multiPointGeometry2Matched.count {
-//            pointInGeometry2NotMatched = true
-//        }
-//
-//        switch (pointInGeometry1NotMatched, pointInGeometry2NotMatched) {
-//        case (false, false):
-//            return identical
-//        case (false, true):
-//            return firstInSecond
-//        case (true, false):
-//            return secondInFirst
-//        case (true, true):
-//            if pointsMatched {
-//                return overlap
-//            } else {
-//                return disjoint
-//            }
-//        }
-//    }
-//
+fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoint) -> Geometry {
+
+    /// Using a set here to make sure the resulting collection of Points is unique.  No duplicates.
+    /// The returned value will be a MultiPoint, which may be empty.
+
+    var intersectionCoordinatesSet = Set<Coordinate>()
+
+    for tempPoint1 in points1 {
+
+        for tempPoint2 in points2 {
+
+            if tempPoint1 == tempPoint2 {
+                intersectionCoordinatesSet.insert(tempPoint1.coordinate)
+            }
+
+        }
+
+    }
+
+    var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+    for coordinate in intersectionCoordinatesSet {
+        multiPointGeometry.append(Point(coordinate))
+    }
+
+    return multiPointGeometry
+}
+
 //    ///
 //    /// Dimension .zero and dimesion .one
 //    ///
