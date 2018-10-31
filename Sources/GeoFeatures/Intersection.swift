@@ -147,8 +147,8 @@ fileprivate func intersectionZeroZero(_ geometry1: Geometry, _ geometry2: Geomet
 /// For the intersection of two geometries of dimension .zero and .one, respectively.
 fileprivate func intersectionZeroOne(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
 
-//    if let point = geometry1 as? Point, let lineString = geometry2 as? LineString {
-//        return generateIntersection(point, lineString)
+    if let point = geometry1 as? Point, let lineString = geometry2 as? LineString {
+        return generateIntersection(point, lineString)
 //    } else if let points = geometry1 as? MultiPoint, let lineString = geometry2 as? LineString {
 //        return generateIntersection(points, lineString)
 //    } else if let point = geometry1 as? Point, let multilineString = geometry2 as? MultiLineString {
@@ -159,7 +159,7 @@ fileprivate func intersectionZeroOne(_ geometry1: Geometry, _ geometry2: Geometr
 //        return generateIntersection(point, linearRing)
 //    } else if let points = geometry1 as? MultiPoint, let linearRing = geometry2 as? LinearRing {
 //        return generateIntersection(points, linearRing)
-//    }
+    }
     return GeometryCollection()
 }
 
@@ -364,105 +364,76 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
     return multiPointGeometry
 }
 
-//    ///
-//    /// Dimension .zero and dimesion .one
-//    ///
-//
-//    enum LocationType {
-//        case onBoundary, onInterior, onExterior
-//    }
-//
-//    /// Returns true if the coordinate is on the line segment.
-//    fileprivate static func coordinateIsOnLineSegment(_ coordinate: Coordinate, segment: Segment) -> LocationType {
-//
-//        /// Will likely use precision later, but use EPSILON for now.
-//        let EPSILON = 0.01
-//
-//        /// Check if the coordinate is in between the line segment endpoints in both x and y.
-//        let segmentLeft     = segment.leftCoordinate
-//        let segmentRight    = segment.rightCoordinate
-//        let leftX           = segmentLeft.x
-//        let leftY           = segmentLeft.y
-//        let rightX          = segmentRight.x
-//        let rightY          = segmentRight.y
-//        if  (coordinate.x < leftX && coordinate.x < rightX) ||
-//            (coordinate.x > leftX && coordinate.x > rightX) ||
-//            (coordinate.y < leftY && coordinate.y < rightY) ||
-//            (coordinate.y > leftY && coordinate.y > rightY) {
-//            return .onExterior
-//        }
-//
-//        /// Check if the coordinate is on the boundary of the line segment
-//        if (coordinate == segmentLeft) || (coordinate == segmentRight) {
-//            return .onBoundary
-//        }
-//
-//        /// Check for the case where the line segment is horizontal
-//        if (leftY == rightY) && (coordinate.y == leftY) && ((coordinate.x <= leftX && coordinate.x >= rightX) || (coordinate.x >= leftX && coordinate.x <= rightX)) {
-//            return .onInterior
-//        }
-//
-//        /// Check for the cases where the line segment is vertical
-//        if (leftX == rightX) && (coordinate.x == leftX) && ((coordinate.y <= leftY && coordinate.y >= rightY) || (coordinate.y >= leftY && coordinate.y <= rightY)) {
-//            return .onInterior
-//        }
-//
-//        /// General case
-//        let slope = (rightY - leftY) / (rightX - leftX)
-//        let value = leftY - slope * leftX
-//        if abs(coordinate.y - (slope * coordinate.x + value)) < EPSILON {
-//            return .onInterior
-//        }
-//
-//        return .onExterior
-//    }
-//
-//    fileprivate static func generateIntersection(_ point: Point, _ lineString: LineString) -> IntersectionMatrix {
-//
-//        /// Point matches endpoint
-//        var matchesEndPoint = IntersectionMatrix()
-//        matchesEndPoint[.interior, .boundary] = .zero
-//        matchesEndPoint[.exterior, .interior] = .one
-//        matchesEndPoint[.exterior, .boundary] = .zero /// Assuming the two endpoints of the line string are different
-//        matchesEndPoint[.exterior, .exterior] = .two
-//
-//        /// Point on interior
-//        var pointOnInterior = IntersectionMatrix()
-//        pointOnInterior[.interior, .interior] = .zero
-//        pointOnInterior[.exterior, .interior] = .one
-//        pointOnInterior[.exterior, .boundary] = .zero /// Assuming the two endpoints of the line string are different
-//        pointOnInterior[.exterior, .exterior] = .two
-//
-//        /// Disjoint
-//        var disjoint = IntersectionMatrix()
-//        disjoint[.interior, .exterior] = .zero
-//        disjoint[.exterior, .interior] = .one
-//        disjoint[.exterior, .boundary] = .zero
-//        disjoint[.exterior, .exterior] = .two
-//
-//        /// Check if the point equals either of the two endpoints of the line string.
-//        let mainCoord = point.coordinate
-//        let firstCoord = lineString.first
-//        let secondCoord  = lineString[lineString.count - 1]
-//
-//        if mainCoord == firstCoord || mainCoord == secondCoord {
-//            return matchesEndPoint
-//        }
-//
-//        /// Check if the point is on any of the line segments in the line string.
-//        for firstCoordIndex in 0..<lineString.count - 1 {
-//            let firstCoord  = lineString[firstCoordIndex]
-//            let secondCoord = lineString[firstCoordIndex + 1]
-//            let segment = Segment(left: firstCoord, right: secondCoord)
-//            if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
-//                return pointOnInterior
-//            }
-//        }
-//
-//        /// No intersection
-//        return disjoint
-//    }
-//
+    ///
+    /// Dimension .zero and dimension .one
+    ///
+
+    enum LocationType {
+        case onBoundary, onInterior, onExterior
+    }
+
+    /// Returns true if the coordinate is on the line segment.
+    fileprivate func coordinateIsOnLineSegment(_ coordinate: Coordinate, segment: Segment) -> LocationType {
+
+        /// Will likely use precision later, but use EPSILON for now.
+        let EPSILON = 0.01
+
+        /// Check if the coordinate is in between the line segment endpoints in both x and y.
+        let segmentLeft     = segment.leftCoordinate
+        let segmentRight    = segment.rightCoordinate
+        let leftX           = segmentLeft.x
+        let leftY           = segmentLeft.y
+        let rightX          = segmentRight.x
+        let rightY          = segmentRight.y
+        if  (coordinate.x < leftX && coordinate.x < rightX) ||
+            (coordinate.x > leftX && coordinate.x > rightX) ||
+            (coordinate.y < leftY && coordinate.y < rightY) ||
+            (coordinate.y > leftY && coordinate.y > rightY) {
+            return .onExterior
+        }
+
+        /// Check if the coordinate is on the boundary of the line segment
+        if (coordinate == segmentLeft) || (coordinate == segmentRight) {
+            return .onBoundary
+        }
+
+        /// Check for the case where the line segment is horizontal
+        if (leftY == rightY) && (coordinate.y == leftY) && ((coordinate.x <= leftX && coordinate.x >= rightX) || (coordinate.x >= leftX && coordinate.x <= rightX)) {
+            return .onInterior
+        }
+
+        /// Check for the cases where the line segment is vertical
+        if (leftX == rightX) && (coordinate.x == leftX) && ((coordinate.y <= leftY && coordinate.y >= rightY) || (coordinate.y >= leftY && coordinate.y <= rightY)) {
+            return .onInterior
+        }
+
+        /// General case
+        let slope = (rightY - leftY) / (rightX - leftX)
+        let value = leftY - slope * leftX
+        if abs(coordinate.y - (slope * coordinate.x + value)) < EPSILON {
+            return .onInterior
+        }
+
+        return .onExterior
+    }
+
+    fileprivate func generateIntersection(_ point: Point, _ lineString: LineString) -> Geometry {
+
+        /// Check if the point is on any of the line segments in the line string.
+        let mainCoord = point.coordinate
+        for firstCoordIndex in 0..<lineString.count - 1 {
+            let firstCoord  = lineString[firstCoordIndex]
+            let secondCoord = lineString[firstCoordIndex + 1]
+            let segment = Segment(left: firstCoord, right: secondCoord)
+            if coordinateIsOnLineSegment(mainCoord, segment: segment) != .onExterior {
+                return point
+            }
+        }
+
+        /// No intersection
+        return GeometryCollection()
+    }
+
 //    fileprivate static func generateIntersection(_ point: Point, _ linearRing: LinearRing) -> IntersectionMatrix {
 //
 //        /// Point on interior
