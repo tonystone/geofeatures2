@@ -234,138 +234,122 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
-//    ///
-//    /// Point Polygon tests
-//    ///
-//
-//    func testPoint_Polygon_outerRingOnly_noIntersection() {
-//
-//        let geometry1 = Point(Coordinate(x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection() {
-//
-//        let geometry1 = Point(Coordinate(x: -20.0, y: -20.0), precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection() {
-//
-//        let geometry1 = Point(Coordinate(x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: -3.0, y: 0.0), Coordinate(x: 0.0, y: -3.0), Coordinate(x: 3.0, y: 0.0), Coordinate(x: 0.0, y: 3.0), Coordinate(x: -3.0, y: 0.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testPoint_Polygon_outerRingOnly_intersectsBoundary() {
-//
-//        let geometry1 = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary() {
-//
-//        let geometry1 = Point(Coordinate(x: -10.0, y: 5.0), precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary() {
-//
-//        let geometry1 = Point(Coordinate(x: 4.0, y: 4.0), precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testPoint_Polygon_outerRingOnly_intersectsInterior() {
-//
-//        let geometry1 = Point(Coordinate(x: 2.5, y: 2.5), precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testPoint_Polygon_outerRingAndInnerRing_intersectsInterior() {
-//
-//        let geometry1 = Point(Coordinate(x: -1.0, y: 4.0), precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+    ///
+    /// Point Polygon tests
+    ///
+
+    func testPoint_Polygon_outerRingOnly_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -20.0, y: -20.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: -3.0, y: 0.0), Coordinate(x: 0.0, y: -3.0), Coordinate(x: 3.0, y: 0.0), Coordinate(x: 0.0, y: 3.0), Coordinate(x: -3.0, y: 0.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_outerRingOnly_intersectsBoundary() {
+
+        let geometry1 = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = geometry1
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundary() {
+
+        let geometry1 = Point(Coordinate(x: -10.0, y: 5.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = geometry1
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundary() {
+
+        let geometry1 = Point(Coordinate(x: 4.0, y: 4.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = geometry1
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_outerRingOnly_intersectsInterior() {
+
+        let geometry1 = Point(Coordinate(x: 2.5, y: 2.5), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = geometry1
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_outerRingAndInnerRing_intersectsInterior() {
+
+        let geometry1 = Point(Coordinate(x: -1.0, y: 4.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = geometry1
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
 //    ///
 //    /// Point MultiPolygon tests
 //    ///

@@ -166,15 +166,15 @@ fileprivate func intersectionZeroOne(_ geometry1: Geometry, _ geometry2: Geometr
 /// For the intersection of two geometries of dimension .zero and .two, respectively.
 fileprivate func intersectionZeroTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
 
-//    if let point = geometry1 as? Point, let polygon = geometry2 as? Polygon {
-//        return generateIntersection(point, polygon)
+    if let point = geometry1 as? Point, let polygon = geometry2 as? Polygon {
+        return generateIntersection(point, polygon)
 //    } else if let points = geometry1 as? MultiPoint, let polygon = geometry2 as? Polygon {
 //        return generateIntersection(points, polygon)
 //    } else if let point = geometry1 as? Point, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(point, multipolygon)
 //    } else if let points = geometry1 as? MultiPoint, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(points, multipolygon)
-//    }
+    }
     return GeometryCollection()
 }
 
@@ -584,80 +584,80 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 //        return false
 //    }
 //
-//    /// The coordinates array consists of a collection of tuples where each item contains a Coordinate and a boolean indicating
-//    /// whether the Coordinate is a boundary point.
-//    fileprivate static func relatedTo(_ coordinates: [(Coordinate, Bool)], _ linearRing: LinearRing) -> RelatedTo {
-//
-//        var relatedTo = RelatedTo()
-//        for (tempCoordinate, isBoundaryPoint) in coordinates {
-//            var pointIsOnExterior = true // The point cannot touch the boundary or interior of any segment to be on the exterior
-//            for firstCoordIndex in 0..<linearRing.count - 1 {
-//                let firstCoord  = linearRing[firstCoordIndex]
-//                let secondCoord = linearRing[firstCoordIndex + 1]
-//                let segment = Segment(left: firstCoord, right: secondCoord)
-//                let location = coordinateIsOnLineSegment(tempCoordinate, segment: segment)
-//                if location == .onInterior {
-//                    pointIsOnExterior = false
-//                    if isBoundaryPoint {
-//                        relatedTo.firstBoundaryTouchesSecondInterior = .zero
-//                    } else {
-//                        relatedTo.firstInteriorTouchesSecondInterior = .zero
-//                    }
-//                } else if location == .onBoundary {
-//                    /// The boundary of any line segment on the linear ring is necessarily on the interior of the linear ring
-//                    pointIsOnExterior = false
-//                    if isBoundaryPoint {
-//                        relatedTo.firstBoundaryTouchesSecondInterior = .zero
-//                    } else {
-//                        relatedTo.firstInteriorTouchesSecondInterior = .zero
-//                    }
-//                }
-//            }
-//
-//            if pointIsOnExterior {
-//                if isBoundaryPoint {
-//                    relatedTo.firstBoundaryTouchesSecondExterior = .zero
-//                } else {
-//                    relatedTo.firstInteriorTouchesSecondExterior = .zero
-//                }
-//            }
-//        }
-//        return relatedTo
-//    }
-//
-//    /// This assumes a GeometryCollection where all of the elements are LinearRings.
-//    /// The coordinates array is a collection of Coordinate, Bool tuples, where the Bool is a flag indicating whether the point is a boundary point.
-//    fileprivate static func relatedTo(_ coordinates: [(Coordinate, Bool)], _ geometryCollection: GeometryCollection) -> RelatedTo {
-//
-//        var relatedTo = RelatedTo()
-//
-//        for index in 0..<geometryCollection.count {
-//
-//            guard let linearRing = geometryCollection[index] as? LinearRing else {
-//                return relatedTo
-//            }
-//
-//            for (tempCoordinate, _) in coordinates {
-//                for firstCoordIndex in 0..<linearRing.count - 1 {
-//                    let firstCoord  = linearRing[firstCoordIndex]
-//                    let secondCoord = linearRing[firstCoordIndex + 1]
-//                    let segment = Segment(left: firstCoord, right: secondCoord)
-//                    let location = coordinateIsOnLineSegment(tempCoordinate, segment: segment)
-//                    if location == .onInterior {
-//                        relatedTo.firstInteriorTouchesSecondInterior = .zero
-//                    } else if location == .onBoundary {
-//                        /// The boundary of any line segment on the linear ring is necessarily on the interior of the linear ring
-//                        relatedTo.firstInteriorTouchesSecondInterior = .zero
-//                    } else {
-//                        relatedTo.firstInteriorTouchesSecondExterior = .zero
-//                    }
-//                }
-//            }
-//        }
-//
-//        return relatedTo
-//    }
-//
+    /// The coordinates array consists of a collection of tuples where each item contains a Coordinate and a boolean indicating
+    /// whether the Coordinate is a boundary point.
+    fileprivate func relatedTo(_ coordinates: [(Coordinate, Bool)], _ linearRing: LinearRing) -> RelatedTo {
+
+        var relatedTo = RelatedTo()
+        for (tempCoordinate, isBoundaryPoint) in coordinates {
+            var pointIsOnExterior = true // The point cannot touch the boundary or interior of any segment to be on the exterior
+            for firstCoordIndex in 0..<linearRing.count - 1 {
+                let firstCoord  = linearRing[firstCoordIndex]
+                let secondCoord = linearRing[firstCoordIndex + 1]
+                let segment = Segment(left: firstCoord, right: secondCoord)
+                let location = coordinateIsOnLineSegment(tempCoordinate, segment: segment)
+                if location == .onInterior {
+                    pointIsOnExterior = false
+                    if isBoundaryPoint {
+                        relatedTo.firstBoundaryTouchesSecondInterior = .zero
+                    } else {
+                        relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    }
+                } else if location == .onBoundary {
+                    /// The boundary of any line segment on the linear ring is necessarily on the interior of the linear ring
+                    pointIsOnExterior = false
+                    if isBoundaryPoint {
+                        relatedTo.firstBoundaryTouchesSecondInterior = .zero
+                    } else {
+                        relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    }
+                }
+            }
+
+            if pointIsOnExterior {
+                if isBoundaryPoint {
+                    relatedTo.firstBoundaryTouchesSecondExterior = .zero
+                } else {
+                    relatedTo.firstInteriorTouchesSecondExterior = .zero
+                }
+            }
+        }
+        return relatedTo
+    }
+
+    /// This assumes a GeometryCollection where all of the elements are LinearRings.
+    /// The coordinates array is a collection of Coordinate, Bool tuples, where the Bool is a flag indicating whether the point is a boundary point.
+    fileprivate func relatedTo(_ coordinates: [(Coordinate, Bool)], _ geometryCollection: GeometryCollection) -> RelatedTo {
+
+        var relatedTo = RelatedTo()
+
+        for index in 0..<geometryCollection.count {
+
+            guard let linearRing = geometryCollection[index] as? LinearRing else {
+                return relatedTo
+            }
+
+            for (tempCoordinate, _) in coordinates {
+                for firstCoordIndex in 0..<linearRing.count - 1 {
+                    let firstCoord  = linearRing[firstCoordIndex]
+                    let secondCoord = linearRing[firstCoordIndex + 1]
+                    let segment = Segment(left: firstCoord, right: secondCoord)
+                    let location = coordinateIsOnLineSegment(tempCoordinate, segment: segment)
+                    if location == .onInterior {
+                        relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    } else if location == .onBoundary {
+                        /// The boundary of any line segment on the linear ring is necessarily on the interior of the linear ring
+                        relatedTo.firstInteriorTouchesSecondInterior = .zero
+                    } else {
+                        relatedTo.firstInteriorTouchesSecondExterior = .zero
+                    }
+                }
+            }
+        }
+
+        return relatedTo
+    }
+
 //    fileprivate static func relatedTo(_ coordinates: [Coordinate], _ multiLineString: MultiLineString) -> RelatedTo {
 //
 //        var relatedTo = RelatedTo()
@@ -701,119 +701,119 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 //        return relatedTo
 //    }
 //
-//    /// This code parallels that of a point and a simple polygon.
-//    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
-//    /// The coordinate is a Coordinate object and a flag indicating whether it is a boundary point.
-//    fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ linearRing: LinearRing) -> RelatedTo {
-//
-//        var relatedToResult = RelatedTo()
-//
-//        /// Check if the coordinate is on the boundary of the linear ring
-//        var coordinates = [(Coordinate, Bool)]()
-//        coordinates.append(coordinateTuple)
-//        let tempRelatedToResult = relatedTo(coordinates, linearRing)
-//        if tempRelatedToResult.firstTouchesSecondInterior != .empty {
-//            relatedToResult.firstInteriorTouchesSecondInterior = .zero
-//            return relatedToResult
-//        }
-//
-//        let coordinate = coordinateTuple.0
-//
-//        var secondCoord = linearRing[linearRing.count - 1]
-//
-//        var isSubset = false
-//
-//        for firstCoordIndex in 0..<linearRing.count - 1 {
-//            let firstCoord  = linearRing[firstCoordIndex]
-//
-//            if ((firstCoord.y >= coordinate.y) != (secondCoord.y >= coordinate.y)) &&
-//                (coordinate.x <= (secondCoord.x - firstCoord.x) * (coordinate.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
-//                isSubset = !isSubset
-//            }
-//
-//            secondCoord = firstCoord
-//        }
-//
-//        relatedToResult = RelatedTo() /// Resets to default values
-//
-//        if isSubset {
-//            relatedToResult.firstInteriorTouchesSecondInterior = .zero
-//        } else {
-//            relatedToResult.firstInteriorTouchesSecondExterior = .zero
-//        }
-//
-//        return relatedToResult
-//    }
-//
-//    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-//    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
-//    /// The algorithm was modified because we assume the polygon is defined as a LinearRing, whose first and last points are the same.
-//    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
-//    fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ simplePolygon: Polygon) -> RelatedTo {
-//
-//        var relatedToResult = RelatedTo()
-//
-//        guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
-//            polygonBoundary.count > 0,
-//            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-//            outerLinearRing.count > 0 else {
-//                return relatedToResult
-//        }
-//
-//        /// Check if the point is on the boundary of the polygon
-//        var coordinatesTupleArray = [(Coordinate, Bool)]()
-//        coordinatesTupleArray.append(coordinateTuple)
-//        let tempRelatedToResult = relatedTo(coordinatesTupleArray, outerLinearRing)
-//        let isBoundaryPoint = coordinateTuple.1
-//        if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
-//            if isBoundaryPoint {
-//                relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
-//            } else {
-//                relatedToResult.firstInteriorTouchesSecondBoundary = .zero
-//            }
-//            relatedToResult.firstExteriorTouchesSecondInterior = .two
-//            relatedToResult.firstExteriorTouchesSecondBoundary = .one
-//            return relatedToResult
-//        }
-//
-//        /// Coordinate does not touch the polygon boundary
-//        let coordinate = coordinateTuple.0
-//
-//        var isSubset = false
-//
-//        var firstCoord  = outerLinearRing[0]
-//
-//        for firstCoordIndex in 1..<outerLinearRing.count {
-//            let secondCoord = outerLinearRing[firstCoordIndex]
-//
-//            if ((secondCoord.y >= coordinate.y) != (firstCoord.y >= coordinate.y)) &&
-//                (coordinate.x <= (firstCoord.x - secondCoord.x) * (coordinate.y - secondCoord.y) / (firstCoord.y - secondCoord.y) + secondCoord.x) {
-//                isSubset = !isSubset
-//            }
-//
-//            firstCoord = secondCoord
-//        }
-//
-//        relatedToResult = RelatedTo() /// Resets to default values
-//        relatedToResult.firstExteriorTouchesSecondInterior = .two
-//        relatedToResult.firstExteriorTouchesSecondBoundary = .one
-//
-//        if isSubset {
-//            relatedToResult.firstInteriorTouchesSecondInterior = .zero
-//            if isBoundaryPoint {
-//                relatedToResult.firstBoundaryTouchesSecondInterior = .zero
-//            }
-//        } else {
-//            if isBoundaryPoint {
-//                relatedToResult.firstBoundaryTouchesSecondExterior = .zero
-//            } else {
-//                relatedToResult.firstInteriorTouchesSecondExterior = .zero
-//            }
-//        }
-//
-//        return relatedToResult
-//    }
-//
+    /// This code parallels that of a point and a simple polygon.
+    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
+    /// The coordinate is a Coordinate object and a flag indicating whether it is a boundary point.
+    fileprivate func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ linearRing: LinearRing) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Check if the coordinate is on the boundary of the linear ring
+        var coordinates = [(Coordinate, Bool)]()
+        coordinates.append(coordinateTuple)
+        let tempRelatedToResult = relatedTo(coordinates, linearRing)
+        if tempRelatedToResult.firstTouchesSecondInterior != .empty {
+            relatedToResult.firstInteriorTouchesSecondInterior = .zero
+            return relatedToResult
+        }
+
+        let coordinate = coordinateTuple.0
+
+        var secondCoord = linearRing[linearRing.count - 1]
+
+        var isSubset = false
+
+        for firstCoordIndex in 0..<linearRing.count - 1 {
+            let firstCoord  = linearRing[firstCoordIndex]
+
+            if ((firstCoord.y >= coordinate.y) != (secondCoord.y >= coordinate.y)) &&
+                (coordinate.x <= (secondCoord.x - firstCoord.x) * (coordinate.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
+                isSubset = !isSubset
+            }
+
+            secondCoord = firstCoord
+        }
+
+        relatedToResult = RelatedTo() /// Resets to default values
+
+        if isSubset {
+            relatedToResult.firstInteriorTouchesSecondInterior = .zero
+        } else {
+            relatedToResult.firstInteriorTouchesSecondExterior = .zero
+        }
+
+        return relatedToResult
+    }
+
+    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
+    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
+    /// The algorithm was modified because we assume the polygon is defined as a LinearRing, whose first and last points are the same.
+    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    fileprivate func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ simplePolygon: Polygon) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        guard let polygonBoundary = simplePolygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 0,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
+            outerLinearRing.count > 0 else {
+                return relatedToResult
+        }
+
+        /// Check if the point is on the boundary of the polygon
+        var coordinatesTupleArray = [(Coordinate, Bool)]()
+        coordinatesTupleArray.append(coordinateTuple)
+        let tempRelatedToResult = relatedTo(coordinatesTupleArray, outerLinearRing)
+        let isBoundaryPoint = coordinateTuple.1
+        if tempRelatedToResult.firstTouchesSecondInterior != .empty || tempRelatedToResult.firstTouchesSecondBoundary != .empty {
+            if isBoundaryPoint {
+                relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+            } else {
+                relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+            }
+            relatedToResult.firstExteriorTouchesSecondInterior = .two
+            relatedToResult.firstExteriorTouchesSecondBoundary = .one
+            return relatedToResult
+        }
+
+        /// Coordinate does not touch the polygon boundary
+        let coordinate = coordinateTuple.0
+
+        var isSubset = false
+
+        var firstCoord  = outerLinearRing[0]
+
+        for firstCoordIndex in 1..<outerLinearRing.count {
+            let secondCoord = outerLinearRing[firstCoordIndex]
+
+            if ((secondCoord.y >= coordinate.y) != (firstCoord.y >= coordinate.y)) &&
+                (coordinate.x <= (firstCoord.x - secondCoord.x) * (coordinate.y - secondCoord.y) / (firstCoord.y - secondCoord.y) + secondCoord.x) {
+                isSubset = !isSubset
+            }
+
+            firstCoord = secondCoord
+        }
+
+        relatedToResult = RelatedTo() /// Resets to default values
+        relatedToResult.firstExteriorTouchesSecondInterior = .two
+        relatedToResult.firstExteriorTouchesSecondBoundary = .one
+
+        if isSubset {
+            relatedToResult.firstInteriorTouchesSecondInterior = .zero
+            if isBoundaryPoint {
+                relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+            }
+        } else {
+            if isBoundaryPoint {
+                relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+            } else {
+                relatedToResult.firstInteriorTouchesSecondExterior = .zero
+            }
+        }
+
+        return relatedToResult
+    }
+
 //    fileprivate static func relatedTo(_ coordinate: Coordinate, _ simplePolygon: Polygon) -> RelatedTo {
 //
 //        return relatedTo((coordinate, false), simplePolygon)
@@ -824,69 +824,69 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 //        return relatedTo((coordinate, false), linearRing)
 //    }
 //
-//    /// Assume here that the polygon is a general polygon with holes.
-//    /// Note we've changed the name so as not to conflict with the simple polygon case.  This may change later.
-//    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
-//    fileprivate static func relatedToGeneral(_ coordinateTuple: (Coordinate, Bool), _ polygon: Polygon) -> RelatedTo {
-//
-//        var relatedToResult = RelatedTo()
-//
-//        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-//            polygonBoundary.count > 0,
-//            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-//            outerLinearRing.count > 0 else {
-//                return relatedToResult
-//        }
-//
-//        /// Get the relationship between the coordinate and the main polygon
-//        let tempPolygon = Polygon(outerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
-//        let coordinateRelatedToResult = relatedTo(coordinateTuple, tempPolygon)
-//
-//        /// Check if the coordinate is on the exterior of the main polygon
-//        if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
-//            return coordinateRelatedToResult
-//        }
-//
-//        /// Check if the coordinate is on the boundary of the main polygon
-//        if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
-//            return coordinateRelatedToResult
-//        }
-//
-//        /// From this coordinate on, the coordinate must be on the interior of the main polygon.
-//        /// Now we have to check to see if the coordinate is on the boundary or interior of any holes.
-//
-//        for index in 1..<polygonBoundary.count {
-//
-//            guard let innerLinearRing = polygonBoundary[index] as? LinearRing,
-//                innerLinearRing.count > 0 else {
-//                    return coordinateRelatedToResult
-//            }
-//
-//            /// Get the relationship between the coordinate and the hole
-//            let tempPolygon = Polygon(innerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
-//            /// Flag the line below.
-//            /// This variable name is the same as one outside the loop.  Check this.
-//            let coordinateRelatedToResult = relatedTo(coordinateTuple, tempPolygon)
-//
-//            /// Check if the coordinate is on the interior of the hole
-//            if coordinateRelatedToResult.firstTouchesSecondInterior > .empty {
-//                relatedToResult.firstInteriorTouchesSecondExterior = .zero
-//                return relatedToResult
-//            }
-//
-//            /// Check if the coordinate is on the boundary of the hole
-//            if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
-//                return coordinateRelatedToResult
-//            }
-//
-//        }
-//
-//        /// If we've gotten this far, the coordinate must on the interior of the polygon
-//        relatedToResult.firstInteriorTouchesSecondInterior = .zero
-//
-//        return relatedToResult
-//    }
-//
+    /// Assume here that the polygon is a general polygon with holes.
+    /// Note we've changed the name so as not to conflict with the simple polygon case.  This may change later.
+    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    fileprivate func relatedToGeneral(_ coordinateTuple: (Coordinate, Bool), _ polygon: Polygon) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 0,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
+            outerLinearRing.count > 0 else {
+                return relatedToResult
+        }
+
+        /// Get the relationship between the coordinate and the main polygon
+        let tempPolygon = Polygon(outerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
+        let coordinateRelatedToResult = relatedTo(coordinateTuple, tempPolygon)
+
+        /// Check if the coordinate is on the exterior of the main polygon
+        if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
+            return coordinateRelatedToResult
+        }
+
+        /// Check if the coordinate is on the boundary of the main polygon
+        if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
+            return coordinateRelatedToResult
+        }
+
+        /// From this coordinate on, the coordinate must be on the interior of the main polygon.
+        /// Now we have to check to see if the coordinate is on the boundary or interior of any holes.
+
+        for index in 1..<polygonBoundary.count {
+
+            guard let innerLinearRing = polygonBoundary[index] as? LinearRing,
+                innerLinearRing.count > 0 else {
+                    return coordinateRelatedToResult
+            }
+
+            /// Get the relationship between the coordinate and the hole
+            let tempPolygon = Polygon(innerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
+            /// Flag the line below.
+            /// This variable name is the same as one outside the loop.  Check this.
+            let coordinateRelatedToResult = relatedTo(coordinateTuple, tempPolygon)
+
+            /// Check if the coordinate is on the interior of the hole
+            if coordinateRelatedToResult.firstTouchesSecondInterior > .empty {
+                relatedToResult.firstInteriorTouchesSecondExterior = .zero
+                return relatedToResult
+            }
+
+            /// Check if the coordinate is on the boundary of the hole
+            if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
+                return coordinateRelatedToResult
+            }
+
+        }
+
+        /// If we've gotten this far, the coordinate must on the interior of the polygon
+        relatedToResult.firstInteriorTouchesSecondInterior = .zero
+
+        return relatedToResult
+    }
+
 //    /// Assume here that the multi polygon is a general multi polygon with a collection of non-intersecting general polygons.
 //    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
 //    fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ multipolygon: MultiPolygon) -> RelatedTo {
@@ -1015,135 +1015,135 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 //        }
 //    }
 //
-//    /// The polygon is a general polygon.  This polygon has holes.
-//    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
-//    fileprivate static func relatedTo(_ coordinatesTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
-//
-//        var relatedToResult = RelatedTo()
-//
-//        /// It is assumed that the polygon boundary is a collection of LinearRings with the first
-//        /// being the main polygon boundary and the rest being the holes inside the polygon.
-//        /// In this case, we should have just one LinearRing, which is the outer LinearRing.
-//        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-//            polygonBoundary.count > 0 else {
-//                return relatedToResult
-//        }
-//
-//        /// Check if any of the coordinates are on the boundary
-//        let coordinatesRelatedToBoundary = relatedTo(coordinatesTupleArray, polygonBoundary)
-//        if coordinatesRelatedToBoundary.firstTouchesSecondInterior != .empty || coordinatesRelatedToBoundary.firstTouchesSecondBoundary != .empty {
-//            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
-//        }
-//
-//        var coordinatesOnInteriorOfMainRing     = [Coordinate]()
-//        var coordinatesOnInteriorOfInnerRings   = [Coordinate]()
-//        var coordinatesOnBoundaryOfInnerRings   = [Coordinate]()
-//
-//        for (tempCoordinate, boundaryPoint) in coordinatesTupleArray {
-//
-//            var firstTime = true
-//
-//            for element in polygonBoundary {
-//
-//                guard let linearRing = element as? LinearRing else {
-//                    return relatedToResult
-//                }
-//
-//                let tempPolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
-//
-//                let tempRelatedToResult = relatedTo((tempCoordinate, boundaryPoint), tempPolygon)
-//
-//                /// The first linear ring is the outer boundary of the polygon
-//                if firstTime {
-//                    if tempRelatedToResult.firstTouchesSecondExterior > .empty {
-//                        relatedToResult.firstInteriorTouchesSecondExterior = .zero
-//                        break
-//                    } else if tempRelatedToResult.firstTouchesSecondBoundary > .empty {
-//                        relatedToResult.firstInteriorTouchesSecondBoundary = .zero
-//                        break
-//                    } else {
-//                        coordinatesOnInteriorOfMainRing.append(tempCoordinate)
-//                    }
-//                    firstTime = false
-//
-//                } else {
-//                    /// The algorithm will only reach this point if the coordinate is on the interior of the main polygon.
-//                    /// Note, too, that the tempPolygon above now refers to one of the main polygon's holes.
-//                    /// If the coordinate is on the interior of a hole, it is on the exterior of the main polygon.
-//                    if tempRelatedToResult.firstTouchesSecondInterior > .empty {
-//                        coordinatesOnInteriorOfInnerRings.append(tempCoordinate)
-//                        relatedToResult.firstInteriorTouchesSecondExterior = .zero
-//                        break
-//                    }
-//
-//                    if tempRelatedToResult.firstTouchesSecondBoundary > .empty {
-//                        coordinatesOnBoundaryOfInnerRings.append(tempCoordinate)
-//                        relatedToResult.firstInteriorTouchesSecondBoundary = .zero
-//                        break
-//                    }
-//                }
-//            }
-//        }
-//
-//        if coordinatesOnInteriorOfMainRing.count > coordinatesOnInteriorOfInnerRings.count + coordinatesOnBoundaryOfInnerRings.count {
-//            relatedToResult.firstInteriorTouchesSecondInterior = .zero
-//        }
-//
-//        return relatedToResult
-//    }
-//
-//    /// Assume here that the polygon is a general polygon with holes.
-//    /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
-//    /// Each element of the coordinate tuple array consists of a Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
-//    fileprivate static func relatedToGeneral(_ coordinateTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
-//
-//        var relatedToResult = RelatedTo()
-//
-//        /// Get the polygon boundary
-//        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-//            polygonBoundary.count > 0,
-//            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-//            outerLinearRing.count > 0 else {
-//                return relatedToResult
-//        }
-//
-//        for (coordinate, boundaryPoint) in coordinateTupleArray {
-//
-//            /// Get the relationships between each coordinate and the general polygon
-//            let coordinateRelatedToResult = relatedToGeneral((coordinate, boundaryPoint), polygon)
-//
-//            /// Check if the coordinate is on the interior of the polygon
-//            if coordinateRelatedToResult.firstTouchesSecondInterior > .empty {
-//                if boundaryPoint {
-//                    relatedToResult.firstBoundaryTouchesSecondInterior = .zero
-//                } else {
-//                    relatedToResult.firstInteriorTouchesSecondInterior = .zero
-//                }
-//            }
-//
-//            /// Check if the coordinate is on the boundary of the polygon
-//            if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
-//                if boundaryPoint {
-//                    relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
-//                } else {
-//                    relatedToResult.firstInteriorTouchesSecondBoundary = .zero
-//                }
-//            }
-//
-//            /// Check if the coordinate is on the exterior of the polygon
-//            if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
-//                if boundaryPoint {
-//                    relatedToResult.firstBoundaryTouchesSecondExterior = .zero
-//                } else {
-//                    relatedToResult.firstInteriorTouchesSecondExterior = .zero
-//                }
-//            }
-//
-//        }
-//
-//        return relatedToResult
-//    }
-//
+    /// The polygon is a general polygon.  This polygon has holes.
+    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    fileprivate func relatedTo(_ coordinatesTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// It is assumed that the polygon boundary is a collection of LinearRings with the first
+        /// being the main polygon boundary and the rest being the holes inside the polygon.
+        /// In this case, we should have just one LinearRing, which is the outer LinearRing.
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 0 else {
+                return relatedToResult
+        }
+
+        /// Check if any of the coordinates are on the boundary
+        let coordinatesRelatedToBoundary = relatedTo(coordinatesTupleArray, polygonBoundary)
+        if coordinatesRelatedToBoundary.firstTouchesSecondInterior != .empty || coordinatesRelatedToBoundary.firstTouchesSecondBoundary != .empty {
+            relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+        }
+
+        var coordinatesOnInteriorOfMainRing     = [Coordinate]()
+        var coordinatesOnInteriorOfInnerRings   = [Coordinate]()
+        var coordinatesOnBoundaryOfInnerRings   = [Coordinate]()
+
+        for (tempCoordinate, boundaryPoint) in coordinatesTupleArray {
+
+            var firstTime = true
+
+            for element in polygonBoundary {
+
+                guard let linearRing = element as? LinearRing else {
+                    return relatedToResult
+                }
+
+                let tempPolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
+
+                let tempRelatedToResult = relatedTo((tempCoordinate, boundaryPoint), tempPolygon)
+
+                /// The first linear ring is the outer boundary of the polygon
+                if firstTime {
+                    if tempRelatedToResult.firstTouchesSecondExterior > .empty {
+                        relatedToResult.firstInteriorTouchesSecondExterior = .zero
+                        break
+                    } else if tempRelatedToResult.firstTouchesSecondBoundary > .empty {
+                        relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                        break
+                    } else {
+                        coordinatesOnInteriorOfMainRing.append(tempCoordinate)
+                    }
+                    firstTime = false
+
+                } else {
+                    /// The algorithm will only reach this point if the coordinate is on the interior of the main polygon.
+                    /// Note, too, that the tempPolygon above now refers to one of the main polygon's holes.
+                    /// If the coordinate is on the interior of a hole, it is on the exterior of the main polygon.
+                    if tempRelatedToResult.firstTouchesSecondInterior > .empty {
+                        coordinatesOnInteriorOfInnerRings.append(tempCoordinate)
+                        relatedToResult.firstInteriorTouchesSecondExterior = .zero
+                        break
+                    }
+
+                    if tempRelatedToResult.firstTouchesSecondBoundary > .empty {
+                        coordinatesOnBoundaryOfInnerRings.append(tempCoordinate)
+                        relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                        break
+                    }
+                }
+            }
+        }
+
+        if coordinatesOnInteriorOfMainRing.count > coordinatesOnInteriorOfInnerRings.count + coordinatesOnBoundaryOfInnerRings.count {
+            relatedToResult.firstInteriorTouchesSecondInterior = .zero
+        }
+
+        return relatedToResult
+    }
+
+    /// Assume here that the polygon is a general polygon with holes.
+    /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
+    /// Each element of the coordinate tuple array consists of a Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    fileprivate func relatedToGeneral(_ coordinateTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Get the polygon boundary
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 0,
+            let outerLinearRing = polygonBoundary[0] as? LinearRing,
+            outerLinearRing.count > 0 else {
+                return relatedToResult
+        }
+
+        for (coordinate, boundaryPoint) in coordinateTupleArray {
+
+            /// Get the relationships between each coordinate and the general polygon
+            let coordinateRelatedToResult = relatedToGeneral((coordinate, boundaryPoint), polygon)
+
+            /// Check if the coordinate is on the interior of the polygon
+            if coordinateRelatedToResult.firstTouchesSecondInterior > .empty {
+                if boundaryPoint {
+                    relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+                } else {
+                    relatedToResult.firstInteriorTouchesSecondInterior = .zero
+                }
+            }
+
+            /// Check if the coordinate is on the boundary of the polygon
+            if coordinateRelatedToResult.firstTouchesSecondBoundary > .empty {
+                if boundaryPoint {
+                    relatedToResult.firstBoundaryTouchesSecondBoundary = .zero
+                } else {
+                    relatedToResult.firstInteriorTouchesSecondBoundary = .zero
+                }
+            }
+
+            /// Check if the coordinate is on the exterior of the polygon
+            if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
+                if boundaryPoint {
+                    relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+                } else {
+                    relatedToResult.firstInteriorTouchesSecondExterior = .zero
+                }
+            }
+
+        }
+
+        return relatedToResult
+    }
+
 //    /// Assume here that the multi polygon is a general multi polygon with holes.
 //    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
 //    fileprivate static func relatedTo(_ coordinateTupleArray: [(Coordinate, Bool)], _ multipolygon: MultiPolygon) -> RelatedTo {
@@ -2280,30 +2280,20 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 //        return matrixIntersects
 //    }
 //
-//    fileprivate static func generateIntersection(_ point: Point, _ polygon: Polygon) -> IntersectionMatrix {
-//
-//        /// Default intersection matrix
-//        var matrixIntersects = IntersectionMatrix()
-//        matrixIntersects[.exterior, .interior] = .two
-//        matrixIntersects[.exterior, .boundary] = .one
-//        matrixIntersects[.exterior, .exterior] = .two
-//
-//        var coordinates = [(Coordinate, Bool)]()
-//        coordinates.append((point.coordinate, false))
-//
-//        let tempRelatedToResult = relatedTo(coordinates, polygon)
-//
-//        if tempRelatedToResult.firstTouchesSecondInterior != .empty {
-//            matrixIntersects[.interior, .interior] = .zero
-//        } else if tempRelatedToResult.firstTouchesSecondBoundary != .empty {
-//            matrixIntersects[.interior, .boundary] = .zero
-//        } else if tempRelatedToResult.firstTouchesSecondExterior != .empty {
-//            matrixIntersects[.interior, .exterior] = .zero
-//        }
-//
-//        return matrixIntersects
-//    }
-//
+    fileprivate func generateIntersection(_ point: Point, _ polygon: Polygon) -> Geometry {
+
+        var coordinates = [(Coordinate, Bool)]()
+        coordinates.append((point.coordinate, false))
+
+        let tempRelatedToResult = relatedTo(coordinates, polygon)
+
+        if tempRelatedToResult.firstTouchesSecondExterior == .empty {
+            return point
+        }
+
+        return GeometryCollection()
+    }
+
 //    fileprivate static func generateIntersection(_ point: Point, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 //
 //        let relatedToCoordinateMP = relatedTo((point.coordinate, false), multipolygon)

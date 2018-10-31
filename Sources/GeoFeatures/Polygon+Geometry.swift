@@ -41,12 +41,12 @@ extension Polygon {
     /// - Note: The boundary of a Polygon consists of a set of LinearRings that make up its exterior and interior boundaries
     ///
     public func boundary() -> Geometry {
-
-        let boundary = self.map({ LineString(converting: $0, precision: self.precision, coordinateSystem: self.coordinateSystem) })
-
-        return MultiLineString(boundary, precision: self.precision, coordinateSystem: self.coordinateSystem)
+        
+        let boundary = self.map({ LinearRing(converting: $0, precision: self.precision, coordinateSystem: self.coordinateSystem) })
+        
+        return GeometryCollection(boundary, precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
-
+    
     ///
     /// - Returns: true if `self` is equal to the `other`.
     ///
