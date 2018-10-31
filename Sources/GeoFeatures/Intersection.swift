@@ -170,8 +170,8 @@ fileprivate func intersectionZeroTwo(_ geometry1: Geometry, _ geometry2: Geometr
         return generateIntersection(point, polygon)
 //    } else if let points = geometry1 as? MultiPoint, let polygon = geometry2 as? Polygon {
 //        return generateIntersection(points, polygon)
-//    } else if let point = geometry1 as? Point, let multipolygon = geometry2 as? MultiPolygon {
-//        return generateIntersection(point, multipolygon)
+    } else if let point = geometry1 as? Point, let multipolygon = geometry2 as? MultiPolygon {
+        return generateIntersection(point, multipolygon)
 //    } else if let points = geometry1 as? MultiPoint, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(points, multipolygon)
     }
@@ -887,91 +887,91 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
         return relatedToResult
     }
 
-//    /// Assume here that the multi polygon is a general multi polygon with a collection of non-intersecting general polygons.
-//    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
-//    fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ multipolygon: MultiPolygon) -> RelatedTo {
-//
-//        var relatedToResult = RelatedTo()
-//
-//        /// There is a special case where a coordinate touches the exterior of a MultiPolygon only when it
-//        /// touches the exterior of every Polygon in the MultiPolygon.  Therefore, we will track the
-//        /// total number of times the point touches the exterior of a Polygon.
-//        var coordinateTouchesExteriorOfPolygonCount = 0
-//
-//        /// Loop over the polygons and update the relatedToResult struct as needed on each pass.
-//
-//        for polygon in multipolygon {
-//
-//            /// Get the relationship between the coordinate and the polygon
-//            let coordinateRelatedToResult = relatedToGeneral(coordinateTuple, polygon)
-//
-//            /// Update the exterior count
-//            if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
-//                coordinateTouchesExteriorOfPolygonCount += 1
-//            }
-//
-//            /// Update the relatedToResult as needed
-//            update(relatedToBase: &relatedToResult, relatedToNew: coordinateRelatedToResult)
-//
-//        }
-//
-//        /// Update the interior, exterior or boundary, exterior parameter
-//        if coordinateTuple.1 { // Is this a boundary point?
-//            relatedToResult.firstBoundaryTouchesSecondExterior = .empty
-//            if coordinateTouchesExteriorOfPolygonCount == multipolygon.count {
-//                relatedToResult.firstBoundaryTouchesSecondExterior = .zero
-//            }
-//        } else {
-//            relatedToResult.firstInteriorTouchesSecondExterior = .empty
-//            if coordinateTouchesExteriorOfPolygonCount == multipolygon.count {
-//                relatedToResult.firstInteriorTouchesSecondExterior = .zero
-//            }
-//        }
-//
-//        return relatedToResult
-//    }
-//
-//    /// This function takes one RelatedTo struct, the base struct, and compares a new RelatedTo struct to it.
-//    /// If the values of the new RelatedTo struct are greater than the base struct, the base struct is updated with the new values.
-//    fileprivate static func update(relatedToBase: inout RelatedTo, relatedToNew: RelatedTo) {
-//
-//        if relatedToNew.firstInteriorTouchesSecondInterior > relatedToBase.firstInteriorTouchesSecondInterior {
-//            relatedToBase.firstInteriorTouchesSecondInterior = relatedToNew.firstInteriorTouchesSecondInterior
-//        }
-//
-//        if relatedToNew.firstInteriorTouchesSecondBoundary > relatedToBase.firstInteriorTouchesSecondBoundary {
-//            relatedToBase.firstInteriorTouchesSecondBoundary = relatedToNew.firstInteriorTouchesSecondBoundary
-//        }
-//
-//        if relatedToNew.firstInteriorTouchesSecondExterior > relatedToBase.firstInteriorTouchesSecondExterior {
-//            relatedToBase.firstInteriorTouchesSecondExterior = relatedToNew.firstInteriorTouchesSecondExterior
-//        }
-//
-//        if relatedToNew.firstBoundaryTouchesSecondInterior > relatedToBase.firstBoundaryTouchesSecondInterior {
-//            relatedToBase.firstBoundaryTouchesSecondInterior = relatedToNew.firstBoundaryTouchesSecondInterior
-//        }
-//
-//        if relatedToNew.firstBoundaryTouchesSecondBoundary > relatedToBase.firstBoundaryTouchesSecondBoundary {
-//            relatedToBase.firstBoundaryTouchesSecondBoundary = relatedToNew.firstBoundaryTouchesSecondBoundary
-//        }
-//
-//        if relatedToNew.firstBoundaryTouchesSecondExterior > relatedToBase.firstBoundaryTouchesSecondExterior {
-//            relatedToBase.firstBoundaryTouchesSecondExterior = relatedToNew.firstBoundaryTouchesSecondExterior
-//        }
-//
-//        if relatedToNew.firstExteriorTouchesSecondInterior > relatedToBase.firstExteriorTouchesSecondInterior {
-//            relatedToBase.firstExteriorTouchesSecondInterior = relatedToNew.firstExteriorTouchesSecondInterior
-//        }
-//
-//        if relatedToNew.firstExteriorTouchesSecondBoundary > relatedToBase.firstExteriorTouchesSecondBoundary {
-//            relatedToBase.firstExteriorTouchesSecondBoundary = relatedToNew.firstExteriorTouchesSecondBoundary
-//        }
-//
-//        if relatedToNew.firstExteriorTouchesSecondExterior > relatedToBase.firstExteriorTouchesSecondExterior {
-//            relatedToBase.firstExteriorTouchesSecondExterior = relatedToNew.firstExteriorTouchesSecondExterior
-//        }
-//    }
-//
+    /// Assume here that the multi polygon is a general multi polygon with a collection of non-intersecting general polygons.
+    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    fileprivate func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ multipolygon: MultiPolygon) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// There is a special case where a coordinate touches the exterior of a MultiPolygon only when it
+        /// touches the exterior of every Polygon in the MultiPolygon.  Therefore, we will track the
+        /// total number of times the point touches the exterior of a Polygon.
+        var coordinateTouchesExteriorOfPolygonCount = 0
+
+        /// Loop over the polygons and update the relatedToResult struct as needed on each pass.
+
+        for polygon in multipolygon {
+
+            /// Get the relationship between the coordinate and the polygon
+            let coordinateRelatedToResult = relatedToGeneral(coordinateTuple, polygon)
+
+            /// Update the exterior count
+            if coordinateRelatedToResult.firstTouchesSecondExterior > .empty {
+                coordinateTouchesExteriorOfPolygonCount += 1
+            }
+
+            /// Update the relatedToResult as needed
+            update(relatedToBase: &relatedToResult, relatedToNew: coordinateRelatedToResult)
+
+        }
+
+        /// Update the interior, exterior or boundary, exterior parameter
+        if coordinateTuple.1 { // Is this a boundary point?
+            relatedToResult.firstBoundaryTouchesSecondExterior = .empty
+            if coordinateTouchesExteriorOfPolygonCount == multipolygon.count {
+                relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+            }
+        } else {
+            relatedToResult.firstInteriorTouchesSecondExterior = .empty
+            if coordinateTouchesExteriorOfPolygonCount == multipolygon.count {
+                relatedToResult.firstInteriorTouchesSecondExterior = .zero
+            }
+        }
+
+        return relatedToResult
+    }
+
+    /// This function takes one RelatedTo struct, the base struct, and compares a new RelatedTo struct to it.
+    /// If the values of the new RelatedTo struct are greater than the base struct, the base struct is updated with the new values.
+    fileprivate func update(relatedToBase: inout RelatedTo, relatedToNew: RelatedTo) {
+
+        if relatedToNew.firstInteriorTouchesSecondInterior > relatedToBase.firstInteriorTouchesSecondInterior {
+            relatedToBase.firstInteriorTouchesSecondInterior = relatedToNew.firstInteriorTouchesSecondInterior
+        }
+
+        if relatedToNew.firstInteriorTouchesSecondBoundary > relatedToBase.firstInteriorTouchesSecondBoundary {
+            relatedToBase.firstInteriorTouchesSecondBoundary = relatedToNew.firstInteriorTouchesSecondBoundary
+        }
+
+        if relatedToNew.firstInteriorTouchesSecondExterior > relatedToBase.firstInteriorTouchesSecondExterior {
+            relatedToBase.firstInteriorTouchesSecondExterior = relatedToNew.firstInteriorTouchesSecondExterior
+        }
+
+        if relatedToNew.firstBoundaryTouchesSecondInterior > relatedToBase.firstBoundaryTouchesSecondInterior {
+            relatedToBase.firstBoundaryTouchesSecondInterior = relatedToNew.firstBoundaryTouchesSecondInterior
+        }
+
+        if relatedToNew.firstBoundaryTouchesSecondBoundary > relatedToBase.firstBoundaryTouchesSecondBoundary {
+            relatedToBase.firstBoundaryTouchesSecondBoundary = relatedToNew.firstBoundaryTouchesSecondBoundary
+        }
+
+        if relatedToNew.firstBoundaryTouchesSecondExterior > relatedToBase.firstBoundaryTouchesSecondExterior {
+            relatedToBase.firstBoundaryTouchesSecondExterior = relatedToNew.firstBoundaryTouchesSecondExterior
+        }
+
+        if relatedToNew.firstExteriorTouchesSecondInterior > relatedToBase.firstExteriorTouchesSecondInterior {
+            relatedToBase.firstExteriorTouchesSecondInterior = relatedToNew.firstExteriorTouchesSecondInterior
+        }
+
+        if relatedToNew.firstExteriorTouchesSecondBoundary > relatedToBase.firstExteriorTouchesSecondBoundary {
+            relatedToBase.firstExteriorTouchesSecondBoundary = relatedToNew.firstExteriorTouchesSecondBoundary
+        }
+
+        if relatedToNew.firstExteriorTouchesSecondExterior > relatedToBase.firstExteriorTouchesSecondExterior {
+            relatedToBase.firstExteriorTouchesSecondExterior = relatedToNew.firstExteriorTouchesSecondExterior
+        }
+    }
+
 //    /// This function takes one IntersectionMatrix struct, the base struct, and compares a new IntersectionMatrix struct to it.
 //    /// If the values of the new IntersectionMatrix struct are greater than the base struct, the base struct is updated with the new values.
 //    /// Note the RelatedTo struct has evolved into an IntersectionMatrix equivalent.
@@ -1144,26 +1144,26 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
         return relatedToResult
     }
 
-//    /// Assume here that the multi polygon is a general multi polygon with holes.
-//    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
-//    fileprivate static func relatedTo(_ coordinateTupleArray: [(Coordinate, Bool)], _ multipolygon: MultiPolygon) -> RelatedTo {
-//
-//        var relatedToResult = RelatedTo()
-//
-//        /// Loop over the coordinate tuples and update the relatedToResult struct as needed on each pass.
-//
-//        for coodinateTuple in coordinateTupleArray {
-//
-//            /// Get the relationships between each coordinate tuple and the general multipolygon
-//            let pointRelatedToResult = relatedTo(coodinateTuple, multipolygon)
-//
-//            /// Update the relatedToResult as needed
-//            update(relatedToBase: &relatedToResult, relatedToNew: pointRelatedToResult)
-//        }
-//
-//        return relatedToResult
-//    }
-//
+    /// Assume here that the multi polygon is a general multi polygon with holes.
+    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    fileprivate func relatedTo(_ coordinateTupleArray: [(Coordinate, Bool)], _ multipolygon: MultiPolygon) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        /// Loop over the coordinate tuples and update the relatedToResult struct as needed on each pass.
+
+        for coodinateTuple in coordinateTupleArray {
+
+            /// Get the relationships between each coordinate tuple and the general multipolygon
+            let pointRelatedToResult = relatedTo(coodinateTuple, multipolygon)
+
+            /// Update the relatedToResult as needed
+            update(relatedToBase: &relatedToResult, relatedToNew: pointRelatedToResult)
+        }
+
+        return relatedToResult
+    }
+
 //    fileprivate static func midpoint(_ coord1: Coordinate, _ coord2: Coordinate) -> Coordinate {
 //
 //        return Coordinate(x: (coord1.x + coord2.x) / 2.0, y: (coord1.y + coord2.y) / 2.0)
@@ -2294,15 +2294,17 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
         return GeometryCollection()
     }
 
-//    fileprivate static func generateIntersection(_ point: Point, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
-//
-//        let relatedToCoordinateMP = relatedTo((point.coordinate, false), multipolygon)
-//
-//        let matrixIntersects = intersectionMatrix(from: relatedToCoordinateMP)
-//
-//        return matrixIntersects
-//    }
-//
+    fileprivate func generateIntersection(_ point: Point, _ multipolygon: MultiPolygon) -> Geometry {
+
+        let relatedToCoordinateMP = relatedTo((point.coordinate, false), multipolygon)
+
+        if relatedToCoordinateMP.firstTouchesSecondExterior == .empty {
+            return point
+        }
+
+        return GeometryCollection()
+    }
+
 //    fileprivate static func multiPointToCoordinateTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Coordinate, Bool)] {
 //
 //        var tupleArray = [(Coordinate, Bool)]()
