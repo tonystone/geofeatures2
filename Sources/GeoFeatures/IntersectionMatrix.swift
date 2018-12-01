@@ -92,6 +92,35 @@ extension IntersectionMatrix {
 extension IntersectionMatrix {
 
     ///
+    /// Transpose the matrix in place
+    ///
+    ///
+    internal mutating func transpose() {
+        ///
+        /// This is a simple transpose of a square matrix
+        ///
+        var transposedMatrix = IntersectionMatrix()
+        for row in 0...Index.exterior.rawValue {
+            for col in 0...Index.exterior.rawValue {
+                transposedMatrix.matrix[row][col] = self.matrix[col][row]
+            }
+        }
+        self = transposedMatrix
+    }
+
+    ///
+    /// Transpose the matrix returning a new IntersectionMatrix
+    ///
+    ///
+    internal func transposed() -> IntersectionMatrix {
+        
+        var transposedMatrix = IntersectionMatrix(matrix: self.matrix)
+        transposedMatrix.transpose()
+        
+        return transposedMatrix
+    }
+
+    ///
     /// Match an IntersectionMatrix to a pattern matrix
     /// such as “T*T***T**”
     ///

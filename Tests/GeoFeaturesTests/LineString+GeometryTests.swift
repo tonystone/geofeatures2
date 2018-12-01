@@ -105,4 +105,97 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
+
+    // MARK: - Simplify
+
+    func testLineStringSimplify_twoIdenticalPoints() {
+        let lineString = LineString([[100, 100], [100, 100]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 2)
+    }
+
+    func testLineStringSimplify_threeIdenticalPoints() {
+        let lineString = LineString([[100, 100], [100, 100], [100, 100]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 2)
+    }
+
+    func testLineStringSimplify_fourIdenticalPoints() {
+        let lineString = LineString([[100, 100], [100, 100], [100, 100], [100, 100]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 2)
+    }
+
+    func testLineStringSimplify_fivePointsThreeUnique_sameSlope() {
+        let lineString = LineString([[100, 100], [100, 100], [150, 150], [200, 200], [200, 200]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 2)
+    }
+
+    func testLineStringSimplify_fivePointsThreeUnique_twoDifferentSlopes() {
+        let lineString = LineString([[100, 100], [100, 100], [150, 150], [200, 150], [200, 150]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 3)
+    }
+
+    func testLineStringSimplify_multipleIntermediatePoints_threeDifferentSlopes() {
+        let lineString = LineString([[100, 100], [100, 100], [200, 200], [300, 300], [300, 300], [400, 300], [500, 300], [600, 300], [600, 300], [600, 400], [600, 600], [600, 800]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 4)
+    }
+
+    func testLineStringSimplify_square() {
+        let lineString = LineString([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 5)
+    }
+
+    func testLineStringSimplify_sameLineSegmentTwice() {
+        let lineString = LineString([[100, 100], [200, 200], [200, 200], [100, 100]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 2)
+    }
+
+    func testLineStringSimplify_sameLineSegmentThreeTimes() {
+        let lineString = LineString([[100, 100], [200, 200], [200, 200], [100, 100], [100, 100], [200, 200]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 2)
+    }
+
+    func testLineStringSimplify_sameSlopeTwoReversals() {
+        let lineString = LineString([[100, 100], [300, 300], [200, 200], [500, 500]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 4)
+    }
+
+    func testLineStringSimplify_sameSlopeTwoReversalsAndOtherPoints() {
+        let lineString = LineString([[0, 1], [1, 1], [2, 2], [0, 0], [1, 1], [5, 1]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 6)
+    }
+
+    func testLineStringSimplify_sameSquareTwice() {
+        let lineString = LineString([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100], [100, 100], [100, 200], [200, 200], [200, 100], [100, 100]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 5)
+    }
+
+    func testLineStringSimplify_overlappingRectangleWithLoop() {
+        let lineString = LineString([[0, 0], [0, 10], [20, 10], [20, 0], [8, 0], [8, 4], [12, 4], [12, 0], [0, 0], [0, 10], [20, 10], [20, 0], [0, 0], [0, 10]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 13)
+    }
 }
