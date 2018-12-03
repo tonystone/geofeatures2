@@ -64,3 +64,58 @@ lineString13.simplify(tolerance: 1.0)
 
 let simplifiedLineString = lineString1.simplify(tolerance: 1.0)
 type(of: simplifiedLineString)
+
+/// LinearRing
+
+let linearRing1 = LinearRing([])
+linearRing1.simplify(tolerance: 1.0)
+
+let linearRing2 = LinearRing([[100, 100]])
+linearRing2.simplify(tolerance: 1.0)
+
+let linearRing3 = LinearRing([[100, 100], [100, 100]])
+linearRing3.simplify(tolerance: 1.0)
+
+let linearRing4 = LinearRing([[100, 100], [100, 100], [100, 100]])
+linearRing4.simplify(tolerance: 1.0)
+
+let linearRing5 = LinearRing([[100, 100], [100, 100], [100, 100], [100, 100]])
+linearRing5.simplify(tolerance: 1.0)
+
+let linearRing6 = LinearRing([[100, 100], [100, 100], [150, 150], [200, 200], [200, 200], [100, 100]])
+linearRing6.simplify(tolerance: 1.0)
+
+let linearRing7 = LinearRing([[100, 100], [100, 100], [150, 150], [200, 150], [200, 150], [100, 100]])
+linearRing7.simplify(tolerance: 1.0)
+
+let linearRing8 = LinearRing([[100, 100], [100, 100], [200, 200], [300, 300], [300, 300], [400, 300], [500, 300], [600, 300], [600, 300], [600, 400], [600, 600], [600, 800], [100, 100]])
+linearRing8.simplify(tolerance: 1.0)
+
+let linearRing9 = LinearRing([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100]])
+linearRing9.simplify(tolerance: 1.0)
+
+let linearRing10 = LinearRing([[100, 100], [200, 200], [200, 200], [100, 100]])
+linearRing10.simplify(tolerance: 1.0)
+
+let linearRing11 = LinearRing([[100, 100], [200, 200], [200, 200], [100, 100], [100, 100], [200, 200], [200, 200], [100, 100]])
+linearRing11.simplify(tolerance: 1.0)
+
+let linearRing12 = LinearRing([[100, 100], [300, 300], [200, 200], [500, 500], [100, 100]])
+linearRing12.simplify(tolerance: 1.0)
+
+let linearRing13 = LinearRing([[0, 1], [1, 1], [2, 2], [0, 0], [1, 1], [5, 1], [0, 1]])
+linearRing13.simplify(tolerance: 1.0)
+
+let linearRing14 = LinearRing([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100], [100, 100], [100, 200], [200, 200], [200, 100], [100, 100]])
+linearRing14.simplify(tolerance: 1.0)
+
+let linearRing15 = LinearRing([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100], [100, 100], [200, 100], [200, 200], [100, 200], [100, 100]])
+linearRing15.simplify(tolerance: 1.0)
+
+let linearRing16 = LinearRing([[0, 0], [0, 10], [20, 10], [20, 0], [8, 0], [8, 4], [12, 4], [12, 0], [0, 0], [0, 10], [20, 10], [20, 0], [0, 0], [0, 10], [0, 0]])
+linearRing16.simplify(tolerance: 1.0)
+
+/// MultiLineString
+
+//let multiLineString1 = MultiLineString([LineString([[100, 100], [100, 100]]), LineString([[200, 200], [200, 200]])])
+//multiLineString1.simplify(tolerance: 1.0)
