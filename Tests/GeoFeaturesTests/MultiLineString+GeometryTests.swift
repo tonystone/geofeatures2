@@ -147,4 +147,82 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
+    
+    // MARK: Simplify
+
+    func testMultiLineStringSimplify_noLineStrings() {
+        let multiLineString = MultiLineString()
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 0)
+    }
+
+    func testMultiLineStringSimplify_oneLineStringOnePoint() {
+        let multiLineString = MultiLineString([LineString([[100, 100]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 1)
+    }
+
+    func testMultiLineStringSimplify_oneLineStringTwoIdenticalPoints() {
+        let multiLineString = MultiLineString([LineString([[100, 100], [100, 100]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 2)
+    }
+
+    func testMultiLineStringSimplify_oneLineStringThreeIdenticalPoints() {
+        let multiLineString = MultiLineString([LineString([[100, 100], [100, 100], [100, 100]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 2)
+    }
+
+    func testMultiLineStringSimplify_oneLineStringFourIdenticalPoints() {
+        let multiLineString = MultiLineString([LineString([[100, 100], [100, 100], [100, 100], [100, 100]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 2)
+    }
+
+    func testMultiLineStringSimplify_fivePointsThreeUniqueSameSlope_fivePointsThreeUniqueTwoDifferentSlopes() {
+        let multiLineString = MultiLineString([LineString([[100, 100], [100, 100], [150, 150], [200, 200], [200, 200]]), LineString([[100, 100], [100, 100], [150, 150], [200, 150], [200, 150]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 2)
+        XCTAssert(multiLineStringResult[1].count == 3)
+    }
+
+    func testMultiLineStringSimplify_fourLineStrings() {
+        let multiLineString = MultiLineString([LineString([[100, 100], [100, 100], [200, 200], [300, 300], [300, 300], [400, 300], [500, 300], [600, 300], [600, 300], [600, 400], [600, 600], [600, 800]]),
+                                                LineString([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100]]),
+                                                LineString([[100, 100], [200, 200], [200, 200], [100, 100]]),
+                                                LineString([[100, 100], [200, 200], [200, 200], [100, 100], [100, 100], [200, 200]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 4)
+        XCTAssert(multiLineStringResult[0].count == 4)
+        XCTAssert(multiLineStringResult[1].count == 5)
+        XCTAssert(multiLineStringResult[2].count == 2)
+        XCTAssert(multiLineStringResult[3].count == 2)
+    }
+
+    func testMultiLineStringSimplify_fourLineStrings2() {
+        let multiLineString = MultiLineString([LineString([[100, 100], [300, 300], [200, 200], [500, 500]]),
+                                                LineString([[0, 1], [1, 1], [2, 2], [0, 0], [1, 1], [5, 1]]),
+                                                LineString([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100], [100, 100], [100, 200], [200, 200], [200, 100], [100, 100]]),
+                                                LineString([[0, 0], [0, 10], [20, 10], [20, 0], [8, 0], [8, 4], [12, 4], [12, 0], [0, 0], [0, 10], [20, 10], [20, 0], [0, 0], [0, 10]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 4)
+        XCTAssert(multiLineStringResult[0].count == 4)
+        XCTAssert(multiLineStringResult[1].count == 6)
+        XCTAssert(multiLineStringResult[2].count == 5)
+        XCTAssert(multiLineStringResult[3].count == 13)
+    }
 }

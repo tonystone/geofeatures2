@@ -117,5 +117,32 @@ linearRing16.simplify(tolerance: 1.0)
 
 /// MultiLineString
 
-//let multiLineString1 = MultiLineString([LineString([[100, 100], [100, 100]]), LineString([[200, 200], [200, 200]])])
-//multiLineString1.simplify(tolerance: 1.0)
+let multiLineString1 = MultiLineString()
+multiLineString1.simplify(tolerance: 1.0)
+
+let multiLineString2 = MultiLineString([LineString([[100, 100]])])
+multiLineString2.simplify(tolerance: 1.0)
+
+let multiLineString3 = MultiLineString([LineString([[100, 100], [100, 100]])])
+multiLineString3.simplify(tolerance: 1.0)
+
+let multiLineString4 = MultiLineString([LineString([[100, 100], [100, 100], [100, 100]])])
+multiLineString4.simplify(tolerance: 1.0)
+
+let multiLineString5 = MultiLineString([LineString([[100, 100], [100, 100], [100, 100], [100, 100]])])
+multiLineString5.simplify(tolerance: 1.0)
+
+let multiLineString6 = MultiLineString([LineString([[100, 100], [100, 100], [150, 150], [200, 200], [200, 200]]), LineString([[100, 100], [100, 100], [150, 150], [200, 150], [200, 150]])])
+multiLineString6.simplify(tolerance: 1.0)
+
+let multiLineString7 = MultiLineString([LineString([[100, 100], [100, 100], [200, 200], [300, 300], [300, 300], [400, 300], [500, 300], [600, 300], [600, 300], [600, 400], [600, 600], [600, 800]]),
+                                        LineString([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100]]),
+                                        LineString([[100, 100], [200, 200], [200, 200], [100, 100]]),
+                                        LineString([[100, 100], [200, 200], [200, 200], [100, 100], [100, 100], [200, 200]])])
+multiLineString7.simplify(tolerance: 1.0)
+
+let multiLineString8 = MultiLineString([LineString([[100, 100], [300, 300], [200, 200], [500, 500]]),
+                                        LineString([[0, 1], [1, 1], [2, 2], [0, 0], [1, 1], [5, 1]]),
+                                        LineString([[100, 100], [100, 200], [200, 200], [200, 100], [100, 100], [100, 100], [100, 200], [200, 200], [200, 100], [100, 100]]),
+                                        LineString([[0, 0], [0, 10], [20, 10], [20, 0], [8, 0], [8, 4], [12, 4], [12, 0], [0, 0], [0, 10], [20, 10], [20, 0], [0, 0], [0, 10]])])
+multiLineString8.simplify(tolerance: 1.0)
