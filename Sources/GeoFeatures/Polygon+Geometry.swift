@@ -72,7 +72,7 @@ extension Polygon {
     ///
     public func simplify(tolerance: Double) -> Polygon {
 
-        /// Part 1 - simplify each line string
+        /// Part 1 - simplify each linear ring
         var resultPolygon1 = Polygon()
         for linearRing in self {
             let resultLinearRing = linearRing.simplify(tolerance: 1.0)
