@@ -97,20 +97,4 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
         }
         return Bounds(min: (x: minX, y: minY), max: (x: maxX, y: maxY))
     }
-
-    public func simplify(tolerance: Double) -> Self {
-        return self
-    }
-}
-
-///
-/// Extension for all `CoordinateCollectionType`'s.
-///
-/// - Remarks: This covers `LineString`, `LinearRing`, and `Point`.
-///
-public extension CoordinateCollectionType {
-
-    public func simplify(tolerance: Double) -> Self {
-        return self
-    }
 }
