@@ -43,10 +43,6 @@ extension Geometry where Self: GeometryCollectionType {
     public func isEmpty() -> Bool {
         return self.isEmpty
     }
-
-    public func simplify(tolerance: Double) -> Self {
-        return self
-    }
 }
 
 ///
