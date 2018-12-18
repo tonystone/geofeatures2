@@ -58,4 +58,8 @@ extension GeometryCollection {
         }
         return false
     }
+
+    public func simplify(tolerance: Double) -> GeometryCollection {
+        return self
+    }
 }
