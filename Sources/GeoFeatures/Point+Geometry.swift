@@ -71,4 +71,11 @@ extension Point {
         }
         return false
     }
+
+    ///
+    /// Simplication of Point simply returns itself.
+    ///
+    public func simplify(tolerance: Double) -> Point {
+        return self
+    }
 }
