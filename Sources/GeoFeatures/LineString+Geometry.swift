@@ -67,11 +67,6 @@ extension LineString {
             }
         }
 
-        /// Make sure there is at least two points
-        if resultLineString1.count == 1 {
-            resultLineString1.append(resultLineString1[0])
-        }
-
         /// Must have at least 3 points or two lines segments for this algorithm to apply
         guard resultLineString1.count >= 3 else {
             return resultLineString1

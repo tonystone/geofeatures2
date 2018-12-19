@@ -178,7 +178,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
 
         XCTAssert(multiLineStringResult.count == 1)
-        XCTAssert(multiLineStringResult[0].count == 2)
+        XCTAssert(multiLineStringResult[0].count == 1)
     }
 
     func testMultiLineStringSimplify_oneLineStringFourIdenticalPoints() {
@@ -186,7 +186,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
 
         XCTAssert(multiLineStringResult.count == 1)
-        XCTAssert(multiLineStringResult[0].count == 2)
+        XCTAssert(multiLineStringResult[0].count == 1)
     }
 
     func testMultiLineStringSimplify_fivePointsThreeUniqueSameSlope_fivePointsThreeUniqueTwoDifferentSlopes() {

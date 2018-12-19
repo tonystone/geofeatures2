@@ -119,14 +119,14 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let lineString = LineString([[100, 100], [100, 100], [100, 100]])
         let lineStringResult = lineString.simplify(tolerance: 1.0)
 
-        XCTAssert(lineStringResult.count == 2)
+        XCTAssert(lineStringResult.count == 1)
     }
 
     func testLineStringSimplify_fourIdenticalPoints() {
         let lineString = LineString([[100, 100], [100, 100], [100, 100], [100, 100]])
         let lineStringResult = lineString.simplify(tolerance: 1.0)
 
-        XCTAssert(lineStringResult.count == 2)
+        XCTAssert(lineStringResult.count == 1)
     }
 
     func testLineStringSimplify_fivePointsThreeUnique_sameSlope() {

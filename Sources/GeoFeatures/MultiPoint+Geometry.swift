@@ -59,6 +59,8 @@ extension MultiPoint {
     /// that is topologically equivalent to the original geometry.  In essence, this function removes
     /// duplication and intermediate coordinates that do not contribute to the overall definition.
     ///
+    /// Simplifying a MultiPoint means removing identical points.
+    ///
     /// - Returns: the simplified geometry of the same type as the original
     ///
     public func simplify(tolerance: Double) -> MultiPoint {

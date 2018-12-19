@@ -303,4 +303,40 @@ class IntersectionMatrixTests: XCTestCase {
 
         XCTAssertNotEqual(IntersectionMatrix(arrayLiteral: input1), IntersectionMatrix(arrayLiteral: input2))
     }
+
+    func testTranspose () {
+        var input = IntersectionMatrix(arrayLiteral: [
+            [.two,  .empty, .one],
+            [.two,  .one,   .two],
+            [.zero, .empty, .two]
+        ])
+
+        let expectedOutput = IntersectionMatrix(arrayLiteral: [
+            [.two,   .two, .zero],
+            [.empty, .one, .empty],
+            [.one,   .two, .two]
+            ])
+
+        input.transpose()
+
+        XCTAssertEqual(input, expectedOutput)
+    }
+
+    func testTransposed () {
+        let input = IntersectionMatrix(arrayLiteral: [
+            [.two,  .empty, .one],
+            [.two,  .one,   .two],
+            [.zero, .empty, .two]
+            ])
+
+        let expectedOutput = IntersectionMatrix(arrayLiteral: [
+            [.two,   .two, .zero],
+            [.empty, .one, .empty],
+            [.one,   .two, .two]
+            ])
+
+        let output = input.transposed()
+
+        XCTAssertEqual(output, expectedOutput)
+    }
 }
