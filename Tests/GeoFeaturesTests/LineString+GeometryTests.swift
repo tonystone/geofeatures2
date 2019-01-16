@@ -108,6 +108,20 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
     // MARK: - Simplify
 
+    func testLineStringSimplify_noPoints() {
+        let lineString = LineString([])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 0)
+    }
+
+    func testLineStringSimplify_onePoint() {
+        let lineString = LineString([[100, 100]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 1)
+    }
+
     func testLineStringSimplify_twoIdenticalPoints() {
         let lineString = LineString([[100, 100], [100, 100]])
         let lineStringResult = lineString.simplify(tolerance: 1.0)
@@ -119,14 +133,14 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let lineString = LineString([[100, 100], [100, 100], [100, 100]])
         let lineStringResult = lineString.simplify(tolerance: 1.0)
 
-        XCTAssert(lineStringResult.count == 1)
+        XCTAssert(lineStringResult.count == 2)
     }
 
     func testLineStringSimplify_fourIdenticalPoints() {
         let lineString = LineString([[100, 100], [100, 100], [100, 100], [100, 100]])
         let lineStringResult = lineString.simplify(tolerance: 1.0)
 
-        XCTAssert(lineStringResult.count == 1)
+        XCTAssert(lineStringResult.count == 2)
     }
 
     func testLineStringSimplify_fivePointsThreeUnique_sameSlope() {

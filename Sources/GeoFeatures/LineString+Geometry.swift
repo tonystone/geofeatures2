@@ -47,6 +47,12 @@ extension LineString {
     /// of segments that have the same slope to just a single segment, and (3) removing the end portion
     /// of a LineString that is completely contained in an earlier portion of that LineString.
     ///
+    /// Note there is a special case where we will simplify an invalid LineString.
+    /// If a LineString has only two or more identical points, the LineString is invalid.
+    /// However, we will simplify such a LineString to have exactly two points.
+    /// The philosophy here being that once a LineString has two or more points, it should
+    /// never be reduced to less than two points.
+    ///
     /// - Returns: the simplified geometry of the same type as the original
     ///
     public func simplify(tolerance: Double) -> LineString {
@@ -69,6 +75,11 @@ extension LineString {
 
         /// Must have at least 3 points or two lines segments for this algorithm to apply
         guard resultLineString1.count >= 3 else {
+            /// Handle special case where the curve has been reduced to only one point.
+            /// Duplicate that point, so there is exactly two identical points, an invalid LineString.
+            if resultLineString1.count == 1 {
+                resultLineString1.append(resultLineString1[0])
+            }
             return resultLineString1
         }
 
