@@ -133,7 +133,7 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let linearRing = LinearRing([[100, 100], [100, 100], [100, 100]])
         let linearRingResult = linearRing.simplify(tolerance: 1.0)
 
-        XCTAssert(linearRingResult.count == 3)
+        XCTAssert(linearRingResult.count == 2)
     }
 
     func testLinearRingSimplify_fourIdenticalPoints() {

@@ -47,12 +47,18 @@ extension LinearRing {
     /// of segments that have the same slope to just a single segment, and (3) removing the end portion
     /// of a LinearRing that is completely contained in an earlier portion of that LinearRing.
     ///
+    /// Note there is a special case where we will simplify an invalid LinearRing.
+    /// If a LinearRing has only two or more identical points, the LinearRing is invalid.
+    /// However, we will simplify such a LinearRing to have exactly two points.
+    /// The philosophy here being that once a LinearRing has two or more points, it should
+    /// never be reduced to less than two points.
+    ///
     /// - Returns: the simplified geometry of the same type as the original
     ///
     public func simplify(tolerance: Double) -> LinearRing {
 
-        /// Must have at least 4 points or three lines segments for this algorithm to apply
-        guard self.count >= 4 else {
+        /// Must have at least 3 points or two line segments for this algorithm to apply
+        guard self.count >= 3 else {
             return self
         }
 
@@ -72,7 +78,7 @@ extension LinearRing {
             resultLinearRing1.append(resultLinearRing1[0])
         }
 
-        /// Must have at least 4 points or three lines segments for this algorithm to apply
+        /// Must have at least 4 points or three lines segments for further simplification to be done
         guard resultLinearRing1.count >= 4 else {
             return resultLinearRing1
         }
@@ -105,7 +111,7 @@ extension LinearRing {
         /// Add the last coordinate
         resultLinearRing2.append(resultLinearRing1[resultLinearRing1.count - 1])
 
-        /// Must have at least 4 points or three lines segments for this algorithm to appl
+        /// Must have at least 4 points or three lines segments for further simplification to be done
         guard resultLinearRing2.count >= 4 else {
             return resultLinearRing2
         }
