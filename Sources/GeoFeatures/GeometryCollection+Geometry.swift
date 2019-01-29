@@ -59,6 +59,10 @@ extension GeometryCollection {
         return false
     }
 
+    ///
+    /// - Returns: the same type of GeometryCollection but with the same number or fewer coordinates that
+    ///             will be topologically equivalent to the original.
+    ///
     public func simplify(tolerance: Double) -> GeometryCollection {
         return self
     }
