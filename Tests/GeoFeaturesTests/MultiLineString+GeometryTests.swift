@@ -278,4 +278,28 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         XCTAssert(multiLineStringResult[0].count == 3)
         XCTAssert(multiLineStringResult[1].count == 2)
     }
+
+    func testMultiLineStringSimplify_lineStringsShouldNotBeMerged() {
+        let multiLineString = MultiLineString([LineString([[-40, 40], [-20, 20], [0, 20], [20, 20], [40, 40]]),
+                                               LineString([[-40, 0], [-20, 0], [0, 20], [10, 20], [10, 20], [20, 10], [40, 10]]),
+                                               LineString([[30, 0], [0, 30], [30, 60], [40, 60]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 3)
+        XCTAssert(multiLineStringResult[0].count == 4)
+        XCTAssert(multiLineStringResult[1].count == 6)
+        XCTAssert(multiLineStringResult[2].count == 4)
+    }
+
+    func testMultiLineStringSimplify_lineStringsShouldNotBeMergedYet() {
+        let multiLineString = MultiLineString([LineString([[-40, 40], [-20, 20], [0, 20], [20, 20], [40, 40]]),
+                                               LineString([[-40, 0], [-20, 0], [0, 20], [10, 20], [10, 20], [20, 10], [40, 10]]),
+                                               LineString([[60, 10], [20, 10], [10, 20], [5, 20]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 3)
+        XCTAssert(multiLineStringResult[0].count == 4)
+        XCTAssert(multiLineStringResult[1].count == 6)
+        XCTAssert(multiLineStringResult[2].count == 4)
+    }
 }
