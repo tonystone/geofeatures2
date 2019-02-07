@@ -291,15 +291,210 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         XCTAssert(multiLineStringResult[2].count == 4)
     }
 
-    func testMultiLineStringSimplify_lineStringsShouldNotBeMergedYet() {
+    func testMultiLineStringSimplify_lineStringsSecondAndThirdMerge() {
         let multiLineString = MultiLineString([LineString([[-40, 40], [-20, 20], [0, 20], [20, 20], [40, 40]]),
                                                LineString([[-40, 0], [-20, 0], [0, 20], [10, 20], [10, 20], [20, 10], [40, 10]]),
                                                LineString([[60, 10], [20, 10], [10, 20], [5, 20]])])
         let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
 
-        XCTAssert(multiLineStringResult.count == 3)
+        XCTAssert(multiLineStringResult.count == 2)
         XCTAssert(multiLineStringResult[0].count == 4)
         XCTAssert(multiLineStringResult[1].count == 6)
-        XCTAssert(multiLineStringResult[2].count == 4)
+    }
+
+    func testMultiLineStringSimplify_lineStringsOverlapAtOnePartialOneFullSegment_1of4() {
+        let multiLineString = MultiLineString([LineString([[25, 5], [30, 10], [40, 0], [50, 10], [60, 0], [70, 10]]),
+                                               LineString([[40, 0], [30, 10], [20, 0], [10, 10], [0, 0]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 8)
+    }
+
+    func testMultiLineStringSimplify_lineStringsOverlapAtOnePartialOneFullSegment_2of4() {
+        let multiLineString = MultiLineString([LineString([[25, 5], [30, 10], [40, 0], [50, 10], [60, 0], [70, 10]]),
+                                               LineString([[0, 0], [10, 10], [20, 0], [30, 10], [40, 0]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 8)
+    }
+
+    func testMultiLineStringSimplify_lineStringsOverlapAtOnePartialOneFullSegment_3of4() {
+        let multiLineString = MultiLineString([LineString([[70, 10], [60, 0], [50, 10], [40, 0], [30, 10], [25, 5]]),
+                                               LineString([[40, 0], [30, 10], [20, 0], [10, 10], [0, 0]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 8)
+    }
+
+    func testMultiLineStringSimplify_lineStringsOverlapAtOnePartialOneFullSegment_4of4() {
+        let multiLineString = MultiLineString([LineString([[70, 10], [60, 0], [50, 10], [40, 0], [30, 10], [25, 5]]),
+                                               LineString([[0, 0], [10, 10], [20, 0], [30, 10], [40, 0]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 8)
+    }
+
+    func testMultiLineStringSimplify_lineStringsOverlapAtTwoPartialsOneFullSegment_1of4() {
+        let multiLineString = MultiLineString([LineString([[25, 5], [30, 10], [40, 0], [50, 10], [60, 0], [70, 10]]),
+                                               LineString([[45, 5], [40, 0], [30, 10], [20, 0], [10, 10], [0, 0]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 8)
+    }
+
+    func testMultiLineStringSimplify_lineStringsOverlapAtTwoPartialsOneFullSegment_2of4() {
+        let multiLineString = MultiLineString([LineString([[25, 5], [30, 10], [40, 0], [50, 10], [60, 0], [70, 10]]),
+                                               LineString([[0, 0], [10, 10], [20, 0], [30, 10], [40, 0], [45, 5]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 8)
+    }
+
+    func testMultiLineStringSimplify_lineStringsOverlapAtTwoPartialsOneFullSegment_3of4() {
+        let multiLineString = MultiLineString([LineString([[70, 10], [60, 0], [50, 10], [40, 0], [30, 10], [25, 5]]),
+                                               LineString([[45, 5], [40, 0], [30, 10], [20, 0], [10, 10], [0, 0]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 8)
+    }
+
+    func testMultiLineStringSimplify_lineStringsOverlapAtTwoPartialsOneFullSegment_4of4() {
+        let multiLineString = MultiLineString([LineString([[70, 10], [60, 0], [50, 10], [40, 0], [30, 10], [25, 5]]),
+                                               LineString([[0, 0], [10, 10], [20, 0], [30, 10], [40, 0], [45, 5]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 8)
+    }
+
+    func testMultiLineStringSimplify_twoUShapedLineStringsOverlapToFormSquare_1of4() {
+        let multiLineString = MultiLineString([LineString([[0, 0], [0, 50], [50, 50], [50, 0]]),
+                                               LineString([[0, 50], [0, 0], [50, 0], [50, 50]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 5)
+    }
+
+    func testMultiLineStringSimplify_twoUShapedLineStringsOverlapToFormSquare_2of4() {
+        let multiLineString = MultiLineString([LineString([[0, 0], [0, 50], [50, 50], [50, 0]]),
+                                               LineString([[50, 50], [50, 0], [0, 0], [0, 50]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 5)
+    }
+
+    func testMultiLineStringSimplify_twoUShapedLineStringsOverlapToFormSquare_3of4() {
+        let multiLineString = MultiLineString([LineString([[50, 0], [50, 50], [0, 50], [0, 0]]),
+                                                LineString([[0, 50], [0, 0], [50, 0], [50, 50]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 5)
+    }
+
+    func testMultiLineStringSimplify_twoUShapedLineStringsOverlapToFormSquare_4of4() {
+        let multiLineString = MultiLineString([LineString([[50, 0], [50, 50], [0, 50], [0, 0]]),
+                                               LineString([[50, 50], [50, 0], [0, 0], [0, 50]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 1)
+        XCTAssert(multiLineStringResult[0].count == 5)
+    }
+
+    func testMultiLineStringSimplify_twoLineStringsOverlapButCannotBeMerged_1of4() {
+        let multiLineString = MultiLineString([LineString([[80, 0], [50, 0], [50, 50], [0, 50], [0, 0], [-50, 0]]),
+                                               LineString([[0, 50], [0, 0], [50, 0], [50, 50]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 6)
+        XCTAssert(multiLineStringResult[1].count == 4)
+    }
+
+    func testMultiLineStringSimplify_twoLineStringsOverlapButCannotBeMerged_2of4() {
+        let multiLineString = MultiLineString([LineString([[-50, 0], [0, 0], [0, 50], [50, 50], [50, 0], [80, 0]]),
+                                               LineString([[50, 50], [50, 0], [0, 0], [0, 50]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 6)
+        XCTAssert(multiLineStringResult[1].count == 4)
+    }
+
+    func testMultiLineStringSimplify_twoLineStringsOverlapButCannotBeMerged_3of4() {
+        let multiLineString = MultiLineString([LineString([[-50, 0], [0, 0], [0, 50], [50, 50], [50, 0], [80, 0]]),
+                                               LineString([[0, 50], [0, 0], [50, 0], [50, 50]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 6)
+        XCTAssert(multiLineStringResult[1].count == 4)
+    }
+
+    func testMultiLineStringSimplify_twoLineStringsOverlapButCannotBeMerged_4of4() {
+        let multiLineString = MultiLineString([LineString([[80, 0], [50, 0], [50, 50], [0, 50], [0, 0], [-50, 0]]),
+                                               LineString([[50, 50], [50, 0], [0, 0], [0, 50]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 6)
+        XCTAssert(multiLineStringResult[1].count == 4)
+    }
+
+    func testMultiLineStringSimplify_fourLineStringsThreeCanBeMerged_1of4() {
+        let multiLineString = MultiLineString([LineString([[0, 0], [10, 10], [20, 0], [30, 10], [40, 0], [50, 10], [60, 0]]),
+                                               LineString([[115, 5], [120, 0], [130, 10], [140, 0], [150, 10], [160, 0], [170, 10], [180, 0]]),
+                                               LineString([[20, -20], [60, 20], [100, -20], [140, 20]]),
+                                               LineString([[35, 5], [40, 0], [50, 10], [60, 0], [70, 10], [80, 0], [90, 10], [100, 0], [110, 10], [120, 0], [130, 10], [140, 0], [145, 5]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 19)
+        XCTAssert(multiLineStringResult[1].count == 4)
+    }
+
+    func testMultiLineStringSimplify_fourLineStringsThreeCanBeMerged_2of4() {
+        let multiLineString = MultiLineString([LineString([[35, 5], [40, 0], [50, 10], [60, 0], [70, 10], [80, 0], [90, 10], [100, 0], [110, 10], [120, 0], [130, 10],[140, 0], [145, 5]]),
+                                               LineString([[0, 0], [10, 10], [20, 0], [30, 10], [40, 0], [50, 10], [60, 0]]),
+                                               LineString([[180, 0], [170, 10], [160, 0], [150, 10], [140, 0], [130, 10], [120, 0], [115, 5]]),
+                                               LineString([[140, 20], [100, -20], [60, 20], [20, -20]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 19)
+        XCTAssert(multiLineStringResult[1].count == 4)
+    }
+
+    func testMultiLineStringSimplify_fourLineStringsThreeCanBeMerged_3of4() {
+        let multiLineString = MultiLineString([LineString([[180, 0], [170, 10], [160, 0], [150, 10], [140, 0], [130, 10], [120, 0], [115, 5]]),
+                                               LineString([[140, 20], [100, -20], [60, 20], [20, -20]]),
+                                               LineString([[35, 5], [40, 0], [50, 10], [60, 0], [70, 10], [80, 0], [90, 10], [100, 0], [110, 10], [120, 0], [130, 10],[140, 0], [145, 5]]),
+                                               LineString([[60, 0], [50, 10], [40, 0], [30, 10], [30, 10], [30, 10], [20, 0], [10, 10], [0, 0]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 19)
+        XCTAssert(multiLineStringResult[1].count == 4)
+    }
+
+    func testMultiLineStringSimplify_fourLineStringsThreeCanBeMerged_4of4() {
+        let multiLineString = MultiLineString([LineString([[140, 20], [100, -20], [60, 20], [20, -20]]),
+                                               LineString([[35, 5], [40, 0], [50, 10], [60, 0], [70, 10], [80, 0], [90, 10], [100, 0], [110, 10], [120, 0], [130, 10],[140, 0], [145, 5]]),
+                                               LineString([[180, 0], [170, 10], [160, 0], [150, 10], [140, 0], [130, 10], [120, 0], [115, 5]]),
+                                               LineString([[60, 0], [50, 10], [40, 0], [30, 10], [30, 10], [30, 10], [20, 0], [10, 10], [0, 0]])])
+        let multiLineStringResult = multiLineString.simplify(tolerance: 1.0)
+
+        XCTAssert(multiLineStringResult.count == 2)
+        XCTAssert(multiLineStringResult[0].count == 4)
+        XCTAssert(multiLineStringResult[1].count == 19)
     }
 }

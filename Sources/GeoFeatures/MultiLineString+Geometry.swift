@@ -645,7 +645,7 @@ extension MultiLineString {
                 return (lineString1 + LineString(lineString2[1..<ls2Count]), true)
             }
         } else if firstLastSegmentsIntersectAtSegmentOverlappingEndpoints {
-            let newLineString1 = LineString([ls2SecondCoord]) + LineString(lineString1[1..<ls1Count])
+            let newLineString1 = LineString([ls2SecondLastCoord]) + LineString(lineString1[1..<ls1Count])
             let newLineString2 = LineString(lineString2[0..<(ls2Count - 1)])
             return (LineString(newLineString1.reversed() + newLineString2.reversed()), true)
         } else if lastFirstSegmentsIntersectAtSegmentOverlappingEndpoints {
@@ -654,8 +654,146 @@ extension MultiLineString {
             return (newLineString1 + newLineString2, true)
         }
 
-        /// We may add more code later to fill out other cases.
-        /// Put in a placeholder for now to indicate we will not merge the other cases.
+        /// At this point, we have checked for the cases where the line strings meet at an endpoint and
+        /// where two end segments overlap such that each endpoint is in the other segment and the dimension
+        /// of the overlap in each case has dimension one.
+        ///
+        /// We will now check for the case where the two line strings overlap by more than a single segment.
+
+        /// Make sure the two line strings have at least two segments each.
+        guard ls1Count >= 3 && ls2Count >= 3 else {
+            return (lineString1, false)
+        }
+
+        /// Phase 1:
+        /// Take the first segment of the first line string and walk through all the segments of the second line string,
+        /// keeping track of the segment indexes (second) where the first line string segment overlaps the second such that
+        /// the endpoint of the first is in the second and the other end of the first matches one of the endpoints
+        /// of the second segment.  If there are no such indexes, then no overlap exists, so move on to the next phase.
+        /// If there are such indexes, do the same thing again, but choose the first segment of the second line string and
+        /// walk through all of the segments of the first line string. If there are no matches, then move on to the next phase.
+        /// If there are, then starting with the highest index for the second line string and the first index of the first line
+        /// string, loop through the indexes and check whether the two segments overlap by a full or partial amount.
+        /// For the two line strings to line up on several line segments, it should be the case that a partial overlap
+        /// occurs at only the end segments of each, and the segments in between match exactly, except for a reversal of the
+        /// segment endpoints.  If this fails at any point, start over with the next index in the collection we first made.
+        /// If we go through all indexes and they all fail, then no overlap.  If something does overlap completely, build
+        /// a new line string and return that.
+
+        let (resultLineString1, lineStringsMerged1) = combineOverlappingLineStrings(lineString1, lineString2)
+        if lineStringsMerged1 { return (resultLineString1, lineStringsMerged1) }
+
+        /// Phase 2:
+        /// Repeat the above starting with the last segments of each line string.
+
+        let (resultLineString2, lineStringsMerged2) = combineOverlappingLineStrings(lineString1, LineString(lineString2.reversed()))
+        if lineStringsMerged2 { return (resultLineString2, lineStringsMerged2) }
+
+        /// Phase 3:
+        /// Repeat the above starting with the first segment of the first line string and the last segment of the
+        /// second line string.
+
+        let (resultLineString3, lineStringsMerged3) = combineOverlappingLineStrings(LineString(lineString1.reversed()), lineString2)
+        if lineStringsMerged3 { return (resultLineString3, lineStringsMerged3) }
+
+        /// Phase 4:
+        /// Repeat the above starting with the last segment of the first line string and the first segment of the
+        /// second line string.
+
+        let (resultLineString4, lineStringsMerged4) = combineOverlappingLineStrings(LineString(lineString1.reversed()), LineString(lineString2.reversed()))
+        if lineStringsMerged4 { return (resultLineString4, lineStringsMerged4) }
+
+        /// No overlap
+        return (lineString1, false)
+    }
+
+    /// This handles the case where two line strings overlap by one or more segments, or partial segments, at one or both
+    /// of the ends of the two line strings.
+    fileprivate func combineOverlappingLineStrings(_ lineString1: LineString, _ lineString2: LineString) -> (LineString, Bool) {
+
+        /// Make sure the two line strings are valid, else refuse to combine them.
+        let ls1Count = lineString1.count
+        let ls2Count = lineString2.count
+        guard ls1Count >= 2 && ls2Count >= 2 else {
+            return (lineString1, false)
+        }
+
+        /// Get the first segment of the first line string.
+        let ls1FirstCoord  = lineString1[0]
+        let ls1SecondCoord = lineString1[1]
+        let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
+
+        /// Check whether the first segment of the first line string overlaps with any of the segments of the second line string
+        var firstTouchesSecond = [Int]() /// An array of indexes of the segments of the second line string where the first segment of the first line string touches it with dimension one.  May not need an array.  A single value may work.
+        for index2 in 0..<(ls2Count - 1) {
+            let ls2FirstCoord  = lineString2[index2]
+            let ls2SecondCoord = lineString2[index2 + 1]
+            let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
+            let firstSecondIsBoundaryPoint = (index2 == 0)
+
+            let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: true, firstCoordinateSecondSegmentBoundary: firstSecondIsBoundaryPoint)
+
+            let firstOfFirstTouchesSecond = (lineSegmentIntersection.firstSegmentFirstBoundaryLocation != .onExterior)
+            let secondOfFirstTouchesSecondAtBoundaryPoint = ((ls1SecondCoord == ls2FirstCoord) || (ls1SecondCoord == ls2SecondCoord))
+            let segmentsIntersectAtSegment = (lineSegmentIntersection.geometry?.dimension == .one) /// Necessary?
+            if firstOfFirstTouchesSecond && secondOfFirstTouchesSecondAtBoundaryPoint && segmentsIntersectAtSegment {
+                firstTouchesSecond.append(index2)
+            }
+        }
+
+        /// The maximum index of at which the first line string touches the second line string cannot be greater than the count of
+        /// segments in the first line string and have the line strings overlap with the first being a subset of the second.
+        /// Therefore, we will check that case and exit if true
+
+        let maxIndex = firstTouchesSecond.last
+        guard let validMaxIndex = maxIndex, validMaxIndex <= ls1Count else {
+            return (lineString1, false)
+        }
+
+        /// We need to check that the first line string overlaps the second from the validMaxIndex to either 0 or to ls2Count - 1.
+        /// This means we check the overlap occurs in either of two directions.
+
+        var index1 = 1
+        for index2 in (0...validMaxIndex).reversed() {
+            if lineString1[index1] == lineString2[index2] {
+                if index2 == 0 {
+                    /// Everything lines up.  Build a new a line string.
+                    let newLineString1 = LineString(lineString1[(index1 + 1)..<ls1Count])
+                    let newLineString2 = lineString2.reversed()
+                    return (newLineString2 + newLineString1, true)
+                } else {
+                    index1 += 1
+                    continue
+                }
+            } else if index2 != 0 {
+                /// Non-overlapping case.  Go to next phase.
+                return (lineString1, false)
+            } else {
+                /// Index2 == 0.  If the two final segments overlap, this must be in the first segment of the second line string.
+                let ls1FirstCoord  = lineString1[index1]
+                let ls1SecondCoord = lineString1[index1 - 1]
+                let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
+                let firstFirstIsBoundaryPoint = (index1 == (ls1Count - 1))
+
+                let ls2FirstCoord  = lineString2[index2]
+                let ls2SecondCoord = lineString2[index2 + 1]
+                let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
+                let firstSecondIsBoundaryPoint = true
+
+                let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstFirstIsBoundaryPoint, firstCoordinateSecondSegmentBoundary: firstSecondIsBoundaryPoint)
+
+                let firstOfSecondTouchesFirstAtInterior = (lineSegmentIntersection.secondSegmentFirstBoundaryLocation == .onInterior)
+                if firstOfSecondTouchesFirstAtInterior {
+                    /// Segments line up.  Build a new line string.
+                    let newLineString1 = LineString(lineString1[index1..<ls1Count])
+//                    let newLineString1 = LineString(lineString1[(index1 + 1)..<ls1Count])
+                    let newLineString2 = lineString2.reversed()
+                    return (newLineString2 + newLineString1, true)
+                }
+            }
+        }
+
+        /// No overlap
         return (lineString1, false)
     }
 }

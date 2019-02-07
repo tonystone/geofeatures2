@@ -212,4 +212,11 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
         XCTAssert(lineStringResult.count == 13)
     }
+
+    func testLineStringSimplify_hexagonWithOverlappingEnds() {
+        let lineString = LineString([[0, 20], [0, 10], [10, 0], [20, 0], [30, 10], [30, 20], [20, 30], [10, 30], [0, 20], [0, 10], [10, 0], [20, 0], [30, 10]])
+        let lineStringResult = lineString.simplify(tolerance: 1.0)
+
+        XCTAssert(lineStringResult.count == 9)
+    }
 }
