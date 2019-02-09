@@ -119,4 +119,17 @@ class GeometryCollectionGeometryTests: XCTestCase {
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
     }
+
+    // MARK: Simplify
+
+    func testGeometryCollectionSimplify_twoIdenticalPoints() {
+        let geometryCollection = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]  as [Geometry], precision: precision, coordinateSystem: cs)
+        let geometryCollectionResult = geometryCollection.simplify(tolerance: 1.0)
+
+        XCTAssert(geometryCollectionResult.count == 2)
+        let lineString = geometryCollectionResult[0] as? LineString
+        XCTAssert(lineString?.count == 2)
+        let polygon = geometryCollectionResult[1] as? Polygon
+        XCTAssert(polygon?.count == 1)
+    }
 }

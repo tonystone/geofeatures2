@@ -26,7 +26,13 @@ enum Orientation: Int { case collinear = 0, clockwise, counterclockwise }
 ///
 /// This is the main internal type which represents lines, rings and points.
 ///
-public protocol CoordinateCollectionType: MutableCollection where Element == Coordinate, Index == Int {}
+public protocol CoordinateCollectionType: MutableCollection where Element == Coordinate, Index == Int {
+
+    ///
+    /// simplify will simplify a geometry to its simplest form, the simplest sequence of points or coordinates, that will describe that geometry.  In essence, this function will remove duplication and intermediate coordinates that do not contribute to the overall definition.
+    ///
+    func simplify(tolerance: Double) -> Self
+}
 
 ///
 /// Extension for all `CoordinateCollectionType` that are also a `Geometry` & `Curve` type.
@@ -92,10 +98,3 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
         return Bounds(min: (x: minX, y: minY), max: (x: maxX, y: maxY))
     }
 }
-
-///
-/// Extension for all `CoordinateCollectionType`'s.
-///
-/// - Remarks: This covers `LineString`, `LinearRing`, and `Point`.
-///
-internal extension CoordinateCollectionType {}

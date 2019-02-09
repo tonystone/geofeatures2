@@ -303,4 +303,41 @@ class MultiPointGeometryCoordinate3DMFixedCartesianTests: XCTestCase {
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
+
+// MARK: - Simplify -
+
+    func testMultiPointSimplify_noPoints() {
+        let multipoint = MultiPoint([])
+        let multipointResult = multipoint.simplify(tolerance: 1.0)
+
+        XCTAssert(multipointResult.count == 0)
+    }
+
+    func testMultiPointSimplify_onePoint() {
+        let multipoint = MultiPoint([Point([0.0, 0.0])])
+        let multipointResult = multipoint.simplify(tolerance: 1.0)
+
+        XCTAssert(multipointResult.count == 1)
+    }
+
+    func testMultiPointSimplify_twoDifferentPoints() {
+        let multipoint = MultiPoint([Point([0.0, 0.0]), Point([1.0, 1.0])])
+        let multipointResult = multipoint.simplify(tolerance: 1.0)
+
+        XCTAssert(multipointResult.count == 2)
+    }
+
+    func testMultiPointSimplify_twoIdenticalPoints() {
+        let multipoint = MultiPoint([Point([1.0, 1.0]), Point([1.0, 1.0])])
+        let multipointResult = multipoint.simplify(tolerance: 1.0)
+
+        XCTAssert(multipointResult.count == 1)
+    }
+
+    func testMultiPointSimplify_mixtureOfPoints() {
+        let multipoint = MultiPoint([Point([0.0, 0.0]), Point([0.0, 0.0]), Point([1.0, 1.0]), Point([0.0, 0.0]), Point([0.0, 0.0]), Point([0.0, 0.0]), Point([1.0, 1.0])])
+        let multipointResult = multipoint.simplify(tolerance: 1.0)
+
+        XCTAssert(multipointResult.count == 2)
+    }
 }

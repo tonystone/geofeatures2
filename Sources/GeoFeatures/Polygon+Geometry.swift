@@ -58,4 +58,27 @@ extension Polygon {
         }
         return false
     }
+
+    ///
+    /// Reduces the geometry to its simplest form, the simplest sequence of points or coordinates,
+    /// that is topologically equivalent to the original geometry.  In essence, this function removes
+    /// duplication and intermediate coordinates that do not contribute to the overall definition.
+    ///
+    /// Reducing a Polygon means reducing each LinearRing that makes up that Polygon.
+    /// The first LinearRing is the main ring, and all the others are holes.
+    /// Note that no combining of the holes is needed because we assume this is a valid Polygon.
+    ///
+    /// - Returns: the simplified geometry of the same type as the original
+    ///
+    public func simplify(tolerance: Double) -> Polygon {
+
+        /// Part 1 - simplify each linear ring
+        var resultPolygon1 = Polygon()
+        for linearRing in self {
+            let resultLinearRing = linearRing.simplify(tolerance: 1.0)
+            resultPolygon1.append(resultLinearRing)
+        }
+
+        return resultPolygon1
+    }
 }

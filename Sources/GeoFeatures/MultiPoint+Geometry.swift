@@ -53,4 +53,39 @@ extension MultiPoint {
         }
         return false
     }
+
+    ///
+    /// Reduces the geometry to its simplest form, the simplest sequence of points or coordinates,
+    /// that is topologically equivalent to the original geometry.  In essence, this function removes
+    /// duplication and intermediate coordinates that do not contribute to the overall definition.
+    ///
+    /// Simplifying a MultiPoint means removing identical points.
+    ///
+    /// - Returns: the simplified geometry of the same type as the original
+    ///
+    public func simplify(tolerance: Double) -> MultiPoint {
+
+        guard self.count > 1 else {
+            return self
+        }
+
+        var resultGeometry = MultiPoint()
+        var indexesToIgnoreArray = [Int]()
+        for index1 in 0..<self.count {
+            if !indexesToIgnoreArray.contains(index1) {
+                resultGeometry.append(self[index1])
+            } else {
+                continue
+            }
+            for index2 in (index1 + 1)..<self.count {
+                let point1 = self[index1]
+                let point2 = self[index2]
+                if point1 == point2 {
+                    indexesToIgnoreArray.append(index2)
+                }
+            }
+        }
+
+        return resultGeometry
+    }
 }

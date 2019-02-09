@@ -96,5 +96,53 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
+
+    // MARK: - Simplify
+
+    func testPolygonSimplify_empty() {
+        let polygon = Polygon()
+        let polygonResult = polygon.simplify(tolerance: 1.0)
+
+        XCTAssert(polygonResult.count == 0)
+    }
+
+    func testPolygonSimplify_singlePoint() {
+        let polygon = Polygon([[1.0, 1.0]], innerRings: [])
+        let polygonResult = polygon.simplify(tolerance: 1.0)
+
+        XCTAssert(polygonResult.count == 1)
+        XCTAssert(polygonResult[0].count == 1)
+    }
+
+    func testPolygonSimplify_square() {
+        let polygon = Polygon([[1.0, 1.0], [1.0, 5.0], [5.0, 5.0], [5.0, 5.0], [5.0, 1.0], [5.0, 1.0], [1.0, 1.0], [1.0, 5.0], [1.0, 1.0]], innerRings: [])
+        let polygonResult = polygon.simplify(tolerance: 1.0)
+
+        XCTAssert(polygonResult.count == 1)
+        XCTAssert(polygonResult[0].count == 7)
+    }
+
+    func testPolygonSimplify_squareWithHole() {
+        let polygon = Polygon([[1.0, 1.0], [1.0, 5.0], [5.0, 5.0], [5.0, 5.0], [5.0, 1.0], [5.0, 1.0], [1.0, 1.0], [1.0, 5.0], [1.0, 1.0]], innerRings: [[[4.0, 2.0], [4.0, 4.0], [4.0, 4.0], [2.0, 4.0], [3.5, 3.5], [4.0, 2.0], [4.0, 2.0]]])
+        let polygonResult = polygon.simplify(tolerance: 1.0)
+
+        XCTAssert(polygonResult.count == 2)
+        XCTAssert(polygonResult[0].count == 7)
+        XCTAssert(polygonResult[1].count == 5)
+    }
+
+    func testPolygonSimplify_polygonWithMultipleHoles() {
+        let polygon = Polygon([[0.0, 0.0], [-10.0, 10.0], [-10.0, 10.0], [-10.0, 10.0], [0.0, 20.0], [10.0, 20.0], [20.0, 10.0], [10.0, 0.0], [0.0, 0.0]],
+                              innerRings: [[[1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0], [1.0, 1.0], [1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0], [1.0, 1.0], [1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0], [1.0, 1.0]],
+                                           [[8.0, 2.0], [8.0, 1.0], [9.0, 1.0], [9.0, 1.0], [9.0, 1.0], [9.0, 1.0], [9.0, 2.0], [8.0, 2.0]],
+                                           [[5.0, 19.0], [3.0, 17.0], [5.0, 15.0], [7.0, 17.0], [5.0, 19.0], [5.0, 19.0], [3.0, 17.0], [5.0, 15.0], [7.0, 17.0], [5.0, 19.0]]])
+        let polygonResult = polygon.simplify(tolerance: 1.0)
+
+        XCTAssert(polygonResult.count == 4)
+        XCTAssert(polygonResult[0].count == 7)
+        XCTAssert(polygonResult[1].count == 5)
+        XCTAssert(polygonResult[2].count == 5)
+        XCTAssert(polygonResult[3].count == 5)
+    }
 }
 

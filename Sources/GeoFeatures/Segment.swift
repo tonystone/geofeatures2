@@ -15,7 +15,7 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Ed Swiss Default on 10/30/18.
+///  Created by Tony Stone on 4/24/17.
 ///
 import Swift
 
@@ -23,13 +23,12 @@ import Swift
 /// Low level type to represent a segment of a line used in geometric computations.
 ///
 internal class Segment {
-    
+
     var leftCoordinate:  Coordinate
     var rightCoordinate: Coordinate
-    
+
     init(left: Coordinate, right: Coordinate) {
         self.leftCoordinate  = left
         self.rightCoordinate = right
     }
 }
-

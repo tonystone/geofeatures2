@@ -22,7 +22,13 @@ import Foundation
 ///
 /// GeometryCollectionTypes marker protocol
 ///
-public protocol GeometryCollectionType: MutableCollection where Index == Int {}
+public protocol GeometryCollectionType: MutableCollection where Index == Int {
+
+    ///
+    /// simplify will simplify a geometry to its simplest form, the simplest sequence of points or coordinates, that will describe that geometry.  In essence, this function will remove duplication and intermediate coordinates that do not contribute to the overall definition.
+    ///
+    func simplify(tolerance: Double) -> Self
+}
 
 ///
 /// `Geometry`'s which also inherits from `GeometryCollectionType` with any element type.

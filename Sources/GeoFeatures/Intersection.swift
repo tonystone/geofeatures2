@@ -368,10 +368,6 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
     /// Dimension .zero and dimension .one
     ///
 
-    enum LocationType {
-        case onBoundary, onInterior, onExterior
-    }
-
     /// Returns true if the coordinate is on the line segment.
     fileprivate func coordinateIsOnLineSegment(_ coordinate: Coordinate, segment: Segment) -> LocationType {
 

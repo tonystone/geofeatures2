@@ -12,5 +12,6 @@
         <page name='9 - GeometryCollections'/>
         <page name='10 - Well Known Text (WKT)'/>
         <page name='11 - GeoJSON'/>
+        <page name='12 - Simplify'/>
     </pages>
 </playground>

@@ -64,4 +64,26 @@ extension MultiPolygon {
         }
         return false
     }
+
+    ///
+    /// Reduces the geometry to its simplest form, the simplest sequence of points or coordinates,
+    /// that is topologically equivalent to the original geometry.  In essence, this function removes
+    /// duplication and intermediate coordinates that do not contribute to the overall definition.
+    ///
+    /// Reducing a MultiPolygon means reducing each Polygon.  Note that no combining of the Polygons
+    /// is needed because we assume this is a valid MultiPolygon.
+    ///
+    /// - Returns: the simplified geometry of the same type as the original
+    ///
+    public func simplify(tolerance: Double) -> MultiPolygon {
+
+        /// Part 1 - simplify each polygon
+        var resultMultiPolygon1 = MultiPolygon()
+        for polygon in self {
+            let resultPolygon = polygon.simplify(tolerance: 1.0)
+            resultMultiPolygon1.append(resultPolygon)
+        }
+
+        return resultMultiPolygon1
+    }
 }

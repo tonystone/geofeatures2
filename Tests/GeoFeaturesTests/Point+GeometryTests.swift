@@ -396,4 +396,13 @@ class PointGeometryCoordinate3DMFixedCartesianTests: XCTestCase {
 
         XCTAssertTrue(geometry == expected, "\(geometry) is not equal to \(expected)")
     }
+
+    // MARK: - Simplify
+
+    func testPointSimplify_onePoint() {
+        let point = Point([0.0, 0.0])
+        let pointResult = point.simplify(tolerance: 1.0)
+
+        XCTAssert(pointResult.count == 1)
+    }
 }
