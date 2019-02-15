@@ -149,8 +149,8 @@ fileprivate func intersectionZeroOne(_ geometry1: Geometry, _ geometry2: Geometr
 
     if let point = geometry1 as? Point, let lineString = geometry2 as? LineString {
         return generateIntersection(point, lineString)
-//    } else if let points = geometry1 as? MultiPoint, let lineString = geometry2 as? LineString {
-//        return generateIntersection(points, lineString)
+    } else if let points = geometry1 as? MultiPoint, let lineString = geometry2 as? LineString {
+        return generateIntersection(points, lineString)
     } else if let point = geometry1 as? Point, let multilineString = geometry2 as? MultiLineString {
         return generateIntersection(point, multilineString)
 //    } else if let points = geometry1 as? MultiPoint, let multilineString = geometry2 as? MultiLineString {
@@ -464,6 +464,32 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 
         /// No intersection
         return GeometryCollection()
+    }
+
+    ///
+    /// - Returns: a MultiPoint object that is the unique set of points that intersect the line string
+    ///
+    fileprivate func generateIntersection(_ points: MultiPoint, _ lineString: LineString) -> Geometry {
+        
+        /// Simplify each geometry first
+        let simplifiedMultiPoint = points.simplify(tolerance: 1.0)
+        let simplifiedLineString = lineString.simplify(tolerance: 1.0)
+    
+        /// Check the intersection of each point with the line string.
+        /// The returned value will be a MultiPoint, which may be empty.
+        
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        
+        for tempPoint in simplifiedMultiPoint {
+            
+            guard let point = generateIntersection(tempPoint, simplifiedLineString) as? Point else {
+                continue
+            }
+            
+            multiPointGeometry.append(point)
+        }
+        
+        return multiPointGeometry
     }
 
 //    fileprivate static func subset(_ coordinate: Coordinate, _ coordinates: [Coordinate]) -> Bool {
