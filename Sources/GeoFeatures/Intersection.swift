@@ -153,8 +153,8 @@ fileprivate func intersectionZeroOne(_ geometry1: Geometry, _ geometry2: Geometr
         return generateIntersection(points, lineString)
     } else if let point = geometry1 as? Point, let multilineString = geometry2 as? MultiLineString {
         return generateIntersection(point, multilineString)
-//    } else if let points = geometry1 as? MultiPoint, let multilineString = geometry2 as? MultiLineString {
-//        return generateIntersection(points, multilineString)
+    } else if let points = geometry1 as? MultiPoint, let multilineString = geometry2 as? MultiLineString {
+        return generateIntersection(points, multilineString)
     } else if let point = geometry1 as? Point, let linearRing = geometry2 as? LinearRing {
         return generateIntersection(point, linearRing)
     } else if let points = geometry1 as? MultiPoint, let linearRing = geometry2 as? LinearRing {
@@ -2062,98 +2062,32 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ linearRing: Linear
     return multiPointGeometry
 }
 
-//
-//    fileprivate static func generateIntersection(_ points: MultiPoint, _ multiLineString: MultiLineString) -> IntersectionMatrix {
-//
-//        /// Default intersection matrix
-//        var matrixIntersects = IntersectionMatrix()
-//        matrixIntersects[.exterior, .interior] = .one
-//        matrixIntersects[.exterior, .exterior] = .two
-//
-//        /// Disjoint
-//        var disjoint = IntersectionMatrix()
-//        disjoint[.interior, .exterior] = .zero
-//        disjoint[.exterior, .interior] = .one
-//        disjoint[.exterior, .boundary] = .zero
-//        disjoint[.exterior, .exterior] = .two
-//
-//        /// Define the coordinate array that might be returned as a Geometry
-//        var resultCoordinateArray = [Coordinate]()
-//
-//        /// Check if any of the points equals any of the endpoints of the multiline string.
-//        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
-//            return disjoint
-//        }
-//
-//        let multiLineStringBoundaryCoordinateArray = multiPointToCoordinateArray(multiLineStringBoundary)
-//        let coordinateArray = multiPointToCoordinateArray(points)
-//
-//        var coordinateOnBoundary = false
-//        var coordinateOnInterior = false
-//        var coordinateOnExterior = false
-//
-//        for coordinate in coordinateArray {
-//            if subset(coordinate, multiLineStringBoundaryCoordinateArray) {
-//                coordinateOnBoundary = true
-//                resultCoordinateArray.append(coordinate)
-//            }
-//        }
-//
-//        /// Check if any of the coordinates is on any of the line segments in the multiline string.
-//        for coordinate in coordinateArray {
-//            /// Ignore coordinates that intersect the boundary of the multiline string.
-//            /// These were just calculated.
-//            if subset(coordinate, resultCoordinateArray) {
-//                continue
-//            }
-//
-//            /// Any intersection here is guaranteed to be in the interior.
-//            for lineString in multiLineString {
-//                for firstCoordIndex in 0..<lineString.count - 1 {
-//                    let firstCoord  = lineString[firstCoordIndex]
-//                    let secondCoord = lineString[firstCoordIndex + 1]
-//                    let segment = Segment(left: firstCoord, right: secondCoord)
-//                    if coordinateIsOnLineSegment(coordinate, segment: segment)  == .onInterior {
-//                        coordinateOnInterior = true
-//                        resultCoordinateArray.append(coordinate)
-//                    }
-//                }
-//            }
-//        }
-//
-//        /// Check if any of the coordinates is not on the multiline string.
-//        for coordinate in coordinateArray {
-//            if !subset(coordinate, multiLineString) {
-//                coordinateOnExterior = true
-//                break
-//            }
-//        }
-//
-//        /// Complete the matrix as needed and return the geometry and matrix if an intersection exists
-//        if coordinateOnInterior {
-//            matrixIntersects[.interior, .interior] = .zero
-//        }
-//
-//        if coordinateOnBoundary {
-//            matrixIntersects[.interior, .boundary] = .zero
-//        }
-//
-//        if coordinateOnExterior {
-//            matrixIntersects[.interior, .exterior] = .zero
-//        }
-//
-//        if !subset(multiLineStringBoundaryCoordinateArray, coordinateArray) {
-//            matrixIntersects[.exterior, .boundary] = .zero
-//        }
-//
-//        if coordinateOnBoundary || coordinateOnInterior {
-//            return matrixIntersects
-//        }
-//
-//        /// No intersection
-//        return disjoint
-//    }
-//
+///
+/// - Returns: a MultiPoint object that is the unique set of points that intersect the multi line string
+///
+fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: MultiLineString) -> Geometry {
+
+    /// Simplify each geometry first
+    let simplifiedMultiPoint = points.simplify(tolerance: 1.0)
+    let simplifiedMultiLineString = multiLineString.simplify(tolerance: 1.0)
+
+    /// Check the intersection of each point with the multi line string.
+    /// The returned value will be a MultiPoint, which may be empty.
+
+    var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+    for tempPoint in simplifiedMultiPoint {
+
+        guard let point = generateIntersection(tempPoint, simplifiedMultiLineString) as? Point else {
+            continue
+        }
+
+        multiPointGeometry.append(point)
+    }
+
+    return multiPointGeometry
+}
+
 //    ///
 //    /// Dimension .zero and dimension .two
 //    ///

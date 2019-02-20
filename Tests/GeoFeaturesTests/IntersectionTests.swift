@@ -790,186 +790,178 @@ class IntersectionTests: XCTestCase {
         compare(resultGeometry, expected)
     }
 
-//    ///
-//    /// MutliPoint MultiLineString tests
-//    ///
-//
-//    func testMultiPoint_MultiLineString_noIntersection() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 0.0, y: 0.0)), Point(Coordinate(x: 4.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstSubsetOfSecondInterior() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 1.5, y: 1.5)), Point(Coordinate(x: 2.5, y: 2.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .empty],
-//            [.empty, .empty, .empty],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstProperSubsetOfSecondBoundary() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstImproperSubsetOfSecondBoundary() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundary() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 1.8, y: 1.8))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndCoversBoundary() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.5, y: 1.5)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 3.0, y: 1.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExterior() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 1.0, y: 2.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstTouchesSecondBoundaryAndExterior() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 5.0, y: 5.0)), Point(Coordinate(x: 2.0, y: 4.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 4.0), Coordinate(x: 2.0, y: 4.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .zero],
-//            [.empty, .empty, .empty],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstCoversSecondBoundaryAndTouchesExterior() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 2.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 10.0, y: 0.0)), Point(Coordinate(x: 0.0, y: 10.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 10.0, y: 0.0), Coordinate(x: 0.0, y: 10.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .zero],
-//            [.empty, .empty, .empty],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundaryAndExterior() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 1.5, y: 4.0)), Point(Coordinate(x: 1.0, y: 5.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 4.0), Coordinate(x: 2.0, y: 4.0)]), LineString([Coordinate(x: 1.0, y: 5.0), Coordinate(x: 3.0, y: 5.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .zero],
-//            [.empty, .empty, .empty],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 1.0, y: 6.0)), Point(Coordinate(x: 3.0, y: 7.0)), Point(Coordinate(x: 1.0, y: 1.5)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 6.0)]), LineString([Coordinate(x: 3.0, y: 2.0), Coordinate(x: 3.0, y: 7.0)])], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .zero],
-//            [.empty, .empty, .empty],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+    func testMultiPoint_LinearRing_firstTouchesSecondInteriorAndExterior_bothGeometriesNeedSimplification() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 1.0, y: 2.5)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    ///
+    /// MutliPoint MultiLineString tests
+    ///
+
+    func testMultiPoint_MultiLineString_noIntersection() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 0.0, y: 0.0)), Point(Coordinate(x: 4.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstSubsetOfSecondInterior() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 1.5, y: 1.5)), Point(Coordinate(x: 2.5, y: 2.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 1.5, y: 1.5)), Point(Coordinate(x: 2.5, y: 2.5))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstProperSubsetOfSecondBoundary() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstImproperSubsetOfSecondBoundary() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundary() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 1.8, y: 1.8))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 1.8, y: 1.8))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndCoversBoundary() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.5, y: 1.5)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 3.0, y: 1.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.5, y: 1.5)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 3.0, y: 1.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExterior() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 1.0, y: 2.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 3.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstTouchesSecondBoundaryAndExterior() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 5.0, y: 5.0)), Point(Coordinate(x: 2.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 4.0), Coordinate(x: 2.0, y: 4.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.0, y: 4.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstCoversSecondBoundaryAndTouchesExterior() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 2.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 10.0, y: 0.0)), Point(Coordinate(x: 0.0, y: 10.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 10.0, y: 0.0), Coordinate(x: 0.0, y: 10.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 3.0, y: 3.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 10.0, y: 0.0)), Point(Coordinate(x: 0.0, y: 10.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndBoundaryAndExterior() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 1.5, y: 4.0)), Point(Coordinate(x: 1.0, y: 5.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 4.0), Coordinate(x: 2.0, y: 4.0)]), LineString([Coordinate(x: 1.0, y: 5.0), Coordinate(x: 3.0, y: 5.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 1.5, y: 4.0)), Point(Coordinate(x: 1.0, y: 5.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_MultiLineString_firstTouchesSecondInteriorAndExteriorAndCoversBoundary() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 1.0, y: 6.0)), Point(Coordinate(x: 3.0, y: 7.0)), Point(Coordinate(x: 1.0, y: 1.5)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 6.0)]), LineString([Coordinate(x: 3.0, y: 2.0), Coordinate(x: 3.0, y: 7.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 1.0, y: 6.0)), Point(Coordinate(x: 3.0, y: 7.0)), Point(Coordinate(x: 1.0, y: 1.5))])
+
+        compare(resultGeometry, expected)
+    }
+
 //    ///
 //    /// MultiPoint Polygon tests
 //    ///
