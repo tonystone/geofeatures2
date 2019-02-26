@@ -172,8 +172,8 @@ fileprivate func intersectionZeroTwo(_ geometry1: Geometry, _ geometry2: Geometr
         return generateIntersection(points, polygon)
     } else if let point = geometry1 as? Point, let multipolygon = geometry2 as? MultiPolygon {
         return generateIntersection(point, multipolygon)
-//    } else if let points = geometry1 as? MultiPoint, let multipolygon = geometry2 as? MultiPolygon {
-//        return generateIntersection(points, multipolygon)
+    } else if let points = geometry1 as? MultiPoint, let multipolygon = geometry2 as? MultiPolygon {
+        return generateIntersection(points, multipolygon)
     }
     return GeometryCollection()
 }
@@ -2188,18 +2188,33 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
         return multiPointGeometry
     }
 
-//    fileprivate static func generateIntersection(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
-//
-//        let coordinateTupleArray = multiPointToCoordinateTupleArray(points, false)
-//
-//        let relatedToCoordinatesMP = relatedTo(coordinateTupleArray, multipolygon)
-//
-//        let matrixIntersects = intersectionMatrix(from: relatedToCoordinatesMP)
-//
-//        /// No intersection
-//        return matrixIntersects
-//    }
-//
+    fileprivate func generateIntersection(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> Geometry {
+
+        /// Simplify each geometry first
+        let simplifiedMultiPoint = points.simplify(tolerance: 1.0)
+        let simplifiedMultiPolygon = multipolygon.simplify(tolerance: 1.0)
+
+        /// Check the intersection of each point with each polygon in the multi polygon.
+        /// The returned value will be a MultiPoint, which may be empty.
+
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+        for tempPoint in simplifiedMultiPoint {
+
+            for polygon in simplifiedMultiPolygon {
+
+                guard let point = generateIntersection(tempPoint, polygon) as? Point else {
+                    continue
+                }
+
+                multiPointGeometry.append(point)
+                break
+            }
+        }
+
+        return multiPointGeometry
+    }
+
 //    ///
 //    /// Dimension .one and dimesion .one
 //    ///
