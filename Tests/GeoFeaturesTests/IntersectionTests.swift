@@ -962,474 +962,416 @@ class IntersectionTests: XCTestCase {
         compare(resultGeometry, expected)
     }
 
-//    ///
-//    /// MultiPoint Polygon tests
-//    ///
-//
-//    func testMultiPoint_Polygon_outerRingOnly_noIntersection() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 2.0)), Point(Coordinate(x: 0.5, y: 4.0)), Point(Coordinate(x: 1.0, y: 5.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 11.0, y: 2.0)), Point(Coordinate(x: 0.5, y: 14.0)), Point(Coordinate(x: -11.0, y: -5.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: -0.5, y: 0.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: -3.0, y: 0.0), Coordinate(x: 0.0, y: -3.0), Coordinate(x: 3.0, y: 0.0), Coordinate(x: 0.0, y: 3.0), Coordinate(x: -3.0, y: 0.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_outsideMainRingAndInsideInnerRings_noIntersection() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 11.0, y: 11.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: -5.0, y: -3.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingOnly_intersectsBoundaryOnly() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 2.0, y: 4.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundaryOnly() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -10.0, y: 3.4)), Point(Coordinate(x: 2.5, y: -10.0)), Point(Coordinate(x: 10.0, y: 10.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundaryOnly() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 4.0, y: 4.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsOuterAndInnerBoundaries() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 4.0, y: -10.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 10.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingOnly_intersectsInteriorOnly() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 3.0)), Point(Coordinate(x: 3.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 2.2))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorOnly() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 6.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 0.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorOnly() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -8.0, y: -8.0)), Point(Coordinate(x: 6.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 0.0)), Point(Coordinate(x: -0.5, y: 1.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingOnly_intersectsInteriorAndBoundary() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: 4.5, y: 2.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndOuterBoundary() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -10.0, y: 3.4)), Point(Coordinate(x: 2.5, y: 0.0)), Point(Coordinate(x: 5.0, y: 10.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndInnerBoundary() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -9.0, y: -9.0)), Point(Coordinate(x: 1.0, y: 3.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndOuterAndInnerBoundaries() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 8.0, y: 7.0)), Point(Coordinate(x: 4.0, y: -10.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 10.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 4.0)), Point(Coordinate(x: -1.0, y: -0.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .empty],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingOnly_intersectsInteriorAndExterior() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -2.0, y: -2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: 8.5, y: 2.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndExteriorOfMainRing() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -9.0, y: 3.4)), Point(Coordinate(x: 12.5, y: 0.0)), Point(Coordinate(x: 5.0, y: -8.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndExteriorWithinInnerRing() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -9.0, y: 9.0)), Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 2.5, y: 2.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndExteriorOfMainRingAndWithinInnerRings() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -4.0, y: -2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: -5.0, y: -11.0)), Point(Coordinate(x: -1.0, y: -0.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingOnly_intersectsBoundaryAndExterior() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 0.0, y: 0.0)), Point(Coordinate(x: 8.5, y: 2.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsBoundaryAndExteriorOfMainRing() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 8.6)), Point(Coordinate(x: 12.5, y: 0.0)), Point(Coordinate(x: 5.0, y: -10.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsBoundaryAndExteriorWithinInnerRing() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 9.0)), Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsBoundaryAndExteriorOfMainRingAndWithinInnerRings() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -6.0, y: -2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: -5.0, y: -3.0)), Point(Coordinate(x: 3.0, y: 5.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .zero, .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingOnly_intersectsInteriorAndBoundaryAndExterior() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 8.5, y: 2.5))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndMainBoundaryAndExteriorOfMainRing() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 8.6)), Point(Coordinate(x: 12.5, y: 0.0)), Point(Coordinate(x: -8.0, y: -8.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndBothMainAndInnerBoundaryAndExteriorWithinInnerRingAndOutsideMainRing() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 9.0)), Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 7.0, y: 4.3)), Point(Coordinate(x: 2.0, y: 12.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings() {
-//
-//        let geometry1 = MultiPoint([Point(Coordinate(x: -6.0, y: -2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: -5.0, y: -3.0)), Point(Coordinate(x: 3.0, y: 5.0)), Point(Coordinate(x: 1.0, y: -1.0)), Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 13.0, y: -5.0))], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .zero,  .zero],
-//            [.empty, .empty, .empty],
-//            [.two,   .one,   .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+    ///
+    /// MultiPoint Polygon tests
+    ///
+
+    func testMultiPoint_Polygon_outerRingOnly_noIntersection() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 2.0)), Point(Coordinate(x: 0.5, y: 4.0)), Point(Coordinate(x: 1.0, y: 5.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_outsideMainRing_noIntersection() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 11.0, y: 2.0)), Point(Coordinate(x: 0.5, y: 14.0)), Point(Coordinate(x: -11.0, y: -5.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_insideInnerRing_noIntersection() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: -0.5, y: 0.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: -3.0, y: 0.0), Coordinate(x: 0.0, y: -3.0), Coordinate(x: 3.0, y: 0.0), Coordinate(x: 0.0, y: 3.0), Coordinate(x: -3.0, y: 0.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_outsideMainRingAndInsideInnerRings_noIntersection() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 11.0, y: 11.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: -5.0, y: -3.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+        
+        let expected = MultiPoint([])
+        
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingOnly_intersectsBoundaryOnly() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 2.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 2.0, y: 4.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsOuterBoundaryOnly() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -10.0, y: 3.4)), Point(Coordinate(x: 2.5, y: -10.0)), Point(Coordinate(x: 10.0, y: 10.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -10.0, y: 3.4)), Point(Coordinate(x: 2.5, y: -10.0)), Point(Coordinate(x: 10.0, y: 10.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInnerBoundaryOnly() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 4.0, y: 4.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 4.0, y: 4.0)), Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsOuterAndInnerBoundaries() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 4.0, y: -10.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 4.0, y: 2.0)), Point(Coordinate(x: 4.0, y: -10.0)), Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsOuterAndInnerBoundaries() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 10.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 10.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 4.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingOnly_intersectsInteriorOnly() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 3.0)), Point(Coordinate(x: 3.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 2.2))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.0, y: 3.0)), Point(Coordinate(x: 3.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 2.2))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorOnly() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 6.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 0.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 6.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 0.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorOnly() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -8.0, y: -8.0)), Point(Coordinate(x: 6.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 0.0)), Point(Coordinate(x: -0.5, y: 1.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -8.0, y: -8.0)), Point(Coordinate(x: 6.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 0.0)), Point(Coordinate(x: -0.5, y: 1.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingOnly_intersectsInteriorAndBoundary() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: 4.5, y: 2.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: 4.5, y: 2.5))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndOuterBoundary() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -10.0, y: 3.4)), Point(Coordinate(x: 2.5, y: 0.0)), Point(Coordinate(x: 5.0, y: 10.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -10.0, y: 3.4)), Point(Coordinate(x: 2.5, y: 0.0)), Point(Coordinate(x: 5.0, y: 10.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndInnerBoundary() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -9.0, y: -9.0)), Point(Coordinate(x: 1.0, y: 3.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -9.0, y: -9.0)), Point(Coordinate(x: 1.0, y: 3.0)), Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndOuterAndInnerBoundaries() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 8.0, y: 7.0)), Point(Coordinate(x: 4.0, y: -10.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 8.0, y: 7.0)), Point(Coordinate(x: 4.0, y: -10.0)), Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndOuterAndInnerBoundaries() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 10.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 4.0)), Point(Coordinate(x: -1.0, y: -0.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -2.0, y: -3.0)), Point(Coordinate(x: 10.0, y: 2.5)), Point(Coordinate(x: 4.0, y: 4.0)), Point(Coordinate(x: -1.0, y: -0.5))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingOnly_intersectsInteriorAndExterior() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -2.0, y: -2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: 8.5, y: 2.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.5, y: 2.5))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndExteriorOfMainRing() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -9.0, y: 3.4)), Point(Coordinate(x: 12.5, y: 0.0)), Point(Coordinate(x: 5.0, y: -8.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -9.0, y: 3.4)), Point(Coordinate(x: 5.0, y: -8.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndExteriorWithinInnerRing() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -9.0, y: 9.0)), Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 2.5, y: 2.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -9.0, y: 9.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndExteriorOfMainRingAndWithinInnerRings() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -4.0, y: -2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: -5.0, y: -11.0)), Point(Coordinate(x: -1.0, y: -0.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -1.0, y: -0.5))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingOnly_intersectsBoundaryAndExterior() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 0.0, y: 0.0)), Point(Coordinate(x: 8.5, y: 2.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsBoundaryAndExteriorOfMainRing() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 8.6)), Point(Coordinate(x: 12.5, y: 0.0)), Point(Coordinate(x: 5.0, y: -10.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 10.0, y: 8.6)), Point(Coordinate(x: 5.0, y: -10.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsBoundaryAndExteriorWithinInnerRing() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 9.0)), Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 10.0, y: 9.0)), Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsBoundaryAndExteriorOfMainRingAndWithinInnerRings() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -6.0, y: -2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: -5.0, y: -3.0)), Point(Coordinate(x: 3.0, y: 5.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -6.0, y: -2.0)), Point(Coordinate(x: 3.0, y: 5.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingOnly_intersectsInteriorAndBoundaryAndExterior() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 8.5, y: 2.5))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: 2.0, y: 2.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndMainBoundaryAndExteriorOfMainRing() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 8.6)), Point(Coordinate(x: 12.5, y: 0.0)), Point(Coordinate(x: -8.0, y: -8.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 10.0, y: 8.6)), Point(Coordinate(x: -8.0, y: -8.0))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndInnerRing_intersectsInteriorAndBothMainAndInnerBoundaryAndExteriorWithinInnerRingAndOutsideMainRing() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: 10.0, y: 9.0)), Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 7.0, y: 4.3)), Point(Coordinate(x: 2.0, y: 12.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 10.0, y: 9.0)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 7.0, y: 4.3))])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testMultiPoint_Polygon_outerRingAndMultipleInnerRings_intersectsInteriorAndInnerBoundariesAndExteriorOfMainRingAndWithinInnerRings() {
+
+        let geometry1 = MultiPoint([Point(Coordinate(x: -6.0, y: -2.0)), Point(Coordinate(x: 2.5, y: 2.5)), Point(Coordinate(x: -5.0, y: -3.0)), Point(Coordinate(x: 3.0, y: 5.0)), Point(Coordinate(x: 1.0, y: -1.0)), Point(Coordinate(x: 3.0, y: 2.0)), Point(Coordinate(x: 13.0, y: -5.0))], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 1.0, y: 3.0)], [Coordinate(x: -6.0, y: -1.0), Coordinate(x: -6.0, y: -5.0), Coordinate(x: -2.0, y: -5.0), Coordinate(x: -2.0, y: -1.0), Coordinate(x: -6.0, y: -1.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: -6.0, y: -2.0)), Point(Coordinate(x: 3.0, y: 5.0)), Point(Coordinate(x: 1.0, y: -1.0))])
+
+        compare(resultGeometry, expected)
+    }
+
 //    ///
 //    /// MultiPoint MultiPolygon tests
 //    ///

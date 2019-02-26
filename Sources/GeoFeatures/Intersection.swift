@@ -168,8 +168,8 @@ fileprivate func intersectionZeroTwo(_ geometry1: Geometry, _ geometry2: Geometr
 
     if let point = geometry1 as? Point, let polygon = geometry2 as? Polygon {
         return generateIntersection(point, polygon)
-//    } else if let points = geometry1 as? MultiPoint, let polygon = geometry2 as? Polygon {
-//        return generateIntersection(points, polygon)
+    } else if let points = geometry1 as? MultiPoint, let polygon = geometry2 as? Polygon {
+        return generateIntersection(points, polygon)
     } else if let point = geometry1 as? Point, let multipolygon = geometry2 as? MultiPolygon {
         return generateIntersection(point, multipolygon)
 //    } else if let points = geometry1 as? MultiPoint, let multipolygon = geometry2 as? MultiPolygon {
@@ -2137,15 +2137,15 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
         return GeometryCollection()
     }
 
-//    fileprivate static func multiPointToCoordinateTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Coordinate, Bool)] {
-//
-//        var tupleArray = [(Coordinate, Bool)]()
-//        for point in points {
-//            tupleArray.append((point.coordinate, allBoundaryPoints))
-//        }
-//        return tupleArray
-//    }
-//
+    fileprivate func multiPointToCoordinateTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Coordinate, Bool)] {
+
+        var tupleArray = [(Coordinate, Bool)]()
+        for point in points {
+            tupleArray.append((point.coordinate, allBoundaryPoints))
+        }
+        return tupleArray
+    }
+
 //    fileprivate static func multiPointToCoordinateArray(_ points: MultiPoint) -> [Coordinate] {
 //
 //        var coordinateArray = [Coordinate]()
@@ -2164,34 +2164,30 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
 //        }
 //        return multiPoint
 //    }
-//
-//    fileprivate static func generateIntersection(_ points: MultiPoint, _ polygon: Polygon) -> IntersectionMatrix {
-//
-//        /// Default intersection matrix
-//        var matrixIntersects = IntersectionMatrix()
-//        matrixIntersects[.exterior, .interior] = .two
-//        matrixIntersects[.exterior, .boundary] = .one
-//        matrixIntersects[.exterior, .exterior] = .two
-//
-//        let coordinateTupleArray = multiPointToCoordinateTupleArray(points, false)
-//
-//        let tempRelatedToResult = relatedTo(coordinateTupleArray, polygon)
-//
-//        if tempRelatedToResult.firstTouchesSecondInterior != .empty {
-//            matrixIntersects[.interior, .interior] = .zero
-//        }
-//
-//        if tempRelatedToResult.firstTouchesSecondBoundary != .empty {
-//            matrixIntersects[.interior, .boundary] = .zero
-//        }
-//
-//        if tempRelatedToResult.firstTouchesSecondExterior != .empty {
-//            matrixIntersects[.interior, .exterior] = .zero
-//        }
-//
-//        return matrixIntersects
-//    }
-//
+
+    fileprivate func generateIntersection(_ points: MultiPoint, _ polygon: Polygon) -> Geometry {
+
+        /// Simplify each geometry first
+        let simplifiedMultiPoint = points.simplify(tolerance: 1.0)
+        let simplifiedPolygon = polygon.simplify(tolerance: 1.0)
+
+        /// Check the intersection of each point with the polygon.
+        /// The returned value will be a MultiPoint, which may be empty.
+
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+        for tempPoint in simplifiedMultiPoint {
+
+            guard let point = generateIntersection(tempPoint, simplifiedPolygon) as? Point else {
+                continue
+            }
+
+            multiPointGeometry.append(point)
+        }
+
+        return multiPointGeometry
+    }
+
 //    fileprivate static func generateIntersection(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 //
 //        let coordinateTupleArray = multiPointToCoordinateTupleArray(points, false)
