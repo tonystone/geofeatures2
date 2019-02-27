@@ -181,25 +181,19 @@ fileprivate func intersectionZeroTwo(_ geometry1: Geometry, _ geometry2: Geometr
 /// For the intersection of two geometries of dimension .one and .zero, respectively.
 fileprivate func intersectionOneZero(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
 
-//    if let lineString = geometry1 as? LineString, let point = geometry2 as? Point {
-//        let intersectionMatrix = generateIntersection(point, lineString)
-//        return intersectionMatrix.transposed()
+    if let lineString = geometry1 as? LineString, let point = geometry2 as? Point {
+        return generateIntersection(point, lineString)
 //    } else if let lineString = geometry1 as? LineString, let points = geometry2 as? MultiPoint {
-//        let intersectionMatrix = generateIntersection(points, lineString)
-//        return intersectionMatrix.transposed()
+//        return generateIntersection(points, lineString)
 //    } else if let multilineString = geometry1 as? MultiLineString, let point = geometry2 as? Point {
-//        let intersectionMatrix = generateIntersection(point, multilineString)
-//        return intersectionMatrix.transposed()
+//        return generateIntersection(point, multilineString)
 //    } else if let multilineString = geometry1 as? MultiLineString, let points = geometry2 as? MultiPoint {
-//        let intersectionMatrix = generateIntersection(points, multilineString)
-//        return intersectionMatrix.transposed()
+//        return generateIntersection(points, multilineString)
 //    } else if let linearRing = geometry1 as? LinearRing, let point = geometry2 as? Point {
-//        let intersectionMatrix = generateIntersection(point, linearRing)
-//        return intersectionMatrix.transposed()
+//        return generateIntersection(point, linearRing)
 //    } else if let linearRing = geometry1 as? LinearRing, let points = geometry2 as? MultiPoint {
-//        let intersectionMatrix = generateIntersection(points, linearRing)
-//        return intersectionMatrix.transposed()
-//    }
+//        return generateIntersection(points, linearRing)
+    }
     return GeometryCollection()
 }
 
