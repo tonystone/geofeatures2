@@ -183,8 +183,8 @@ fileprivate func intersectionOneZero(_ geometry1: Geometry, _ geometry2: Geometr
 
     if let lineString = geometry1 as? LineString, let point = geometry2 as? Point {
         return generateIntersection(point, lineString)
-//    } else if let lineString = geometry1 as? LineString, let points = geometry2 as? MultiPoint {
-//        return generateIntersection(points, lineString)
+    } else if let lineString = geometry1 as? LineString, let points = geometry2 as? MultiPoint {
+        return generateIntersection(points, lineString)
 //    } else if let multilineString = geometry1 as? MultiLineString, let point = geometry2 as? Point {
 //        return generateIntersection(point, multilineString)
 //    } else if let multilineString = geometry1 as? MultiLineString, let points = geometry2 as? MultiPoint {
