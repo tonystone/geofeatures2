@@ -191,8 +191,8 @@ fileprivate func intersectionOneZero(_ geometry1: Geometry, _ geometry2: Geometr
         return generateIntersection(points, multilineString)
     } else if let linearRing = geometry1 as? LinearRing, let point = geometry2 as? Point {
         return generateIntersection(point, linearRing)
-//    } else if let linearRing = geometry1 as? LinearRing, let points = geometry2 as? MultiPoint {
-//        return generateIntersection(points, linearRing)
+    } else if let linearRing = geometry1 as? LinearRing, let points = geometry2 as? MultiPoint {
+        return generateIntersection(points, linearRing)
     }
     return GeometryCollection()
 }
