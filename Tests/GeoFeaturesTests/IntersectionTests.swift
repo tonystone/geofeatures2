@@ -4696,59 +4696,53 @@ class IntersectionTests: XCTestCase {
 //
 //        XCTAssertEqual(matrix, expected)
 //    }
-//
-//    ///
-//    /// MultiLineString Point tests
-//    ///
-//
-//    func testMultiLineString_Point_noIntersection() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Point(Coordinate(x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.zero,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_Point_secondSubsetOfFirstInterior() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Point(Coordinate(x: 1.5, y: 1.5), precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.empty, .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_Point_secondSubsetOfFirstBoundary() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = Point(Coordinate(x: 3.0, y: 3.0), precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.zero,  .empty, .zero],
-//            [.empty, .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+
+    ///
+    /// MultiLineString Point tests
+    ///
+
+    func testMultiLineString_Point_noIntersection() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point(Coordinate(x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_Point_secondSubsetOfFirstInterior() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point(Coordinate(x: 1.5, y: 1.5), precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = geometry2
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_Point_secondSubsetOfFirstBoundary() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = Point(Coordinate(x: 3.0, y: 3.0), precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = geometry2
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
 //    ///
 //    /// MultiLineString MutliPoint tests
 //    ///
