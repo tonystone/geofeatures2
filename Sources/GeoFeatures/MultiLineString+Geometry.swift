@@ -597,7 +597,7 @@ extension MultiLineString {
                 let newLineString2 = LineString(lineString2[1..<(ls2Count - 1)])
                 return (newLineString1 + newLineString2.reversed(), true)
             } else {
-                return (lineString1 + LineString(lineString2[0..<(ls2Count - 1)]), true)
+                return (lineString1 + LineString(lineString2[0..<(ls2Count - 1)].reversed()), true)
             }
         } else if firstSegmentsIntersectAtSegmentOverlappingEndpoints {
             let newLineString1 = LineString([ls2SecondCoord]) + LineString(lineString1[1..<ls1Count])
@@ -634,7 +634,7 @@ extension MultiLineString {
                 let newLineString2 = LineString(lineString2[1..<ls2Count])
                 return (newLineString1 + newLineString2, true)
             } else {
-                return (lineString1.reversed() + LineString(lineString2[1..<ls2Count]), true)
+                return (lineString1.reversed() + LineString(lineString2[0..<(ls2Count - 1)].reversed()), true)
             }
         } else if lastFirstSegmentsTouchAtBoundaryPoints {
             if firstLastSegmentsIntersectAtSegmentOverlappingEndpoints {
