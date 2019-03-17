@@ -213,9 +213,8 @@ fileprivate func intersectionOneOne(_ geometry1: Geometry, _ geometry2: Geometry
         return generateIntersection(lineString, multilineString)
     } else if let lineString = geometry1 as? LineString, let linearRing = geometry2 as? LinearRing {
         return generateIntersection(lineString, linearRing)
-//    } else if let multilineString = geometry1 as? MultiLineString, let lineString = geometry2 as? LineString {
-//        let intersectionMatrix = generateIntersection(lineString, multilineString)
-//        return intersectionMatrix.transposed()
+    } else if let multilineString = geometry1 as? MultiLineString, let lineString = geometry2 as? LineString {
+        return generateIntersection(lineString, multilineString)
 //    } else if let multilineString1 = geometry1 as? MultiLineString, let multilineString2 = geometry2 as? MultiLineString {
 //        return generateIntersection(multilineString1, multilineString2)
 //    } else if let multilineString = geometry1 as? MultiLineString, let linearRing = geometry2 as? LinearRing {
