@@ -60,6 +60,18 @@ extension GeometryCollection {
     }
 
     ///
+    /// - Returns: true if `self` is equal to the `other` topologically.  This defaults to 'equals,' but should be generally overridden
+    ///
+    public func equalsTopo(_ other: Geometry) -> Bool {
+        if let other = other as? GeometryCollection {
+            return self.elementsEqual(other, by: { (lhs: Geometry, rhs: Geometry) -> Bool in
+                return lhs.equals(rhs)
+            })
+        }
+        return false
+    }
+
+    ///
     /// - Returns: the same type of GeometryCollection but with the same number or fewer coordinates that
     ///             will be topologically equivalent to the original.
     ///

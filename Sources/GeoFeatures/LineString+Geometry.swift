@@ -39,6 +39,65 @@ extension LineString {
     }
 
     ///
+    /// - Returns: true if `lineString1` is topologically equal to `lineString2`.
+    ///
+    private func lineStringsMatchTopo(_ lineString1: LineString, _ lineString2: LineString) -> Bool {
+
+        let simplifiedLineString1 = lineString1.simplify(tolerance: 1.0)
+        let simplifiedLineString2 = lineString2.simplify(tolerance: 1.0)
+        if simplifiedLineString1.count != simplifiedLineString2.count { return false }
+
+        let count = simplifiedLineString1.count
+        if count == 0 {
+            return true
+        } else if count == 1 {
+            return simplifiedLineString1[0] == simplifiedLineString2[0]
+        } else {
+            /// See if the line strings match when comparing coordinates in one direction.
+            var allCoordinatesMatch = true
+            for index in 0..<count {
+                if simplifiedLineString1[index] != simplifiedLineString2[index] {
+                    allCoordinatesMatch = false
+                    break
+                }
+            }
+            if allCoordinatesMatch { return true }
+
+            /// Now see if the line strings match when comparing coordinates in the reverse direction.
+            allCoordinatesMatch = true
+            for index in 0..<count {
+                if simplifiedLineString1[count - index - 1] != simplifiedLineString2[index] {
+                    allCoordinatesMatch = false
+                    break
+                }
+            }
+            if allCoordinatesMatch { return true }
+        }
+
+        return false
+    }
+
+    ///
+    /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
+    ///
+    public func equalsTopo(_ other: Geometry) -> Bool {
+
+        if let other = other as? LineString {
+            return lineStringsMatchTopo(self, other)
+        } else if let other = other as? LinearRing {
+            let otherLineString = other.convertToLineString()
+            return lineStringsMatchTopo(self, otherLineString)
+        } else if let other = other as? MultiLineString {
+            let simplifiedMultiLineString = other.simplify(tolerance: 1.0)
+            if simplifiedMultiLineString.count == 1 {
+                return lineStringsMatchTopo(self, simplifiedMultiLineString[0])
+            }
+        }
+
+        return false
+    }
+
+    ///
     /// Reduces the geometry to its simplest form, the simplest sequence of points or coordinates,
     /// that is topologically equivalent to the original geometry.  In essence, this function removes
     /// duplication and intermediate coordinates that do not contribute to the overall definition.

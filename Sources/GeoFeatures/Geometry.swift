@@ -79,6 +79,14 @@ public protocol Geometry {
     /// - Returns: true if `self` is equal to the `other`.
     ///
     func equals(_ other: Geometry) -> Bool
+
+    ///
+    /// Is `other` equal to `self` topologically.  That is, the two geometries visually the same.
+    /// This ignores order and duplication.
+    ///
+    /// - Returns: true if `self` is equal to the `other`.
+    ///
+    func equalsTopo(_ other: Geometry) -> Bool
 }
 
 

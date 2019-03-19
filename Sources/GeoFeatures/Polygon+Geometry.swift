@@ -60,6 +60,26 @@ extension Polygon {
     }
 
     ///
+    /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
+    ///
+    public func equalsTopo(_ other: Geometry) -> Bool {
+
+//        if let other = other as? LineString {
+//            return lineStringsMatchTopo(self, other)
+//        } else if let other = other as? LinearRing {
+//            let otherLineString = other.convertToLineString()
+//            return lineStringsMatchTopo(self, otherLineString)
+//        } else if let other = other as? MultiLineString {
+//            let simplifiedMultiLineString = other.simplify(tolerance: 1.0)
+//            if simplifiedMultiLineString.count == 1 {
+//                return lineStringsMatchTopo(self, simplifiedMultiLineString[0])
+//            }
+//        }
+
+        return false
+    }
+
+    ///
     /// Reduces the geometry to its simplest form, the simplest sequence of points or coordinates,
     /// that is topologically equivalent to the original geometry.  In essence, this function removes
     /// duplication and intermediate coordinates that do not contribute to the overall definition.

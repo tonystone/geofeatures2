@@ -73,6 +73,16 @@ extension Point {
     }
 
     ///
+    /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
+    ///
+    public func equalsTopo(_ other: Geometry) -> Bool {
+        if let other = other as? Point {
+            return self.coordinate == other.coordinate
+        }
+        return false
+    }
+
+    ///
     /// Simplication of Point simply returns itself.
     ///
     public func simplify(tolerance: Double) -> Point {

@@ -102,6 +102,41 @@ extension MultiLineString {
         return false
     }
 
+    ///
+    /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
+    ///
+    public func equalsTopo(_ other: Geometry) -> Bool {
+
+        if let other = other as? LineString {
+            return other.equalsTopo(self)
+        } else if let other = other as? LinearRing {
+            let otherLineString = other.convertToLineString()
+            return otherLineString.equalsTopo(self)
+        } else if let other = other as? MultiLineString {
+            let simplifiedSelf = self.simplify(tolerance: 1.0)
+            let simplifiedOther = other.simplify(tolerance: 1.0)
+            if simplifiedSelf.count != simplifiedOther.count { return false }
+
+            if simplifiedSelf.count == 0 {
+                return true
+            } else {
+                for lineStringSelf in simplifiedSelf {
+                    var lineStringsMatch = false
+                    for lineStringOther in simplifiedOther {
+                        if lineStringSelf.equalsTopo(lineStringOther) {
+                            lineStringsMatch = true
+                            break
+                        }
+                        if !lineStringsMatch { return false }
+                    }
+                }
+                return true
+            }
+        }
+
+        return false
+    }
+
     /// ***************************************************************************
 
     /// The code that lies between the two lines with asterisks was borrowed from

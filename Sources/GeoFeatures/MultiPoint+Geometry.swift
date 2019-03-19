@@ -55,6 +55,33 @@ extension MultiPoint {
     }
 
     ///
+    /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
+    ///
+    public func equalsTopo(_ other: Geometry) -> Bool {
+        if let other = other as? Point {
+            if self.count == 1 {
+                return self[0].coordinate == other.coordinate
+            }
+        } else if let other = other as? MultiPoint {
+            let simplifiedSelf = self.simplify(tolerance: 1.0)
+            let simplifiedOther = other.simplify(tolerance: 1.0)
+            if simplifiedSelf.count != simplifiedOther.count { return false }
+            for point1 in simplifiedSelf {
+                var noPointMatches = true
+                for point2 in simplifiedOther {
+                    if point1.coordinate == point2.coordinate {
+                        noPointMatches = false
+                        break
+                    }
+                }
+                if noPointMatches { return false }
+            }
+            return true
+        }
+        return false
+    }
+
+    ///
     /// Reduces the geometry to its simplest form, the simplest sequence of points or coordinates,
     /// that is topologically equivalent to the original geometry.  In essence, this function removes
     /// duplication and intermediate coordinates that do not contribute to the overall definition.

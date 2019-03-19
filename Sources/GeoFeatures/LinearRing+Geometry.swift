@@ -39,6 +39,27 @@ extension LinearRing {
     }
 
     ///
+    /// - Returns: a LineString equivalent of the `linearRing.`
+    ///
+    public func convertToLineString() -> LineString {
+
+        var newLineString = LineString()
+        for coordinate in self {
+            newLineString.append(coordinate)
+        }
+        return newLineString
+    }
+
+    ///
+    /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
+    ///
+    public func equalsTopo(_ other: Geometry) -> Bool {
+
+        let selfAsLineString = self.convertToLineString()
+        return selfAsLineString.equalsTopo(other)
+    }
+
+    ///
     /// Reduces the geometry to its simplest form, the simplest sequence of points or coordinates,
     /// that is topologically equivalent to the original geometry.  In essence, this function removes
     /// duplication and intermediate coordinates that do not contribute to the overall definition.

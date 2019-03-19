@@ -41,4 +41,6 @@ internal struct UnsupportedGeometry: Geometry {
     }
 
     func equals(_ other: Geometry) -> Bool { return false }
+
+    func equalsTopo(_ other: Geometry) -> Bool { return false }
 }
