@@ -127,8 +127,8 @@ extension MultiLineString {
                             lineStringsMatch = true
                             break
                         }
-                        if !lineStringsMatch { return false }
                     }
+                    if !lineStringsMatch { return false }
                 }
                 return true
             }

@@ -66,21 +66,51 @@ extension MultiPolygon {
     }
 
     ///
+    /// - Returns: true if `multiPolygon1` is topologically equal to `multiPolygon2`.
+    ///
+    fileprivate func multiPolygonsMatchTopo(_ multiPolygon1: MultiPolygon, _ multiPolygon2: MultiPolygon) -> Bool {
+
+        let simplifiedMultiPolygon1 = multiPolygon1.simplify(tolerance: 1.0)
+        let simplifiedMultiPolygon2 = multiPolygon2.simplify(tolerance: 1.0)
+        if simplifiedMultiPolygon1.count != simplifiedMultiPolygon2.count { return false }
+
+        let count = simplifiedMultiPolygon1.count
+        if count == 0 {
+            return true
+        } else if count == 1 {
+            return simplifiedMultiPolygon1[0].equalsTopo(simplifiedMultiPolygon2[0])
+        } else {
+            /// See if each polygon from the first multi polygon matches a polygon from the second multi polygon.
+            /// Note at this point the multi polygons have been simplified, so the polygons should be unique,
+            /// and we know each multi polygon has the same number of polygons, so matching each polygon of the
+            /// first with one in the second also means the reverse should also be true.
+            for polgyon1 in simplifiedMultiPolygon1 {
+                var polygonsMatch = false
+                for polgyon2 in simplifiedMultiPolygon2 {
+                    if polgyon1.equalsTopo(polgyon2) {
+                        polygonsMatch = true
+                        break
+                    }
+                }
+                if !polygonsMatch { return false }
+            }
+            return true
+        }
+    }
+
+    ///
     /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
     ///
     public func equalsTopo(_ other: Geometry) -> Bool {
 
-//        if let other = other as? LineString {
-//            return lineStringsMatchTopo(self, other)
-//        } else if let other = other as? LinearRing {
-//            let otherLineString = other.convertToLineString()
-//            return lineStringsMatchTopo(self, otherLineString)
-//        } else if let other = other as? MultiLineString {
-//            let simplifiedMultiLineString = other.simplify(tolerance: 1.0)
-//            if simplifiedMultiLineString.count == 1 {
-//                return lineStringsMatchTopo(self, simplifiedMultiLineString[0])
-//            }
-//        }
+        if let other = other as? Polygon {
+            let simplifiedMultiPolygon = self.simplify(tolerance: 1.0)
+            if simplifiedMultiPolygon.count == 1 {
+                return simplifiedMultiPolygon[0].equalsTopo(other)
+            }
+        } else if let other = other as? MultiPolygon {
+            return multiPolygonsMatchTopo(self, other)
+        }
 
         return false
     }

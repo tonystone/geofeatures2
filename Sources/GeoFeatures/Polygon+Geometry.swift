@@ -60,21 +60,74 @@ extension Polygon {
     }
 
     ///
+    /// - Returns: the holes for a polygon.  This will be an array of linear rings.
+    ///
+    fileprivate func holes(_ polygon: Polygon) -> [LinearRing] {
+
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 1 else {
+                return []
+        }
+
+        var innerLinearRings = [LinearRing]()
+        for index in 1..<polygonBoundary.count {
+            guard let linearRing = polygonBoundary[index] as? LinearRing else { return [] }
+            innerLinearRings.append(linearRing)
+        }
+
+        return innerLinearRings
+    }
+
+    ///
+    /// - Returns: true if `polygon1` is topologically equal to `polygon2`.
+    ///
+    fileprivate func polygonsMatchTopo(_ polygon1: Polygon, _ polygon2: Polygon) -> Bool {
+
+        let simplifiedPolygon1 = polygon1.simplify(tolerance: 1.0)
+        let simplifiedPolygon2 = polygon2.simplify(tolerance: 1.0)
+        if simplifiedPolygon1.count != simplifiedPolygon2.count { return false }
+
+        let count = simplifiedPolygon1.count
+        if count == 0 {
+            return true
+        } else if count == 1 {
+            return simplifiedPolygon1[0].equalsTopo(simplifiedPolygon2[0])
+        } else {
+            /// See if the outer rings match
+            if !simplifiedPolygon1[0].equalsTopo(simplifiedPolygon2[0]) { return false }
+
+            /// Now see if the holes match
+            let holes1 = holes(simplifiedPolygon1)
+            let holes2 = holes(simplifiedPolygon2)
+            if holes1.count != holes2.count { return false }
+
+            for linearRing1 in holes1 {
+                var linearRingsMatch = false
+                for linearRing2 in holes2 {
+                    if linearRing1.equalsTopo(linearRing2) {
+                        linearRingsMatch = true
+                        break
+                    }
+                }
+                if !linearRingsMatch { return false }
+            }
+            return true
+        }
+    }
+
+    ///
     /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
     ///
     public func equalsTopo(_ other: Geometry) -> Bool {
 
-//        if let other = other as? LineString {
-//            return lineStringsMatchTopo(self, other)
-//        } else if let other = other as? LinearRing {
-//            let otherLineString = other.convertToLineString()
-//            return lineStringsMatchTopo(self, otherLineString)
-//        } else if let other = other as? MultiLineString {
-//            let simplifiedMultiLineString = other.simplify(tolerance: 1.0)
-//            if simplifiedMultiLineString.count == 1 {
-//                return lineStringsMatchTopo(self, simplifiedMultiLineString[0])
-//            }
-//        }
+        if let other = other as? Polygon {
+            return polygonsMatchTopo(self, other)
+        } else if let other = other as? MultiPolygon {
+            let simplifiedMultiPolygon = other.simplify(tolerance: 1.0)
+            if simplifiedMultiPolygon.count == 1 {
+                return polygonsMatchTopo(self, simplifiedMultiPolygon[0])
+            }
+        }
 
         return false
     }

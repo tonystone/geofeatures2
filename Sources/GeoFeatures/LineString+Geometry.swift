@@ -39,6 +39,32 @@ extension LineString {
     }
 
     ///
+    /// - Returns: `true` if the LineString is a LinearRing.
+    ///
+    public func isLinearRing() -> Bool {
+
+        return self[0] == self[self.count - 1]
+    }
+
+    ///
+    /// The line string should have identical first and last coordinates.
+    ///
+    /// - Returns: a LineString equivalent of the `linearRing.`
+    ///
+    public func convertToLinearRing() -> LinearRing? {
+
+        guard self[0] == self[self.count - 1] else {
+            return nil
+        }
+
+        var newLinearRing = LinearRing()
+        for coordinate in self {
+            newLinearRing.append(coordinate)
+        }
+        return newLinearRing
+    }
+
+    ///
     /// - Returns: true if `lineString1` is topologically equal to `lineString2`.
     ///
     private func lineStringsMatchTopo(_ lineString1: LineString, _ lineString2: LineString) -> Bool {
@@ -52,6 +78,12 @@ extension LineString {
             return true
         } else if count == 1 {
             return simplifiedLineString1[0] == simplifiedLineString2[0]
+        } else if let linearRing1 = simplifiedLineString1.convertToLinearRing() {
+            if let linearRing2 = simplifiedLineString2.convertToLinearRing() {
+                return linearRing1.equalsTopo(linearRing2)
+            } else {
+                return false
+            }
         } else {
             /// See if the line strings match when comparing coordinates in one direction.
             var allCoordinatesMatch = true
@@ -72,9 +104,8 @@ extension LineString {
                 }
             }
             if allCoordinatesMatch { return true }
+            return false
         }
-
-        return false
     }
 
     ///

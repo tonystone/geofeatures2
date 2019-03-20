@@ -51,12 +51,96 @@ extension LinearRing {
     }
 
     ///
+    /// - Returns: true if `linearRing1` is topologically equal to `linearRing2`.
+    ///
+    private func linearRingsMatchTopo(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> Bool {
+
+        let simplifiedLinearRing1 = linearRing1.simplify(tolerance: 1.0)
+        let simplifiedLinearRing2 = linearRing2.simplify(tolerance: 1.0)
+        if simplifiedLinearRing1.count != simplifiedLinearRing1.count { return false }
+
+        let count = simplifiedLinearRing1.count
+        if count == 0 {
+            return true
+        } else if count == 1 {
+            return simplifiedLinearRing1[0] == simplifiedLinearRing2[0]
+        } else {
+            /// Reaching this point means there are two linear rings with at least two coordinates each.
+            /// The main feature of a linear ring is that it is closed.
+            /// This means two linear rings could match topologically even though they start and stop at different coordinates.
+            /// We must compare the two linear rings by having them start at the same coordinate.
+            /// We do this by first collecting all the indexes from the second linear ring that matches the
+            /// starting coordinate of the first linear ring, ignoring the duplicated final coordinate.
+            /// Using each of these indexes, we then compare coordinates in both the forward and backward directions
+            /// to see if any of the complete set or coordinates match.  If they, do return true, else return false.
+
+            /// Get the starting coordinate of the first linear ring, and then find all indexes of the same
+            /// coordinate in the second line string.  This will be an array of integers.
+            /// Ignore the final coordinate.
+            let firstCoordinate = simplifiedLinearRing1[0]
+            var matchingFirstCoordinateArray = [Int]()
+            for index in 0..<(simplifiedLinearRing2.count - 1) {
+                let coordinate = simplifiedLinearRing2[index]
+                if coordinate == firstCoordinate {
+                    matchingFirstCoordinateArray.append(index)
+                }
+            }
+
+            /// For each coordinate in the second linear ring that matches the starting coordinate of the first,
+            /// we now check, in both directions, whether the sequence of coordinates in the second matches those of the first.
+            /// Note we have to do this carefully because the starting coordinate and ending coordinate of the
+            /// linear rings are the same.  Ignore the final coordinate of both linear rings.
+            for startingIndex in matchingFirstCoordinateArray {
+
+                /// Check the coordinates match in the forward direction.
+                var allCoordinatesMatch = true
+                for index1 in 1..<(count - 1) {
+                    let index2 = (startingIndex + index1) % (count - 1)
+                    if simplifiedLinearRing1[index1] != simplifiedLinearRing2[index2] {
+                        allCoordinatesMatch = false
+                        break
+                    }
+                }
+                if allCoordinatesMatch { return true }
+
+                /// Now see if the linear rings match when comparing coordinates in the reverse direction.
+                allCoordinatesMatch = true
+                for index1 in 1..<(count - 1) {
+                    var index2 = (startingIndex - index1)
+                    if index2 < 0 { index2 += (count - 1) }
+                    if simplifiedLinearRing1[index1] != simplifiedLinearRing2[index2] {
+                        allCoordinatesMatch = false
+                        break
+                    }
+                }
+                if allCoordinatesMatch { return true }
+            }
+
+            return false
+        }
+    }
+
+    ///
     /// - Returns: true if `self` is equal to the `other` topologically.  The two geometries are visually identical.
     ///
     public func equalsTopo(_ other: Geometry) -> Bool {
 
-        let selfAsLineString = self.convertToLineString()
-        return selfAsLineString.equalsTopo(other)
+        if let other = other as? LineString {
+            if let otherLinearRing = other.convertToLinearRing() {
+                return linearRingsMatchTopo(self, otherLinearRing)
+            }
+        } else if let other = other as? LinearRing {
+            return linearRingsMatchTopo(self, other)
+        } else if let other = other as? MultiLineString {
+            let simplifiedMultiLineString = other.simplify(tolerance: 1.0)
+            if simplifiedMultiLineString.count == 1 {
+                if let otherLinearRing = simplifiedMultiLineString[0].convertToLinearRing() {
+                    return linearRingsMatchTopo(self, otherLinearRing)
+                }
+            }
+        }
+
+        return false
     }
 
     ///
