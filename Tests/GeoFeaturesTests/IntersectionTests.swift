@@ -5371,395 +5371,380 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
-//    ///
-//    /// MultiLineString LinearRing tests
-//    ///
-//
-//    func testMultiLineString_LinearRing_noIntersection() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 5.0), Coordinate(x: 5.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointFirstSegmentsFirstLineString() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 0.0, y: 2.0), Coordinate(x: 0.0, y: 13.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 5.0), Coordinate(x: 5.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointFirstSegmentsSecondLineString() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -5.0, y: 2.0), Coordinate(x: -3.0, y: 2.0), Coordinate(x: -3.0, y: -3.0), Coordinate(x: -5.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointSecondSegmentsFirstLineString() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -4.0, y: -18.0), Coordinate(x: -4.0, y: -2.5), Coordinate(x: 10.0, y: -2.5), Coordinate(x: -4.0, y: -18.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointSecondSegmentsSecondLineString() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: -12.0, y: -8.0), Coordinate(x: -3.0, y: -8.0), Coordinate(x: -3.0, y: 10.0), Coordinate(x: -12.0, y: -8.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    /// TODO: Add more tests like this one, where the linear ring and multiline string touch at a point but do not cross.
-//    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -7.0, y: 8.0), Coordinate(x: -3.0, y: 4.0), Coordinate(x: 1.0, y: 8.0), Coordinate(x: -7.0, y: 8.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_interiorsIntersectAtTwoPointDifferentSegmentsDifferentLineStrings() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -2.0, y: 7.0), Coordinate(x: -2.0, y: -2.5), Coordinate(x: 5.0, y: -2.5), Coordinate(x: -2.0, y: 7.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.zero,  .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundaryFirstLineString1() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -1.0, y: -1.0), Coordinate(x: 4.0, y: -1.0), Coordinate(x: 10.0, y: -6.0), Coordinate(x: -1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.zero,  .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundaryFirstLineString2() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 0.0, y: -10.0), Coordinate(x: 0.0, y: -3.0), Coordinate(x: 12.0, y: -3.0), Coordinate(x: 0.0, y: -10.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.zero,  .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundarySecondLineString1() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -2.0, y: 1.0), Coordinate(x: -9.0, y: 1.0), Coordinate(x: -9.0, y: -9.0), Coordinate(x: -2.0, y: 1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.zero,  .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundarySecondLineString2() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -2.0, y: -10.0), Coordinate(x: -2.0, y: 1.0), Coordinate(x: 0.0, y: 1.0), Coordinate(x: -2.0, y: -10.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.zero,  .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_FirstLineString() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -5.0, y: -5.0), Coordinate(x: 1.0, y: -5.0), Coordinate(x: 1.0, y: 0.0), Coordinate(x: -5.0, y: -5.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.zero,  .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_SecondLineString() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -5.0, y: -5.0), Coordinate(x: -5.0, y: 1.0), Coordinate(x: 0.0, y: 1.0), Coordinate(x: -5.0, y: -5.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.zero,  .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_AllBoundaryPoints() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -5.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: -5.0), Coordinate(x: -5.0, y: 1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .one],
-//            [.zero,  .empty, .empty],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_firstLineStringInteriorDoesNotIntersectLinearRingExterior() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0), Coordinate(x: 1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .one],
-//            [.zero, .empty, .zero],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondLineStringInteriorDoesNotIntersectLinearRingExterior() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0), Coordinate(x: -4.0, y: 1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .one],
-//            [.zero, .empty, .zero],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_neitherLineStringInteriorIntersectsLinearRingExterior() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 0.0, y: -4.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .empty],
-//            [.zero, .empty, .empty],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_firstTouchesSecondInteriorAtLineSegmentAndPoint() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 10.0, y: -2.0)]), LineString([Coordinate(x: 6.0, y: -3.0), Coordinate(x: 0.0, y: -3.0), Coordinate(x: -3.0, y: 0.0), Coordinate(x: -10.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 1.5, y: -1.5), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0), Coordinate(x: 1.5, y: -1.5)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,   .empty, .one],
-//            [.empty, .empty, .zero],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_firstLineStringInsideLinearRing_secondLineStringBoundaryTouchesLinearRing() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 3.0, y: -3.0), Coordinate(x: 5.0, y: -5.0), Coordinate(x: 5.0, y: -7.0)]), LineString([Coordinate(x: 1.0, y: -9.0), Coordinate(x: 3.0, y: -11.0), Coordinate(x: 5.0, y: -9.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 5.0, y: -5.0), Coordinate(x: 5.0, y: -9.0), Coordinate(x: 1.0, y: -9.0), Coordinate(x: 1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .one],
-//            [.zero, .empty, .empty],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondLineStringInsideLinearRing_firstLineStringBoundaryTouchesLinearRing() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 3.0, y: -3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 4.0, y: 5.0), Coordinate(x: 4.0, y: -4.0)]), LineString([Coordinate(x: 1.0, y: -7.0), Coordinate(x: 1.0, y: -9.0), Coordinate(x: 3.0, y: -9.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 5.0, y: -5.0), Coordinate(x: 5.0, y: -9.0), Coordinate(x: 1.0, y: -9.0), Coordinate(x: 1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .one],
-//            [.zero, .empty, .empty],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondIntersectsFirstBoundaryPointOfFirstAndInteriorsOverlap_FirstLineString() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 4.0, y: -4.0), Coordinate(x: 0.0, y: -8.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .one],
-//            [.zero, .empty, .zero],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_secondIntersectsSecondBoundaryPointOfFirstAndInteriorsOverlap_SecondLineString() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -1.0, y: 9.0), Coordinate(x: -1.0, y: -4.0), Coordinate(x: -5.0, y: -8.0), Coordinate(x: -1.0, y: 9.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .one],
-//            [.zero, .empty, .zero],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_firstProperSubsetOfSecond() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: -9.0, y: -9.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -3.0, y: -3.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 4.0, y:0.0), Coordinate(x: 5.0, y: -1.0), Coordinate(x: 7.0, y: -3.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -10.0, y: -10.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 12.0, y: -8.0), Coordinate(x: -10.0, y: -10.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .empty],
-//            [.zero, .empty, .empty],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiLineString_LinearRing_firstMostlyProperSubsetOfSecondButOneLineStringBoundaryPointNotIncluded() {
-//
-//        let geometry1 = MultiLineString([LineString([Coordinate(x: -9.0, y: -9.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -3.0, y: -3.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 4.0, y:0.0), Coordinate(x: 5.0, y: -1.0), Coordinate(x: 10.0, y: 10.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LinearRing([Coordinate(x: -10.0, y: -10.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 12.0, y: -8.0), Coordinate(x: -10.0, y: -10.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .empty, .one],
-//            [.zero, .empty, .zero],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+    ///
+    /// MultiLineString LinearRing tests
+    ///
+
+    func testMultiLineString_LinearRing_noIntersection() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 5.0), Coordinate(x: 5.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected, "For \(resultGeometry) and \(expected) expected no intersection")
+    }
+
+    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointFirstSegmentsFirstLineString() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 0.0, y: 2.0), Coordinate(x: 0.0, y: 13.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 5.0), Coordinate(x: 5.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 1.0, y: 2.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+
+//        compareTopo(geometry1, geometry2, resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointFirstSegmentsSecondLineString() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -5.0, y: 2.0), Coordinate(x: -3.0, y: 2.0), Coordinate(x: -3.0, y: -3.0), Coordinate(x: -5.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -4.0, y: 2.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+
+//        compareTopo(resultGeometry, expected, "Coordinate(x: -4.0, y: 2.0)")
+    }
+
+    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointSecondSegmentsFirstLineString() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -4.0, y: -18.0), Coordinate(x: -4.0, y: -2.5), Coordinate(x: 10.0, y: -2.5), Coordinate(x: -4.0, y: -18.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 1.5, y: -2.5))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+
+//        compareTopo(resultGeometry, expected, "Coordinate(x: 1.5, y: -2.5)")
+    }
+
+    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointSecondSegmentsSecondLineString() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -12.0, y: -8.0), Coordinate(x: -3.0, y: -8.0), Coordinate(x: -3.0, y: 10.0), Coordinate(x: -12.0, y: -8.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -3.0, y: 4.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// TODO: Add more tests like this one, where the linear ring and multiline string touch at a point but do not cross.
+    func testMultiLineString_LinearRing_interiorsIntersectAtOnePointLineStringFirstSegment_DoNotCross() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -7.0, y: 8.0), Coordinate(x: -3.0, y: 4.0), Coordinate(x: 1.0, y: 8.0), Coordinate(x: -7.0, y: 8.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -3.0, y: 4.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_interiorsIntersectAtTwoPointsDifferentSegmentsDifferentLineStrings() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -2.0, y: 7.0), Coordinate(x: -2.0, y: -2.5), Coordinate(x: 5.0, y: -2.5), Coordinate(x: -2.0, y: 7.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -2.0, y: 4.0)), Point(Coordinate(x: 1.5, y: -2.5))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundaryFirstLineString1() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -1.0, y: -1.0), Coordinate(x: 4.0, y: -1.0), Coordinate(x: 10.0, y: -6.0), Coordinate(x: -1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 1.0, y: -1.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundaryFirstLineString2() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 0.0, y: -10.0), Coordinate(x: 0.0, y: -3.0), Coordinate(x: 12.0, y: -3.0), Coordinate(x: 0.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 1.0, y: -3.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundarySecondLineString1() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -2.0, y: 1.0), Coordinate(x: -9.0, y: 1.0), Coordinate(x: -9.0, y: -9.0), Coordinate(x: -2.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -4.0, y: 1.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundarySecondLineString2() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -2.0, y: -10.0), Coordinate(x: -2.0, y: 1.0), Coordinate(x: 0.0, y: 1.0), Coordinate(x: -2.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -1.0, y: 1.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_FirstLineString() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -5.0, y: -5.0), Coordinate(x: 1.0, y: -5.0), Coordinate(x: 1.0, y: 0.0), Coordinate(x: -5.0, y: -5.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 1.0, y: -1.0)), Point(Coordinate(x: 1.0, y: -3.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_BothBoundaryPoints_SecondLineString() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -5.0, y: -5.0), Coordinate(x: -5.0, y: 1.0), Coordinate(x: 0.0, y: 1.0), Coordinate(x: -5.0, y: -5.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -4.0, y: 1.0)), Point(Coordinate(x: -1.0, y: 1.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondInteriorIntersectsFirstBoundary_AllBoundaryPoints() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -5.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: -5.0), Coordinate(x: -5.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -4.0, y: 1.0)), Point(Coordinate(x: -1.0, y: 1.0)), Point(Coordinate(x: 1.0, y: -1.0)), Point(Coordinate(x: 1.0, y: -3.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_firstLineStringInteriorDoesNotIntersectLinearRingExterior() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0), Coordinate(x: 1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondLineStringInteriorDoesNotIntersectLinearRingExterior() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0), Coordinate(x: -4.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_neitherLineStringInteriorIntersectsLinearRingExterior() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 0.0, y: -4.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_firstTouchesSecondInteriorAtLineSegmentAndPoint() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 10.0, y: -2.0)]), LineString([Coordinate(x: 6.0, y: -3.0), Coordinate(x: 0.0, y: -3.0), Coordinate(x: -3.0, y: 0.0), Coordinate(x: -10.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.5, y: -1.5), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0), Coordinate(x: 1.5, y: -1.5)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 1.0, y: -3.0))]))
+        expected.append(MultiLineString([LineString([Coordinate(x: 1.5, y: -1.5), Coordinate(x: 2.0, y: -2.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_firstLineStringInsideLinearRing_secondLineStringBoundaryTouchesLinearRing() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 3.0, y: -3.0), Coordinate(x: 5.0, y: -5.0), Coordinate(x: 5.0, y: -7.0)]), LineString([Coordinate(x: 1.0, y: -9.0), Coordinate(x: 3.0, y: -11.0), Coordinate(x: 5.0, y: -9.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 5.0, y: -5.0), Coordinate(x: 5.0, y: -9.0), Coordinate(x: 1.0, y: -9.0), Coordinate(x: 1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 5.0, y: -9.0)), Point(Coordinate(x: 1.0, y: -9.0))]))
+        expected.append(MultiLineString([LineString([Coordinate(x: 3.0, y: -3.0), Coordinate(x: 5.0, y: -5.0), Coordinate(x: 5.0, y: -7.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondLineStringInsideLinearRing_firstLineStringBoundaryTouchesLinearRing() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 3.0, y: -3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 4.0, y: 5.0), Coordinate(x: 4.0, y: -4.0)]), LineString([Coordinate(x: 1.0, y: -7.0), Coordinate(x: 1.0, y: -9.0), Coordinate(x: 3.0, y: -9.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 5.0, y: -5.0), Coordinate(x: 5.0, y: -9.0), Coordinate(x: 1.0, y: -9.0), Coordinate(x: 1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 3.0, y: -3.0)), Point(Coordinate(x: 4.0, y: -4.0))]))
+        expected.append(MultiLineString([LineString([Coordinate(x: 3.0, y: -9.0), Coordinate(x: 1.0, y: -9.0), Coordinate(x: 1.0, y: -7.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondIntersectsFirstBoundaryPointOfFirstAndInteriorsOverlap_FirstLineString() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 4.0, y: -4.0), Coordinate(x: 0.0, y: -8.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_secondIntersectsSecondBoundaryPointOfFirstAndInteriorsOverlap_SecondLineString() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -1.0, y: 9.0), Coordinate(x: -1.0, y: -4.0), Coordinate(x: -7.0, y: -1.0), Coordinate(x: -1.0, y: 9.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -4.0, y: 4.0))]))
+        expected.append(MultiLineString([LineString([Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_firstProperSubsetOfSecond() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: -9.0, y: -9.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -3.0, y: -3.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 4.0, y:0.0), Coordinate(x: 5.0, y: -1.0), Coordinate(x: 7.0, y: -3.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -10.0, y: -10.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 12.0, y: -8.0), Coordinate(x: -10.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: -9.0, y: -9.0), Coordinate(x: -3.0, y: -3.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 7.0, y: -3.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiLineString_LinearRing_firstMostlyProperSubsetOfSecondButOneLineStringBoundaryPointNotIncluded() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: -9.0, y: -9.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -3.0, y: -3.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 4.0, y:0.0), Coordinate(x: 5.0, y: -1.0), Coordinate(x: 10.0, y: 10.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: -10.0, y: -10.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 12.0, y: -8.0), Coordinate(x: -10.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: -9.0, y: -9.0), Coordinate(x: -3.0, y: -3.0)]), LineString([Coordinate(x: 3.0, y: 1.0), Coordinate(x: 5.0, y: -1.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
 //    ///
 //    /// MultiLineString MultiLineString tests
 //    ///
@@ -10874,5 +10859,55 @@ class IntersectionTests: XCTestCase {
                 XCTFail()
             }
         }
+    }
+    
+    ///
+    /// From a geometry collection, return either a geometry of dimension zero, a MultiPoint,
+    /// a geometry of dimension one, a MultiLineString, or a geometry of dimension two, a MultiLineString.
+    ///
+    /// - Parameters:
+    ///     - geometryCollection: an intersection geometry collection containing no more than one MultiPoint,
+    ///                             one MultiLineString, and one MultiLineString, for a maximum three objects.
+    ///     - dimension: the dimension of the object in the geometryCollection to be returned.
+    ///
+    /// - Returns: The object in the geometryCollection with the given dimension or nil, if does not exist.
+    ///
+    func geometry(_ geometryCollection: GeometryCollection, _ dimension: GeoFeatures.Dimension) -> Geometry? {
+        
+        guard geometryCollection.count > 0 else { return nil }
+        
+        for geometry in geometryCollection {
+            if let collection = geometry as? MultiPoint, dimension == .zero {
+                return collection
+            } else if let collection = geometry as? MultiLineString, dimension == .one {
+                return collection
+            } else if let collection = geometry as? MultiPolygon, dimension == .two {
+                return collection
+            }
+        }
+
+        return nil
+    }
+    
+    ///
+    /// This is a function used to compare two geometry collections.  This function is TBD.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first of two geometries for which an intersection is to be found.
+    ///     - geometry2: The second of two geometries for which an intersection is to be found.
+    ///     - resultGeometry: The resulting geometry collection.
+    ///     - expected: The expected geometry collection.
+    ///
+    /// - Returns: Nothing
+    ///
+    func compareTopo(_ geometry1: Geometry, _ geometry2: Geometry, _ resultGeometry: GeometryCollection, expected: GeometryCollection) {
+        
+//        let errorMessage = "For \(geometry1) and \(geometry2) got an intersection of \(resultGeometry) but expected an intersection of \(expected)."
+//
+//        if let dimension = geometry1.dimension { }
+//
+//        if !geometry1.equalsTopo(geometry2) {
+//            XCTFail()
+//        }
     }
 }

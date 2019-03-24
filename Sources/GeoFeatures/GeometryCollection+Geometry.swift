@@ -60,9 +60,14 @@ extension GeometryCollection {
     }
 
     ///
-    /// - Returns: true if `self` is equal to the `other` topologically.  This defaults to 'equals,' but should be generally overridden
+    /// - Returns: true if `self` is equal to the `other` topologically.
     ///
     public func equalsTopo(_ other: Geometry) -> Bool {
+        /// This will be put on hold for a while.  For the time being, we will just use standard equals.
+        /// One way to do this would be to reduce each GeometryCollection to a set of at most three GeometryCollections,
+        /// one MultiPoint, for all zero-dimensional objects; one MultiLineString, for all one-dimensional objects; and
+        /// one MultiPolygon for all two-dimensional objects.  Note this would contain no LinearRings.  They would
+        /// all be converted to LineStrings.
         if let other = other as? GeometryCollection {
             return self.elementsEqual(other, by: { (lhs: Geometry, rhs: Geometry) -> Bool in
                 return lhs.equals(rhs)
