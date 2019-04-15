@@ -73,8 +73,25 @@ struct RelatedTo {
 }
 
 /// Describes the relationship between two Segments
+///
+/// This was developed to help to determine the intersection between a LineString and a Polygon.
+/// In particular, it will be used to determine the overlap of a Segment with segments in a LinearRing,
+/// whether it is the main LinearRing of the Polygon or a hole.
+///
+/// - parameters:
+///     - segmentNumber: The segment number of the LinearRing, base 0.
+///     - hole: Is the LinearRing a hole in the Polygon or the main outer ring?
+///     - firstSubsetOfSecond: Is the first Segment a subset of the second Segment?
+///     - secondSubsetOfFirst: Is the second Segment a subset of the first Segment?
+///     - point: A single point at which the two segments touch.
+///     - segment: The Segment at which the two segments overlap.
+///
 struct SegmentOverlap {
 
+    var segmentNumber: Int = 0
+    var hole: Bool
+    var firstSubsetOfSecond: Bool
+    var secondSubsetOfFirst: Bool
     var point: Point?
     var segment: Segment?
 }
@@ -232,8 +249,8 @@ fileprivate func intersectionOneOne(_ geometry1: Geometry, _ geometry2: Geometry
 /// For the intersection of two geometries of dimension .one and .two, respectively.
 fileprivate func intersectionOneTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
 
-//    if let lineString = geometry1 as? LineString, let polygon = geometry2 as? Polygon {
-//        return generateIntersection(lineString, polygon)
+    if let lineString = geometry1 as? LineString, let polygon = geometry2 as? Polygon {
+        return generateIntersection(lineString, polygon)
 //    } else if let lineString = geometry1 as? LineString, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(lineString, multipolygon)
 //    } else if let multilineString = geometry1 as? MultiLineString, let polygon = geometry2 as? Polygon {
@@ -244,7 +261,7 @@ fileprivate func intersectionOneTwo(_ geometry1: Geometry, _ geometry2: Geometry
 //        return generateIntersection(linearRing, polygon)
 //    } else if let linearRing = geometry1 as? LinearRing, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(linearRing, multipolygon)
-//    }
+    }
     return GeometryCollection()
 }
 
@@ -1158,12 +1175,188 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
         return relatedToResult
     }
 
-//    fileprivate static func midpoint(_ coord1: Coordinate, _ coord2: Coordinate) -> Coordinate {
-//
-//        return Coordinate(x: (coord1.x + coord2.x) / 2.0, y: (coord1.y + coord2.y) / 2.0)
-//
-//    }
-//
+    ///
+    /// Describes the relationship between a single Segment and the Segments of a LinearRing.
+    ///
+    /// This was developed to help to determine the intersection between a LineString and a Polygon.
+    /// In particular, it will be used to determine the overlap of a Segment with segments in a LinearRing,
+    /// whether it is the main LinearRing of the Polygon or a hole.
+    ///
+    /// - parameters:
+    ///     - segment: The segment which will be checked for overlaps with the LinearRing.
+    ///     - linearRing: The LinearRing which the segment may overlap in a variety of ways.
+    ///     - hole: Is the LinearRing a hole in some polgyon or the main outer ring?
+    ///
+    ///  - returns: An array of SegmentOverlap structs, one for each segment in the linear ring.
+    ///
+    fileprivate func crosses(_ segment: Segment, _ linearRing: LinearRing, _ hole: Bool) -> [SegmentOverlap] {
+
+        var overlapResults = [SegmentOverlap]()
+
+        let simplifiedLinearRing = linearRing.simplify(tolerance: 1.0)
+
+        /// For each line segment in the simplified linear ring, check the following:
+        /// - Is the main segment a subset of the linear ring segment?
+        /// - Is the linear ring segment a subset of the main segment?
+        /// - Do the main segment and the linear ring segment intersect at a single point and what is that point?
+        /// - Do the main segment and the linear ring segment intersect at another segment and what is that segment?
+        for firstCoordIndex in 0..<simplifiedLinearRing.count - 1 {
+            let firstCoord  = simplifiedLinearRing[firstCoordIndex]
+            let secondCoord = simplifiedLinearRing[firstCoordIndex + 1]
+            let segment2 = Segment(left: firstCoord, right: secondCoord)
+
+            let lineSegmentIntersection = intersection(segment: segment, other: segment2)
+
+            /// Check for a LineString or Point intersection.
+            var lineSegmentOverlap: Segment?
+            var pointOverlap: Point?
+            if let lineString = lineSegmentIntersection.geometry as? LineString, lineString.count == 2 {
+                lineSegmentOverlap = Segment(left: lineString[0], right: lineString[1])
+            } else if let point = lineSegmentIntersection.geometry as? Point {
+                pointOverlap = point
+            }
+
+            overlapResults.append(SegmentOverlap(segmentNumber: firstCoordIndex, hole: hole, firstSubsetOfSecond: lineSegmentIntersection.firstSubsetOfSecond, secondSubsetOfFirst: lineSegmentIntersection.secondSubsetOfFirst, point: pointOverlap, segment: lineSegmentOverlap))
+        }
+
+        /// Return
+
+        return overlapResults
+    }
+
+    ///
+    /// Collects all the points for a SegmentOverlap array and returns a single MultiPoint
+    ///
+    /// This was developed to help to determine the intersection between a LineString and a Polygon.
+    ///
+    /// - parameters:
+    ///     - overlaps: An array of SegmentOverlap structs.
+    ///
+    ///  - returns: A MultiPoint containing all the points in the SegmentOverlap array.
+    ///
+    fileprivate func points(_ overlaps: [SegmentOverlap]) -> MultiPoint {
+
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+        /// For each segment overlap, check if there is a point.  If so, add it to the MultiPoint.
+        for segmentOverlap in overlaps {
+            if let point = segmentOverlap.point {
+                multiPointGeometry.append(point)
+            }
+        }
+
+        /// Return
+        return multiPointGeometry
+    }
+
+    ///
+    /// Collects all the coordinates for a SegmentOverlap array and the endpoints of a segment.
+    /// This includes the coordinates of individual points and the endpoints of the segments.
+    /// These may be duplicated.
+    /// Note the first coordinate of the segment will always be first.
+    ///
+    /// This was developed to help to determine the intersection between a LineString and a Polygon.
+    ///
+    /// - parameters:
+    ///     - segment: The segment of interest.
+    ///     - overlaps: An array of SegmentOverlap structs.
+    ///
+    ///  - returns: A MultiPoint containing all the points in the SegmentOverlap array.
+    ///
+    fileprivate func segmentCoordinates(_ segment: Segment, _ overlaps: [SegmentOverlap]) -> [Coordinate] {
+
+        var coordinates = [Coordinate]()
+
+        /// Add the first and last coordinates of the segment endpoints.
+        /// Note that the first coordinate of the segment will always be first.
+        coordinates.append(segment.leftCoordinate)
+        coordinates.append(segment.rightCoordinate)
+
+        /// For each segment overlap, check if there is a point or a segment.
+        /// If so, add the coordinates of the point, or the coordinates of the segment endpoints to the final array.
+        for segmentOverlap in overlaps {
+            if let point = segmentOverlap.point {
+                coordinates.append(point.coordinate)
+            }
+            if let segment = segmentOverlap.segment {
+                coordinates.append(segment.leftCoordinate)
+                coordinates.append(segment.rightCoordinate)
+            }
+        }
+
+        /// Return
+        return coordinates
+    }
+
+    ///
+    /// Sorts the coordinates of a line segment from those nearest the first coordinate to those farthest away.
+    /// Some coordinates may be duplicated.
+    /// Note the first coordinate of the segment will always be first.
+    /// Removes duplicate coordinates.
+    ///
+    /// This was developed to help to determine the intersection between a LineString and a Polygon.
+    ///
+    /// - parameters:
+    ///     - coordinates: An array of Coordinates represent points on a segment.
+    ///
+    ///  - returns: A MultiPoint containing all the points in the SegmentOverlap array.
+    ///
+    fileprivate func sortSegmentCoordinates(_ coordinates: [Coordinate]) -> [Coordinate] {
+
+        /// Create a new array consisting of tuples or coordinates and their distance from the first coordinate.
+        var distances = [(Coordinate, Double)]()
+        let firstCoordinate = coordinates[0]
+        for newCoordinate in coordinates {
+            let distanceFromFirst = distance(firstCoordinate, newCoordinate)
+            distances.append((newCoordinate, distanceFromFirst))
+        }
+
+        /// Sort the coordinates from closest to the first coordinate to the farthest.
+        let sortedDistances = distances.sorted(by: {$0.1 < $1.1})
+        let sortedCoordinates = sortedDistances.map{ $0.0 }
+
+        /// Remove duplicate coordinates.
+        var sortedUniqueCoordinates = [Coordinate]()
+        var currentCoordinate = firstCoordinate
+        sortedUniqueCoordinates.append(currentCoordinate)
+        for index in 1..<sortedCoordinates.count {
+            let newCoordinate = sortedCoordinates[index]
+            if newCoordinate != currentCoordinate {
+                currentCoordinate = newCoordinate
+                sortedUniqueCoordinates.append(currentCoordinate)
+            }
+        }
+
+        /// Return
+        return sortedUniqueCoordinates
+    }
+
+    ///
+    /// - parameters:
+    ///     - coord1: The first coordinate.
+    ///     - coord2: The second coordinate.
+    ///
+    ///  - returns: The midpoint coordinate of the two input coordinates.
+    ///
+    fileprivate func midpoint(_ coord1: Coordinate, _ coord2: Coordinate) -> Coordinate {
+
+        return Coordinate(x: (coord1.x + coord2.x) / 2.0, y: (coord1.y + coord2.y) / 2.0)
+
+    }
+
+    ///
+    /// - parameters:
+    ///     - coord1: The first coordinate.
+    ///     - coord2: The second coordinate.
+    ///
+    ///  - returns: The distance between the two input coordinates.
+    ///
+    fileprivate func distance(_ coord1: Coordinate, _ coord2: Coordinate) -> Double {
+
+        return sqrt(pow((coord1.x - coord2.x), 2.0) + pow((coord1.y - coord2.y), 2.0))
+
+    }
+
 //    /// This code parallels that where the second geometry is a simple polygon.
 //    fileprivate static func relatedTo(_ segment: Segment, _ linearRing: LinearRing) -> RelatedTo {
 //
@@ -3458,179 +3651,311 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
         return geometryCollection
     }
 
-//    ///
-//    /// Dimension .one and dimension .two
-//    ///
-//
-//    /// The polygon here is a full polygon with holes
-//    fileprivate static func generateIntersection(_ lineString: LineString, _ polygon: Polygon) -> IntersectionMatrix {
-//
-//        /// Default intersection matrix
-//        var matrixIntersects = IntersectionMatrix()
-//        matrixIntersects[.exterior, .interior] = .two
-//        matrixIntersects[.exterior, .boundary] = .one // This assumes the polygon boundary is not a subset of the input line string
-//        matrixIntersects[.exterior, .exterior] = .two
-//
-//        /// Get the polygon boundary
-//        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-//            polygonBoundary.count > 0,
-//            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-//            outerLinearRing.count > 0 else {
-//                return matrixIntersects
-//        }
-//
-//        /// Check whether the line string is completely contained in the polygon boundary
-//        let reducedLs = reduce(lineString)
-//        let reducedPolygon = reduce(polygon)
-//        if subset(reducedLs, reducedPolygon) {
-//            matrixIntersects[.interior, .boundary] = .one
-//            matrixIntersects[.boundary, .boundary] = .zero
-//            return matrixIntersects
-//        }
-//
-//        /// From here on we know the line string is not completely contained in the polygon boundary
-//
-//        /// Get the endpoints of the line string (the line string boundary).
-//        /// Assume for now that there are two boundary points.
-//
-//        guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
-//            return matrixIntersects
-//        }
-//
-//        let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
-//
-//        let lineStringBoundaryCoordinate1 = lineStringBoundaryCoordinateArray[0]
-//        let lineStringBoundaryCoordinate2 = lineStringBoundaryCoordinateArray[1]
-//
-//        /// Must add an algorithm here to check whether a line segment is inside a polygon
-//        var lineStringInsideMainPolygon     = false /// Implies part of the line string lies inside the polygon
-//
-//        var boundaryPoint1OutsidePolygon    = false
-//        var boundaryPoint2OutsidePolygon    = false
-//
-//        var boundaryPoint1OnPolygonBoundary = false
-//        var boundaryPoint2OnPolygonBoundary = false
-//
-//        /// Relate the line string to the main polygon and each of its holes
-//        var isMainPolygon = true
-//        for element in polygonBoundary {
-//
-//            guard let linearRing = element as? LinearRing else { return matrixIntersects }
-//            let tempPolygon = Polygon(linearRing)
-//
-//            let boundaryCoordinate1RelatedToResult  = relatedTo([(lineStringBoundaryCoordinate1, true)], tempPolygon)
-//            let boundaryCoordinate2RelatedToResult  = relatedTo([(lineStringBoundaryCoordinate2, true)], tempPolygon)
-//            let lineStringRelatedToResult           = relatedTo(lineString, tempPolygon)
-//
-//            if isMainPolygon {
-//
-//                if lineStringRelatedToResult.firstTouchesSecondInterior > .empty {
-//                    lineStringInsideMainPolygon = true
-//                    matrixIntersects[.interior, .interior] = .one
-//                }
-//
-//                if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
-//                    matrixIntersects[.interior, .boundary] = lineStringRelatedToResult.firstInteriorTouchesSecondBoundary
-//                }
-//
-//                if lineStringRelatedToResult.firstTouchesSecondExterior == .one {
-//                    matrixIntersects[.interior, .exterior] = .one
-//                }
-//
-//                if lineStringRelatedToResult.firstBoundaryTouchesSecondInterior > .empty {
-//                    matrixIntersects[.boundary, .interior] = lineStringRelatedToResult.firstBoundaryTouchesSecondInterior
-//                }
-//
-//                if lineStringRelatedToResult.firstBoundaryTouchesSecondBoundary > .empty {
-//                    matrixIntersects[.boundary, .boundary] = lineStringRelatedToResult.firstBoundaryTouchesSecondBoundary
-//                }
-//
-//                if boundaryCoordinate1RelatedToResult.firstTouchesSecondBoundary > .empty {
-//                    boundaryPoint1OnPolygonBoundary = true
-//                    matrixIntersects[.boundary, .boundary] = .zero
-//                }
-//
-//                if boundaryCoordinate2RelatedToResult.firstTouchesSecondBoundary > .empty {
-//                    boundaryPoint2OnPolygonBoundary = true
-//                    matrixIntersects[.boundary, .boundary] = .zero
-//                }
-//
-//                if boundaryCoordinate1RelatedToResult.firstTouchesSecondExterior > .empty {
-//                    boundaryPoint1OutsidePolygon = true
-//                    matrixIntersects[.boundary, .exterior] = .zero
-//                }
-//
-//                if boundaryCoordinate2RelatedToResult.firstTouchesSecondExterior > .empty {
-//                    boundaryPoint2OutsidePolygon = true
-//                    matrixIntersects[.boundary, .exterior] = .zero
-//                }
-//
-//                isMainPolygon = false
-//
-//                /// If the line string does not touch the interior of the main polygon, we're done.
-//                if !lineStringInsideMainPolygon {
-//                    return matrixIntersects
-//                }
-//
-//            } else {
-//
-//                /// We will only consider cases here where the line string is inside the main polygon.
-//                /// If the line string touches only the main polygon boundary or is outside the main polygon,
-//                /// those cases have already been addressed.
-//
-//                if lineStringRelatedToResult.firstTouchesSecondInteriorOrBoundaryOnly {
-//                    matrixIntersects[.interior, .interior] = .empty
-//                }
-//
-//                if lineStringRelatedToResult.firstTouchesSecondExterior > matrixIntersects[.interior, .interior] {
-//                    matrixIntersects[.interior, .interior] = lineStringRelatedToResult.firstTouchesSecondExterior
-//                }
-//
-//                if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
-//                    matrixIntersects[.interior, .boundary] = lineStringRelatedToResult.firstInteriorTouchesSecondBoundary
-//                }
-//
-//                if lineStringRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
-//                    matrixIntersects[.interior, .exterior] = lineStringRelatedToResult.firstTouchesSecondInterior
-//                }
-//
-//                if lineStringRelatedToResult.firstBoundaryTouchesSecondBoundary > .empty {
-//                    matrixIntersects[.boundary, .boundary] = lineStringRelatedToResult.firstBoundaryTouchesSecondBoundary
-//                }
-//
-//                if boundaryCoordinate1RelatedToResult.firstTouchesSecondBoundary > .empty {
-//                    boundaryPoint1OnPolygonBoundary = true
-//                    matrixIntersects[.boundary, .boundary] = .zero
-//                }
-//
-//                if boundaryCoordinate2RelatedToResult.firstTouchesSecondBoundary > .empty {
-//                    boundaryPoint2OnPolygonBoundary = true
-//                    matrixIntersects[.boundary, .boundary] = .zero
-//                }
-//
-//                if boundaryCoordinate1RelatedToResult.firstTouchesSecondInterior > .empty {
-//                    boundaryPoint1OutsidePolygon = true
-//                    matrixIntersects[.boundary, .exterior] = .zero
-//                }
-//
-//                if boundaryCoordinate2RelatedToResult.firstTouchesSecondInterior > .empty {
-//                    boundaryPoint2OutsidePolygon = true
-//                    matrixIntersects[.boundary, .exterior] = .zero
-//                }
-//            }
-//        }
-//
-//        /// We have to check that each boundary point is either on the boundary or outside the polygon
-//        /// before we know about the value of the boundary, interior entry.
-//        matrixIntersects[.boundary, .interior] = .empty
-//        if (!boundaryPoint1OnPolygonBoundary && !boundaryPoint1OutsidePolygon) || (!boundaryPoint2OnPolygonBoundary && !boundaryPoint2OutsidePolygon) {
-//            matrixIntersects[.boundary, .interior] = .zero
-//        }
-//
-//        /// No intersection
-//        return matrixIntersects
-//    }
-//
+    ///
+    /// Dimension .one and dimension .two
+    ///
+
+    /// Find the intersection of a segment, and a simple polygon, which is a regular polygon minus any holes, given that
+    /// you have the locations where the segment and the linear ring, which is the boundary of the polygon, overlap.
+    /// Note this is used in finding the intersection of a line string and a polygon.
+    fileprivate func generateSimplePolygonIntersection(_ segment: Segment, _ polygon: Polygon, _ overlaps: [SegmentOverlap]) -> Geometry {
+
+        /// Determine whether the first and last endpoints of the segment are inside or outside of the polygon.
+        /// Being inside the polygon does include the boundary.
+        let firstEndPointInPolygon = !relatedToGeneral((segment.leftCoordinate, true), polygon).firstTouchesSecondExteriorOnly
+        let lastEndPointInPolygon = !relatedToGeneral((segment.rightCoordinate, true), polygon).firstTouchesSecondExteriorOnly
+
+        /// Loop over the places where the segment overlaps the outer ring and build the intersection.
+        /// The returned value will be a GeometryCollection, which may be empty.
+        /// The GeometryCollection may contain two values, a MultiPoint and a MultiLineString.
+        /// The MultiPoint will contain all the Points, and the MultiLineString will contain all the LineStrings.
+        /// The MultiPoint and a MultiLineString will only be in the GeometryCollection if they are non-empty.
+
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        var multiLineStringGeometry = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+
+        /// Collect all intersections that will consist of Segments or Points.
+        /// The Points can be duplicated, and they could be contained in one or more Segments.
+        var startCoordinateOfPossibleInternalSegment: Coordinate?
+        if firstEndPointInPolygon {
+            startCoordinateOfPossibleInternalSegment = segment.leftCoordinate
+        }
+        for segmentOverlap in overlaps {
+            if let newCoordinate = segmentOverlap.point?.coordinate {
+                /// Handle the case where the segment and the segment of the linear ring touch at a point
+                if let startCoordinate = startCoordinateOfPossibleInternalSegment {
+                    if startCoordinate == newCoordinate {
+                        continue
+                    } else {
+                        /// The start and end points differ.  This creates a segment.
+                        /// This segment can lie inside or outside the linear ring.
+                        /// Check the midpoint of the two endpoints to see if it is inside or outside of the polygon.
+                        let midCoordinate = midpoint(startCoordinate, newCoordinate)
+                        let midCoordinateInPolygon = !relatedToGeneral((midCoordinate, true), polygon).firstTouchesSecondExteriorOnly
+                        if midCoordinateInPolygon {
+                            multiLineStringGeometry.append(LineString([startCoordinate, newCoordinate]))
+                        } else {
+                            multiPointGeometry.append(Point(startCoordinate))
+                        }
+                        startCoordinateOfPossibleInternalSegment = newCoordinate
+                    }
+                } else {
+                    startCoordinateOfPossibleInternalSegment = newCoordinate
+                }
+            } else if let newSegment = segmentOverlap.segment {
+                /// Handle the case where the segment and the segment of the linear ring touch at a segment
+                if let startCoordinate = startCoordinateOfPossibleInternalSegment {
+                    if startCoordinate == newSegment.leftCoordinate {
+                        multiLineStringGeometry.append(LineString([startCoordinate, newSegment.rightCoordinate]))
+                        startCoordinateOfPossibleInternalSegment = newSegment.rightCoordinate
+                    } else if startCoordinate == newSegment.rightCoordinate {
+                        /// This else statement may not be needed
+                        multiLineStringGeometry.append(LineString([startCoordinate, newSegment.leftCoordinate]))
+                        startCoordinateOfPossibleInternalSegment = newSegment.leftCoordinate
+                    }
+                } else {
+                    multiLineStringGeometry.append(LineString([newSegment.leftCoordinate, newSegment.rightCoordinate]))
+                    startCoordinateOfPossibleInternalSegment = newSegment.rightCoordinate
+                }
+            }
+        }
+
+        /// We have looped over all the overlaps.  Check for a final point or segment.
+        if let startCoordinate = startCoordinateOfPossibleInternalSegment {
+            if startCoordinate != segment.rightCoordinate {
+                /// The start coordinate and right coordinate of the segment differ and the start coordinate touches the linear ring.
+                /// The creates a segment.  This segment can lie inside or outside the linear ring.
+                /// Check the last endpoint of the segment to see if it is inside or outside of the polygon.
+                if lastEndPointInPolygon {
+                    multiLineStringGeometry.append(LineString([startCoordinate, segment.rightCoordinate]))
+                } else {
+                    multiPointGeometry.append(Point(startCoordinate))
+                }
+            } else {
+                multiPointGeometry.append(Point(startCoordinate))
+            }
+        }
+
+        /// Remove all Points that are duplicated or are contained in one of the LineStrings.
+        let simplifiedMultiPoint = multiPointGeometry.simplify(tolerance: 1.0)
+        var finalMultiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+        for tempPoint in simplifiedMultiPoint {
+
+            if let _ = intersection(tempPoint, multiLineStringGeometry) as? GeometryCollection {
+                finalMultiPointGeometry.append(tempPoint)
+            }
+        }
+
+        /// Simplify the LineStrings in the MultiLineString to minimize the total number of LineStrings.
+        let finalMultiLineString = multiLineStringGeometry.simplify(tolerance: 1.0)
+
+        /// Build the final GeometryCollection that will be returned.
+        var geometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        if finalMultiPointGeometry.count > 0 {
+            geometryCollection.append(finalMultiPointGeometry)
+        }
+        if finalMultiLineString.count > 0 {
+            geometryCollection.append(finalMultiLineString)
+        }
+
+        /// Return
+        return geometryCollection
+    }
+
+    /// Given a segment, and a simple polygon, which is a hole in a polygon, and given that
+    /// you have the locations where the segment and the linear ring, which is the boundary of the polygon, overlap,
+    /// remove portions of the segment that are inside the hole.
+    /// The result is an array of segments.
+    /// Note this is used in finding the intersection of a line string and a polygon.
+    fileprivate func removeSectionsInsideHole(_ segment: Segment, _ polygon: Polygon, _ overlaps: [SegmentOverlap]) -> [Segment] {
+
+        /// Check that the two endpoints of the segment are not the same.
+        guard segment.leftCoordinate != segment.rightCoordinate else {
+            return [segment]
+        }
+
+        /// Collect all the coordinates at which the segment touches the hole.
+        /// Note this collection will include the segment endpoints,
+        /// and the first coordinate of the segment will be the first element.
+        let segmentTouchesAtCoordinates = segmentCoordinates(segment, overlaps)
+
+        /// Sort the coordinates of the points on the segment starting with the first coordinate
+        /// and ending with the last coordinate of the segment.
+        /// Note there should be at least two, since this will include the segment endpoints.
+        let sortedSegmentCoordinates = sortSegmentCoordinates(segmentTouchesAtCoordinates)
+
+        /// Determine if each pair of consecutive coordinates represents a segment that is inside or outside of the hole.
+        /// Being inside the polygon does NOT include the boundary.
+        /// This is because the polygon is a hole, and being on the boundary implies being part of the main polygon.
+        /// If outside the hole, create and return a new line string.
+        var segmentsArray = [Segment]()
+        for index in 0..<sortedSegmentCoordinates.count - 1 {
+            let coordinate1 = sortedSegmentCoordinates[index]
+            let coordinate2 = sortedSegmentCoordinates[index + 1]
+            let midCoordinate = midpoint(coordinate1, coordinate2)
+            let midCoordinateInPolygon = relatedToGeneral((midCoordinate, true), polygon).firstTouchesSecondInteriorOnly
+            if !midCoordinateInPolygon {
+                segmentsArray.append(Segment(left: coordinate1, right: coordinate2))
+            }
+        }
+
+        /// See if we can simplify the array of segments.
+        var finalSegmentsArray = [Segment]()
+        if segmentsArray.count > 0 {
+            var currentSegment = segmentsArray[0]
+            for index in 1..<segmentsArray.count {
+                let newSegment = segmentsArray[index]
+                if currentSegment.rightCoordinate == newSegment.leftCoordinate {
+                    currentSegment = Segment(left: currentSegment.leftCoordinate, right: newSegment.rightCoordinate)
+                } else {
+                    finalSegmentsArray.append(currentSegment)
+                    currentSegment = newSegment
+                }
+            }
+            
+            finalSegmentsArray.append(currentSegment)
+        }
+
+        /// Return
+        return finalSegmentsArray
+    }
+
+    /// The polygon here is a full polygon with holes
+    fileprivate func generateIntersection(_ lineString: LineString, _ polygon: Polygon) -> Geometry {
+
+        /// Simplify each geometry first
+        let simplifiedLineString = lineString.simplify(tolerance: 1.0)
+        let simplifiedPolygon = polygon.simplify(tolerance: 1.0)
+
+        /// Check the intersection of each line segment of both the line string and the linear ring.
+        /// Determine whether each intersection of two points is either inside or outside the main linear ring,
+        /// and whether the intersection passes through any holes.
+        /// The returned value will be a GeometryCollection, which may be empty.
+        /// The GeometryCollection may contain two values, a MultiPoint and a MultiLineString.
+        /// The MultiPoint will contain all the Points, and the MultiLineString will contain all the LineStrings.
+        /// The MultiPoint and a MultiLineString will only be in the GeometryCollection if they are non-empty.
+
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        var multiLineStringGeometry = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+
+        /// Loop over all the segments of the line string.
+        /// Get all the place where each segment crosses over the outer linear ring.
+        /// Determine which subsegments intersect the inside or outside of the outer linear ring.
+        /// Points will always be included since they must touch on the boundary of any linear ring.
+        /// Collect all intersections that will consist of LineStrings or Points.
+        /// Note the LineStrings will really be Segments that potentially overlap each other.
+        /// The Points can be duplicated, and they could be contained in one or more LineStrings.
+        var outerMultiLineStringGeometry = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+        let outerLinearRing = simplifiedPolygon[0]
+        let outerPolygon = Polygon(outerLinearRing)
+        for ls1FirstCoordIndex in 0..<simplifiedLineString.count - 1 {
+            let ls1FirstCoord  = simplifiedLineString[ls1FirstCoordIndex]
+            let ls1SecondCoord = simplifiedLineString[ls1FirstCoordIndex + 1]
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
+
+            /// Get the places where the segment intersects the outer linear ring.
+            let segmentOverlaps = crosses(segment1, outerLinearRing, false)
+
+            /// Get the intersection of the segment with a polygon made from just the outer linear ring.
+            let outerIntersection = generateSimplePolygonIntersection(segment1, outerPolygon, segmentOverlaps)
+
+            /// Append the intersections for this particular segment to the final collection of intersections
+            if let geometryCollection = outerIntersection as? GeometryCollection {
+                if geometryCollection.count > 0 {
+                    if let segmentMultiPointGeometry = geometryCollection[0] as? MultiPoint {
+                        multiPointGeometry += segmentMultiPointGeometry
+                    } else if let segmentMultiLineStringGeometry = geometryCollection[0] as? MultiLineString {
+                        outerMultiLineStringGeometry += segmentMultiLineStringGeometry
+                    }
+                }
+                if geometryCollection.count > 1 {
+                    if let segmentMultiLineStringGeometry = geometryCollection[1] as? MultiLineString {
+                        outerMultiLineStringGeometry += segmentMultiLineStringGeometry
+                    }
+                }
+            }
+        }
+
+        /// If there are holes in the polygon, loop over all the segments of each line string in the multi line string
+        /// that resulted from the intersection of the initial line string and the main polygon minus the holes,
+        /// and loop over all the holes in the polygon.  Remove those line segments that are inside the holes.
+        /// The resulting set of line strings will be appended to the final set of line strings.
+        ///
+        /// If there are no holes, simply use the outer set of line strings as the final set of line strings.
+        if simplifiedPolygon.count > 1 {
+            /// There are holes
+            for outerLineString in outerMultiLineStringGeometry {
+                for ls1FirstCoordIndex in 0..<outerLineString.count - 1 {
+                    let ls1FirstCoord  = outerLineString[ls1FirstCoordIndex]
+                    let ls1SecondCoord = outerLineString[ls1FirstCoordIndex + 1]
+                    let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
+
+                    var segments = [segment1]
+                    for linearRingIndex in 1..<simplifiedPolygon.count {
+                        let innerLinearRing = simplifiedPolygon[linearRingIndex]
+                        let innerPolygon = Polygon(innerLinearRing)
+                        var tempSegmentsArray = [Segment]()
+                        for currentSegment in segments {
+                            /// Get the places where the segment intersects the hole.
+                            let segmentOverlaps = crosses(currentSegment, innerLinearRing, false)
+
+                            /// Collect all the points at which the segment touches the hole
+                            let segmentTouchesAtPoints = points(segmentOverlaps)
+                            if segmentTouchesAtPoints.count > 0 {
+                                multiPointGeometry += segmentTouchesAtPoints
+                            }
+
+                            /// Remove the intersection of the segment with the hole and return the resulting segments array.
+                            let segmentsAfterHolesRemoved = removeSectionsInsideHole(currentSegment, innerPolygon, segmentOverlaps)
+
+                            /// Append the new segments to the temporary array of segments
+                            tempSegmentsArray += segmentsAfterHolesRemoved
+                        }
+
+                        /// Update the segments array before seeing whether any of the segments overlaps the next hole.
+                        segments = tempSegmentsArray
+                    }
+
+                    /// Append the intersections for this particular segment to the final collection of intersections.
+                    /// Note a segment could be completely inside a hole, so an empty geometry collection will be returned.
+                    for currentSegment in segments {
+                        multiLineStringGeometry.append(LineString([currentSegment.leftCoordinate, currentSegment.rightCoordinate]))
+                    }
+                }
+            }
+        } else {
+            /// There are no holes
+            multiLineStringGeometry += outerMultiLineStringGeometry
+        }
+
+        /// Remove all Points that are duplicated or are contained in one of the LineStrings.
+        let simplifiedMultiPoint = multiPointGeometry.simplify(tolerance: 1.0)
+        var finalMultiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+        for tempPoint in simplifiedMultiPoint {
+
+            if let _ = intersection(tempPoint, multiLineStringGeometry) as? GeometryCollection {
+                finalMultiPointGeometry.append(tempPoint)
+            }
+        }
+
+        /// Simplify the LineStrings in the MultiLineString to minimize the total number of LineStrings.
+        let finalMultiLineString = multiLineStringGeometry.simplify(tolerance: 1.0)
+
+        /// Build the final GeometryCollection that will be returned.
+        var geometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        if finalMultiPointGeometry.count > 0 {
+            geometryCollection.append(finalMultiPointGeometry)
+        }
+        if finalMultiLineString.count > 0 {
+            geometryCollection.append(finalMultiLineString)
+        }
+
+        /// Return
+        return geometryCollection
+    }
+
 //    fileprivate static func generateIntersection(_ lineString: LineString, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 //
 //        var matrixIntersects = IntersectionMatrix()
