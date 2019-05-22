@@ -251,8 +251,8 @@ fileprivate func intersectionOneTwo(_ geometry1: Geometry, _ geometry2: Geometry
 
     if let lineString = geometry1 as? LineString, let polygon = geometry2 as? Polygon {
         return generateIntersection(lineString, polygon)
-//    } else if let lineString = geometry1 as? LineString, let multipolygon = geometry2 as? MultiPolygon {
-//        return generateIntersection(lineString, multipolygon)
+    } else if let lineString = geometry1 as? LineString, let multipolygon = geometry2 as? MultiPolygon {
+        return generateIntersection(lineString, multipolygon)
 //    } else if let multilineString = geometry1 as? MultiLineString, let polygon = geometry2 as? Polygon {
 //        return generateIntersection(multilineString, polygon)
 //    } else if let multilineString = geometry1 as? MultiLineString, let multipolygon = geometry2 as? MultiPolygon {
@@ -3956,37 +3956,67 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
         return geometryCollection
     }
 
-//    fileprivate static func generateIntersection(_ lineString: LineString, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
-//
-//        var matrixIntersects = IntersectionMatrix()
-//
-//        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
-//
-//        for polygon in multipolygon {
-//
-//            /// Get the relationship between the line string and the polygon
-//            let intersectionMatrixResult = generateIntersection(lineString, polygon)
-//
-//            /// Update the intersection matrix as needed
-//            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
-//
-//        }
-//
-//        /// There is a special case here: line string boundary with multipolygon exterior.
-//        /// It's possible that the boundary of the line string exists in two different polygons.
-//        /// We have to check for that case and fix it from the above calculations.
-//
-//        guard let lineStringBoundary = lineString.boundary() as? MultiPoint else {
-//            return matrixIntersects
-//        }
-//        let boundaryMatrix = generateIntersection(lineStringBoundary, multipolygon)
-//        if boundaryMatrix[.boundary, .exterior] <  matrixIntersects[.boundary, .exterior] {
-//            matrixIntersects[.boundary, .exterior] = boundaryMatrix[.interior, .exterior]
-//        }
-//
-//        return matrixIntersects
-//    }
-//
+    fileprivate func generateIntersection(_ lineString: LineString, _ multipolygon: MultiPolygon) -> Geometry {
+
+        /// Simplify each geometry first
+        let simplifiedLineString = lineString.simplify(tolerance: 1.0)
+        let simplifiedMultiPolygon = multipolygon.simplify(tolerance: 1.0)
+
+        /// Perform the intersection calculation.
+        /// The returned value will be a GeometryCollection, which may be empty.
+        /// The GeometryCollection may contain two values, a MultiPoint and a MultiLineString.
+        /// The MultiPoint will contain all the Points, and the MultiLineString will contain all the LineStrings.
+        /// The MultiPoint and a MultiLineString will only be in the GeometryCollection if they are non-empty.
+
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        var multiLineStringGeometry = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+
+        /// Collect all intersections that will consist of LineStrings or Points.
+        /// Note the LineStrings will really be Segments that potentially overlap each other.
+        /// The Points can be duplicated, and they could be contained in one or more LineStrings.
+        for polygon in simplifiedMultiPolygon {
+            /// We assume each polygon has been simplified because the MultiPolgyon was simplified.
+            let resultGeometry = generateIntersection(simplifiedLineString, polygon)
+            guard let resultGeometryCollection = resultGeometry as? GeometryCollection else {
+                continue
+            }
+
+            for tempGeometry in resultGeometryCollection {
+                if let tempMultiPoint = tempGeometry as? MultiPoint {
+                    multiPointGeometry += tempMultiPoint
+                } else if let tempMultiLineString = tempGeometry as? MultiLineString {
+                    multiLineStringGeometry += tempMultiLineString
+                }
+            }
+        }
+
+        /// Remove all Points that are duplicated or are contained in one of the LineStrings.
+        let simplifiedMultiPoint = multiPointGeometry.simplify(tolerance: 1.0)
+        var finalMultiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+        for tempPoint in simplifiedMultiPoint {
+
+            if let _ = intersection(tempPoint, multiLineStringGeometry) as? GeometryCollection {
+                finalMultiPointGeometry.append(tempPoint)
+            }
+        }
+
+        /// Simplify the LineStrings in the MultiLineString to minimize the total number of LineStrings.
+        let finalMultiLineString = multiLineStringGeometry.simplify(tolerance: 1.0)
+
+        /// Build the final GeometryCollection that will be returned.
+        var geometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        if finalMultiPointGeometry.count > 0 {
+            geometryCollection.append(finalMultiPointGeometry)
+        }
+        if finalMultiLineString.count > 0 {
+            geometryCollection.append(finalMultiLineString)
+        }
+
+        /// Return
+        return geometryCollection
+    }
+
 //    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ polygon: Polygon) -> IntersectionMatrix {
 //
 //        /// Default intersection matrix
