@@ -257,8 +257,8 @@ fileprivate func intersectionOneTwo(_ geometry1: Geometry, _ geometry2: Geometry
 //        return generateIntersection(multilineString, polygon)
 //    } else if let multilineString = geometry1 as? MultiLineString, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(multilineString, multipolygon)
-//    } else if let linearRing = geometry1 as? LinearRing, let polygon = geometry2 as? Polygon {
-//        return generateIntersection(linearRing, polygon)
+    } else if let linearRing = geometry1 as? LinearRing, let polygon = geometry2 as? Polygon {
+        return generateIntersection(linearRing, polygon)
 //    } else if let linearRing = geometry1 as? LinearRing, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(linearRing, multipolygon)
     }
@@ -4017,98 +4017,13 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
         return geometryCollection
     }
 
-//    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ polygon: Polygon) -> IntersectionMatrix {
-//
-//        /// Default intersection matrix
-//        var matrixIntersects = IntersectionMatrix()
-//        matrixIntersects[.exterior, .interior] = .two
-//        matrixIntersects[.exterior, .exterior] = .two
-//
-//        /// Get the polygon boundary
-//        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-//            polygonBoundary.count > 0,
-//            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-//            outerLinearRing.count > 0 else {
-//                return matrixIntersects
-//        }
-//
-//        /// Check whether the linear ring is completely contained in the polygon boundary.
-//        /// If not, the exterior of the linear ring must intersect with the polygon boundary.
-//        let reducedLr  = reduce(linearRing)
-//        let reducedPB = reduce(polygonBoundary)
-//        if subset(reducedLr, reducedPB) {
-//            matrixIntersects[.interior, .boundary] = .one
-//            return matrixIntersects
-//        } else {
-//            matrixIntersects[.exterior, .boundary] = .one
-//        }
-//
-//        /// From here on we know the linear ring is not completely contained in the polygon boundary
-//
-//        var linearRingInsideMainPolygon = false /// Implies part of the linear ring lies inside the polygon
-//
-//        var linearRingOutsideAllHoles = true /// Assume initially that the linear ring it outside all holes, assuming any holes exist
-//
-//        /// Relate the linear ring to the main polygon and each of its holes
-//        var isMainPolygon = true
-//        for tempLinearRingPolygon in polygonBoundary {
-//
-//            guard let linearRingPolygon = tempLinearRingPolygon as? LinearRing else { return matrixIntersects }
-//
-//            let tempPolygon = Polygon(linearRingPolygon, precision: Floating(), coordinateSystem: Cartesian())
-//
-//            let linearRingRelatedToResult = relatedTo(linearRing, tempPolygon)
-//
-//            if isMainPolygon {
-//
-//                if linearRingRelatedToResult.firstTouchesSecondInterior > .empty {
-//                    linearRingInsideMainPolygon = true
-//                }
-//
-//                if linearRingRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
-//                    matrixIntersects[.interior, .boundary] = linearRingRelatedToResult.firstInteriorTouchesSecondBoundary
-//                }
-//
-//                if linearRingRelatedToResult.firstTouchesSecondExterior == .one {
-//                    matrixIntersects[.interior, .exterior] = .one
-//                }
-//
-//                isMainPolygon = false
-//
-//                /// If the linear ring does not touch the interior of the main polygon, we're done.
-//                /// Also, if there are no holes and the linear ring is inside the main polygon, the interiors overlap.
-//                if !linearRingInsideMainPolygon {
-//                    return matrixIntersects
-//                }
-//
-//            } else {
-//
-//                /// We will only consider cases here where the linear ring is inside the main polygon.
-//                /// If the linear ring touches only the main polygon boundary or is outside the main polygon,
-//                /// those cases have already been addressed.
-//
-//                if linearRingRelatedToResult.firstTouchesSecondExterior == .empty {
-//                    linearRingOutsideAllHoles = false
-//                }
-//
-//                if linearRingRelatedToResult.firstTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
-//                    matrixIntersects[.interior, .boundary] = linearRingRelatedToResult.firstTouchesSecondBoundary
-//                }
-//
-//                if linearRingRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
-//                    matrixIntersects[.interior, .exterior] = linearRingRelatedToResult.firstTouchesSecondInterior
-//                }
-//            }
-//        }
-//
-//        if linearRingOutsideAllHoles {
-//            matrixIntersects[.interior, .interior] = .one
-//        }
-//
-//        /// No intersection
-//        return matrixIntersects
-//    }
-//
+    fileprivate func generateIntersection(_ linearRing: LinearRing, _ polygon: Polygon) -> Geometry {
+
+        /// Convert the linear ring to a line string, and calculate the intersection from that.
+        let lineString = linearRing.convertToLineString()
+        return generateIntersection(lineString, polygon)
+    }
+
 //    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 //
 //        var matrixIntersects = IntersectionMatrix()
