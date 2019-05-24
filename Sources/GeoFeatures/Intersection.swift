@@ -259,8 +259,8 @@ fileprivate func intersectionOneTwo(_ geometry1: Geometry, _ geometry2: Geometry
 //        return generateIntersection(multilineString, multipolygon)
     } else if let linearRing = geometry1 as? LinearRing, let polygon = geometry2 as? Polygon {
         return generateIntersection(linearRing, polygon)
-//    } else if let linearRing = geometry1 as? LinearRing, let multipolygon = geometry2 as? MultiPolygon {
-//        return generateIntersection(linearRing, multipolygon)
+    } else if let linearRing = geometry1 as? LinearRing, let multipolygon = geometry2 as? MultiPolygon {
+        return generateIntersection(linearRing, multipolygon)
     }
     return GeometryCollection()
 }
@@ -4024,25 +4024,13 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
         return generateIntersection(lineString, polygon)
     }
 
-//    fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
-//
-//        var matrixIntersects = IntersectionMatrix()
-//
-//        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
-//
-//        for polygon in multipolygon {
-//
-//            /// Get the relationship between the point and the polygon
-//            let intersectionMatrixResult = generateIntersection(linearRing, polygon)
-//
-//            /// Update the intersection matrix as needed
-//            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
-//
-//        }
-//
-//        return matrixIntersects
-//    }
-//
+    fileprivate func generateIntersection(_ linearRing: LinearRing, _ multipolygon: MultiPolygon) -> Geometry {
+
+        /// Convert the linear ring to a line string, and calculate the intersection from that.
+        let lineString = linearRing.convertToLineString()
+        return generateIntersection(lineString, multipolygon)
+    }
+
 //    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ polygon: Polygon) -> IntersectionMatrix {
 //
 //        /// Default intersection matrix
