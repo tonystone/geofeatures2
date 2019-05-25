@@ -253,8 +253,8 @@ fileprivate func intersectionOneTwo(_ geometry1: Geometry, _ geometry2: Geometry
         return generateIntersection(lineString, polygon)
     } else if let lineString = geometry1 as? LineString, let multipolygon = geometry2 as? MultiPolygon {
         return generateIntersection(lineString, multipolygon)
-//    } else if let multilineString = geometry1 as? MultiLineString, let polygon = geometry2 as? Polygon {
-//        return generateIntersection(multilineString, polygon)
+    } else if let multilineString = geometry1 as? MultiLineString, let polygon = geometry2 as? Polygon {
+        return generateIntersection(multilineString, polygon)
 //    } else if let multilineString = geometry1 as? MultiLineString, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(multilineString, multipolygon)
     } else if let linearRing = geometry1 as? LinearRing, let polygon = geometry2 as? Polygon {
@@ -4031,153 +4031,65 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
         return generateIntersection(lineString, multipolygon)
     }
 
-//    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ polygon: Polygon) -> IntersectionMatrix {
-//
-//        /// Default intersection matrix
-//        var matrixIntersects = IntersectionMatrix()
-//        matrixIntersects[.exterior, .interior] = .two
-//        matrixIntersects[.exterior, .exterior] = .two
-//
-//        /// Get the polygon boundary
-//        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-//            polygonBoundary.count > 0,
-//            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-//            outerLinearRing.count > 0 else {
-//                return matrixIntersects
-//        }
-//
-//        /// Check whether the multi line string is completely contained in the polygon boundary
-//        let reducedMls  = reduce(multiLineString)
-//        let reducedPB = reduce(polygonBoundary)
-//        if subset(reducedMls, reducedPB) {
-//            matrixIntersects[.interior, .boundary] = .one
-//            matrixIntersects[.boundary, .boundary] = .zero
-//            return matrixIntersects
-//        }
-//
-//        /// Check whether the polygon boundary is completely contained in the multi line string.
-//        /// If it is, this guarantees matrixIntersects[.exterior, .boundary] = .empty
-//        /// Note that because of the current definition of a multi line string not intersecting itself,
-//        /// a polygon boundary cannot be completely inside a multi line string.  Therefore, the subset test
-//        /// will be commented out, but possibly should be added in if that definition changes.
-//        matrixIntersects[.exterior, .boundary] = .one
-//        //        if subset(reducedPB, reducedMls) {
-//        //            matrixIntersects[.exterior, .boundary] = .empty
-//        //        }
-//
-//        /// From here on we know the multi line string is not completely contained in the polygon boundary,
-//        /// and we know whether the polygon boundary is completely contained in the multi line string.
-//
-//        /// Get the endpoints of the multi line string (the multi line string boundary) and their relationship to the polygon.
-//        /// Set some intersection matrix values depending on the result.
-//
-//        guard let multiLineStringBoundary = multiLineString.boundary() as? MultiPoint else {
-//            return matrixIntersects
-//        }
-//
-//        let multiLineStringBoundaryCoordindateTupleArray = multiPointToCoordinateTupleArray(multiLineStringBoundary, true)
-//
-//        let boundaryCoordinatesRelatedToResult = relatedToGeneral(multiLineStringBoundaryCoordindateTupleArray, polygon)
-//
-//        if boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondInterior > .empty {
-//            matrixIntersects[.boundary, .interior] = boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondInterior
-//        }
-//
-//        if boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondBoundary > .empty {
-//            matrixIntersects[.boundary, .boundary] = boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondBoundary
-//        }
-//
-//        if boundaryCoordinatesRelatedToResult.firstTouchesSecondExterior > .empty {
-//            matrixIntersects[.boundary, .exterior] = boundaryCoordinatesRelatedToResult.firstTouchesSecondExterior
-//        }
-//
-//        var multiLineStringInsideMainPolygon = false /// Implies part of the multi line string lies inside the polygon
-//
-//        /// Relate the multi line string to the main polygon.
-//        /// Collect an array of line strings that touch the interior of the main polygon
-//        /// that will be used to check against the holes.
-//        var interiorLineStrings = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
-//
-//        guard let mainLinearRing = polygonBoundary[0] as? LinearRing,
-//            mainLinearRing.count > 0 else {
-//                return matrixIntersects
-//        }
-//
-//        for lineString in multiLineString {
-//
-//            let tempPolygon = Polygon(mainLinearRing, precision: Floating(), coordinateSystem: Cartesian())
-//
-//            let lineStringRelatedToResult = relatedTo(lineString, tempPolygon)
-//
-//            if lineStringRelatedToResult.firstTouchesSecondInterior > .empty {
-//                multiLineStringInsideMainPolygon = true
-//                interiorLineStrings.append(lineString)
-//            }
-//
-//            if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
-//                matrixIntersects[.interior, .boundary] = lineStringRelatedToResult.firstInteriorTouchesSecondBoundary
-//            }
-//
-//            if lineStringRelatedToResult.firstTouchesSecondExterior == .one {
-//                matrixIntersects[.interior, .exterior] = .one
-//            }
-//        }
-//
-//        /// If the multi line string does not touch the interior of the main polygon, we're done.
-//        if !multiLineStringInsideMainPolygon {
-//            return matrixIntersects
-//        }
-//
-//        /// At least one line string touches the interior of the main linear ring.
-//        /// Relate each of the line strings that touch the interior of the main linear ring to each of its holes.
-//        var multiLineStringTouchesInterior = false
-//        let holesArray = holes(polygon)
-//
-//        for tempLineString in interiorLineStrings {
-//
-//            guard let lineString = tempLineString as? LineString,
-//                lineString.count > 0 else {
-//                    return matrixIntersects
-//            }
-//
-//            var lineStringTouchesInterior = true
-//
-//            for linearRing in holesArray {
-//
-//                guard linearRing.count > 0 else {
-//                    return matrixIntersects
-//                }
-//
-//                let tempPolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())
-//
-//                let lineStringRelatedToResult = relatedTo(lineString, tempPolygon)
-//
-//                if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
-//                    matrixIntersects[.interior, .boundary] = lineStringRelatedToResult.firstInteriorTouchesSecondBoundary
-//                }
-//
-//                if lineStringRelatedToResult.firstTouchesSecondInterior > matrixIntersects[.interior, .exterior] {
-//                    matrixIntersects[.interior, .exterior] = lineStringRelatedToResult.firstTouchesSecondInterior
-//                }
-//
-//                if lineStringRelatedToResult.firstTouchesSecondExterior == .empty {
-//                    lineStringTouchesInterior = false
-//                }
-//            }
-//
-//            multiLineStringTouchesInterior = multiLineStringTouchesInterior || lineStringTouchesInterior
-//        }
-//
-//        /// We have to check whether the multi line string is completely contained in the main polygon and in a hole
-//        /// in order to set the interior, interior entry.
-//        if multiLineStringInsideMainPolygon {
-//            matrixIntersects[.interior, .interior] = (multiLineStringTouchesInterior ? .one : .empty)
-//        }
-//
-//        /// Return
-//        return matrixIntersects
-//    }
-//
+    fileprivate func generateIntersection(_ multiLineString: MultiLineString, _ polygon: Polygon) -> Geometry {
+
+        /// Simplify each geometry first
+        let simplifiedMultiLineString = multiLineString.simplify(tolerance: 1.0)
+        let simplifiedPolygon = polygon.simplify(tolerance: 1.0)
+
+        /// Calculate the intersection of each line string with the polygon and add those intersections together.
+        /// The returned value will be a GeometryCollection, which may be empty.
+        /// The GeometryCollection may contain two values, a MultiPoint and a MultiLineString.
+        /// The MultiPoint will contain all the Points, and the MultiLineString will contain all the LineStrings.
+        /// The MultiPoint and a MultiLineString will only be in the GeometryCollection if they are non-empty.
+
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        var multiLineStringGeometry = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+
+        /// Loop over all the line strings of the multi line string.
+        /// Combine the results of each intersection.
+        for simplifiedLineString in simplifiedMultiLineString {
+            let resultGeometry = generateIntersection(simplifiedLineString, simplifiedPolygon)
+            guard let resultGeometryCollection = resultGeometry as? GeometryCollection else {
+                continue
+            }
+
+            for tempGeometry in resultGeometryCollection {
+                if let tempMultiPoint = tempGeometry as? MultiPoint {
+                    multiPointGeometry += tempMultiPoint
+                } else if let tempMultiLineString = tempGeometry as? MultiLineString {
+                    multiLineStringGeometry += tempMultiLineString
+                }
+            }
+        }
+
+        /// Remove all Points that are duplicated or are contained in one of the LineStrings.
+        let simplifiedMultiPoint = multiPointGeometry.simplify(tolerance: 1.0)
+        var finalMultiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+
+        for tempPoint in simplifiedMultiPoint {
+
+            if let _ = intersection(tempPoint, multiLineStringGeometry) as? GeometryCollection {
+                finalMultiPointGeometry.append(tempPoint)
+            }
+        }
+
+        /// Simplify the LineStrings in the MultiLineString to minimize the total number of LineStrings.
+        let finalMultiLineString = multiLineStringGeometry.simplify(tolerance: 1.0)
+
+        /// Build the final GeometryCollection that will be returned.
+        var geometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        if finalMultiPointGeometry.count > 0 {
+            geometryCollection.append(finalMultiPointGeometry)
+        }
+        if finalMultiLineString.count > 0 {
+            geometryCollection.append(finalMultiLineString)
+        }
+
+        /// Return
+        return geometryCollection
+    }
+
 //    fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 //
 //        var matrixIntersects = IntersectionMatrix()
