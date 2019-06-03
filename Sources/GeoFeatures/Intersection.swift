@@ -268,10 +268,9 @@ fileprivate func intersectionOneTwo(_ geometry1: Geometry, _ geometry2: Geometry
 /// For the intersection of two geometries of dimension .two and .zero, respectively.
 fileprivate func intersectionTwoZero(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
 
-//    if let polgyon = geometry1 as? Polygon, let point = geometry2 as? Point {
-//        let intersectionMatrix = generateIntersection(point, polgyon)
-//        return intersectionMatrix.transposed()
-//    } else if let polgyon = geometry1 as? Polygon, let points = geometry2 as? MultiPoint {
+    if let polygon = geometry1 as? Polygon, let point = geometry2 as? Point {
+        return generateIntersection(point, polygon)
+//    } else if let polygon = geometry1 as? Polygon, let points = geometry2 as? MultiPoint {
 //        let intersectionMatrix = generateIntersection(points, polgyon)
 //        return intersectionMatrix.transposed()
 //    } else if let multipolygon = geometry1 as? MultiPolygon, let point = geometry2 as? Point {
@@ -280,7 +279,7 @@ fileprivate func intersectionTwoZero(_ geometry1: Geometry, _ geometry2: Geometr
 //    } else if let multipolygon = geometry1 as? MultiPolygon, let points = geometry2 as? MultiPoint {
 //        let intersectionMatrix = generateIntersection(points, multipolygon)
 //        return intersectionMatrix.transposed()
-//    }
+    }
     return GeometryCollection()
 }
 
