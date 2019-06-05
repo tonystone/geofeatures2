@@ -274,9 +274,8 @@ fileprivate func intersectionTwoZero(_ geometry1: Geometry, _ geometry2: Geometr
         return generateIntersection(points, polygon)
     } else if let multipolygon = geometry1 as? MultiPolygon, let point = geometry2 as? Point {
         return generateIntersection(point, multipolygon)
-//    } else if let multipolygon = geometry1 as? MultiPolygon, let points = geometry2 as? MultiPoint {
-//        let intersectionMatrix = generateIntersection(points, multipolygon)
-//        return intersectionMatrix.transposed()
+    } else if let multipolygon = geometry1 as? MultiPolygon, let points = geometry2 as? MultiPoint {
+        return generateIntersection(points, multipolygon)
     }
     return GeometryCollection()
 }
