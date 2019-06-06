@@ -283,14 +283,13 @@ fileprivate func intersectionTwoZero(_ geometry1: Geometry, _ geometry2: Geometr
 /// For the intersection of two geometries of dimension .two and .one, respectively.
 fileprivate func intersectionTwoOne(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
 
-//    if let polgyon = geometry1 as? Polygon, let lineString = geometry2 as? LineString {
-//        let intersectionMatrix = generateIntersection(lineString, polgyon)
+    if let polygon = geometry1 as? Polygon, let lineString = geometry2 as? LineString {
+        return generateIntersection(lineString, polygon)
+//    } else if let polygon = geometry1 as? Polygon, let multilineString = geometry2 as? MultiLineString {
+//        let intersectionMatrix = generateIntersection(multilineString, polygon)
 //        return intersectionMatrix.transposed()
-//    } else if let polgyon = geometry1 as? Polygon, let multilineString = geometry2 as? MultiLineString {
-//        let intersectionMatrix = generateIntersection(multilineString, polgyon)
-//        return intersectionMatrix.transposed()
-//    } else if let polgyon = geometry1 as? Polygon, let linearRing = geometry2 as? LinearRing {
-//        let intersectionMatrix = generateIntersection(linearRing, polgyon)
+//    } else if let polygon = geometry1 as? Polygon, let linearRing = geometry2 as? LinearRing {
+//        let intersectionMatrix = generateIntersection(linearRing, polygon)
 //        return intersectionMatrix.transposed()
 //    } else if let multipolygon = geometry1 as? MultiPolygon, let lineString = geometry2 as? LineString {
 //        let intersectionMatrix = generateIntersection(lineString, multipolygon)
@@ -301,7 +300,7 @@ fileprivate func intersectionTwoOne(_ geometry1: Geometry, _ geometry2: Geometry
 //    } else if let multipolygon = geometry1 as? MultiPolygon, let linearRing = geometry2 as? LinearRing {
 //        let intersectionMatrix = generateIntersection(linearRing, multipolygon)
 //        return intersectionMatrix.transposed()
-//    }
+    }
     return GeometryCollection()
 }
 
