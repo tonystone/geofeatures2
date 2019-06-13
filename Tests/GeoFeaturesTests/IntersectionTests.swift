@@ -9211,250 +9211,236 @@ class IntersectionTests: XCTestCase {
         compare(resultGeometry, expected)
     }
 
-//    ///
-//    /// MultiPolygon LineString tests
-//    ///
-//
-//    func testMultiPolygon_LineString_noIntersection() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .two],
-//            [.empty, .empty, .one],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_withHoles_noIntersection_lineStringOutsideMainPolygon() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -9.0, y: 12.0), Coordinate(x: -9.0, y: 10.0), Coordinate(x: -7.0, y: 10.0), Coordinate(x: -7.0, y: 12.0), Coordinate(x: -9.0, y: 12.0)], [Coordinate(x: -3.0, y: 4.0), Coordinate(x: -3.0, y: 8.0), Coordinate(x: -6.0, y: 8.0), Coordinate(x: -6.0, y: 4.0), Coordinate(x: -3.0, y: 4.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 11.0, y: -12.0), Coordinate(x: 5.0, y: -18.0), Coordinate(x: 11.0, y: -18.0), Coordinate(x: 11.0, y: -12.0)], [Coordinate(x: 12.0, y: -11.0), Coordinate(x: 12.0, y: -19.0), Coordinate(x: 19.0, y: -19.0), Coordinate(x: 19.0, y: -11.0), Coordinate(x: 12.0, y: -11.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .two],
-//            [.empty, .empty, .one],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_withHoles_noIntersection_lineStringInsideHole() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -9.0, y: 12.0), Coordinate(x: -9.0, y: 10.0), Coordinate(x: -7.0, y: 10.0), Coordinate(x: -7.0, y: 12.0), Coordinate(x: -9.0, y: 12.0)], [Coordinate(x: -3.0, y: 4.0), Coordinate(x: -3.0, y: 8.0), Coordinate(x: -6.0, y: 8.0), Coordinate(x: -6.0, y: 4.0), Coordinate(x: -3.0, y: 4.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 11.0, y: -12.0), Coordinate(x: 5.0, y: -18.0), Coordinate(x: 11.0, y: -18.0), Coordinate(x: 11.0, y: -12.0)], [Coordinate(x: 12.0, y: -11.0), Coordinate(x: 12.0, y: -19.0), Coordinate(x: 19.0, y: -19.0), Coordinate(x: 19.0, y: -11.0), Coordinate(x: 12.0, y: -11.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 13.0, y: -12.0), Coordinate(x: 18.0, y: -15.0), Coordinate(x: 13.0, y: -18.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .two],
-//            [.empty, .empty, .one],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_interiorsIntersect_firstPolygon() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 4.0, y: 0.0), Coordinate(x: 0.0, y: 7.0), Coordinate(x: -5.0, y: 5.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .zero,  .two],
-//            [.zero, .empty, .one],
-//            [.one,  .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_interiorsIntersect_firstPolygon_withHole() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: -10.0, y: 10.0), Coordinate(x: -10.0, y: 12.0), Coordinate(x: -5.0, y: 10.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .zero,  .two],
-//            [.zero, .empty, .one],
-//            [.one,  .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_interiorsIntersect_secondPolygon() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 0.0, y: 10.0), Coordinate(x: 6.0, y: 0.0), Coordinate(x: 6.0, y: -6.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .zero,  .two],
-//            [.zero, .empty, .one],
-//            [.one,  .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_interiorsIntersect_secondPolygon_withHole() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 15.0, y: -15.0), Coordinate(x: 14.0, y: -18.0), Coordinate(x: 18.0, y: -18.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .zero,  .two],
-//            [.zero, .empty, .one],
-//            [.one,  .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_interiorsIntersect_bothPolygons_withHoles() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: -3.0, y: 10.0), Coordinate(x: 0.0, y: 12.0), Coordinate(x: 10.0, y: -18.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one,  .zero,  .two],
-//            [.zero, .empty, .one],
-//            [.one,  .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_boundariesIntersect_firstPolygon_withHoles() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: -20.0, y: 18.0), Coordinate(x: -30.0, y: 30.0), Coordinate(x: -50.0, y: 0.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .two],
-//            [.empty, .zero,  .one],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_boundariesIntersect_secondPolygon_withHoles() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 0.0, y: -40.0), Coordinate(x: 22.0, y: -30.0), Coordinate(x: 15.0, y: -20.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .two],
-//            [.empty, .zero,  .one],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_boundariesIntersect_bothPolygons_withHoles() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 20.0, y: -20.0), Coordinate(x: 0.0, y: -50.0), Coordinate(x: -100.0, y: 0.0), Coordinate(x: -18.0, y: 3.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .two],
-//            [.empty, .zero,  .one],
-//            [.one,   .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 21.0, y: -3.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.empty, .empty, .two],
-//            [.one,   .empty, .one],
-//            [.one,   .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 21.0, y: -3.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0), Coordinate(x: -12.0, y: 12.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one, .empty, .two],
-//            [.one, .empty, .one],
-//            [.one, .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_interiorsIntersectAndBoundariesIntersect_withHoles() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 21.0, y: -3.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0), Coordinate(x: -8.0, y: 9.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one, .empty, .two],
-//            [.one, .zero,  .one],
-//            [.one, .zero,  .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
-//    func testMultiPolygon_LineString_boundaryIntersectsInteriorAndBoundary_withHoles() {
-//
-//        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
-//        let geometry2 = LineString([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0), Coordinate(x: -7.0, y: 9.0)], precision: precision, coordinateSystem: cs)
-//
-//        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
-//
-//        let expected  = IntersectionMatrix(arrayLiteral: [
-//            [.one, .zero,  .two],
-//            [.one, .zero,  .one],
-//            [.one, .empty, .two]
-//            ])
-//
-//        XCTAssertEqual(matrix, expected)
-//    }
-//
+    ///
+    /// MultiPolygon LineString tests
+    ///
+
+    func testMultiPolygon_LineString_noIntersection() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_withHoles_noIntersection_lineStringOutsideMainPolygon() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -9.0, y: 12.0), Coordinate(x: -9.0, y: 10.0), Coordinate(x: -7.0, y: 10.0), Coordinate(x: -7.0, y: 12.0), Coordinate(x: -9.0, y: 12.0)], [Coordinate(x: -3.0, y: 4.0), Coordinate(x: -3.0, y: 8.0), Coordinate(x: -6.0, y: 8.0), Coordinate(x: -6.0, y: 4.0), Coordinate(x: -3.0, y: 4.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 11.0, y: -12.0), Coordinate(x: 5.0, y: -18.0), Coordinate(x: 11.0, y: -18.0), Coordinate(x: 11.0, y: -12.0)], [Coordinate(x: 12.0, y: -11.0), Coordinate(x: 12.0, y: -19.0), Coordinate(x: 19.0, y: -19.0), Coordinate(x: 19.0, y: -11.0), Coordinate(x: 12.0, y: -11.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_withHoles_noIntersection_lineStringInsideHole() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -9.0, y: 12.0), Coordinate(x: -9.0, y: 10.0), Coordinate(x: -7.0, y: 10.0), Coordinate(x: -7.0, y: 12.0), Coordinate(x: -9.0, y: 12.0)], [Coordinate(x: -3.0, y: 4.0), Coordinate(x: -3.0, y: 8.0), Coordinate(x: -6.0, y: 8.0), Coordinate(x: -6.0, y: 4.0), Coordinate(x: -3.0, y: 4.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 11.0, y: -12.0), Coordinate(x: 5.0, y: -18.0), Coordinate(x: 11.0, y: -18.0), Coordinate(x: 11.0, y: -12.0)], [Coordinate(x: 12.0, y: -11.0), Coordinate(x: 12.0, y: -19.0), Coordinate(x: 19.0, y: -19.0), Coordinate(x: 19.0, y: -11.0), Coordinate(x: 12.0, y: -11.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 13.0, y: -12.0), Coordinate(x: 18.0, y: -15.0), Coordinate(x: 13.0, y: -18.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_interiorsIntersect_firstPolygon() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 4.0, y: 0.0), Coordinate(x: 0.0, y: 7.0), Coordinate(x: -5.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: -4.0, y: 3.0), Coordinate(x: -2.0, y: 5.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_interiorsIntersect_firstPolygon_withHole() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: -10.0, y: 10.0), Coordinate(x: -10.0, y: 12.0), Coordinate(x: -5.0, y: 10.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: -8.0, y: 11.2), Coordinate(x: -5.0, y: 10.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_interiorsIntersect_secondPolygon() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 0.0, y: 10.0), Coordinate(x: 6.0, y: 0.0), Coordinate(x: 6.0, y: -6.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: 6.0, y: -4.0), Coordinate(x: 6.0, y: -6.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_interiorsIntersect_secondPolygon_withHole() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 15.0, y: -15.0), Coordinate(x: 12.0, y: -18.0), Coordinate(x: 18.0, y: -18.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: 14.0, y: -16.0), Coordinate(x: 12.0, y: -18.0), Coordinate(x: 18.0, y: -18.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_interiorsIntersect_bothPolygons_withHoles() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: -3.0, y: 10.0), Coordinate(x: 0.0, y: 13.0), Coordinate(x: 10.0, y: 13.0), Coordinate(x: 10.0, y: -18.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: -3.0, y: 10.0), Coordinate(x: -2.0, y: 11.0)]), LineString([Coordinate(x: 10.0, y: -2.0), Coordinate(x: 10.0, y: -18.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_boundariesIntersect_firstPolygon_withHoles() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: -20.0, y: 18.0), Coordinate(x: -30.0, y: 30.0), Coordinate(x: -50.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -20.0, y: 18.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_boundariesIntersect_secondPolygon_withHoles() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 0.0, y: -40.0), Coordinate(x: 22.0, y: -30.0), Coordinate(x: 15.0, y: -20.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 15.0, y: -20.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_boundariesIntersect_bothPolygons_withHoles() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 20.0, y: -20.0), Coordinate(x: 0.0, y: -50.0), Coordinate(x: -100.0, y: 0.0), Coordinate(x: -18.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -18.0, y: 3.0)), Point(Coordinate(x: 20.0, y: -20.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_interiorIntersectsBoundary_bothPolygons_atPointAndLineSegment_withHoles() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 21.0, y: -3.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 20.0, y: -2.0))]))
+        expected.append(MultiLineString([LineString([Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_interiorIntersectsInteriorAndBoundary_bothPolygons_atPointAndLineSegment_withHoles() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 21.0, y: -3.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0), Coordinate(x: -34.0, y: 12.0), Coordinate(x: -12.0, y: 12.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 20.0, y: -2.0))]))
+        expected.append(MultiLineString([LineString([Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0)]), LineString([Coordinate(x: -20.0, y: 12.0), Coordinate(x: -16.0, y: 12.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_interiorsIntersectAndBoundariesIntersect_withHoles() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 21.0, y: -3.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0), Coordinate(x: -34.0, y: 9.0), Coordinate(x: -8.0, y: 9.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 20.0, y: -2.0))]))
+        expected.append(MultiLineString([LineString([Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0)]), LineString([Coordinate(x: -20.0, y: 9.0), Coordinate(x: -8.0, y: 9.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_boundaryIntersectsInteriorAndBoundary_withHoles() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0), Coordinate(x: -34.0, y: 10.0), Coordinate(x: -7.0, y: 10.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: 20.0, y: -2.0))]))
+        expected.append(MultiLineString([LineString([Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0)]), LineString([Coordinate(x: -20.0, y: 10.0), Coordinate(x: -16.0, y: 10.0)]), LineString([Coordinate(x: -8.0, y: 10.0), Coordinate(x: -7.0, y: 10.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
 //    ///
 //    /// MultiPolygon LinearRing tests
 //    ///
