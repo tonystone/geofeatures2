@@ -17,6 +17,10 @@ enum Subset: Int {
     secondInFirstBoundary
 }
 
+struct Constants {
+    static let NOT_FOUND: Int = -1
+}
+
 /// Describes the relationship between the first and second geometries
 struct RelatedTo {
 
@@ -94,6 +98,90 @@ struct SegmentOverlap {
     var secondSubsetOfFirst: Bool
     var point: Point?
     var segment: Segment?
+}
+
+/// Specifies a Coordinate and some characteristics of that Coordinate.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+/// In particular, it describes whether the coordinates of one linear ring are inside or outside
+/// of the second linear ring/polygon.
+///
+/// - parameters:
+///     - coordinate: The coordinate of the first linear ring.
+///     - location: The location of the coordinate relative to the second linear ring, whether it is
+///         internal, external or on the boundary.
+///
+struct CoordinateLocation {
+
+    var coordinate: Coordinate
+    var location: LocationType
+}
+
+/// Specifies a Coordinate of an intersection and some characteristics of that Coordinate.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+/// In particular, it describes whether the intersection coordinates of one linear ring with another linear ring
+/// point towards the inside, outside, or along the boundary of the second linear ring.
+///
+/// - parameters:
+///     - coordinate: The intersection  coordinate of the first linear ring with the second.
+///     - direction: The location of the coordinate relative to the second linear ring, whether it is
+///         internal, external or on the boundary.
+///
+struct IntersectionDirection {
+
+    var coordinate: Coordinate
+    var location: LocationType
+}
+
+/// Specifies a graph-like object consisting of a coordinate and an array of related coordinates with details.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+///
+/// - parameters:
+///     - coordinate: A coordinate.
+///     - relatedGraphItemArray: An array of other coordinates and related information.
+///
+struct GraphItem {
+
+    var coordinate: Coordinate
+    var relatedGraphItemArray = [RelatedGraphItem]()
+    
+    init(coord: Coordinate) {
+        coordinate = coord
+    }
+}
+
+/// Specifies a graph-like object consisting of a coordinate and an array of related coordinates with details.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+///
+/// - parameters:
+///     - coordinate: A coordinate.
+///     - distance: Distance from some other coordinate that is > 0.
+///     - angle: Between the positive horizontal and the vector that points from the graph item coordinate to this coordinate.
+///              In radians, from 0 to < 2*PI, from some other coordinate.
+///              Note the two coordinates should never be the same.
+///
+struct RelatedGraphItem {
+    
+    var coordinate: Coordinate
+    var distance: Double
+    var angle: Double
+}
+
+/// Generic structure for keeping track of certain useful pieces of information related to the intersection of two polygons.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+///
+/// - parameters:
+///     - firstPolygonInsideSecond: Is the first polygon inside the second?  Sharing common boundaries at points or line strings is acceptable.
+///     - secondPolygonInsideFirst: Is the second polygon inside the first?  Sharing common boundaries at points or line strings is acceptable.
+///
+struct IntersectionStatus {
+    
+    var firstPolygonInsideSecond = false
+    var secondPolygonInsideFirst = false
 }
 
 func intersection(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
@@ -302,8 +390,8 @@ fileprivate func intersectionTwoOne(_ geometry1: Geometry, _ geometry2: Geometry
 /// For the intersection of two geometries of dimension .two.
 fileprivate func intersectionTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
 
-//    if let polgyon1 = geometry1 as? Polygon, let polygon2 = geometry2 as? Polygon {
-//        return generateIntersection(polgyon1, polygon2)
+    if let polgyon1 = geometry1 as? Polygon, let polygon2 = geometry2 as? Polygon {
+        return generateIntersection(polgyon1, polygon2)
 //    } else if let polgyon = geometry1 as? Polygon, let multipolygon = geometry2 as? MultiPolygon {
 //        return generateIntersection(polgyon, multipolygon)
 //    } else if let multipolygon = geometry1 as? MultiPolygon, let polgyon = geometry2 as? Polygon {
@@ -311,7 +399,7 @@ fileprivate func intersectionTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry
 //        return intersectionMatrix.transposed()
 //    } else if let multipolygon1 = geometry1 as? MultiPolygon, let multipolygon2 = geometry2 as? MultiPolygon {
 //        return generateIntersection(multipolygon1, multipolygon2)
-//    }
+    }
     return GeometryCollection()
 }
 
@@ -1166,6 +1254,83 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
     }
 
     ///
+    /// Determines whether a Coordinate is inside, outside or on the boundary of a LinearRing.
+    /// In this case, the LinearRing can be viewed as a simple Polygon.  No holes.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - coordinate: The Coordinate to compare to the LinearRing.
+    ///     - linearRing: The LinearRing which the coordinate may overlap.
+    ///
+    ///  - returns: An array of SegmentOverlap structs, one for each segment in the linear ring.
+    ///
+    fileprivate func location(_ coordinate: Coordinate, _ linearRing: LinearRing) -> LocationType {
+
+        let simplifiedLinearRing = linearRing.simplify(tolerance: 1.0)
+
+        /// Check if the coordinate is on the boundary of the linear ring.
+        let resultGeometry = generateIntersection(Point(coordinate), simplifiedLinearRing)
+        if let _ = resultGeometry as? Point {
+            return .onBoundary
+        }
+
+        /// If we get here, the coordinate is either inside or outside the linear ring.
+        /// Create a line segment that goes horizontally from the coordinate to infinity
+        /// in the rightward direction and see whether it intersects each line segment of
+        /// the linear ring.  Add up the total count.  If the total is odd, the coordinate
+        /// is inside the linear ring.  If even, it is outside.
+        ///
+        /// Note there are special cases where the line segment is colinear with one or more
+        /// vertices of the linear ring.  In these cases, these vertices will be considered
+        /// above the line segment to perform the above calculation.
+        let coordinate2 = Coordinate(x: Double.infinity, y: coordinate.y)
+        let segment2 = Segment(left: coordinate, right: coordinate2)
+        var totalIntersections = 0
+
+        for firstCoordIndex in 0..<simplifiedLinearRing.count - 1 {
+            let firstCoord  = simplifiedLinearRing[firstCoordIndex]
+            let secondCoord = simplifiedLinearRing[firstCoordIndex + 1]
+            let segment = Segment(left: firstCoord, right: secondCoord)
+            let lineSegmentIntersection = intersection(segment: segment, other: segment2)
+
+            if let lineString = lineSegmentIntersection.geometry as? LineString, lineString.count == 2 {
+                /// In the case that the two segments intersect at a segment, that segment must be a
+                /// side of the linear ring because segment2 is infinitely long and starts at a point
+                /// that is not on the boundary of the linear ring.  Therefore, both endpoints of the
+                /// side of the linear ring will be considered above segment2, as mentioned above,
+                /// neither will touch segment2, so nothing will be added to the total intersections.
+            } else if let _ = lineSegmentIntersection.geometry as? Point {
+                /// In the case that the two segments intersect at a point, we must check whether
+                /// that point is a vertex of the linear ring.  If it's not, we add one to the total
+                /// number of intersections and move on.  If it is, we will consider that
+                /// point to be above segment2 and must check whether the other endpoint of that
+                /// segment is above or below segment2.  If above, we add nothing.  If below, we
+                /// will add one to the total intersections and continue.
+                if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior {
+                    if secondCoord.y < coordinate.y {
+                        totalIntersections += 1
+                    }
+                } else if lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior {
+                    if firstCoord.y < coordinate.y {
+                        totalIntersections += 1
+                    }
+                } else {
+                    totalIntersections += 1
+                }
+            }
+        }
+
+        if totalIntersections % 2 == 0 {
+            /// An even number of intersections implies the coordinate is outside the linear ring
+            return .onExterior
+        } else {
+            /// An odd number of intersections implies the coordinate is inside the linear ring
+            return .onInterior
+        }
+    }
+
+    ///
     /// Describes the relationship between a single Segment and the Segments of a LinearRing.
     ///
     /// This was developed to help to determine the intersection between a LineString and a Polygon.
@@ -1213,6 +1378,73 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 
         return overlapResults
     }
+
+    ///
+    /// Describes the relationship between a linear ring of one polygon and the linear ring of a second polygon.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    /// In particular, it will determine (1) whether each point of the first linear ring is inside or
+    /// outside of the second linear ring/polygon (the boundary is inside) and (2) an ordered list of intersections
+    /// of the two linear rings, noting for each intersection whether the vector to the next vertex is inward
+    /// or outward.
+    ///
+    /// - parameters:
+    ///     - segment: The segment which will be checked for overlaps with the LinearRing.
+    ///     - linearRing: The LinearRing which the segment may overlap in a variety of ways.
+    ///
+    ///  - returns: An array of SegmentOverlap structs, one for each segment in the linear ring.
+    ///
+//    fileprivate func crosses(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> ([CoordinateLocation], [IntersectionDirection]) {
+//
+//        var coordinateLocations = [CoordinateLocation]()
+//        var intersectionDirections = [IntersectionDirection]()
+//
+//        let simplifiedLinearRing1 = linearRing1.simplify(tolerance: 1.0)
+//        let simplifiedLinearRing2 = linearRing2.simplify(tolerance: 1.0)
+//
+//        /// For each coordinate of the first linear ring, determine whether it is inside, outside or
+//        /// on the boundary of the second linear ring.
+//        var coordinateLocationArray = [CoordinateLocation]()
+//        for firstCoordIndex in 0..<simplifiedLinearRing1.count - 1 {
+//            let firstCoord = simplifiedLinearRing1[firstCoordIndex]
+//            let coordinateLocation = location(firstCoord, simplifiedLinearRing2)
+//            coordinateLocationArray.append(CoordinateLocation(coordinate: firstCoord, location: coordinateLocation))
+//        }
+//
+//        /// Find all of the intersections of the two linear rings.
+//        var intersectionDirectionArray = [IntersectionDirection]()
+//        guard let resultGeometry = intersection(simplifiedLinearRing1, simplifiedLinearRing2) as? GeometryCollection else {
+//            return (coordinateLocationArray, intersectionDirectionArray)
+//        }
+//
+//        /// For each line segment in the simplified linear ring, check the following:
+//        /// - Is the main segment a subset of the linear ring segment?
+//        /// - Is the linear ring segment a subset of the main segment?
+//        /// - Do the main segment and the linear ring segment intersect at a single point and what is that point?
+//        /// - Do the main segment and the linear ring segment intersect at another segment and what is that segment?
+//        for firstCoordIndex in 0..<simplifiedLinearRing.count - 1 {
+//            let firstCoord  = simplifiedLinearRing[firstCoordIndex]
+//            let secondCoord = simplifiedLinearRing[firstCoordIndex + 1]
+//            let segment2 = Segment(left: firstCoord, right: secondCoord)
+//
+//            let lineSegmentIntersection = intersection(segment: segment, other: segment2)
+//
+//            /// Check for a LineString or Point intersection.
+//            var lineSegmentOverlap: Segment?
+//            var pointOverlap: Point?
+//            if let lineString = lineSegmentIntersection.geometry as? LineString, lineString.count == 2 {
+//                lineSegmentOverlap = Segment(left: lineString[0], right: lineString[1])
+//            } else if let point = lineSegmentIntersection.geometry as? Point {
+//                pointOverlap = point
+//            }
+//
+//            overlapResults.append(SegmentOverlap(segmentNumber: firstCoordIndex, hole: hole, firstSubsetOfSecond: lineSegmentIntersection.firstSubsetOfSecond, secondSubsetOfFirst: lineSegmentIntersection.secondSubsetOfFirst, point: pointOverlap, segment: lineSegmentOverlap))
+//        }
+//
+//        /// Return
+//
+//        return overlapResults
+//    }
 
     ///
     /// Collects all the points for a SegmentOverlap array and returns a single MultiPoint
@@ -1345,6 +1577,21 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 
         return sqrt(pow((coord1.x - coord2.x), 2.0) + pow((coord1.y - coord2.y), 2.0))
 
+    }
+
+    ///
+    /// - parameters:
+    ///     - coord1: The first coordinate.
+    ///     - coord2: The second coordinate.
+    ///
+    ///  - returns: The angle in radians between the positive horizontal x axis and the vector that points from the first coordinate to the second.
+    ///
+    fileprivate func angle(_ fromCoord: Coordinate, _ toCoord: Coordinate) -> Double {
+        let dx = fromCoord.x - toCoord.x
+        let dy = fromCoord.y - toCoord.y
+        let twoPi = 2 * Double.pi
+        let radians = (atan2(dy, -dx) + twoPi).truncatingRemainder(dividingBy: twoPi)
+        return radians
     }
 
 //    /// This code parallels that where the second geometry is a simple polygon.
@@ -2093,24 +2340,24 @@ fileprivate func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoi
 //
 //        return relatedToResult
 //    }
-//
-//    /// Get the holes for a polygon.  This will be an array of linear rings.
-//    fileprivate static func holes(_ polygon: Polygon) -> [LinearRing] {
-//
-//        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-//            polygonBoundary.count > 1 else {
-//                return []
-//        }
-//
-//        var innerLinearRings = [LinearRing]()
-//        for index in 1..<polygonBoundary.count {
-//            guard let linearRing = polygonBoundary[index] as? LinearRing else { return [] }
-//            innerLinearRings.append(linearRing)
-//        }
-//
-//        return innerLinearRings
-//    }
-//
+
+    /// Get the holes for a polygon.  This will be an array of linear rings.
+    fileprivate func holes(_ polygon: Polygon) -> [LinearRing] {
+
+        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
+            polygonBoundary.count > 1 else {
+                return []
+        }
+
+        var innerLinearRings = [LinearRing]()
+        for index in 1..<polygonBoundary.count {
+            guard let linearRing = polygonBoundary[index] as? LinearRing else { return [] }
+            innerLinearRings.append(linearRing)
+        }
+
+        return innerLinearRings
+    }
+
 //    /// It is assumed that a RelatedTo structure has been generated for two linear rings,
 //    /// and now we want to know if the two match.
 //    fileprivate static func areLinearRingsIdentical(_ relatedToLinearRings: RelatedTo) -> Bool {
@@ -2664,26 +2911,26 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
 //        }
 //        return false
 //    }
-//
-//    /// Calculate the slope as a tuple.
-//    /// The first value is the slope, if the line is not vertical.
-//    /// The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
-//    fileprivate static func slope(_ coordinate1: Coordinate, _ coordinate2: Coordinate) -> (Double, Bool) {
-//
-//        /// Check for the vertical case
-//        guard coordinate1.x != coordinate2.x else {
-//            return (0, true)
-//        }
-//
-//        /// Normal case
-//        return ((coordinate2.y - coordinate1.y) / (coordinate2.x - coordinate1.x), false)
-//    }
-//
-//    fileprivate static func slope(_ segment: Segment) -> (Double, Bool) {
-//
-//        return slope(segment.leftCoordinate, segment.rightCoordinate)
-//    }
-//
+
+    /// Calculate the slope as a tuple.
+    /// The first value is the slope, if the line is not vertical.
+    /// The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
+    fileprivate func slope(_ coordinate1: Coordinate, _ coordinate2: Coordinate) -> (Double, Bool) {
+
+        /// Check for the vertical case
+        guard coordinate1.x != coordinate2.x else {
+            return (0, true)
+        }
+
+        /// Normal case
+        return ((coordinate2.y - coordinate1.y) / (coordinate2.x - coordinate1.x), false)
+    }
+
+    fileprivate func slope(_ segment: Segment) -> (Double, Bool) {
+
+        return slope(segment.leftCoordinate, segment.rightCoordinate)
+    }
+
 //    /// Reduces a line string to a sequence of points such that each consecutive line segment will have a different slope
 //    fileprivate static func reduce(_ lineString: LineString) -> LineString {
 //
@@ -2905,27 +3152,27 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
 //        /// Construct the new polygon from the reduced pieces
 //        return Polygon(reducedMainLinearRing, innerRings: reducedHoles, precision: Floating(), coordinateSystem: Cartesian())
 //    }
-//
-//    /// Is segment1 contained in or a subset of segment2?
-//    fileprivate static func subset(_ segment1: Segment, _ segment2: Segment) -> Bool {
-//
-//        /// If the slopes are not the same one segment being contained in another is not possible
-//        let slope1 = slope(segment1)
-//        let slope2 = slope(segment2)
-//        guard slope1 == slope2 else {
-//            return false
-//        }
-//
-//        /// Slopes are the same.  Check if both coordinates of the first segment lie on the second
-//        let location1 = coordinateIsOnLineSegment(segment1.leftCoordinate, segment: segment2)
-//        let location2 = coordinateIsOnLineSegment(segment1.rightCoordinate, segment: segment2)
-//        if location1 != .onExterior && location2 != .onExterior {
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
-//
+
+    /// Is segment1 contained in or a subset of segment2?
+    fileprivate func subset(_ segment1: Segment, _ segment2: Segment) -> Bool {
+
+        /// If the slopes are not the same one segment being contained in another is not possible
+        let slope1 = slope(segment1)
+        let slope2 = slope(segment2)
+        guard slope1 == slope2 else {
+            return false
+        }
+
+        /// Slopes are the same.  Check if both coordinates of the first segment lie on the second
+        let location1 = coordinateIsOnLineSegment(segment1.leftCoordinate, segment: segment2)
+        let location2 = coordinateIsOnLineSegment(segment1.rightCoordinate, segment: segment2)
+        if location1 != .onExterior && location2 != .onExterior {
+            return true
+        } else {
+            return false
+        }
+    }
+
 //    /// Is line string 1 contained in or a subset of line string 2?
 //    /// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
 //    fileprivate static func subset(_ lineString1: LineString, _ lineString2: LineString) -> Bool {
@@ -2954,36 +3201,36 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
 //
 //        return true
 //    }
-//
-//    /// Is the line string contained in or a subset of the linear ring?
-//    /// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
-//    fileprivate static func subset(_ lineString: LineString, _ linearRing: LinearRing) -> Bool {
-//
-//        for lsFirstCoordIndex in 0..<lineString.count - 1 {
-//            let lsFirstCoord  = lineString[lsFirstCoordIndex]
-//            let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
-//            let segment1 = Segment(left: lsFirstCoord, right: lsSecondCoord)
-//
-//            var segment1IsSubsetOfOtherSegment = false
-//            for lrFirstCoordIndex in 0..<linearRing.count - 1 {
-//                let lrFirstCoord  = linearRing[lrFirstCoordIndex]
-//                let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
-//                let segment2 = Segment(left: lrFirstCoord, right: lrSecondCoord)
-//
-//                if subset(segment1, segment2) {
-//                    segment1IsSubsetOfOtherSegment = true
-//                    break
-//                }
-//            }
-//
-//            if !segment1IsSubsetOfOtherSegment {
-//                return false
-//            }
-//        }
-//
-//        return true
-//    }
-//
+
+    /// Is the line string contained in or a subset of the linear ring?
+    /// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate func subset(_ lineString: LineString, _ linearRing: LinearRing) -> Bool {
+
+        for lsFirstCoordIndex in 0..<lineString.count - 1 {
+            let lsFirstCoord  = lineString[lsFirstCoordIndex]
+            let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
+            let segment1 = Segment(left: lsFirstCoord, right: lsSecondCoord)
+
+            var segment1IsSubsetOfOtherSegment = false
+            for lrFirstCoordIndex in 0..<linearRing.count - 1 {
+                let lrFirstCoord  = linearRing[lrFirstCoordIndex]
+                let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
+                let segment2 = Segment(left: lrFirstCoord, right: lrSecondCoord)
+
+                if subset(segment1, segment2) {
+                    segment1IsSubsetOfOtherSegment = true
+                    break
+                }
+            }
+
+            if !segment1IsSubsetOfOtherSegment {
+                return false
+            }
+        }
+
+        return true
+    }
+
 //    /// Is the first linear ring contained in or a subset of the second linear ring?
 //    /// The algorithm here assumes that both linear rings have been reduced, so that no two consecutive segments have the same slope.
 //    fileprivate static func subset(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> Bool {
@@ -3012,44 +3259,44 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
 //
 //        return true
 //    }
-//
-//    /// Is the line string contained in or a subset of the multi line string?
-//    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-//    /// TODO:
-//    fileprivate static func subset(_ lineString1: LineString, _ multiLineString: MultiLineString) -> Bool {
-//
-//        for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
-//            let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
-//            let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
-//            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
-//
-//            var segment1IsSubsetOfOtherSegment = false
-//
-//            for lineString2 in multiLineString {
-//                for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
-//                    let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
-//                    let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-//                    let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
-//
-//                    if subset(segment1, segment2) {
-//                        segment1IsSubsetOfOtherSegment = true
-//                        break
-//                    }
-//                }
-//
-//                if segment1IsSubsetOfOtherSegment {
-//                    break
-//                }
-//            }
-//
-//            if !segment1IsSubsetOfOtherSegment {
-//                return false
-//            }
-//        }
-//
-//        return true
-//    }
-//
+
+    /// Is the line string contained in or a subset of the multi line string?
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    /// TODO:
+    fileprivate func subset(_ lineString1: LineString, _ multiLineString: MultiLineString) -> Bool {
+
+        for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
+            let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
+            let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
+
+            var segment1IsSubsetOfOtherSegment = false
+
+            for lineString2 in multiLineString {
+                for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
+                    let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
+                    let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
+                    let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
+
+                    if subset(segment1, segment2) {
+                        segment1IsSubsetOfOtherSegment = true
+                        break
+                    }
+                }
+
+                if segment1IsSubsetOfOtherSegment {
+                    break
+                }
+            }
+
+            if !segment1IsSubsetOfOtherSegment {
+                return false
+            }
+        }
+
+        return true
+    }
+
 //    /// Is the line string contained in or a subset of the polygon?
 //    /// If the line string is a subset of the polygon, it must be included in the main polygon and not inside any of the polygon holes.
 //    /// Note that being on the boundary of a polygon hole is acceptable.
@@ -3496,6 +3743,1387 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
 
         /// Return
         return geometryCollection
+    }
+
+    /// Removes duplicate consecutive coordinates from a linear ring tuple.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRingTupleArray: An array of (Coordinate, Bool) tuples.
+    ///     - The first item in the tuple is a coordinate of a linear ring.
+    ///     - The second item of the tuple is a boolean flag indicating whether the coordinate is an intersection coordinate.
+    ///
+    fileprivate func removeDuplicateConsecutiveCoordinates(_ linearRingTupleArray: [(Coordinate, Bool)]) -> [(Coordinate, Bool)] {
+
+        var resultLinearRingTupleArray = [(Coordinate, Bool)]()
+        var lastCoordinate: Coordinate?
+        var lastIntersectionCoordinateFlag: Bool?
+        for index in 0..<linearRingTupleArray.count {
+            let (currentCoordinate, currentIntersectionCoordinateFlag) = linearRingTupleArray[index]
+            if currentCoordinate != lastCoordinate {
+                var isIntersectionCoordinate = false
+                if lastIntersectionCoordinateFlag == nil {
+                    isIntersectionCoordinate = currentIntersectionCoordinateFlag
+                } else {
+                    isIntersectionCoordinate = lastIntersectionCoordinateFlag! || currentIntersectionCoordinateFlag
+                }
+                resultLinearRingTupleArray.append((currentCoordinate, isIntersectionCoordinate))
+                lastCoordinate = currentCoordinate
+                lastIntersectionCoordinateFlag = currentIntersectionCoordinateFlag
+            }
+        }
+
+        return resultLinearRingTupleArray
+    }
+
+    ///
+    /// Determines whether a coordinate is inside, outside or on the boundary of a linear ring.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - coordinate: The coordinate that will be checked for its position relative to the LinearRing.
+    ///     - linearRing: The LinearRing that the coordinate may overlap.
+    ///
+    ///  - returns: A boolean indicating whether the coordinate is strictly inside the linear ring.
+    ///
+    fileprivate func inside(_ coordinate: Coordinate, _ linearRing: LinearRing) -> Bool {
+
+        /// Note we will not simplify the linear ring.
+        /// This may need to be added later.
+
+        /// For each coordinate of the first linear ring, determine whether it is inside, outside or
+        /// on the boundary of the second linear ring.
+        return location(coordinate, linearRing) == .onInterior
+    }
+
+    ///
+    /// Generate a multipoint from a linear ring tuple, which has been generated from the intersection of a second linear ring.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    /// Note the linear ring tuple consists of all the coordinates of the first linear ring and the intersection coordinates
+    /// with the seccond linear ring.
+    ///
+    /// - parameters:
+    ///     - linearRingTupleArray: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+    ///
+    ///  - returns: A multipoint consisting of just the coordinates where intersections occur.
+    ///
+    fileprivate func generateMultiPoint(_ linearRingTupleArray: [(Coordinate, Bool, Bool)]) -> MultiPoint {
+        var multiPoint = MultiPoint()
+        for (coordinate, intersectionFlag, _) in linearRingTupleArray {
+            if intersectionFlag {
+                multiPoint.append(Point(coordinate))
+            }
+        }
+        return multiPoint
+    }
+
+    ///
+    /// Combine two line strings into one, if possible.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - lineString1: The first line string
+    ///     - lineString2: The second line string
+    ///
+    ///  - returns: An array of line strings. There will be one, if the line strings were merged, or two,
+    ///             the original two, if the line strings were not merged.
+    ///
+    fileprivate func combine(_ lineString1: LineString, _ lineString2: LineString) -> [LineString] {
+
+        let defaultReturn = [lineString1, lineString2]
+        guard lineString1.count >= 2 && lineString2.count >= 2 else { return defaultReturn }
+
+        let count1 = lineString1.count
+        let count2 = lineString2.count
+
+        let firstCoordinate1 = lineString1[0]
+        let lastCoordinate1 = lineString1[count1 - 1]
+        let firstCoordinate2 = lineString2[0]
+        let lastCoordinate2 = lineString2[count2 - 1]
+
+        if firstCoordinate1 == firstCoordinate2 {
+            return [LineString(lineString1.reversed() + LineString(lineString2[1..<count2]))]
+        } else if firstCoordinate1 == lastCoordinate2 {
+            return [LineString(lineString2 + lineString1[1..<count1])]
+        } else if lastCoordinate1 == firstCoordinate2 {
+            return [LineString(lineString1 + lineString2[1..<count2])]
+        } else if lastCoordinate1 == lastCoordinate2 {
+            return [LineString(lineString1 + lineString2[0..<count2 - 1].reversed())]
+        }
+
+        return defaultReturn
+    }
+
+    ///
+    /// Combine two line strings into one, if possible, append the new line string to a multilinestring,
+    /// and then remove the two line strings that were merged from the multilinestring.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - lineString1: The first line string.
+    ///     - lineString2: The second line string.
+    ///     - multiLineString: The multilinestring that will be potentially altered.
+    ///
+    ///  - returns: A boolean indicating whether an update tool place.  Also an updated multiLineString, if the two line strings were merged.
+    ///             If the line strings were not merged, the multiLineString will not be changed.
+    ///
+    fileprivate func combineAndUpdate(_ lineStringIndex1: Int, _ lineStringIndex2: Int, _ multiLineString: inout MultiLineString) -> Bool {
+
+        guard lineStringIndex1 != lineStringIndex2 else { return false }
+        guard (lineStringIndex1 < multiLineString.count) && (lineStringIndex2 < multiLineString.count) else { return false }
+
+        let lineString1 = multiLineString[lineStringIndex1]
+        let lineString2 = multiLineString[lineStringIndex2]
+        guard lineString1.count >= 2 && lineString2.count >= 2 else { return false }
+
+        let lineStringsArray = combine(lineString1, lineString2)
+        guard lineStringsArray.count == 1 else { return false } /// No merging happened
+        let newLineString = lineStringsArray[0]
+
+        if lineStringIndex1 > lineStringIndex2 {
+            multiLineString.remove(at: lineStringIndex1)
+            multiLineString.remove(at: lineStringIndex2)
+        } else {
+            multiLineString.remove(at: lineStringIndex2)
+            multiLineString.remove(at: lineStringIndex1)
+        }
+
+        multiLineString.append(newLineString)
+
+        return true
+    }
+
+    ///
+    /// Append a line segment to a multilinestring so that, if possible, it is combined with existing line strings.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - segment: A line segment to potentially append to an existing multilinestring.
+    ///     - multiLineString: The multilinestring to which the line segment may be appended.
+    ///
+    ///  - returns: Nothing other than an updated multilinestring.
+    ///
+    fileprivate func append(_ segment: Segment, _ multiLineString: inout MultiLineString) {
+
+        let newLineString = LineString([segment.leftCoordinate, segment.rightCoordinate])
+        guard multiLineString.count > 0 else {
+            multiLineString.append(newLineString)
+            return
+        }
+
+        var segmentAppendedToLineStringIndex = Constants.NOT_FOUND
+        for lineStringIndex in 0..<multiLineString.count {
+            var lineString = multiLineString[lineStringIndex]
+            let count = lineString.count
+            guard count >= 2 else { continue }
+
+            /// Do nothing if the segment matches an existing line string segment
+            for index in 0..<count - 1 {
+                if ((segment.leftCoordinate == lineString[index]) && (segment.rightCoordinate == lineString[index + 1])) ||
+                    ((segment.leftCoordinate == lineString[index + 1]) && (segment.rightCoordinate == lineString[index])) {
+                    return
+                }
+            }
+
+            /// See if the segment can be appended to the current line string
+            if ((segment.leftCoordinate == lineString[0]) && (segment.rightCoordinate != lineString[1])) {
+                lineString.insert(lineString[1], at: 0)
+                segmentAppendedToLineStringIndex = lineStringIndex
+                break
+            } else if ((segment.leftCoordinate == lineString[1]) && (segment.rightCoordinate != lineString[0])) {
+                lineString.insert(lineString[0], at: 0)
+                segmentAppendedToLineStringIndex = lineStringIndex
+                break
+            } else if ((segment.leftCoordinate == lineString[count - 1]) && (segment.rightCoordinate != lineString[count - 2])) {
+                lineString.append(lineString[count - 2])
+                segmentAppendedToLineStringIndex = lineStringIndex
+                break
+            } else if ((segment.leftCoordinate == lineString[count - 2]) && (segment.rightCoordinate != lineString[count - 1])) {
+                lineString.append(lineString[count - 1])
+                segmentAppendedToLineStringIndex = lineStringIndex
+                break
+            }
+        }
+
+        /// Check whether the line segment was appended to an existing line string.
+        /// If it was not, create a new line string from the segment, and append it to the multilinestring.
+        /// We are then done.
+        if segmentAppendedToLineStringIndex == Constants.NOT_FOUND {
+            let newLineString = LineString([segment.leftCoordinate, segment.rightCoordinate])
+            multiLineString.append(newLineString)
+            return
+        }
+
+        /// At this point, the segment has been appended to an existing line string.
+        /// We now check whether that line string can be combined with any other existing line string.
+        /// If it can be, that is done, and then we are finished.
+        for lineStringIndex in 0..<multiLineString.count {
+            guard lineStringIndex != segmentAppendedToLineStringIndex else { continue }
+            let combined = combineAndUpdate(lineStringIndex, segmentAppendedToLineStringIndex, &multiLineString)
+            if combined {
+                break
+            }
+        }
+    }
+
+    ///
+    /// Generate a multilinestring from a linear ring tuple, which has been generated from the intersection of a second linear ring.
+    /// The multilinestring represents the set of line strings that the boundaries of the two linear rings have in common.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    /// Note the linear ring tuples consists of all the coordinates of the one linear ring and the intersection coordinates
+    /// with the other linear ring.
+    ///
+    /// - parameters:
+    ///     - linearRingTupleArray1: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+    ///     - linearRingTupleArray2: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+    ///
+    ///  - returns: A multilinestring consisting of the line strings where the two linear ring boundaries intersect.
+    ///
+    fileprivate func generateMultiLineString(_ linearRingTupleArray1: [(Coordinate, Bool, Bool)], _ linearRingTupleArray2: [(Coordinate, Bool, Bool)]) -> MultiLineString {
+        var multiLineString = MultiLineString()
+        let linearRing2 = generateLinearRing(linearRingTupleArray2)
+        let count1 = linearRingTupleArray1.count
+        for index1 in 0..<count1 - 1 {
+            let (coordinate1, intersectionFlag1, _) = linearRingTupleArray1[index1]
+            let index2 = index1 + 1
+            let (coordinate2, intersectionFlag2, _) = linearRingTupleArray1[index2]
+            if intersectionFlag1 && intersectionFlag2 {
+                let midCoordinate = midpoint(coordinate1, coordinate2)
+                if location(midCoordinate, linearRing2) == .onBoundary {
+                    let segment = Segment(left: coordinate1, right: coordinate2)
+                    append(segment, &multiLineString)
+                }
+            }
+        }
+
+        return multiLineString
+    }
+
+    ///
+    /// Generate a linear ring from a linear ring tuple.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRingTupleArray: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+    ///
+    ///  - returns: A linear ring consisting of just the coordinates,
+    ///
+    fileprivate func generateLinearRing(_ linearRingTupleArray: [(Coordinate, Bool, Bool)]) -> LinearRing {
+        var linearRing = LinearRing()
+        for (coordinate, _, _) in linearRingTupleArray {
+            linearRing.append(coordinate)
+        }
+        return linearRing
+    }
+
+    ///
+    /// Determines whether one linear ring is inside another linear ring.  Note that sharing all or part of a boundary is inside.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    /// Note that the linear ring tuple array contains not only the coordinates of the linear ring, but also the intersection
+    /// coordinates where it meets the ohter linear ring tuple.  The algorithm exploits this fact.
+    ///
+    /// - parameters:
+    ///     - linearRingTupleArray1: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+    ///     - linearRingTupleArray2: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+    ///
+    ///  - returns: A boolean indicating whether the first linear ring tuple is inside the second linear ring tuple.
+    ///
+    fileprivate func inside(_ linearRingTupleArray1: [(Coordinate, Bool, Bool)], _ linearRingTupleArray2: [(Coordinate, Bool, Bool)]) -> Bool {
+
+//        /// Check whether there are any inbound coordinates.  If there are, then it is not inside.
+//        for (_, intersectionCoordindateFlag, inboundIntersectionCoordindateFlag) in linearRingTupleArray1 {
+//            if intersectionCoordindateFlag && inboundIntersectionCoordindateFlag {
+//                return false
+//            }
+//        }
+//
+//        for (_, intersectionCoordindateFlag, inboundIntersectionCoordindateFlag) in linearRingTupleArray2 {
+//            if intersectionCoordindateFlag && inboundIntersectionCoordindateFlag {
+//                return false
+//            }
+//        }
+
+        guard (linearRingTupleArray1.count > 1) && (linearRingTupleArray2.count > 1) else { return false }
+
+        /// Nothing crosses, so let's see if the first linear ring is inside the second linear ring.
+        let linearRing = generateLinearRing(linearRingTupleArray2)
+        let count1 = linearRingTupleArray1.count
+        for index1 in 0..<count1 {
+            let (coordinate1, _, _) = linearRingTupleArray1[index1]
+            let index2 = (index1 + 1) % count1
+            let (coordinate2, _, _) = linearRingTupleArray1[index2]
+            let midCoordinate = midpoint(coordinate1, coordinate2)
+            if (location(coordinate1, linearRing) == .onExterior) || (location(midCoordinate, linearRing) == .onExterior) {
+                return false
+            }
+        }
+
+        /// Passed all the checks.  It must be inside.
+        return true
+    }
+
+    ///
+    /// Determines whether a linear ring is inside a multi polygon.  Note that sharing all or part of a boundary is fine.
+    /// No part of the linear ring can be outside the multi polygon or inside a hole of one of the polygons.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRing: The linear ring to check inside or outside of the multi polygon.
+    ///     - multiPolygon: A multi polygon to compare against.
+    ///
+    ///  - returns: A boolean indicating whether the linear ring tuple is inside the multi polygon.
+    ///
+//    fileprivate func inside(_ linearRing: LinearRing, _ multiPolygon: MultiPolygon) -> Bool {
+//
+//        /// Check whether there are any inbound coordinates.  If there are, then it is not inside.
+//        for (_, intersectionCoordindateFlag, inboundIntersectionCoordindateFlag) in linearRingTupleArray1 {
+//            if intersectionCoordindateFlag && inboundIntersectionCoordindateFlag {
+//                return false
+//            }
+//        }
+//
+//        for (_, intersectionCoordindateFlag, inboundIntersectionCoordindateFlag) in linearRingTupleArray2 {
+//            if intersectionCoordindateFlag && inboundIntersectionCoordindateFlag {
+//                return false
+//            }
+//        }
+//
+//        /// Nothing crosses, so let's see if the first linear ring is inside the second linear ring.
+//        let linearRing = generateLinearRing(linearRingTupleArray2)
+//        for (coordinate, _, _) in linearRingTupleArray1 {
+//            if location(coordinate, linearRing) == .onExterior {
+//                return false
+//            }
+//        }
+//
+//        /// Passed all the checks.  It must be inside.
+//        return true
+//    }
+
+    ///
+    /// Determines whether one linear ring is outside another linear ring.  Note that sharing all or part of a boundary is outside.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRingTupleArray1: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+    ///     - linearRingTupleArray2: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+    ///
+    ///  - returns: A boolean indicating whether the first linear ring tuple is inside the second linear ring tuple.
+    ///
+    fileprivate func outside(_ linearRingTupleArray1: [(Coordinate, Bool, Bool)], _ linearRingTupleArray2: [(Coordinate, Bool, Bool)]) -> Bool {
+
+        /// Check whether there are any inbound coordinates.  If there are, then it is not outside.
+        for (_, intersectionCoordindateFlag, inboundIntersectionCoordindateFlag) in linearRingTupleArray1 {
+            if intersectionCoordindateFlag && inboundIntersectionCoordindateFlag {
+                return false
+            }
+        }
+
+        for (_, intersectionCoordindateFlag, inboundIntersectionCoordindateFlag) in linearRingTupleArray2 {
+            if intersectionCoordindateFlag && inboundIntersectionCoordindateFlag {
+                return false
+            }
+        }
+
+        /// Nothing crosses, so let's see if the first linear ring is outside the second linear ring.
+        let linearRing = generateLinearRing(linearRingTupleArray2)
+        for (coordinate, _, _) in linearRingTupleArray1 {
+            if location(coordinate, linearRing) == .onInterior {
+                return false
+            }
+        }
+
+        /// Passed all the checks.  It must be outside.
+        return true
+    }
+
+    ///
+    /// Determines whether the coordinates of a linear ring tuple point inward, outward or on the boundary
+    /// of a second linear ring tuple.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRingTupleArray1: Tuple array of type (coordinate, coordinate is intersection coordinate flag).
+    ///     - linearRingTupleArray2: Tuple array of type (coordinate, coordinate is intersection coordinate flag).
+    ///
+    ///  - returns: Tuple array of type (coordinate, coordinate is intersection coordinate flag, coordinate points inward).
+    ///
+    fileprivate func inbound(_ linearRingTupleArray1: [(Coordinate, Bool)], _ linearRingTupleArray2: [(Coordinate, Bool)]) -> [(Coordinate, Bool, Bool)] {
+
+        /// Create a linear ring from the second linear ring tuple array.
+        var linearRing = LinearRing()
+        for (coordinate, _) in linearRingTupleArray2 {
+            linearRing.append(coordinate)
+        }
+
+        /// Check the direction of each intersection coordinate.
+        var linearRingTupleArray = [(Coordinate, Bool, Bool)]()
+        for index in 0..<linearRingTupleArray1.count - 1 {
+            let (coordinate1, intersectionPoint) = linearRingTupleArray1[index]
+            let (coordinate2, _) = linearRingTupleArray1[index + 1]
+            if intersectionPoint {
+                let centerCoordinate = Coordinate(x: (coordinate1.x + coordinate2.x) / 2.0, y: (coordinate1.y + coordinate2.y) / 2.0)
+                let inward = inside(centerCoordinate, linearRing)
+                linearRingTupleArray.append((coordinate1, intersectionPoint, inward))
+            } else {
+                linearRingTupleArray.append((coordinate1, intersectionPoint, false))
+            }
+        }
+
+        if linearRingTupleArray.count > 0 {
+            linearRingTupleArray.append(linearRingTupleArray[0])
+        }
+
+        return linearRingTupleArray
+    }
+
+    ///
+    /// Determines whether a coordinate appears in any polygon of a multi polygon.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - coordinate: The coordinate to find or match against
+    ///     - multiPolygonGeometry: The multi polygon whose coordinates we will compare.
+    ///
+    ///  - returns: A boolean indicating whether the coordinate matches any coordinate of the multi polygon
+    ///
+    fileprivate func matches(_ coordinate: Coordinate, _ multiPolygon: MultiPolygon) -> Bool {
+        
+        for polygon in multiPolygon {
+            for linearRing in polygon {
+                for linearRingCoordinate in linearRing {
+                    if linearRingCoordinate == coordinate {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    ///
+    /// Determines whether a coordinate appears in a tuple.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - coordinate: The coordinate to find
+    ///     - linearRingTupleArray: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag).
+    ///
+    ///  - returns: The index of the first occurrence the coordinate in the tuple or -1 if not found.
+    ///
+    fileprivate func indexInTuple(_ coordinate: Coordinate, _ linearRingTupleArray:[(Coordinate, Bool, Bool)]) -> Int {
+        
+        for index in 0..<linearRingTupleArray.count {
+            let (linearRingCoordinate, _, _) = linearRingTupleArray[index]
+            /// Note we might be comparing Doubles here, so we might need to add an epsilon error value later.
+            if linearRingCoordinate == coordinate {
+                return index
+            }
+        }
+        return Constants.NOT_FOUND
+    }
+
+    ///
+    /// Appends two linear ring coordinates and a collection of intersection coordinates to a new linear ring.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    /// The objective here is to build a new linear ring that includes both the original linear ring coordinates and the coordinates
+    /// of the intersection with a second linear ring.  Note the intersection coordinates are generally in between the two other end coordinates,
+    /// but they can also touch either or both coordinates.
+    ///
+    /// - parameters:
+    ///     - linearRingTuple: An array of tuples.  Each element is a coordinate of a linear ring, to which the line string will be appended,
+    ///       and a flag indicating whether the coordinate is an intersection coordinate.
+    ///     - coordinate1: The first coordinate of a line segment of the linear ring.
+    ///     - coordinate1: The second coordinate of a line segment of the linear ring.
+    ///     - intersectionCoordinates: An array of coordinates that intersect the line segment formed by the two other coordinates.
+    ///
+    ///  - returns: Nothing but an updated linear ring tuple array.
+    ///
+    fileprivate func appendIntersectionCoordinates(_ linearRingTuple: inout [(Coordinate, Bool)], _ coordinate1: Coordinate, _ coordinate2: Coordinate, _ intersectionCoordinates: [Coordinate]) {
+
+        /// We will add potentially several coordinates to the linear ring tuple, disallowing redundancies.
+        /// We will first establish the starting coordinate, either coordinate1 or coordinate2.
+        /// We will then get the distances to all the other values and add those, starting with the nearest to the starting coordinate.
+        /// We will not add redundant coordinates.
+        /// Note that for the intersection coordinates, the intersection coordinate flag is true, so that may need to be added to
+        /// a previous coordinate.
+        var startWithCoordinate1 = false
+        if linearRingTuple.count == 0 {
+            linearRingTuple.append((coordinate1, false))
+            startWithCoordinate1 = true
+        } else {
+            let lastTuple = linearRingTuple.last!
+            let lastCoordinate = lastTuple.0
+            if lastCoordinate == coordinate1 {
+                startWithCoordinate1 = true
+            } else if lastCoordinate == coordinate2 {
+                startWithCoordinate1 = false
+            } else {
+                /// This should not really happen, I think, but we will address it anyway.
+                let distance1 = distance(lastCoordinate, coordinate1)
+                let distance2 = distance(lastCoordinate, coordinate2)
+                startWithCoordinate1 = (distance1 <= distance2)
+                if startWithCoordinate1 {
+                    linearRingTuple.append((coordinate1, false))
+                } else {
+                    linearRingTuple.append((coordinate2, false))
+                }
+            }
+        }
+
+        /// At this point, the first coordinate has been added, if need be, now we must get the distances from that coordinate
+        /// to all the others, and then add them in order, starting with the closest one.
+        var tupleIndex = linearRingTuple.count - 1 /// Note we guaranteed to have at least one value in the linear ring tuple at this point
+        var nextValues = [(Coordinate, Double, Bool)]()
+        for intersectionCoordinate in intersectionCoordinates {
+            var distanceToCoordinate: Double
+            if startWithCoordinate1 {
+                distanceToCoordinate = distance(coordinate1, intersectionCoordinate)
+            } else {
+                distanceToCoordinate = distance(coordinate2, intersectionCoordinate)
+            }
+            nextValues.append((intersectionCoordinate, distanceToCoordinate, true))
+        }
+
+        let distCoord = distance(coordinate1, coordinate2)
+        if startWithCoordinate1 {
+            nextValues.append((coordinate2, distCoord, false))
+        } else {
+            nextValues.append((coordinate1, distCoord, false))
+        }
+
+        nextValues = nextValues.sorted(by: {$0.1 < $1.1})
+        for (coordinate, _, intersectionFlag) in nextValues {
+            if (linearRingTuple[tupleIndex].0 == coordinate) && intersectionFlag {
+                linearRingTuple[tupleIndex].1 = intersectionFlag
+            } else if linearRingTuple[tupleIndex].0 == coordinate {
+                // Do nothing
+            } else {
+                linearRingTuple.append((coordinate, intersectionFlag))
+                tupleIndex += 1
+            }
+        }
+    }
+
+    ///
+    /// Appends two linear ring coordinates and a point to a linear ring.  The point is the result of the intersection of two line segments.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    /// The objective here is to build a new linear ring that includes both the original linear ring coordinates and the coordinates
+    /// of the intersection with a second linear ring.  Note that the point is generally in between the two coordinates, but
+    /// it can also touch either coordinate.
+    ///
+    /// - parameters:
+    ///     - linearRingTuple: An array of tuples.  Each element is a coordinate of a linear ring, to which the line string will be appended,
+    ///       and a flag indicating whether the coordinate is an intersection coordinate.
+    ///     - coordinate1: The first coordinate of a line segment of the linear ring.
+    ///     - coordinate1: The second coordinate of a line segment of the linear ring.
+    ///     - point: A point that is the intersection of two line segments from two different linear rings.
+    ///
+    ///  - returns: Nothing but an updated linear ring tuple array.
+    ///
+//    fileprivate func appendPointIntersection(_ linearRingTuple: inout [(Coordinate, Bool)], _ coordinate1: Coordinate, _ coordinate2: Coordinate, _ point: Point) {
+//
+//        let pointCoordinate = point.coordinate
+//
+//        /// We will add up to three coordinates to the linear ring tuple, assuming no redundancies.
+//        /// We will first establish the starting coordinate, either coordinate1 or coordinate2.
+//        /// We will then get the distances to the other two values and add those, starting with the nearest to the starting coordinate.
+//        /// We will not add redundant coordinates.
+//        /// Note that for the point coordinate, the intersection coordinate flag is true, so that may need to be added to
+//        /// a previous coordinate.
+//        var startWithCoordinate1 = false
+//        if linearRingTuple.count == 0 {
+//            linearRingTuple.append((coordinate1, false))
+//            startWithCoordinate1 = true
+//        } else {
+//            let lastTuple = linearRingTuple.last!
+//            let lastCoordinate = lastTuple.0
+//            if lastCoordinate == coordinate1 {
+//                startWithCoordinate1 = true
+//            } else if lastCoordinate == coordinate2 {
+//                startWithCoordinate1 = false
+//            } else {
+//                /// This should not really happen, I think, but we will address it anyway.
+//                let distance1 = distance(lastCoordinate, coordinate1)
+//                let distance2 = distance(lastCoordinate, coordinate2)
+//                startWithCoordinate1 = (distance1 <= distance2)
+//                if startWithCoordinate1 {
+//                    linearRingTuple.append((coordinate1, false))
+//                } else {
+//                    linearRingTuple.append((coordinate2, false))
+//                }
+//            }
+//        }
+//
+//        /// At this point, the first coordinate has been added, if need be, now we must get the distances from that coordinate
+//        /// to all the others, and then add them in order, starting with the closest one.
+//        var tupleIndex = linearRingTuple.count - 1 /// Note we guaranteed to have at least one value in the linear ring tuple at this point
+//        var nextValues = [(Coordinate, Double, Bool)]()
+//        if startWithCoordinate1 {
+//            let distPoint = distance(coordinate1, pointCoordinate)
+//            let distCoord2 = distance(coordinate1, coordinate2)
+//            nextValues = [(pointCoordinate, distPoint, true), (coordinate2, distCoord2, false)]
+//        } else {
+//            let distPoint = distance(coordinate2, pointCoordinate)
+//            let distCoord1 = distance(coordinate2, coordinate1)
+//            nextValues = [(pointCoordinate, distPoint, true), (coordinate1, distCoord1, false)]
+//        }
+//        nextValues = nextValues.sorted(by: {$0.1 < $1.1})
+//        for (coordinate, _, intersectionFlag) in nextValues {
+//            if (linearRingTuple[tupleIndex].0 == coordinate) && intersectionFlag {
+//                linearRingTuple[tupleIndex].1 = intersectionFlag
+//            } else if linearRingTuple[tupleIndex].0 == coordinate {
+//                // Do nothing
+//            } else {
+//                linearRingTuple.append((coordinate, intersectionFlag))
+//                tupleIndex += 1
+//            }
+//        }
+//    }
+//
+//    ///
+//    /// Appends two linear ring coordinates to a linear ring.
+//    ///
+//    /// This was developed to help to determine the intersection between two Polygons.
+//    ///
+//    /// - parameters:
+//    ///     - linearRingTuple: An array of tuples.  Each element is a coordinate of a linear ring, to which the line string will be appended,
+//    ///       and a flag indicating whether the coordinate is an intersection coordinate.
+//    ///     - coordinate1: The first coordinate of a line segment of the linear ring.
+//    ///     - coordinate1: The second coordinate of a line segment of the linear ring.
+//    ///
+//    ///  - returns: Nothing but an updated linear ring tuple array.
+//    ///
+//    fileprivate func appendCoordinates(_ linearRingTuple: inout [(Coordinate, Bool)], _ coordinate1: Coordinate, _ coordinate2: Coordinate) {
+//
+//        /// We will add up to two coordinates to the linear ring tuple, assuming no redundancies.
+//        /// We will not add redundant coordinates.
+//        var startWithCoordinate1 = false
+//        if linearRingTuple.count == 0 {
+//            linearRingTuple.append((coordinate1, false))
+//            startWithCoordinate1 = true
+//        } else {
+//            let lastTuple = linearRingTuple.last!
+//            let lastCoordinate = lastTuple.0
+//            if lastCoordinate == coordinate1 {
+//                startWithCoordinate1 = true
+//            } else if lastCoordinate == coordinate2 {
+//                startWithCoordinate1 = false
+//            } else {
+//                /// This should not really happen, I think, but we will address it anyway.
+//                let distance1 = distance(lastCoordinate, coordinate1)
+//                let distance2 = distance(lastCoordinate, coordinate2)
+//                startWithCoordinate1 = (distance1 <= distance2)
+//                if startWithCoordinate1 {
+//                    linearRingTuple.append((coordinate1, false))
+//                } else {
+//                    linearRingTuple.append((coordinate2, false))
+//                }
+//            }
+//        }
+//
+//        /// At this point, the first coordinate has been added, so add the second coordinate.
+//        if startWithCoordinate1 {
+//            if coordinate1 != coordinate2 {
+//                linearRingTuple.append((coordinate2, false))
+//            }
+//        } else {
+//            if coordinate1 != coordinate2 {
+//                linearRingTuple.append((coordinate1, false))
+//            }
+//        }
+//    }
+
+    ///
+    /// Determines the intersection of two linear rings, which are really just simple polygons with no holes.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRing1: The first linear ring.
+    ///     - linearRing2: The second linear ring.
+    ///     - isHole1: Boolean indicating whether the first linear ring is a hole.
+    ///     - isHole2: Boolean indicating whether the second linear ring is a hole.
+    ///     - status: A structure holding the general intersection status.  These are useful parameters for special cases.
+    ///
+    ///  - returns: A GeometryCollection, which will consist of at most three items: a MultiPoint, a MultiLineString, and a MultiPolygon.
+    ///             These are the items represent the intersection of the two linear rings.
+    ///
+    fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing, _ linearRing2: LinearRing, isHole1: Bool = false, isHole2: Bool = false, status: inout IntersectionStatus) -> Geometry {
+
+        /// Simplify each geometry first
+        let simplifiedLinearRing1 = linearRing1.simplify(tolerance: 1.0)
+        let simplifiedLinearRing2 = linearRing2.simplify(tolerance: 1.0)
+
+        /// Define new linear rings.
+        /// Each consists of an array of coordinates with two flags.  The first flag indicates whether the coordinate is
+        /// an intersection coordinate, and the second flag indicates whether that boundary coordinate is inbound.
+        /// Note that a segment along the boundary is not inbound.
+        var newLinearRing1 = [(Coordinate, Bool)]()
+        var newLinearRing2 = [(Coordinate, Bool)]()
+
+        /// Check the intersection of each line segment of both linear rings.
+        /// The returned value will be a GeometryCollection, which may be empty.
+        /// The GeometryCollection may contain three values, a MultiPoint, a MultiLineString, and a MultiPolygon.
+        /// The MultiPoint will contain all the Points, and the MultiLineString will contain all the LineStrings.
+        /// The MultiPolygon will contain all the Polygons.
+        /// The MultiPoint, MultiLineString, and MultiPolygon will only be in the GeometryCollection if they are non-empty.
+
+        var multiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        var multiLineStringGeometry = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+        var multiPolygonGeometry = MultiPolygon(precision: Floating(), coordinateSystem: Cartesian())
+
+        /// Find and collect all intersections that will consist of LineStrings or Points.
+        /// Also, generate two new linear rings that will consist of the original linear ring points
+        /// plus all intersection points inserted into their correct positions in a clockwise sequence.
+        /// Label each intersection point as being inbound, outbound, or on the boundary of the other linear ring.
+        /// Note the LineStrings will really be Segments that potentially overlap each other.
+        /// The Points can be duplicated, and they could be contained in one or more LineStrings.
+
+        /// Determine the new first linear ring.
+        for ls1FirstCoordIndex in 0..<simplifiedLinearRing1.count - 1 {
+            var intersectionCoordinates = [Coordinate]()
+            let ls1FirstCoord  = simplifiedLinearRing1[ls1FirstCoordIndex]
+            let ls1SecondCoord = simplifiedLinearRing1[ls1FirstCoordIndex + 1]
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
+            let firstBoundary = (ls1FirstCoordIndex == 0)
+
+            for ls2FirstCoordIndex in 0..<simplifiedLinearRing2.count - 1 {
+                let ls2FirstCoord  = simplifiedLinearRing2[ls2FirstCoordIndex]
+                let ls2SecondCoord = simplifiedLinearRing2[ls2FirstCoordIndex + 1]
+                let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
+                let secondBoundary = (ls2FirstCoordIndex == simplifiedLinearRing2.count - 2)
+                let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
+
+                /// Check for a LineString or Point intersection or no intersection.
+                if let lineString = lineSegmentIntersection.geometry as? LineString {
+                    multiLineStringGeometry.append(lineString)
+                    guard lineString.count == 2 else { continue }
+                    intersectionCoordinates.append(lineString[0])
+                    intersectionCoordinates.append(lineString[1])
+                } else if let point = lineSegmentIntersection.geometry as? Point {
+                    multiPointGeometry.append(point)
+                    intersectionCoordinates.append(point.coordinate)
+                }
+            }
+            
+            /// We have accumulated all the intersection coordinates for this segment of the linear ring.
+            /// Now add them to the new linear ring.
+            appendIntersectionCoordinates(&newLinearRing1, ls1FirstCoord, ls1SecondCoord, intersectionCoordinates)
+        }
+
+        /// If no intersection, return
+//        var geometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+//        if multiLineStringGeometry.count == 0 && multiPointGeometry.count == 0 {
+//            return geometryCollection
+//        }
+
+        /// Determine the new second linear ring.
+        for ls2FirstCoordIndex in 0..<simplifiedLinearRing2.count - 1 {
+            var intersectionCoordinates = [Coordinate]()
+            let ls2FirstCoord  = simplifiedLinearRing2[ls2FirstCoordIndex]
+            let ls2SecondCoord = simplifiedLinearRing2[ls2FirstCoordIndex + 1]
+            let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
+            let secondBoundary = (ls2FirstCoordIndex == simplifiedLinearRing2.count - 2)
+
+            for ls1FirstCoordIndex in 0..<simplifiedLinearRing1.count - 1 {
+                let ls1FirstCoord  = simplifiedLinearRing1[ls1FirstCoordIndex]
+                let ls1SecondCoord = simplifiedLinearRing1[ls1FirstCoordIndex + 1]
+                let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
+                let firstBoundary = (ls1FirstCoordIndex == 0)
+                let lineSegmentIntersection = intersection(segment: segment2, other: segment1, firstCoordinateFirstSegmentBoundary: secondBoundary, secondCoordinateSecondSegmentBoundary: firstBoundary)
+
+                /// Check for a LineString or Point intersection.
+                if let lineString = lineSegmentIntersection.geometry as? LineString {
+                    guard lineString.count == 2 else { continue }
+                    intersectionCoordinates.append(lineString[0])
+                    intersectionCoordinates.append(lineString[1])
+                } else if let point = lineSegmentIntersection.geometry as? Point {
+                    intersectionCoordinates.append(point.coordinate)
+                }
+            }
+            
+            /// We have accumulated all the intersection coordinates for this segment of the linear ring.
+            /// Now add them to the new linear ring.
+            appendIntersectionCoordinates(&newLinearRing2, ls2FirstCoord, ls2SecondCoord, intersectionCoordinates)
+        }
+
+        /// Remove duplicate coordinates from both new linear rings.
+        /// Note we DO NOT simplify these linear rings because it may remove coordinates we need.
+//        let reducedNewLinearRing1 = removeDuplicateConsecutiveCoordinates(newLinearRing1)
+//        let reducedNewLinearRing2 = removeDuplicateConsecutiveCoordinates(newLinearRing2)
+
+        /// Determine which of the coordinates on each linear ring is inbound.
+        /// The result is an array of coordinates with two flags.  The first flag indicates whether the coordinate is
+        /// an intersection coordinate, and the second flag indicates whether that boundary coordinate is inbound.
+        /// Note that a segment along the boundary is not inbound.
+        let finalLinearRingTuple1 = inbound(newLinearRing1, newLinearRing2)
+        let finalLinearRingTuple2 = inbound(newLinearRing2, newLinearRing1)
+
+        /// Check the special cases where the first linear ring is inside the second and vice versa.
+        /// Being inside includes sharing a boundary at various points.
+        if inside(finalLinearRingTuple1, finalLinearRingTuple2) {
+            status.firstPolygonInsideSecond = true
+            let multiPointGeometry = generateMultiPoint(finalLinearRingTuple1)
+//            if multiPoint.count > 0 {
+//                geometryCollection.append(multiPoint)
+//            }
+            let multiLineStringGeometry = generateMultiLineString(finalLinearRingTuple1, finalLinearRingTuple2)
+//            if multiLineString.count > 0 {
+//                geometryCollection.append(multiLineString)
+//            }
+            
+            /// Add the polygon except in the case where the first linear ring is not a hole and the second one is.
+            /// In that case, we only care about where the two touch on the boundaries.
+            if !(isHole2 && !isHole1){
+                let linearRing = generateLinearRing(finalLinearRingTuple1)
+                let polygon = Polygon(linearRing)
+                multiPolygonGeometry.append(polygon)
+            }
+//            geometryCollection.append(multiPolygonGeometry)
+//            return geometryCollection
+            return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+        }
+
+        if inside(finalLinearRingTuple2, finalLinearRingTuple1) {
+            status.secondPolygonInsideFirst = true
+            let multiPointGeometry = generateMultiPoint(finalLinearRingTuple2)
+//            if multiPoint.count > 0 {
+//                geometryCollection.append(multiPoint)
+//            }
+            let multiLineStringGeometry = generateMultiLineString(finalLinearRingTuple2, finalLinearRingTuple1)
+//            if multiLineString.count > 0 {
+//                geometryCollection.append(multiLineString)
+//            }
+            
+            /// Add the polygon except in the case where the second linear ring is not a hole and the first one is.
+            /// In that case, we only care about where the two touch on the boundaries.
+            if !(isHole1 && !isHole2){
+                let linearRing = generateLinearRing(finalLinearRingTuple2)
+                let polygon = Polygon(linearRing)
+                multiPolygonGeometry.append(polygon)
+            }
+//            geometryCollection.append(multiPolygonGeometry)
+//            return geometryCollection
+            return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+        }
+
+        /// Check the special cases where the first linear ring is outside the second and vice versa.
+        /// Being outside includes sharing a boundary at various points.
+        if outside(finalLinearRingTuple1, finalLinearRingTuple2) || outside(finalLinearRingTuple2, finalLinearRingTuple1) {
+
+            return cleanupGeometries(multiPointGeometry, multiLineStringGeometry)
+
+//            if multiPointGeometry.count > 0 {
+//                geometryCollection.append(multiPointGeometry)
+//            }
+//            if multiLineStringGeometry.count > 0 {
+//                geometryCollection.append(multiLineStringGeometry)
+//            }
+//            return geometryCollection
+        }
+
+        /// If we reached this point, the two linear rings do intersect and do cross, so that each is both inside and outside the other.
+        /// Note, again, that the general solution here for the intersection consists of collections of Points, LineStrings, and Polygons.
+        /// We have already found the Points and LineStrings where intersection occurs, now we have to find the Polygons.
+
+        /// Generate the polygon intersections.
+        /// The algorithm below works as follows:
+        /// - Starting with the first linear ring tuple, find the first intersection coordinate and add it to the final intersection.
+        /// - Move a pointer to the next coordinate and it to the intersection.
+        /// - If the pointer points to a coordinate that is an inbound coordinate, move the pointer to the next coordinate and add it
+        /// - to the final intersection.
+        /// - If the next coordinate is not inbound, and if the current coordinate can be found in the second linear ring tuple, move a pointer to it, then move
+        /// - that pointer to the next coordinate and add it to the intersection.
+        /// - If it cannot be found in the second tuple, move the pointer to the next coordinate and add it to the intersection.
+        /// - Continue to move this way between the two tuples.  If a coordinate is an inbound coordinate, move to the next coordinate in the same tuple.
+        /// - If not, and if the coordinate can be found in the other tuple, move to it and then on to the next coordindate in the list.
+        /// - If you cannot jump to the other tuple, move to the next coordinate in the current tuple, and continue until the starting coordinate is hit
+        /// - a second time.  Once you reach the starting coordinate, consider that one polygon.
+        /// - There may be more than one polygon in the intersection.
+        ///
+        /// - To find the next polygon intersection, do the following:
+        /// - Starting in the first tuple, at the coordinate after the first intersection coordinate used in the above algorithm, look for the next
+        /// - intersection coordinate that does NOT appear in any of the previous intersection polygons that were found.  Once found, redo the above
+        /// - algorithm.  If no such next intersection coordinate can be found, you are done.  All intersection polygons have been found.
+
+        var currentIntersectionIndexTuple1 = -1
+        var currentIntersectionIndexTuple2 = -1
+
+        /// Determine if at least one inbound intersection coordinate exists in the first linear ring tuple.
+        /// If so, this will become our starting coordinate.
+        var inboundIntersectionCoordinateExists = false
+        for indexTuple1 in 0..<finalLinearRingTuple1.count {
+            let (_, initialIntersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple1[indexTuple1]
+            if !initialIntersectionCoordinateFlag || !inboundFlag { continue }
+            inboundIntersectionCoordinateExists = true
+            break
+        }
+
+        /// Loop over the first tuple to find all polygons
+        for lastInitialIntersectionIndexTuple1 in 0..<finalLinearRingTuple1.count {
+            let (initialCoordinate, initialIntersectionCoordinateFlag, initialInboundFlag) = finalLinearRingTuple1[lastInitialIntersectionIndexTuple1]
+            if !initialIntersectionCoordinateFlag { continue }
+            if inboundIntersectionCoordinateExists && !initialInboundFlag { continue }
+
+            /// Check whether the starting coordinate is contained in any existing polygons that were found.
+            if matches(initialCoordinate, multiPolygonGeometry) { continue }
+
+            /// We found our starting intersection coordinate.
+            /// Create a linear ring to which we will attach our coordinates. This will become a polygon.
+            var linearRing = LinearRing()
+
+            /// Start the algorithm for a single polygon.
+            /// Append the first coordinate to the linear ring.
+            var onTuple1 = true
+            currentIntersectionIndexTuple1 = lastInitialIntersectionIndexTuple1
+            linearRing.append(initialCoordinate)
+
+            /// Move the pointer to the next coordinate.  If valid, add it to linear ring as well.
+            currentIntersectionIndexTuple1 += 1
+            guard currentIntersectionIndexTuple1 < finalLinearRingTuple1.count else {
+                continue
+            }
+            var (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple1[currentIntersectionIndexTuple1]
+            linearRing.append(coordinate)
+
+            repeat {
+                /// Check if the current coordinate is an inbound coordinate.  If so, stay on this tuple.
+                if intersectionCoordinateFlag && inboundFlag {
+                    if onTuple1 {
+                        currentIntersectionIndexTuple1 += 1
+                        guard currentIntersectionIndexTuple1 < finalLinearRingTuple1.count else {
+                            continue
+                        }
+                        (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple1[currentIntersectionIndexTuple1]
+                        linearRing.append(coordinate)
+                    } else {
+                        currentIntersectionIndexTuple2 += 1
+                        guard currentIntersectionIndexTuple2 < finalLinearRingTuple2.count else {
+                            continue
+                        }
+                        (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple2[currentIntersectionIndexTuple2]
+                        linearRing.append(coordinate)
+                    }
+                } else {
+                    /// Check if the current coordinate is on the other tuple.
+                    /// If not, stay on same tuple.  If so, move to the other tuple, and then move to the next coordinate.
+                    var tupleIndex = Constants.NOT_FOUND
+                    if onTuple1 {
+                        tupleIndex = indexInTuple(coordinate, finalLinearRingTuple2)
+                        if tupleIndex == Constants.NOT_FOUND {
+                            currentIntersectionIndexTuple1 += 1
+                            guard currentIntersectionIndexTuple1 < finalLinearRingTuple1.count else {
+                                /// We have gone beyond the limits of the tuple.  Loop back to first tuple,
+                                /// which should be the same as the last one.
+                                currentIntersectionIndexTuple1 = 0
+                                continue
+                            }
+                            (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple1[currentIntersectionIndexTuple1]
+                            linearRing.append(coordinate)
+                        } else {
+                            onTuple1 = false
+                            currentIntersectionIndexTuple2 = tupleIndex + 1
+                            guard currentIntersectionIndexTuple2 < finalLinearRingTuple2.count else {
+                                /// We have gone beyond the limits of the tuple.  Loop back to first tuple,
+                                /// which should be the same as the last one.
+                                currentIntersectionIndexTuple2 = 0
+                                continue
+                            }
+                            (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple2[currentIntersectionIndexTuple2]
+                            linearRing.append(coordinate)
+                        }
+                    } else {
+                        /// On the second tuple
+                        tupleIndex = indexInTuple(coordinate, finalLinearRingTuple1)
+                        if tupleIndex == Constants.NOT_FOUND {
+                            currentIntersectionIndexTuple2 += 1
+                            guard currentIntersectionIndexTuple2 < finalLinearRingTuple2.count else {
+                                /// We have gone beyond the limits of the tuple.  Loop back to first tuple,
+                                /// which should be the same as the last one.
+                                currentIntersectionIndexTuple2 = 0
+                                continue
+                            }
+                            (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple2[currentIntersectionIndexTuple2]
+                            linearRing.append(coordinate)
+                        } else {
+                            onTuple1 = true
+                            currentIntersectionIndexTuple1 = tupleIndex + 1
+                            guard currentIntersectionIndexTuple1 < finalLinearRingTuple1.count else {
+                                /// We have gone beyond the limits of the tuple.  Loop back to first tuple,
+                                /// which should be the same as the last one.
+                                currentIntersectionIndexTuple1 = 0
+                                continue
+                            }
+                            (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple1[currentIntersectionIndexTuple1]
+                            linearRing.append(coordinate)
+                        }
+                    }
+                }
+            } while coordinate != initialCoordinate
+
+            /// We have found a polygon.  Add it to the collection of polygons and then look for the next one.
+            let newPolygon = Polygon(linearRing)
+            multiPolygonGeometry.append(newPolygon)
+        }
+
+//        /// Remove all Points that are duplicated or are contained in one of the LineStrings or in the MultiPolygon.
+//        let simplifiedMultiPoint = multiPointGeometry.simplify(tolerance: 1.0)
+//        var finalMultiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+//
+//        for tempPoint in simplifiedMultiPoint {
+//
+//            if let _ = intersection(tempPoint, multiLineStringGeometry) as? GeometryCollection {
+//                if let _ = intersection(tempPoint, multiPolygonGeometry) as? GeometryCollection {
+//                    finalMultiPointGeometry.append(tempPoint)
+//                }
+//            }
+//        }
+//
+//        /// Simplify the LineStrings in the MultiLineString to minimize the total number of LineStrings.
+//        let finalMultiLineString = multiLineStringGeometry.simplify(tolerance: 1.0)
+//
+//        /// TBD: We can throw out LineStrings that are embedded in Polygons.
+//
+//        /// Build the final GeometryCollection that will be returned.
+//        if finalMultiPointGeometry.count > 0 {
+//            geometryCollection.append(finalMultiPointGeometry)
+//        }
+//        if finalMultiLineString.count > 0 {
+//            geometryCollection.append(finalMultiLineString)
+//        }
+//        if multiPolygonGeometry.count > 0 {
+//            geometryCollection.append(multiPolygonGeometry)
+//        }
+//
+//        /// Return
+//        return geometryCollection
+        
+        /// Clean up and return
+//        let multiPointGeometry = getMultiPoint(geometryCollection)
+//        let multiLineStringGeometry = getMultiLineString(geometryCollection)
+        return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+    }
+
+    ///
+    /// Find the GraphItem that corresponds to a specific Coordinate.  This should be unique.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - coordinate: A Coordinate.
+    ///     - graph: An array of GraphItems.
+    ///
+    ///  - returns: A single GraphItem containing the coordinate of interest, if found, or nil otherwise.
+    ///
+    fileprivate func findGraphItem(_ coordinate: Coordinate, _ graph: [GraphItem]) -> GraphItem? {
+        for graphItem in graph {
+            if coordinate == graphItem.coordinate {
+                return graphItem
+            }
+        }
+        return nil
+    }
+
+    ///
+    /// Finds or creates a GraphItem that corresponds to a specific Coordinate, if needed.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - coordinate: A Coordinate.
+    ///     - graph: An array of GraphItems to which the new GraphItem will be added.
+    ///
+    ///  - returns: A single GraphItem containing the coordinate of interest.
+    ///
+    fileprivate func findOrCreateGraphItem(_ coordinate: Coordinate, _ graph: inout Array<GraphItem>) -> GraphItem {
+        /// See if a graph item already exists.  If so, return it.
+        for graphItem in graph {
+            if coordinate == graphItem.coordinate {
+                return graphItem
+            }
+        }
+
+        /// No graph item exists.  Create and return a new one.
+        let newGraphItem = GraphItem(coord: coordinate)
+        graph.append(newGraphItem)
+        return newGraphItem
+    }
+
+    ///
+    /// Finds or creates a RelatedGraphItem that corresponds to a specific coordinate.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - coordinate: A Coordinate.
+    ///     - graph: A GraphItem to which a new RelatedGraphItem will be added.
+    ///
+    ///  - returns: A single GraphItem containing the coordinate of interest.
+    ///
+    fileprivate func findOrCreateRelatedGraphItem(_ coordinate: Coordinate, _ graphItem: inout GraphItem) -> RelatedGraphItem? {
+        /// Make sure the new coordinate and the coordinate of the graph item differ.
+        /// If they are the same, no RelatedGraphItem will be created and nil will be returned.
+        if coordinate == graphItem.coordinate { return nil }
+
+        /// See if a related graph item already exists.  If so, return it.
+        for relatedgraphItem in graphItem.relatedGraphItemArray {
+            if coordinate == relatedgraphItem.coordinate {
+                return relatedgraphItem
+            }
+        }
+
+        /// No related graph item exists.  Create and return a new one.
+        let distanceBetweenCoordinates = distance(graphItem.coordinate, coordinate)
+        let angleToRadians = angle(graphItem.coordinate, coordinate)
+        let newRelatedGraphItem = RelatedGraphItem(coordinate: coordinate, distance: distanceBetweenCoordinates, angle: angleToRadians)
+        graphItem.relatedGraphItemArray.append(newRelatedGraphItem)
+        return newRelatedGraphItem
+    }
+
+    ///
+    /// Add each graph item to each other, if needed.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - graphItem1: The first GraphItem.
+    ///     - graphItem2: The second GraphItem.
+    ///
+    ///  - returns: Nothing, but it does update the related graph items of each graph item, if needed.
+    ///
+    fileprivate func addToEachOther(_ graphItem1: inout GraphItem, _ graphItem2: inout GraphItem) {
+        
+        _ = findOrCreateRelatedGraphItem(graphItem2.coordinate, &graphItem1)
+        _ = findOrCreateRelatedGraphItem(graphItem1.coordinate, &graphItem2)
+    }
+
+    ///
+    /// Add a new graph item, if needed, and update the other relationships as needed.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - newCoordinate: The new coordinate to possibly add.
+    ///     - connectedCoordinateArray: Array of other coordinates to which the new coordinate connects.
+    ///     - graph: An array of GraphItems to which the new GraphItem will be added.
+    ///
+    ///  - returns: Nothing, but it does update the related graph items of each graph item, if needed.
+    ///
+    fileprivate func addGraphItem(_ newCoordinate: Coordinate, _ connectedCoordinateArray: [Coordinate], _ graph: inout Array<GraphItem>) {
+
+        /// See if a graph item already exists for the new coordinate.
+        var graphItem = findOrCreateGraphItem(newCoordinate, &graph)
+
+        /// Add related graph items, as needed, to the graph item for each connected coordinate.
+        for connectedCoordinate in connectedCoordinateArray {
+            _ = findOrCreateRelatedGraphItem(connectedCoordinate, &graphItem)
+        }
+    }
+
+    ///
+    /// Check if the segments match.  The coordinates may be out of order, but the segments can still be the same.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - segment1: The first segment.
+    ///     - segment2: The second segment.
+    ///
+    ///  - returns: A boolean indicating whether the two segments match.
+    ///
+    fileprivate func segmentsMatch(_ segment1: Segment, _ segment2: Segment) -> Bool {
+
+        if (segment1.leftCoordinate == segment2.leftCoordinate && segment1.rightCoordinate == segment2.rightCoordinate) ||
+            (segment1.leftCoordinate == segment2.rightCoordinate && segment1.rightCoordinate == segment2.leftCoordinate) {
+            return true
+        }
+        return false
+    }
+
+    ///
+    /// Determines the union of two linear rings, which are really just simple polygons with no holes.
+    /// Note that the linear rings will be combined only if they share at least one bound by an amount > 0.
+    /// That means if the linear rings touch at points only, no combination will occur.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRing1: The first linear ring.
+    ///     - linearRing2: The second linear ring.
+    ///
+    ///  - returns: An array consisting of one or two linear rings.  One, if the linear rings can be combined, else
+    ///             the original two linear rings will be returned.
+    ///
+    fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> [LinearRing] {
+
+        /// Simplify each geometry first
+        let simplifiedLinearRing1 = linearRing1.simplify(tolerance: 1.0)
+        let simplifiedLinearRing2 = linearRing2.simplify(tolerance: 1.0)
+
+        /// Check to see whether there is a non-zero dimensional intersection.
+        /// If there is not, return the two original linear rings.  We're done.  No combination is possible.
+        let defaultReturn = [linearRing1, linearRing2]
+        var intersectionStatus = IntersectionStatus()
+        guard let geometryCollection = generateIntersectionAsSimplePolygons(simplifiedLinearRing1, simplifiedLinearRing2, status: &intersectionStatus) as? GeometryCollection else {
+            return defaultReturn
+        }
+
+        if geometryCollection.count == 0 {
+            return defaultReturn
+        } else if geometryCollection.count == 1 {
+            if let _ = geometryCollection[0] as? MultiPoint {
+                return defaultReturn
+            }
+        }
+
+        /// We have a non-trivial overlap of the two linear rings.  We can combine them into a single linear ring.
+
+        /// We will first consider the trivial case where one linear ring is inside the other.
+        /// If this is true, we simply return the outermost linear ring.
+        if geometryCollection.count == 1 {
+            if let multipolygon = geometryCollection[0] as? MultiPolygon, multipolygon.count == 1 {
+                let polygon = multipolygon[0]
+                let outerLinearRing = polygon[0]
+                if outerLinearRing == linearRing1 {
+                    return [linearRing2]
+                } else if outerLinearRing == linearRing2 {
+                    return [linearRing1]
+                }
+            }
+        }
+
+        /// At this point, the two linear rings either touch along a significant edge or overlap.
+        /// We will create a general algorithm to handle this case.
+        /// We will create a graph of all the vertices and intersection points for the two linear rings.
+        /// (Some may removed in special cases.)
+        /// We will find a starting coordinate and traverse the outside of the union, creating a new linear ring as we go.
+        /// We will stop when the starting coordinate has been reached.
+
+        /// Create a graph
+        var graph = [GraphItem]()
+
+        /// Find the intersection of the segments of the two linear rings.
+        // Build the graph from the intersection coordinates and the vertices of the two linear rings.
+        for ls1FirstCoordIndex in 0..<simplifiedLinearRing1.count - 1 {
+            let ls1FirstCoord  = simplifiedLinearRing1[ls1FirstCoordIndex]
+            let ls1SecondCoord = simplifiedLinearRing1[ls1FirstCoordIndex + 1]
+            let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
+            let firstBoundary = (ls1FirstCoordIndex == 0)
+
+            var graphItem11 = findOrCreateGraphItem(ls1FirstCoord, &graph)
+            var graphItem12 = findOrCreateGraphItem(ls1SecondCoord, &graph)
+            addToEachOther(&graphItem11, &graphItem12)
+
+            for ls2FirstCoordIndex in 0..<simplifiedLinearRing2.count - 1 {
+                let ls2FirstCoord  = simplifiedLinearRing2[ls2FirstCoordIndex]
+                let ls2SecondCoord = simplifiedLinearRing2[ls2FirstCoordIndex + 1]
+                let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
+                let secondBoundary = (ls2FirstCoordIndex == simplifiedLinearRing2.count - 2)
+                let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
+
+                var graphItem21 = findOrCreateGraphItem(ls2FirstCoord, &graph)
+                var graphItem22 = findOrCreateGraphItem(ls2SecondCoord, &graph)
+                addToEachOther(&graphItem21, &graphItem22)
+
+                /// Now add other coordinates to the graph, depending on the type of intersection.
+                /// If there is no intersection, we do nothing.
+                if let point = lineSegmentIntersection.geometry as? Point {
+                    addGraphItem(point.coordinate, [ls1FirstCoord, ls1SecondCoord, ls2FirstCoord, ls2SecondCoord], &graph)
+                } else if let lineString = lineSegmentIntersection.geometry as? LineString {
+                    /// There should be just one segment to this line string.
+                    guard lineString.count == 2 else {
+                        /// This should never happen
+                        return defaultReturn
+                    }
+                    let intersectionSegment = Segment(left: lineString[0], right: lineString[1])
+                    addGraphItem(intersectionSegment.leftCoordinate, [ls1FirstCoord, ls1SecondCoord, ls2FirstCoord, ls2SecondCoord], &graph)
+                    addGraphItem(intersectionSegment.rightCoordinate, [ls1FirstCoord, ls1SecondCoord, ls2FirstCoord, ls2SecondCoord], &graph)
+                }
+            }
+        }
+
+        /// Build the combined linear ring.
+        /// Find the starting coordinate.  This will be the coordinate with the lowest y value.
+        /// If multiple, the one with the lowest x value will be chosen.
+        var newLinearRing = LinearRing()
+        var startingCoordinate = graph[0].coordinate
+        var startingGraphItem = graph[0]
+        for graphItem in graph {
+            if graphItem.coordinate.y < startingCoordinate.y {
+                startingCoordinate = graphItem.coordinate
+                startingGraphItem = graphItem
+            } else if (graphItem.coordinate.y == startingCoordinate.y) && (graphItem.coordinate.x < startingCoordinate.x) {
+                startingCoordinate = graphItem.coordinate
+                startingGraphItem = graphItem
+            }
+        }
+        newLinearRing.append(startingCoordinate)
+
+        /// TBD: Will need to add code to keep track of paths traversed.
+        var previousAngle = 0.0
+        var currentGraphItem = startingGraphItem
+        var firstTime = true
+        repeat {
+            guard currentGraphItem.relatedGraphItemArray.count > 0 else {
+                /// This should never happen.  Something's wrong.
+                return defaultReturn
+            }
+            var currentRelatedGraphItem = currentGraphItem.relatedGraphItemArray[0]
+            if firstTime {
+                for relatedGraphItem in currentGraphItem.relatedGraphItemArray {
+                    if (relatedGraphItem.angle > currentRelatedGraphItem.angle) ||
+                        ((relatedGraphItem.angle == currentRelatedGraphItem.angle) && (relatedGraphItem.distance < currentRelatedGraphItem.distance)) {
+                        currentRelatedGraphItem = relatedGraphItem
+                    }
+                }
+                newLinearRing.append(currentRelatedGraphItem.coordinate)
+                firstTime = false
+                previousAngle = currentRelatedGraphItem.angle /// Radians
+                guard let tempGraphItem = findGraphItem(currentRelatedGraphItem.coordinate, graph) else {
+                    /// This should never happen.  Something's wrong.
+                    return defaultReturn
+                }
+                currentGraphItem = tempGraphItem
+            } else {
+                /// Not first time through
+                var currentAngle: Double /// Radians
+                for relatedGraphItem in currentGraphItem.relatedGraphItemArray {
+                    currentAngle = relatedGraphItem.angle + Double.pi - previousAngle
+                    if (currentAngle > previousAngle) ||
+                        ((currentAngle == previousAngle) && (relatedGraphItem.distance < currentRelatedGraphItem.distance)) {
+                        currentRelatedGraphItem = relatedGraphItem
+                        previousAngle = currentAngle
+                    }
+                }
+                newLinearRing.append(currentRelatedGraphItem.coordinate)
+                previousAngle = currentRelatedGraphItem.angle /// Radians
+                guard let tempGraphItem = findGraphItem(currentRelatedGraphItem.coordinate, graph) else {
+                    /// This should never happen.  Something's wrong.
+                    return defaultReturn
+                }
+                currentGraphItem = tempGraphItem
+            }
+        } while currentGraphItem.coordinate != startingCoordinate
+
+        /// The starting coordinate was reached, and we have a complete new linear ring.  Return it.
+        return [newLinearRing]
     }
 
     fileprivate func generateIntersection(_ linearRing: LinearRing, _ multiLineString: MultiLineString) -> Geometry {
@@ -4142,33 +5770,564 @@ fileprivate func generateIntersection(_ points: MultiPoint, _ multiLineString: M
         return geometryCollection
     }
 
-//    ///
-//    /// Dimension .two and dimension .two
-//    ///
+    ///
+    /// Dimension .two and dimension .two
+    ///
+
+    ///
+    /// Returns the outer linear rings of a multi polygon.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - multiPolygon: The multi polygon whose outer linear rings we are to find and return.
+    ///
+    ///  - returns: The array of linear rings belonging to the multi polygon.
+    ///
+    fileprivate func outerLinearRings(_ multiPolygon: MultiPolygon) -> [LinearRing] {
+
+        var resultLinearRingArray = [LinearRing]()
+        for polygon in multiPolygon {
+            resultLinearRingArray.append(polygon[0])
+        }
+        return resultLinearRingArray
+    }
+
+    ///
+    /// Finds the multipoint in a geometry collection.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - geometryCollection: The geometry collection from which to get the multipoint.
+    ///
+    ///  - returns: The multipoint in the geometry collection.
+    ///
+    fileprivate func getMultiPoint(_ geometryCollection: GeometryCollection) -> MultiPoint? {
+        for geometry in geometryCollection {
+            if let multiPointGeometry = geometry as? MultiPoint {
+                return multiPointGeometry
+            }
+        }
+        return nil
+    }
+
+    ///
+    /// Finds the multilinestring in a geometry collection.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - geometryCollection: The geometry collection from which to get the multilinestring.
+    ///
+    ///  - returns: The multilinestring in the geometry collection.
+    ///
+    fileprivate func getMultiLineString(_ geometryCollection: GeometryCollection) -> MultiLineString? {
+        for geometry in geometryCollection {
+            if let multiLineStringGeometry = geometry as? MultiLineString {
+                return multiLineStringGeometry
+            }
+        }
+        return nil
+    }
+
+    ///
+    /// Finds the multipolygon in a geometry collection.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - geometryCollection: The geometry collection from which to get the multipolygon.
+    ///
+    ///  - returns: The multipolygon in the geometry collection.
+    ///
+    fileprivate func getMultiPolygon(_ geometryCollection: GeometryCollection) -> MultiPolygon? {
+        for geometry in geometryCollection {
+            if let multipolygonGeometry = geometry as? MultiPolygon {
+                return multipolygonGeometry
+            }
+        }
+        return nil
+    }
+
+    ///
+    /// Removes the values of an array at the index values specified in an array.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRingArray: The linear ring array whose values will be removed.
+    ///     - indexValuesArray: The array of indices that should be removed from the linear ring array
+    ///
+    ///  - returns: The array of linear rings minus the ones removed.
+    ///
+    fileprivate func removeAtIndices(_ linearRingArray: [LinearRing], _ indexValuesArray: [Int]) -> [LinearRing] {
+        var newLinearRingArray = [LinearRing]()
+        for index in 0..<linearRingArray.count {
+            if !indexValuesArray.contains(index) {
+                newLinearRingArray.append(linearRingArray[index])
+            }
+        }
+        return newLinearRingArray
+    }
+
+    ///
+    /// Determines if two linear rings are topologically equal.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - linearRing1: The first linear ring
+    ///     - linearRing2: The second linear ring
+    ///
+    ///  - returns: A boolean indicating whether the two linear rings are topoligically equal.
+    ///
+    fileprivate func linearRingsMatchTopo(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> Bool {
+
+        let simplifiedLinearRing1 = linearRing1.simplify(tolerance: 1.0)
+        let simplifiedLinearRing2 = linearRing2.simplify(tolerance: 1.0)
+        if simplifiedLinearRing1.count != simplifiedLinearRing1.count { return false }
+
+        let count = simplifiedLinearRing1.count
+        if count == 0 {
+            return true
+        } else if count == 1 {
+            return simplifiedLinearRing1[0] == simplifiedLinearRing2[0]
+        } else {
+            /// Reaching this point means there are two linear rings with at least two coordinates each.
+            /// The main feature of a linear ring is that it is closed.
+            /// This means two linear rings could match topologically even though they start and stop at different coordinates.
+            /// We must compare the two linear rings by having them start at the same coordinate.
+            /// We do this by first collecting all the indexes from the second linear ring that matches the
+            /// starting coordinate of the first linear ring, ignoring the duplicated final coordinate.
+            /// Using each of these indexes, we then compare coordinates in both the forward and backward directions
+            /// to see if any of the complete set or coordinates match.  If they, do return true, else return false.
+
+            /// Get the starting coordinate of the first linear ring, and then find all indexes of the same
+            /// coordinate in the second line string.  This will be an array of integers.
+            /// Ignore the final coordinate.
+            let firstCoordinate = simplifiedLinearRing1[0]
+            var matchingFirstCoordinateArray = [Int]()
+            for index in 0..<(simplifiedLinearRing2.count - 1) {
+                let coordinate = simplifiedLinearRing2[index]
+                if coordinate == firstCoordinate {
+                    matchingFirstCoordinateArray.append(index)
+                }
+            }
+
+            /// For each coordinate in the second linear ring that matches the starting coordinate of the first,
+            /// we now check, in both directions, whether the sequence of coordinates in the second matches those of the first.
+            /// Note we have to do this carefully because the starting coordinate and ending coordinate of the
+            /// linear rings are the same.  Ignore the final coordinate of both linear rings.
+            for startingIndex in matchingFirstCoordinateArray {
+
+                /// Check the coordinates match in the forward direction.
+                var allCoordinatesMatch = true
+                for index1 in 1..<(count - 1) {
+                    let index2 = (startingIndex + index1) % (count - 1)
+                    if simplifiedLinearRing1[index1] != simplifiedLinearRing2[index2] {
+                        allCoordinatesMatch = false
+                        break
+                    }
+                }
+                if allCoordinatesMatch { return true }
+
+                /// Now see if the linear rings match when comparing coordinates in the reverse direction.
+                allCoordinatesMatch = true
+                for index1 in 1..<(count - 1) {
+                    var index2 = (startingIndex - index1)
+                    if index2 < 0 { index2 += (count - 1) }
+                    if simplifiedLinearRing1[index1] != simplifiedLinearRing2[index2] {
+                        allCoordinatesMatch = false
+                        break
+                    }
+                }
+                if allCoordinatesMatch { return true }
+            }
+
+            return false
+        }
+    }
+
+    ///
+    /// Simplifies various geometries and combines them into a geometry collection.
+    ///
+    /// This was developed to help to determine the intersection between two Polygons.
+    ///
+    /// - parameters:
+    ///     - multiPoint: A multipoint geometry.
+    ///     - multiLineString: A multilinestring geometry.
+    ///     - multiPolygon: A multiPolygon geometry.
+    ///
+    ///  - returns: A GeometryCollection, which will consist of at most three items: a MultiPoint, a MultiLineString, and a MultiPolygon.
+    ///             These are the items represent the intersection of the two linear rings.
+    ///
+    fileprivate func cleanupGeometries(_ multiPoint: MultiPoint?, _ multiLineString: MultiLineString?, _ multiPolygon: MultiPolygon? = nil) -> GeometryCollection {
+
+        /// Simplify the multilinestring
+        var simplifiedMultiLineString = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+        if let multiLineStringGeometry = multiLineString {
+            simplifiedMultiLineString = multiLineStringGeometry.simplify(tolerance: 1.0)
+        }
+
+        /// Simplify the multipolygon
+        var finalMultiPolygon = MultiPolygon(precision: Floating(), coordinateSystem: Cartesian())
+        if let multiPolygonGeometry = multiPolygon {
+            finalMultiPolygon = multiPolygonGeometry.simplify(tolerance: 1.0)
+        }
+
+        /// Remove all Points that are duplicated or are contained in one of the LineStrings or in the MultiPolygon.
+        var finalMultiPoint = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+        if let multiPointGeometry = multiPoint {
+            let simplifiedMultiPoint = multiPointGeometry.simplify(tolerance: 1.0)
+            for tempPoint in simplifiedMultiPoint {
+
+                if let _ = intersection(tempPoint, simplifiedMultiLineString) as? GeometryCollection {
+                    if let _ = intersection(tempPoint, finalMultiPolygon) as? GeometryCollection {
+                        finalMultiPoint.append(tempPoint)
+                    }
+                }
+            }
+        }
+
+        /// Remove all LineStrings that are duplicated or are contained in the MultiPolygon boundary.
+        var finalMultiLineString = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+        if finalMultiPolygon.count == 0 {
+            finalMultiLineString = simplifiedMultiLineString
+        } else {
+            let multiPolygonBoundary = finalMultiPolygon.boundary() as! GeometryCollection
+            for lineString in simplifiedMultiLineString {
+                var lineStringMatches = false
+                for case let linearRing as LinearRing in multiPolygonBoundary {
+                    if subset(lineString, linearRing) {
+                        lineStringMatches = true
+                        break
+                    }
+                }
+                if !lineStringMatches {
+                    finalMultiLineString.append(lineString)
+                }
+            }
+        }
+
+        /// Build the final GeometryCollection that will be returned.
+        var geometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        if finalMultiPoint.count > 0 {
+            geometryCollection.append(finalMultiPoint)
+        }
+        if finalMultiLineString.count > 0 {
+            geometryCollection.append(finalMultiLineString)
+        }
+        if finalMultiPolygon.count > 0 {
+            geometryCollection.append(finalMultiPolygon)
+        }
+
+        return geometryCollection
+    }
+
+    fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) -> Geometry {
+
+        /// Simplify each geometry first
+        let simplifiedPolygon1 = polygon1.simplify(tolerance: 1.0)
+        let simplifiedPolygon2 = polygon2.simplify(tolerance: 1.0)
+
+        /// Calculate the intersection of the polygons.
+        /// The returned value will be a GeometryCollection, which may be empty.
+        /// The GeometryCollection may contain three values, a MultiPoint, a MultiLineString, and a MultiPolygon.
+        /// The MultiPoint will contain all the Points, the MultiLineString will contain all the LineStrings, and
+        /// the MultiPolygon will contain all the Polygons.
+        /// The MultiPoint, MultiLineString, and MultiPolygon will only be in the GeometryCollection if they are non-empty.
+
+        /// Start by finding the intersection of the two main linear rings
+        var intersectionStatus = IntersectionStatus()
+        guard var geometryCollection = generateIntersectionAsSimplePolygons(simplifiedPolygon1[0], simplifiedPolygon2[0], status: &intersectionStatus) as? GeometryCollection else {
+            return GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        }
+
+        /// If there is no intersection, we are done.
+        if geometryCollection.count == 0 {
+            return geometryCollection
+        }
+
+        /// If there is no polygon intersection, only point and line string intersection, we are done.
+        let multipolygonIntersection = getMultiPolygon(geometryCollection)
+        if multipolygonIntersection == nil {
+            return geometryCollection
+        }
+        var multiPolygonOuterLinearRings = outerLinearRings(multipolygonIntersection!)
+
+        /// The two outer linear rings, main polygons, intersect on a two-dimensional section which is a multipolygon.
+        /// Check for holes, or portions of holes, in the first polygon that are also in the intersection multipolygon.
+        /// Keep track of which polygon in the multipolygon each hole belongs to, so holes in each polygon can be combined.
+        /// We do this by keeping track of a set of linear rings for each polygon in the multipolygon intersection.
+        /// Note some or all of these may be empty.
+        /// Note, also, that the intersection multipolygon at this point does not have any holes.
+        var done = false
+        var multiPolygonGeometry = MultiPolygon(precision: Floating(), coordinateSystem: Cartesian())
+        var potentialLinearRingHoles = [[LinearRing]]()
+        for _ in 0..<multiPolygonOuterLinearRings.count {
+            potentialLinearRingHoles.append([LinearRing]())
+        }
+        var outerLingRingIndicesToRemove = [Int]()
+        let holes1 = holes(simplifiedPolygon1)
+        for holeLinearRing in holes1 {
+            if !done {
+                for index in 0..<multiPolygonOuterLinearRings.count {
+                    let multiPolygonOuterLinearRing = multiPolygonOuterLinearRings[index]
+                    /// Get the intersection of each hole with the multi polygon.
+                    /// Each of the resulting two-dimensional intersections will be a potential hole in the multi polygon.
+                    var intersectionStatus = IntersectionStatus()
+                    guard let tempGeometryCollection = generateIntersectionAsSimplePolygons(holeLinearRing, multiPolygonOuterLinearRing, isHole1: true, status: &intersectionStatus) as? GeometryCollection else {
+                        /// This should not happen
+                        return GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+                    }
+                    if intersectionStatus.secondPolygonInsideFirst {
+                        outerLingRingIndicesToRemove.append(index)
+                        /// One polgyon is inside the hole of another, but the hole and polygon may touch at a point or line string.
+                        done = true
+                        var finalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+                        if let multiPoint = getMultiPoint(tempGeometryCollection) {
+                            finalGeometryCollection.append(multiPoint)
+                        }
+                        if let multiLineString = getMultiLineString(tempGeometryCollection) {
+                            finalGeometryCollection.append(multiLineString)
+                        }
+                        geometryCollection = finalGeometryCollection
+                        break
+                    }
+                    if let multiPolygon = getMultiPolygon(tempGeometryCollection) {
+                        let potentialHolesOuterLinearRings = outerLinearRings(multiPolygon)
+                        /// Check for the special case that one polygon is completely contained in a hole of the other polygon.
+                        if (multiPolygonOuterLinearRings.count == 1) && (potentialHolesOuterLinearRings.count == 1) {
+//                            if linearRingsMatchTopo(multiPolygonOuterLinearRing, potentialHolesOuterLinearRings[0]) {
+//                                /// One polgyon is inside the hole of another, but the hole and polygon may touch at a point or line string.
+//                                done = true
+//                                var finalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+//                                if let multiPoint = getMultiPoint(tempGeometryCollection) {
+//                                    finalGeometryCollection.append(multiPoint)
+//                                }
+//                                if let multiLineString = getMultiLineString(tempGeometryCollection) {
+//                                    finalGeometryCollection.append(multiLineString)
+//                                }
+//                                geometryCollection = finalGeometryCollection
+//                                break
+//                            } else
+                            if linearRingsMatchTopo(holeLinearRing, potentialHolesOuterLinearRings[0]) {
+                                /// potentialHolesOuterLinearRings[0] is just a hole. Do nothing.
+                            } else {
+                                /// The holeLinearRing has been subtracted from the multiPolygonOuterLinearRing, and the remaining portion
+                                /// has been returned as potentialHolesOuterLinearRings[0].  This is true because outer linear rings are
+                                /// arranged clockwise and holes counter clockwise.
+                                done = true
+                                var finalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+                                if let multiPoint = getMultiPoint(tempGeometryCollection) {
+                                    finalGeometryCollection.append(multiPoint)
+                                }
+                                if let multiLineString = getMultiLineString(tempGeometryCollection) {
+                                    finalGeometryCollection.append(multiLineString)
+                                }
+                                multiPolygonGeometry.append(Polygon(potentialHolesOuterLinearRings[0]))
+                                geometryCollection = finalGeometryCollection
+                                break
+                            }
+                        }
+                        potentialLinearRingHoles[index] += potentialHolesOuterLinearRings
+                    }
+                }
+            }
+        }
+
+        if !done {
+            let sorted = outerLingRingIndicesToRemove.sorted(by: { $1 < $0 })
+            for index in sorted {
+                multiPolygonOuterLinearRings.remove(at: index)
+            }
+            outerLingRingIndicesToRemove = [Int]()
+        }
+
+        /// Check for holes in the second polygon that overlap with the intersection multipolygon.
+        let holes2 = holes(simplifiedPolygon2)
+        if !done {
+            for holeLinearRing in holes2 {
+                if !done {
+                    for index in 0..<multiPolygonOuterLinearRings.count {
+                        let multiPolygonOuterLinearRing = multiPolygonOuterLinearRings[index]
+                        /// Get the intersection of each hole with the multi polygon.
+                        /// Each of the resulting two-dimensional intersections will be a potential hole in the multi polygon.
+                        var intersectionStatus = IntersectionStatus()
+                        guard let tempGeometryCollection = generateIntersectionAsSimplePolygons(holeLinearRing, multiPolygonOuterLinearRing, isHole1: true, status: &intersectionStatus) as? GeometryCollection else {
+                            return GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+                        }
+                        if intersectionStatus.secondPolygonInsideFirst {
+                            outerLingRingIndicesToRemove.append(index)
+                            /// One polgyon is inside the hole of another, but the hole and polygon may touch at a point or line string.
+                            done = true
+                            var finalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+                            if let multiPoint = getMultiPoint(tempGeometryCollection) {
+                                finalGeometryCollection.append(multiPoint)
+                            }
+                            if let multiLineString = getMultiLineString(tempGeometryCollection) {
+                                finalGeometryCollection.append(multiLineString)
+                            }
+                            geometryCollection = finalGeometryCollection
+                            break
+                        }
+                        if let multiPolygon = getMultiPolygon(tempGeometryCollection) {
+                            let potentialHolesOuterLinearRings = outerLinearRings(multiPolygon)
+                            /// Check for the special case that one polygon is completely contained in a hole of the other polygon.
+                            if (multiPolygonOuterLinearRings.count == 1) && (potentialHolesOuterLinearRings.count == 1) {
+//                                if linearRingsMatchTopo(multiPolygonOuterLinearRing, potentialHolesOuterLinearRings[0]) {
+//                                    /// One polgyon is inside the hole of another, but the hole and polygon may touch at a point or line string.
+//                                    done = true
+//                                    var finalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+//                                    if let multiPoint = getMultiPoint(tempGeometryCollection) {
+//                                        finalGeometryCollection.append(multiPoint)
+//                                    }
+//                                    if let multiLineString = getMultiLineString(tempGeometryCollection) {
+//                                        finalGeometryCollection.append(multiLineString)
+//                                    }
+//                                    geometryCollection = finalGeometryCollection
+//                                    break
+//                                } else
+                                if linearRingsMatchTopo(holeLinearRing, potentialHolesOuterLinearRings[0]) {
+                                    /// potentialHolesOuterLinearRings[0] is just a hole. Do nothing.
+                                } else {
+                                    /// The holeLinearRing has been subtracted from the multiPolygonOuterLinearRing, and the remaining portion
+                                    /// has been returned as potentialHolesOuterLinearRings[0].  This is true because outer linear rings are
+                                    /// arranged clockwise and holes counter clockwise.
+                                    done = true
+                                    var finalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+                                    if let multiPoint = getMultiPoint(tempGeometryCollection) {
+                                        finalGeometryCollection.append(multiPoint)
+                                    }
+                                    if let multiLineString = getMultiLineString(tempGeometryCollection) {
+                                        finalGeometryCollection.append(multiLineString)
+                                    }
+                                    multiPolygonGeometry.append(Polygon(potentialHolesOuterLinearRings[0]))
+                                    geometryCollection = finalGeometryCollection
+                                    break
+                                }
+                            }
+                            potentialLinearRingHoles[index] += potentialHolesOuterLinearRings
+                        }
+                    }
+                }
+            }
+        }
+        
+        if !done {
+            let sorted = outerLingRingIndicesToRemove.sorted(by: { $1 < $0 })
+            for index in sorted {
+                multiPolygonOuterLinearRings.remove(at: index)
+            }
+        }
+
+        /// Combine all holes into larger holes, if possible. This will generate a final set of holes.
+        /// Potential holes will be combined per each polygon in the intersection multipolygon.
+        if !done {
+            var finalLinearRingHoles = [[LinearRing]]()
+            for _ in 0..<multiPolygonOuterLinearRings.count {
+                finalLinearRingHoles.append([LinearRing]())
+            }
+            for polygonIndex in 0..<potentialLinearRingHoles.count {
+                var potentialLinearRingHolesForPolygon = potentialLinearRingHoles[polygonIndex]
+                if potentialLinearRingHolesForPolygon.count < 2 {
+                    finalLinearRingHoles[polygonIndex] = potentialLinearRingHolesForPolygon
+                    continue
+                }
+
+                /// We have at least two potential holes that can be combined.
+                while potentialLinearRingHolesForPolygon.count >= 2 {
+                    var indicesOfRemovedLinearRingHoles = [Int]()
+                    let index1 = 0
+                    var indicesToCheck = [Int]()
+                    for tempIndex in 1..<potentialLinearRingHolesForPolygon.count {
+                        indicesToCheck.append(tempIndex)
+                    }
+                    var firstHole = potentialLinearRingHolesForPolygon[index1]
+                    indicesOfRemovedLinearRingHoles.append(index1)
+                    var holesWereCombined = false
+                    var firstTime = true
+                    while (firstTime || holesWereCombined) && indicesToCheck.count > 0 {
+                        firstTime = false
+                        holesWereCombined = false
+                        var nextIndicesToCheck = [Int]()
+                        for index2 in indicesToCheck {
+                            let secondHole = potentialLinearRingHolesForPolygon[index2]
+                            let unionLinearRings = generateUnion(firstHole, secondHole)
+                            if unionLinearRings.count == 1 {
+                                /// Holes were combined
+                                holesWereCombined = true
+                                firstHole = unionLinearRings[0]
+                                indicesOfRemovedLinearRingHoles.append(index2)
+                            } else {
+                                /// Holes were not combined
+                                nextIndicesToCheck.append(index2)
+                            }
+                        }
+                        indicesToCheck = nextIndicesToCheck
+                    }
+                    finalLinearRingHoles[polygonIndex].append(firstHole)
+                    potentialLinearRingHolesForPolygon = removeAtIndices(potentialLinearRingHolesForPolygon, indicesOfRemovedLinearRingHoles)
+                }
+                if potentialLinearRingHolesForPolygon.count == 1 {
+                    finalLinearRingHoles[polygonIndex].append(potentialLinearRingHolesForPolygon[0])
+                }
+            }
+
+            /// Build the final polygons and multipolygon
+            for index in 0..<multiPolygonOuterLinearRings.count {
+                let outerLinearRing = multiPolygonOuterLinearRings[index]
+                let holes = finalLinearRingHoles[index]
+                var polygon: Polygon
+                if holes.count > 0 {
+                    polygon = Polygon(outerLinearRing, innerRings: holes)
+                } else {
+                    polygon = Polygon(outerLinearRing)
+                }
+                multiPolygonGeometry.append(polygon)
+            }
+        }
+
+        /// Simplify the LineStrings in the MultiLineString to minimize the total number of LineStrings.
+//        var finalMultiLineStringGeometry = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
+//        if let multiLineStringGeometry = getMultiLineString(geometryCollection) {
+//            finalMultiLineStringGeometry = multiLineStringGeometry.simplify(tolerance: 1.0)
+//        }
 //
-//    fileprivate static func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) -> IntersectionMatrix {
+//        /// Remove all Points that are duplicated or are contained in one of the LineStrings.
+//        var finalMultiPointGeometry = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
+//        if let multiPointGeometry = getMultiPoint(geometryCollection) {
+//            let simplifiedMultiPoint = multiPointGeometry.simplify(tolerance: 1.0)
 //
-//        /// Default intersection matrix
-//        var matrixIntersects = IntersectionMatrix()
+//            if finalMultiLineStringGeometry.count > 0 {
+//                for tempPoint in simplifiedMultiPoint {
 //
-//        let relatedTo = relatedToFull(polygon1, polygon2)
+//                    if let _ = intersection(tempPoint, finalMultiLineStringGeometry) as? GeometryCollection {
+//                        finalMultiPointGeometry.append(tempPoint)
+//                    }
+//                }
+//            }
+//        }
 //
-//        matrixIntersects[.interior, .interior] = relatedTo.firstInteriorTouchesSecondInterior
-//        matrixIntersects[.interior, .boundary] = relatedTo.firstInteriorTouchesSecondBoundary
-//        matrixIntersects[.interior, .exterior] = relatedTo.firstInteriorTouchesSecondExterior
-//
-//        matrixIntersects[.boundary, .interior] = relatedTo.firstBoundaryTouchesSecondInterior
-//        matrixIntersects[.boundary, .boundary] = relatedTo.firstBoundaryTouchesSecondBoundary
-//        matrixIntersects[.boundary, .exterior] = relatedTo.firstBoundaryTouchesSecondExterior
-//
-//        matrixIntersects[.exterior, .interior] = relatedTo.firstExteriorTouchesSecondInterior
-//        matrixIntersects[.exterior, .boundary] = relatedTo.firstExteriorTouchesSecondBoundary
-//        matrixIntersects[.exterior, .exterior] = relatedTo.firstExteriorTouchesSecondExterior
-//
-//        /// No intersection
-//        return matrixIntersects
-//    }
-//
+//        /// Build the final GeometryCollection that will be returned.
+//        var finalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+//        if finalMultiPointGeometry.count > 0 {
+//            finalGeometryCollection.append(finalMultiPointGeometry)
+//        }
+//        if finalMultiLineStringGeometry.count > 0 {
+//            finalGeometryCollection.append(finalMultiLineStringGeometry)
+//        }
+//        if multiPolygonGeometry.count > 0 {
+//            finalGeometryCollection.append(multiPolygonGeometry)
+//        }
+
+        /// Clean up and return
+        let multiPointGeometry = getMultiPoint(geometryCollection)
+        let multiLineStringGeometry = getMultiLineString(geometryCollection)
+        return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+    }
+
 //    fileprivate static func generateIntersection(_ polygon: Polygon, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 //
 //        var matrixIntersects = IntersectionMatrix()

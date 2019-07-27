@@ -41,12 +41,12 @@ extension MultiPolygon {
     /// - Note: The boundary of a MultiPolygon is a set of closed Curves (LineStrings) corresponding to the boundaries of its element Polygons. Each Curve in the boundary of the MultiPolygon is in the boundary of exactly 1 element Polygon, and every Curve in the boundary of an element Polygon is in the boundary of the MultiPolygon.
     ///
     public func boundary() -> Geometry {
-        var boundary = MultiLineString(precision: self.precision, coordinateSystem: self.coordinateSystem)
+        var boundary = GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
         for i in 0..<self.count {
-            if let elementBoundary = self[i].boundary() as? MultiLineString {
-                for lineString in elementBoundary {
-                    boundary.append(lineString)
+            if let elementBoundary = self[i].boundary() as? GeometryCollection {
+                for linearRings in elementBoundary {
+                    boundary.append(linearRings)
                 }
             }
         }
