@@ -4643,6 +4643,9 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
                 if onTuple1 {
                     currentIntersectionIndexTuple1 += 1
                     guard currentIntersectionIndexTuple1 < finalLinearRingTuple1.count else {
+                        /// We have gone beyond the limits of the tuple.  Loop back to first tuple,
+                        /// which should be the same as the last one.
+                        currentIntersectionIndexTuple1 = 0
                         continue
                     }
                     (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple1[currentIntersectionIndexTuple1]
@@ -4650,6 +4653,9 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
                 } else {
                     currentIntersectionIndexTuple2 += 1
                     guard currentIntersectionIndexTuple2 < finalLinearRingTuple2.count else {
+                        /// We have gone beyond the limits of the tuple.  Loop back to first tuple,
+                        /// which should be the same as the last one.
+                        currentIntersectionIndexTuple2 = 0
                         continue
                     }
                     (coordinate, intersectionCoordinateFlag, inboundFlag) = finalLinearRingTuple2[currentIntersectionIndexTuple2]

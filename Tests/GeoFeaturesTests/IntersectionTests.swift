@@ -8413,6 +8413,21 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testPolygon_Polygon_withHoles_overlapButHolesOutside() {
+
+        let geometry1 = Polygon([Coordinate(x: 10.0, y: 0.0), Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: 2.0)], innerRings: [[Coordinate(x: 1.0, y: 7.0), Coordinate(x: 2.0, y: 7.0), Coordinate(x: 2.0, y: 8.0), Coordinate(x: 1.0, y: 8.0), Coordinate(x: 1.0, y: 7.0)]], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 8.0, y: 0.0), Coordinate(x: 8.0, y: 8.0), Coordinate(x: 20.0, y: 8.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 8.0, y: 0.0)], innerRings: [[Coordinate(x: 16.0, y: 6.0), Coordinate(x: 14.0, y: 6.0), Coordinate(x: 14.0, y: 4.0), Coordinate(x: 16.0, y: 4.0), Coordinate(x: 16.0, y: 6.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPolygon([Polygon([Coordinate(x: 10.0, y: 8.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 8.0, y: 0.0), Coordinate(x: 8.0, y: 8.0), Coordinate(x: 10.0, y: 8.0)], precision: precision, coordinateSystem: cs)]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
 //    ///
 //    /// Polygon MultiPolygon tests
 //    ///
