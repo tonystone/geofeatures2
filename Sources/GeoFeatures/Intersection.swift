@@ -559,6 +559,16 @@ fileprivate func generateIntersection(_ point: Point, _ multiLineString: MultiLi
     return GeometryCollection()
 }
 
+fileprivate func subset(_ coordinate: Coordinate, _ multiPoint: MultiPoint) -> Bool {
+
+    for point in multiPoint {
+        if coordinate == point.coordinate {
+            return true
+        }
+    }
+    return false
+}
+
 //    fileprivate static func subset(_ coordinate: Coordinate, _ coordinates: [Coordinate]) -> Bool {
 //
 //        for tempCoordinate in coordinates {
@@ -594,23 +604,23 @@ fileprivate func generateIntersection(_ point: Point, _ multiLineString: MultiLi
 //        }
 //        return false
 //    }
-//
-//    fileprivate static func subset(_ coordinate: Coordinate, _ multiLineString: MultiLineString) -> Bool {
-//
-//        for lineString in multiLineString {
-//            for firstCoordIndex in 0..<lineString.count - 1 {
-//                let firstCoord  = lineString[firstCoordIndex]
-//                let secondCoord = lineString[firstCoordIndex + 1]
-//                let segment = Segment(left: firstCoord, right: secondCoord)
-//                let location = coordinateIsOnLineSegment(coordinate, segment: segment)
-//                if location == .onInterior || location == .onBoundary {
-//                    return true
-//                }
-//            }
-//        }
-//        return false
-//    }
-//
+
+    fileprivate func subset(_ coordinate: Coordinate, _ multiLineString: MultiLineString) -> Bool {
+
+        for lineString in multiLineString {
+            for firstCoordIndex in 0..<lineString.count - 1 {
+                let firstCoord  = lineString[firstCoordIndex]
+                let secondCoord = lineString[firstCoordIndex + 1]
+                let segment = Segment(left: firstCoord, right: secondCoord)
+                let location = coordinateIsOnLineSegment(coordinate, segment: segment)
+                if location == .onInterior || location == .onBoundary {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
 //    fileprivate static func relatedTo(_ coordinates: [Coordinate], _ lineString: LineString) -> RelatedTo {
 //
 //        var relatedTo = RelatedTo()
@@ -2670,7 +2680,6 @@ fileprivate func boundingBoxesOverlap1D(range1: (Double, Double), range2: (Doubl
 
 ///
 /// Check if the bounding boxes overlap for two line segments
-///
 fileprivate func boundingBoxesOverlap2D(segment: Segment, other: Segment) -> Bool {
     let range1x = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
     let range1y = (Swift.min(segment.leftCoordinate.y, segment.rightCoordinate.y), Swift.max(segment.leftCoordinate.y, segment.rightCoordinate.y))
@@ -3151,6 +3160,23 @@ fileprivate func subset(_ segment1: Segment, _ segment2: Segment) -> Bool {
     } else {
         return false
     }
+}
+
+/// Is the segment contained in or a subset of the ine string?
+/// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
+fileprivate func subset(_ segment: Segment, _ lineString: LineString) -> Bool {
+
+    for lsFirstCoordIndex in 0..<lineString.count - 1 {
+        let lsFirstCoord  = lineString[lsFirstCoordIndex]
+        let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
+        let segment2 = Segment(left: lsFirstCoord, right: lsSecondCoord)
+
+        if subset(segment, segment2) {
+            return true
+        }
+    }
+
+    return false
 }
 
 //    /// Is line string 1 contained in or a subset of line string 2?
@@ -4456,6 +4482,20 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
     var multiLineStringGeometry = MultiLineString(precision: Floating(), coordinateSystem: Cartesian())
     var multiPolygonGeometry = MultiPolygon(precision: Floating(), coordinateSystem: Cartesian())
 
+    /// Get the intersection of the two linear rings.
+    let resultGeometry = generateIntersection(linearRing1, linearRing2)
+    guard let resultGeometryCollection = resultGeometry as? GeometryCollection else {
+        return GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+    }
+    let resultMultiPoint = getMultiPoint(resultGeometryCollection)
+    let resultMultiLineString = getMultiLineString(resultGeometryCollection)
+    var resultMultiLineStringEndPoints = MultiPoint()
+    if let tempMultiLineString = resultMultiLineString {
+        if let boundary = tempMultiLineString.boundary() as? MultiPoint {
+            resultMultiLineStringEndPoints = boundary
+        }
+    }
+
     /// Find and collect all intersections that will consist of LineStrings or Points.
     /// Also, generate two new linear rings that will consist of the original linear ring points
     /// plus all intersection points inserted into their correct positions in a clockwise sequence.
@@ -4480,16 +4520,40 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
 
             /// Check for a LineString or Point intersection or no intersection.
             if let lineString = lineSegmentIntersection.geometry as? LineString {
-                multiLineStringGeometry.append(lineString)
                 guard lineString.count == 2 else { continue }
-                intersectionCoordinates.append(lineString[0])
-                intersectionCoordinates.append(lineString[1])
+                if isHole1 && !isHole2 {
+                    if let tempMultiLineString = resultMultiLineString {
+                        if subset(lineString, tempMultiLineString) {
+                            /// The line string segment is part of a hole boundary, so don't include it in the final set of line segments or strings.
+                            /// Do, however, include the end coordinates of the line string as intersection coordinates.
+                            let firstCoordinate = lineString[0]
+                            let lastCoordinate = lineString[lineString.count - 1]
+                            if subset(firstCoordinate, resultMultiLineStringEndPoints) { intersectionCoordinates.append(firstCoordinate) }
+                            if subset(lastCoordinate, resultMultiLineStringEndPoints) { intersectionCoordinates.append(lastCoordinate) }
+                        }
+                    }
+                } else {
+                    multiLineStringGeometry.append(lineString)
+                    intersectionCoordinates.append(lineString[0])
+                    intersectionCoordinates.append(lineString[1])
+                }
             } else if let point = lineSegmentIntersection.geometry as? Point {
-                multiPointGeometry.append(point)
+                if isHole1 && !isHole2 {
+                    if let tempMultiLineString = resultMultiLineString {
+                        if !subset(point.coordinate, tempMultiLineString) {
+                            /// The point is NOT part of the boundary of the hole that will be removed, so go ahead and add it.
+                            multiPointGeometry.append(point)
+                        }
+                    } else {
+                        multiPointGeometry.append(point)
+                    }
+                } else {
+                    multiPointGeometry.append(point)
+                }
                 intersectionCoordinates.append(point.coordinate)
             }
         }
-        
+
         /// We have accumulated all the intersection coordinates for this segment of the linear ring.
         /// Now add them to the new linear ring.
         appendIntersectionCoordinates(&newLinearRing1, ls1FirstCoord, ls1SecondCoord, intersectionCoordinates)
@@ -4513,9 +4577,30 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
             /// Check for a LineString or Point intersection.
             if let lineString = lineSegmentIntersection.geometry as? LineString {
                 guard lineString.count == 2 else { continue }
-                intersectionCoordinates.append(lineString[0])
-                intersectionCoordinates.append(lineString[1])
+                if isHole1 && !isHole2 {
+                    if let tempMultiLineString = resultMultiLineString {
+                        if subset(lineString, tempMultiLineString) {
+                            /// The line string segment is part of a hole boundary, so don't include it in the final set of line segments or strings.
+                            /// Do, however, include the end coordinates of the line string as intersection coordinates.
+                            let firstCoordinate = lineString[0]
+                            let lastCoordinate = lineString[lineString.count - 1]
+                            if subset(firstCoordinate, resultMultiLineStringEndPoints) { intersectionCoordinates.append(firstCoordinate) }
+                            if subset(lastCoordinate, resultMultiLineStringEndPoints) { intersectionCoordinates.append(lastCoordinate) }
+                        }
+                    }
+                } else {
+                    intersectionCoordinates.append(lineString[0])
+                    intersectionCoordinates.append(lineString[1])
+                }
             } else if let point = lineSegmentIntersection.geometry as? Point {
+                if isHole1 && !isHole2 {
+                    if let tempMultiLineString = resultMultiLineString {
+                        if !subset(point.coordinate, tempMultiLineString) {
+                            /// The point is NOT part of the boundary of the hole that will be removed, so go ahead and add it.
+                            multiPointGeometry.append(point)
+                        }
+                    }
+                }
                 intersectionCoordinates.append(point.coordinate)
             }
         }
@@ -4535,35 +4620,51 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
     /// Check the special cases where the first linear ring is inside the second and vice versa.
     /// Being inside includes sharing a boundary at various points.
     if inside(finalLinearRingTuple1, finalLinearRingTuple2) {
-        status.firstPolygonInsideSecond = true
+
         let multiPointGeometry = generateMultiPoint(finalLinearRingTuple1)
         let multiLineStringGeometry = generateMultiLineString(finalLinearRingTuple1, finalLinearRingTuple2)
 
-        /// Add the polygon except in the case where the first linear ring is not a hole and the second one is.
-        /// In that case, we only care about where the two touch on the boundaries.
-        if !(isHole2 && !isHole1){
-            let linearRing = generateLinearRing(finalLinearRingTuple1)
-            let polygon = Polygon(linearRing)
-            multiPolygonGeometry.append(polygon)
-        }
+        /// Handle the special case where the first linear ring is a hole and the second is not, and they share a common boundary.
+        /// In this case, we cannot return here, but we must continue on to the code where the hole is subtracted from the other linear ring.
+        if isHole1 && !isHole2 && multiLineStringGeometry.count > 0 {
+            /// Do nothing here.  This will be handled later on.
+        } else {
 
-        return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+            /// Add the polygon except in the case where the first linear ring is not a hole and the second one is.
+            /// In that case, we only care about where the two touch on the boundaries.
+            status.firstPolygonInsideSecond = true
+            if !(isHole2 && !isHole1){
+                let linearRing = generateLinearRing(finalLinearRingTuple1)
+                let polygon = Polygon(linearRing)
+                multiPolygonGeometry.append(polygon)
+            }
+
+            return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+        }
     }
 
     if inside(finalLinearRingTuple2, finalLinearRingTuple1) {
-        status.secondPolygonInsideFirst = true
+
         let multiPointGeometry = generateMultiPoint(finalLinearRingTuple2)
         let multiLineStringGeometry = generateMultiLineString(finalLinearRingTuple2, finalLinearRingTuple1)
-        
-        /// Add the polygon except in the case where the second linear ring is not a hole and the first one is.
-        /// In that case, we only care about where the two touch on the boundaries.
-        if !(isHole1 && !isHole2){
-            let linearRing = generateLinearRing(finalLinearRingTuple2)
-            let polygon = Polygon(linearRing)
-            multiPolygonGeometry.append(polygon)
-        }
 
-        return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+        /// Handle the special case where the second linear ring is a hole and the first is not, and they share a common boundary.
+        /// In this case, we cannot return here, but we must continue on to the code where the hole is subtracted from the other linear ring.
+        if isHole2 && !isHole1 && multiLineStringGeometry.count > 0 {
+            /// Do nothing here.  This will be handled later on.
+        } else {
+
+            /// Add the polygon except in the case where the second linear ring is not a hole and the first one is.
+            /// In that case, we only care about where the two touch on the boundaries.
+            status.secondPolygonInsideFirst = true
+            if !(isHole1 && !isHole2){
+                let linearRing = generateLinearRing(finalLinearRingTuple2)
+                let polygon = Polygon(linearRing)
+                multiPolygonGeometry.append(polygon)
+            }
+
+            return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+        }
     }
 
     /// Check the special cases where the first linear ring is outside the second and vice versa.

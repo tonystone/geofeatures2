@@ -8458,7 +8458,7 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
-    func testPolygon_Polygon_withHoles_overlap_multipleHoles_insideOutsideMiddle() {
+    func testPolygon_Polygon_withHoles_overlap_multipleHoles_insideOutsideMiddle1() {
 
         let geometry1 = Polygon([Coordinate(x: 40.0, y: 0.0), Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 40.0), Coordinate(x: 40.0, y: 40.0), Coordinate(x: 40.0, y: 0.0)], innerRings: [[Coordinate(x: 4.0, y: 4.0), Coordinate(x: 8.0, y: 4.0), Coordinate(x: 8.0, y: 6.0), Coordinate(x: 4.0, y: 6.0), Coordinate(x: 4.0, y: 4.0)], [Coordinate(x: 24.0, y: 28.0), Coordinate(x: 24.0, y: 24.0), Coordinate(x: 28.0, y: 24.0), Coordinate(x: 28.0, y: 28.0), Coordinate(x: 24.0, y: 28.0)]], precision: precision, coordinateSystem: cs)
         let geometry2 = Polygon([Coordinate(x: 20.0, y: 10.0), Coordinate(x: 20.0, y: 30.0), Coordinate(x: 80.0, y: 30.0), Coordinate(x: 80.0, y: 10.0), Coordinate(x: 20.0, y: 10.0)], innerRings: [[Coordinate(x: 24.0, y: 12.0), Coordinate(x: 28.0, y: 12.0), Coordinate(x: 28.0, y: 18.0), Coordinate(x: 24.0, y: 18.0), Coordinate(x: 24.0, y: 12.0)], [Coordinate(x: 36.0, y: 20.0), Coordinate(x: 36.0, y: 16.0), Coordinate(x: 44.0, y: 16.0), Coordinate(x: 44.0, y: 20.0), Coordinate(x: 36.0, y: 20.0)], [Coordinate(x: 74.0, y: 20.0), Coordinate(x: 78.0, y: 20.0), Coordinate(x: 78.0, y: 24.0), Coordinate(x: 74.0, y: 24.0), Coordinate(x: 74.0, y: 20.0)]], precision: precision, coordinateSystem: cs)
@@ -8469,6 +8469,21 @@ class IntersectionTests: XCTestCase {
 
         var expected  = GeometryCollection()
         expected.append(MultiPolygon([Polygon([Coordinate(x: 40.0, y: 20.0), Coordinate(x: 36.0, y: 20.0), Coordinate(x:36.0, y: 16.0), Coordinate(x: 40.0, y: 16.0), Coordinate(x: 40.0, y: 10.0), Coordinate(x: 20.0, y: 10.0), Coordinate(x: 20.0, y: 30.0), Coordinate(x: 40.0, y: 30.0), Coordinate(x: 40.0, y: 20.0)], innerRings: [[Coordinate(x: 24.0, y: 28.0), Coordinate(x: 24.0, y: 24.0), Coordinate(x: 28.0, y: 24.0), Coordinate(x: 28.0, y: 28.0), Coordinate(x: 24.0, y: 28.0)], [Coordinate(x: 24.0, y: 12.0), Coordinate(x: 28.0, y: 12.0), Coordinate(x: 28.0, y: 18.0), Coordinate(x: 24.0, y: 18.0), Coordinate(x: 24.0, y: 12.0)]], precision: precision, coordinateSystem: cs)]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPolygon_Polygon_withHoles_overlap_multipleHoles_insideOutsideMiddle2() {
+
+        let geometry1 = Polygon([Coordinate(x: 40.0, y: 0.0), Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 40.0), Coordinate(x: 40.0, y: 40.0), Coordinate(x: 40.0, y: 0.0)], innerRings: [[Coordinate(x: 4.0, y: 4.0), Coordinate(x: 8.0, y: 4.0), Coordinate(x: 8.0, y: 6.0), Coordinate(x: 4.0, y: 6.0), Coordinate(x: 4.0, y: 4.0)], [Coordinate(x: 20.0, y: 30.0), Coordinate(x: 20.0, y: 24.0), Coordinate(x: 26.0, y: 24.0), Coordinate(x: 26.0, y: 30.0), Coordinate(x: 20.0, y: 30.0)], [Coordinate(x: 30.0, y: 10.0), Coordinate(x: 34.0, y: 10.0), Coordinate(x: 34.0, y: 14.0), Coordinate(x: 30.0, y: 14.0), Coordinate(x: 30.0, y: 10.0)]], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 20.0, y: 10.0), Coordinate(x: 20.0, y: 30.0), Coordinate(x: 80.0, y: 30.0), Coordinate(x: 80.0, y: 10.0), Coordinate(x: 20.0, y: 10.0)], innerRings: [[Coordinate(x: 24.0, y: 12.0), Coordinate(x: 28.0, y: 12.0), Coordinate(x: 28.0, y: 18.0), Coordinate(x: 24.0, y: 18.0), Coordinate(x: 24.0, y: 12.0)], [Coordinate(x: 36.0, y: 20.0), Coordinate(x: 36.0, y: 16.0), Coordinate(x: 44.0, y: 16.0), Coordinate(x: 44.0, y: 20.0), Coordinate(x: 36.0, y: 20.0)], [Coordinate(x: 74.0, y: 20.0), Coordinate(x: 78.0, y: 20.0), Coordinate(x: 78.0, y: 24.0), Coordinate(x: 74.0, y: 24.0), Coordinate(x: 74.0, y: 20.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPolygon([Polygon([Coordinate(x: 40.0, y: 20.0), Coordinate(x: 36.0, y: 20.0), Coordinate(x:36.0, y: 16.0), Coordinate(x: 40.0, y: 16.0), Coordinate(x: 40.0, y: 10.0), Coordinate(x: 34.0, y: 10.0), Coordinate(x: 34.0, y: 14.0), Coordinate(x: 30.0, y: 14.0), Coordinate(x: 30.0, y: 10.0), Coordinate(x: 20.0, y: 10.0), Coordinate(x: 20.0, y: 24.0), Coordinate(x: 26.0, y: 24.0), Coordinate(x: 26.0, y: 30.0), Coordinate(x: 40.0, y: 30.0), Coordinate(x: 40.0, y: 20.0)], innerRings: [[Coordinate(x: 24.0, y: 12.0), Coordinate(x: 28.0, y: 12.0), Coordinate(x: 28.0, y: 18.0), Coordinate(x: 24.0, y: 18.0), Coordinate(x: 24.0, y: 12.0)]], precision: precision, coordinateSystem: cs)]))
 
         XCTAssertEqual(resultGeometry, expected)
     }
