@@ -5107,7 +5107,7 @@ fileprivate func resetTraversed(_ graph: inout Array<GraphItem>) {
 ///
 ///  - returns: The angle, in radians, between two vectors, measured in the counter clockwise direction.
 ///
-func angle3(_ prevCoord: Coordinate, _ currCoord: Coordinate, _ nextCoord: Coordinate) -> Double {
+func angleBetweenVectors(_ prevCoord: Coordinate, _ currCoord: Coordinate, _ nextCoord: Coordinate) -> Double {
 
     let v1 = CGVector(dx: prevCoord.x - currCoord.x, dy: prevCoord.y - currCoord.y)
     let v2 = CGVector(dx: nextCoord.x - currCoord.x, dy: nextCoord.y - currCoord.y)
@@ -5233,8 +5233,7 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
 
     /// TBD: Will need to add code to keep track of paths traversed.
     resetTraversed(&graph)
-    var previousAngle = 0.0
-    var previousGraphItem: GraphItem
+    var previousGraphItem = GraphItem(coord: Coordinate(x: 0, y: 0))  /// Dummy value for now.  This value will not be used.
     var currentGraphItem = startingGraphItem
     var firstTime = true
     repeat {
@@ -5252,14 +5251,7 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
                 relatedGraphItemFound = true
                 currentRelatedGraphItem = tempRelatedGraphItem
                 if !firstTime {
-                    if previousAngle >= 0 && previousAngle <= Double.pi {
-                        tempAngle = currentRelatedGraphItem.angle + Double.pi - previousAngle
-                    } else {
-                        tempAngle = Double.pi - currentRelatedGraphItem.angle + previousAngle
-                    }
-                    if tempAngle >= Constants.TWO_PI {
-                        tempAngle -= Constants.TWO_PI
-                    }
+                    tempAngle = angleBetweenVectors(previousGraphItem.coordinate, currentGraphItem.coordinate, tempRelatedGraphItem.coordinate)
                 }
                 break
             }
@@ -5278,43 +5270,27 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
             newLinearRing.append(currentRelatedGraphItem.coordinate)
             setTraversed(&currentGraphItem, &currentRelatedGraphItem, true, &graph)
             firstTime = false
-            previousAngle = currentRelatedGraphItem.angle /// Radians
             guard let tempGraphItem = findGraphItem(currentRelatedGraphItem.coordinate, graph) else {
                 /// This should never happen.  Something's wrong.
                 return defaultReturn
             }
+            previousGraphItem = currentGraphItem
             currentGraphItem = tempGraphItem
         } else {
             /// Not first time through
             var currentAngle: Double /// Radians
             for relatedGraphItem in currentGraphItem.relatedGraphItemArray {
                 if relatedGraphItem.traversed { continue }
-//                currentAngle = relatedGraphItem.angle + Double.pi - previousAngle
-                if previousAngle >= 0 && previousAngle <= Double.pi {
-                    currentAngle = relatedGraphItem.angle + Double.pi - previousAngle
-                } else {
-                    currentAngle = Double.pi - relatedGraphItem.angle + previousAngle
-                }
-                if currentAngle >= Constants.TWO_PI {
-                    currentAngle -= Constants.TWO_PI
-                } else if currentAngle < 0 {
-                    currentAngle += Constants.TWO_PI
-                }
-                if (currentGraphItem.coordinate == Coordinate(x: 40, y: 40)) && (relatedGraphItem.coordinate == Coordinate(x: 50, y: 40)) {
-                    /// TBD: Serious hack!  Fix later.
-                    currentRelatedGraphItem = relatedGraphItem
-                    tempAngle = currentAngle
-                } else if currentGraphItem.coordinate == Coordinate(x: 40, y: 40) {
-                    continue
-                } else if (currentAngle > (tempAngle + Constants.EPSILON)) ||
-                    ((abs(currentAngle - tempAngle) < Constants.EPSILON) && ((relatedGraphItem.distance + Constants.EPSILON) < currentRelatedGraphItem.distance)) {
+                if (currentGraphItem.coordinate == previousGraphItem.coordinate) || (currentGraphItem.coordinate == relatedGraphItem.coordinate) { continue }
+                currentAngle = angleBetweenVectors(previousGraphItem.coordinate, currentGraphItem.coordinate, relatedGraphItem.coordinate)
+                if (currentAngle > tempAngle) ||
+                    ((currentAngle == tempAngle) && (relatedGraphItem.distance < currentRelatedGraphItem.distance)) {
                     currentRelatedGraphItem = relatedGraphItem
                     tempAngle = currentAngle
                 }
             }
             newLinearRing.append(currentRelatedGraphItem.coordinate)
             setTraversed(&currentGraphItem, &currentRelatedGraphItem, true, &graph)
-            previousAngle = currentRelatedGraphItem.angle /// Radians
             guard let tempGraphItem = findGraphItem(currentRelatedGraphItem.coordinate, graph) else {
                 /// This should never happen.  Something's wrong.
                 return defaultReturn
