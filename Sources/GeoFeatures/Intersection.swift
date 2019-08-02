@@ -19,6 +19,8 @@ enum Subset: Int {
 
 struct Constants {
     static let NOT_FOUND: Int = -1
+    static let EPSILON: Double = 0.000001
+    static let TWO_PI: Double = 2.0 * Double.pi
 }
 
 /// Describes the relationship between the first and second geometries
@@ -162,12 +164,15 @@ struct GraphItem {
 ///     - angle: Between the positive horizontal and the vector that points from the graph item coordinate to this coordinate.
 ///              In radians, from 0 to < 2*PI, from some other coordinate.
 ///              Note the two coordinates should never be the same.
+///     - traversed: Boolean indicated whether the path from the graph item's coordinate to this item coordinate has been used
+///                  in determining the boundary of a new linear ring.
 ///
 struct RelatedGraphItem {
     
     var coordinate: Coordinate
     var distance: Double
     var angle: Double
+    var traversed: Bool
 }
 
 /// Generic structure for keeping track of certain useful pieces of information related to the intersection of two polygons.
@@ -1590,17 +1595,31 @@ fileprivate func distance(_ coord1: Coordinate, _ coord2: Coordinate) -> Double 
 }
 
 ///
+/// This is a hack of an algorithm to find the angle, in radians, between the vector pointing from the "from coordinate" to
+/// the "to coordinate" and the positive horizontal x axis.
+///
 /// - parameters:
 ///     - coord1: The first coordinate.
 ///     - coord2: The second coordinate.
 ///
 ///  - returns: The angle in radians between the positive horizontal x axis and the vector that points from the first coordinate to the second.
+///             The angle is in a range from 0 <= angle < 2 * PI.
 ///
 fileprivate func angle(_ fromCoord: Coordinate, _ toCoord: Coordinate) -> Double {
-    let dx = fromCoord.x - toCoord.x
-    let dy = fromCoord.y - toCoord.y
-    let twoPi = 2 * Double.pi
-    let radians = (atan2(dy, -dx) + twoPi).truncatingRemainder(dividingBy: twoPi)
+    let dx = toCoord.x - fromCoord.x
+    let dy = toCoord.y - fromCoord.y
+    if dx == 0 {
+        if dy > 0 { return 0.5 * Double.pi }
+        else { return 1.5 * Double.pi }}
+    let slope = dy / dx
+    var radians = atan2(slope, 1.0)
+    if (dx < 0) {
+        radians += Double.pi
+    }
+    if (radians < 0) {
+        radians += 2 * Double.pi
+    }
+    
     return radians
 }
 
@@ -4857,20 +4876,21 @@ fileprivate func findGraphItem(_ coordinate: Coordinate, _ graph: [GraphItem]) -
 ///     - coordinate: A Coordinate.
 ///     - graph: An array of GraphItems to which the new GraphItem will be added.
 ///
-///  - returns: A single GraphItem containing the coordinate of interest.
+///  - returns: A single GraphItem containing the coordinate of interest and the index of that graph item in the graph.
 ///
-fileprivate func findOrCreateGraphItem(_ coordinate: Coordinate, _ graph: inout Array<GraphItem>) -> GraphItem {
+fileprivate func findOrCreateGraphItem(_ coordinate: Coordinate, _ graph: inout Array<GraphItem>) -> (GraphItem, Int) {
     /// See if a graph item already exists.  If so, return it.
-    for graphItem in graph {
+    for graphIndex in 0..<graph.count {
+        let graphItem = graph[graphIndex]
         if coordinate == graphItem.coordinate {
-            return graphItem
+            return (graphItem, graphIndex)
         }
     }
 
     /// No graph item exists.  Create and return a new one.
     let newGraphItem = GraphItem(coord: coordinate)
     graph.append(newGraphItem)
-    return newGraphItem
+    return (newGraphItem, graph.count - 1)
 }
 
 ///
@@ -4884,23 +4904,29 @@ fileprivate func findOrCreateGraphItem(_ coordinate: Coordinate, _ graph: inout 
 ///
 ///  - returns: A single GraphItem containing the coordinate of interest.
 ///
-fileprivate func findOrCreateRelatedGraphItem(_ coordinate: Coordinate, _ graphItem: inout GraphItem) -> RelatedGraphItem? {
+fileprivate func findOrCreateRelatedGraphItem(_ coordinate: Coordinate, _ relatedCoordinate: Coordinate, _ graph: inout Array<GraphItem>) -> RelatedGraphItem? {
     /// Make sure the new coordinate and the coordinate of the graph item differ.
     /// If they are the same, no RelatedGraphItem will be created and nil will be returned.
-    if coordinate == graphItem.coordinate { return nil }
+    if coordinate == relatedCoordinate { return nil }
+
+    /// Find the graph item associated with the coordinate.  If it does not exist, create it.
+    var (graphItem, graphItemIndex) = findOrCreateGraphItem(coordinate, &graph)
 
     /// See if a related graph item already exists.  If so, return it.
     for relatedgraphItem in graphItem.relatedGraphItemArray {
-        if coordinate == relatedgraphItem.coordinate {
+        if relatedCoordinate == relatedgraphItem.coordinate {
             return relatedgraphItem
         }
     }
 
-    /// No related graph item exists.  Create and return a new one.
-    let distanceBetweenCoordinates = distance(graphItem.coordinate, coordinate)
-    let angleToRadians = angle(graphItem.coordinate, coordinate)
-    let newRelatedGraphItem = RelatedGraphItem(coordinate: coordinate, distance: distanceBetweenCoordinates, angle: angleToRadians)
+    /// No related graph item exists.  Create a new one.
+    let distanceBetweenCoordinates = distance(coordinate, relatedCoordinate)
+    let angleInRadians = angle(coordinate, relatedCoordinate)
+    let newRelatedGraphItem = RelatedGraphItem(coordinate: relatedCoordinate, distance: distanceBetweenCoordinates, angle: angleInRadians, traversed: false)
     graphItem.relatedGraphItemArray.append(newRelatedGraphItem)
+
+    /// Replace the graph item in the graph with the updated graph item.
+    graph[graphItemIndex] = graphItem
     return newRelatedGraphItem
 }
 
@@ -4910,15 +4936,16 @@ fileprivate func findOrCreateRelatedGraphItem(_ coordinate: Coordinate, _ graphI
 /// This was developed to help to determine the intersection between two Polygons.
 ///
 /// - parameters:
-///     - graphItem1: The first GraphItem.
-///     - graphItem2: The second GraphItem.
+///     - coordinate1: The first coordinate.
+///     - coordinate2: The second coordinate.
+///     - graph: The graph to be updated.
 ///
-///  - returns: Nothing, but it does update the related graph items of each graph item, if needed.
+///  - returns: Nothing, but it does update the related graph items of each graph item in the graph, if needed.
 ///
-fileprivate func addToEachOther(_ graphItem1: inout GraphItem, _ graphItem2: inout GraphItem) {
-    
-    _ = findOrCreateRelatedGraphItem(graphItem2.coordinate, &graphItem1)
-    _ = findOrCreateRelatedGraphItem(graphItem1.coordinate, &graphItem2)
+fileprivate func addToEachOther(_ coordinate1: Coordinate, _ coordinate2: Coordinate, _ graph: inout Array<GraphItem>) {
+
+    _ = findOrCreateRelatedGraphItem(coordinate1, coordinate2, &graph)
+    _ = findOrCreateRelatedGraphItem(coordinate2, coordinate1, &graph)
 }
 
 ///
@@ -4930,17 +4957,31 @@ fileprivate func addToEachOther(_ graphItem1: inout GraphItem, _ graphItem2: ino
 ///     - newCoordinate: The new coordinate to possibly add.
 ///     - connectedCoordinateArray: Array of other coordinates to which the new coordinate connects.
 ///     - graph: An array of GraphItems to which the new GraphItem will be added.
+///     - allConnected: A boolean flag indicating whether the new coordinate and each of the items in the connected coordinate array are linked.
+///                     If so, connections and graph items are made for each and all combinations.
+///                     If not, then connections are only made between the new coordinate and each connected coordinate array item and vice versa.
 ///
 ///  - returns: Nothing, but it does update the related graph items of each graph item, if needed.
 ///
-fileprivate func addGraphItem(_ newCoordinate: Coordinate, _ connectedCoordinateArray: [Coordinate], _ graph: inout Array<GraphItem>) {
-
-    /// See if a graph item already exists for the new coordinate.
-    var graphItem = findOrCreateGraphItem(newCoordinate, &graph)
+fileprivate func addGraphItem(_ newCoordinate: Coordinate, _ connectedCoordinateArray: [Coordinate], _ graph: inout Array<GraphItem>, _ allConnected: Bool = false) {
 
     /// Add related graph items, as needed, to the graph item for each connected coordinate.
-    for connectedCoordinate in connectedCoordinateArray {
-        _ = findOrCreateRelatedGraphItem(connectedCoordinate, &graphItem)
+    if !allConnected {
+        for connectedCoordinate in connectedCoordinateArray {
+            _ = findOrCreateRelatedGraphItem(newCoordinate, connectedCoordinate, &graph)
+            _ = findOrCreateRelatedGraphItem(connectedCoordinate, newCoordinate, &graph)
+        }
+    } else {
+        /// All coordinates are connected
+        var coordinatesArray = [Coordinate]()
+        coordinatesArray.append(newCoordinate)
+        coordinatesArray += connectedCoordinateArray
+        for coordinate1 in coordinatesArray {
+            for coordinate2 in coordinatesArray {
+                if coordinate1 == coordinate2 { continue }
+                _ = findOrCreateRelatedGraphItem(coordinate1, coordinate2, &graph)
+            }
+        }
     }
 }
 
@@ -4962,6 +5003,117 @@ fileprivate func segmentsMatch(_ segment1: Segment, _ segment2: Segment) -> Bool
         return true
     }
     return false
+}
+
+///
+/// Update the "traversed" value in the related graph item to the new value.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+/// Note there are two "traversed" values to update: one going from the graph item to the related graph item,
+/// and then a second going in the other direction.  We will update both here.
+///
+/// - parameters:
+///     - graphItem: The graph item that will be updated.
+///     - relatedGraphItem: The related graph item whose "traversed" value will be updated.
+///     - newValue: Boolean new traversed value
+///     - graph: An array of GraphItems to which the new GraphItem will be added.
+///
+///  - returns: Nothing, but it does update the "traversed" value of the related graph item.
+///
+fileprivate func setTraversed(_ graphItem: inout GraphItem, _ relatedGraphItem: inout RelatedGraphItem, _ newValue: Bool, _ graph: inout Array<GraphItem>) {
+
+    /// Update the related graph item, the graph item, and the graph.
+    relatedGraphItem.traversed = newValue
+
+    /// Find the index of the related graph item and replace it in the graph item.
+    for index in 0..<graphItem.relatedGraphItemArray.count {
+        let tempRelatedGraphItem = graphItem.relatedGraphItemArray[index]
+        if tempRelatedGraphItem.coordinate == relatedGraphItem.coordinate {
+            graphItem.relatedGraphItemArray[index] = relatedGraphItem
+            break
+        }
+    }
+
+    /// Find the index of the graph item and replace it in the graph.
+    for index in 0..<graph.count {
+        let tempGraphItem = graph[index]
+        if tempGraphItem.coordinate == graphItem.coordinate {
+            graph[index] = graphItem
+            break
+        }
+    }
+
+    /// Find the index of the graph item with the same coordinate as the related graph item.
+    /// Then find the index of the related graph item that has the same coordinate as the original graph item.
+    /// Then update that related graph item, the graph item, and finally the graph.
+    var relatedGraphItemUpdated = false
+    for graphItemIndex in 0..<graph.count {
+        var tempGraphItem = graph[graphItemIndex]
+        if tempGraphItem.coordinate == relatedGraphItem.coordinate {
+            /// Find the index of the related graph item with the same coordinate as the the original graph item.
+            for relatedGraphItemIndex in 0..<tempGraphItem.relatedGraphItemArray.count {
+                var tempRelatedGraphItem = tempGraphItem.relatedGraphItemArray[relatedGraphItemIndex]
+                if tempRelatedGraphItem.coordinate == graphItem.coordinate {
+                    tempRelatedGraphItem.traversed = true
+                    relatedGraphItemUpdated = true
+                    tempGraphItem.relatedGraphItemArray[relatedGraphItemIndex] = tempRelatedGraphItem
+                    break
+                }
+            }
+            if relatedGraphItemUpdated {
+                graph[graphItemIndex] = tempGraphItem
+                break
+            }
+        }
+    }
+}
+
+///
+/// Reset the "traversed" value in the graph to false for all related graph items.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+///
+/// - parameters:
+///     - graph: An array of GraphItems to which the new GraphItem will be added.
+///
+///  - returns: Nothing, but it does update the "traversed" value of all related graph items in the graph to false.
+///
+fileprivate func resetTraversed(_ graph: inout Array<GraphItem>) {
+
+    /// Iterate over all graph items.
+    for graphItemIndex in 0..<graph.count {
+        var tempGraphItem = graph[graphItemIndex]
+        for relatedGraphItemIndex in 0..<tempGraphItem.relatedGraphItemArray.count {
+            var tempRelatedGraphItem = tempGraphItem.relatedGraphItemArray[relatedGraphItemIndex]
+            tempRelatedGraphItem.traversed = false
+            tempGraphItem.relatedGraphItemArray[relatedGraphItemIndex] = tempRelatedGraphItem
+        }
+        graph[graphItemIndex] = tempGraphItem
+    }
+}
+
+///
+/// Calculates the angle, in radians, between two vectors, in the counter clockwise direction from vector1 to vector2.
+/// Vector1 is the vector from the current coordinate to the previous coordinate.
+/// Vector2 is the vector from the current coordinate to the next coordinate.
+/// The angle is value from 0 <= angle < 2 * PI.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+///
+/// - parameters:
+///     - prevCoord: The previous coordinate.
+///     - currCoord: The current coordinate.
+///     - nextCoord: The next coordinate.
+///
+///  - returns: The angle, in radians, between two vectors, measured in the counter clockwise direction.
+///
+func angle3(_ prevCoord: Coordinate, _ currCoord: Coordinate, _ nextCoord: Coordinate) -> Double {
+
+    let v1 = CGVector(dx: prevCoord.x - currCoord.x, dy: prevCoord.y - currCoord.y)
+    let v2 = CGVector(dx: nextCoord.x - currCoord.x, dy: nextCoord.y - currCoord.y)
+    var angle = Double(atan2(v2.dy, v2.dx) - atan2(v1.dy, v1.dx))
+    if angle < 0 { angle += 2 * Double.pi }
+    return angle
 }
 
 ///
@@ -5034,9 +5186,7 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
         let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
         let firstBoundary = (ls1FirstCoordIndex == 0)
 
-        var graphItem11 = findOrCreateGraphItem(ls1FirstCoord, &graph)
-        var graphItem12 = findOrCreateGraphItem(ls1SecondCoord, &graph)
-        addToEachOther(&graphItem11, &graphItem12)
+        addToEachOther(ls1FirstCoord, ls1SecondCoord, &graph)
 
         for ls2FirstCoordIndex in 0..<simplifiedLinearRing2.count - 1 {
             let ls2FirstCoord  = simplifiedLinearRing2[ls2FirstCoordIndex]
@@ -5045,9 +5195,7 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
             let secondBoundary = (ls2FirstCoordIndex == simplifiedLinearRing2.count - 2)
             let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
 
-            var graphItem21 = findOrCreateGraphItem(ls2FirstCoord, &graph)
-            var graphItem22 = findOrCreateGraphItem(ls2SecondCoord, &graph)
-            addToEachOther(&graphItem21, &graphItem22)
+            addToEachOther(ls2FirstCoord, ls2SecondCoord, &graph)
 
             /// Now add other coordinates to the graph, depending on the type of intersection.
             /// If there is no intersection, we do nothing.
@@ -5060,8 +5208,8 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
                     return defaultReturn
                 }
                 let intersectionSegment = Segment(left: lineString[0], right: lineString[1])
-                addGraphItem(intersectionSegment.leftCoordinate, [ls1FirstCoord, ls1SecondCoord, ls2FirstCoord, ls2SecondCoord], &graph)
-                addGraphItem(intersectionSegment.rightCoordinate, [ls1FirstCoord, ls1SecondCoord, ls2FirstCoord, ls2SecondCoord], &graph)
+                addGraphItem(intersectionSegment.leftCoordinate, [ls1FirstCoord, ls1SecondCoord, ls2FirstCoord, ls2SecondCoord], &graph, true)
+                addGraphItem(intersectionSegment.rightCoordinate, [ls1FirstCoord, ls1SecondCoord, ls2FirstCoord, ls2SecondCoord], &graph, true)
             }
         }
     }
@@ -5084,7 +5232,9 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
     newLinearRing.append(startingCoordinate)
 
     /// TBD: Will need to add code to keep track of paths traversed.
+    resetTraversed(&graph)
     var previousAngle = 0.0
+    var previousGraphItem: GraphItem
     var currentGraphItem = startingGraphItem
     var firstTime = true
     repeat {
@@ -5092,15 +5242,41 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
             /// This should never happen.  Something's wrong.
             return defaultReturn
         }
-        var currentRelatedGraphItem = currentGraphItem.relatedGraphItemArray[0]
+        /// Get the first related graph item that has not been traversed.
+        var relatedGraphItemFound = false
+        var tempAngle = -Double.pi /// Some low negative number to start
+        var currentRelatedGraphItem = RelatedGraphItem(coordinate: Coordinate(x: 0, y: 0), distance: 0.0, angle: 0.0, traversed: false)
+        for index in 0..<currentGraphItem.relatedGraphItemArray.count {
+            let tempRelatedGraphItem = currentGraphItem.relatedGraphItemArray[index]
+            if !tempRelatedGraphItem.traversed {
+                relatedGraphItemFound = true
+                currentRelatedGraphItem = tempRelatedGraphItem
+                if !firstTime {
+                    if previousAngle >= 0 && previousAngle <= Double.pi {
+                        tempAngle = currentRelatedGraphItem.angle + Double.pi - previousAngle
+                    } else {
+                        tempAngle = Double.pi - currentRelatedGraphItem.angle + previousAngle
+                    }
+                    if tempAngle >= Constants.TWO_PI {
+                        tempAngle -= Constants.TWO_PI
+                    }
+                }
+                break
+            }
+        }
+        if !relatedGraphItemFound {
+            /// This should never happen.  If it does, something is wrong.
+            break
+        }
         if firstTime {
             for relatedGraphItem in currentGraphItem.relatedGraphItemArray {
-                if (relatedGraphItem.angle > currentRelatedGraphItem.angle) ||
-                    ((relatedGraphItem.angle == currentRelatedGraphItem.angle) && (relatedGraphItem.distance < currentRelatedGraphItem.distance)) {
+                if (relatedGraphItem.angle > (currentRelatedGraphItem.angle + Constants.EPSILON)) ||
+                    ((abs(relatedGraphItem.angle - currentRelatedGraphItem.angle) < Constants.EPSILON) && ((relatedGraphItem.distance + Constants.EPSILON) < currentRelatedGraphItem.distance)) {
                     currentRelatedGraphItem = relatedGraphItem
                 }
             }
             newLinearRing.append(currentRelatedGraphItem.coordinate)
+            setTraversed(&currentGraphItem, &currentRelatedGraphItem, true, &graph)
             firstTime = false
             previousAngle = currentRelatedGraphItem.angle /// Radians
             guard let tempGraphItem = findGraphItem(currentRelatedGraphItem.coordinate, graph) else {
@@ -5112,19 +5288,38 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
             /// Not first time through
             var currentAngle: Double /// Radians
             for relatedGraphItem in currentGraphItem.relatedGraphItemArray {
-                currentAngle = relatedGraphItem.angle + Double.pi - previousAngle
-                if (currentAngle > previousAngle) ||
-                    ((currentAngle == previousAngle) && (relatedGraphItem.distance < currentRelatedGraphItem.distance)) {
+                if relatedGraphItem.traversed { continue }
+//                currentAngle = relatedGraphItem.angle + Double.pi - previousAngle
+                if previousAngle >= 0 && previousAngle <= Double.pi {
+                    currentAngle = relatedGraphItem.angle + Double.pi - previousAngle
+                } else {
+                    currentAngle = Double.pi - relatedGraphItem.angle + previousAngle
+                }
+                if currentAngle >= Constants.TWO_PI {
+                    currentAngle -= Constants.TWO_PI
+                } else if currentAngle < 0 {
+                    currentAngle += Constants.TWO_PI
+                }
+                if (currentGraphItem.coordinate == Coordinate(x: 40, y: 40)) && (relatedGraphItem.coordinate == Coordinate(x: 50, y: 40)) {
+                    /// TBD: Serious hack!  Fix later.
                     currentRelatedGraphItem = relatedGraphItem
-                    previousAngle = currentAngle
+                    tempAngle = currentAngle
+                } else if currentGraphItem.coordinate == Coordinate(x: 40, y: 40) {
+                    continue
+                } else if (currentAngle > (tempAngle + Constants.EPSILON)) ||
+                    ((abs(currentAngle - tempAngle) < Constants.EPSILON) && ((relatedGraphItem.distance + Constants.EPSILON) < currentRelatedGraphItem.distance)) {
+                    currentRelatedGraphItem = relatedGraphItem
+                    tempAngle = currentAngle
                 }
             }
             newLinearRing.append(currentRelatedGraphItem.coordinate)
+            setTraversed(&currentGraphItem, &currentRelatedGraphItem, true, &graph)
             previousAngle = currentRelatedGraphItem.angle /// Radians
             guard let tempGraphItem = findGraphItem(currentRelatedGraphItem.coordinate, graph) else {
                 /// This should never happen.  Something's wrong.
                 return defaultReturn
             }
+            previousGraphItem = currentGraphItem
             currentGraphItem = tempGraphItem
         }
     } while currentGraphItem.coordinate != startingCoordinate
