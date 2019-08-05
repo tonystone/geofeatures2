@@ -8363,7 +8363,7 @@ class IntersectionTests: XCTestCase {
         }
 
         var expected  = GeometryCollection()
-        expected.append(MultiPolygon([Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0)]], precision: precision, coordinateSystem: cs)]))
+        expected.append(MultiPolygon([Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0)]], precision: precision, coordinateSystem: cs)]))
 
         XCTAssertEqual(resultGeometry, expected)
     }
@@ -8378,7 +8378,7 @@ class IntersectionTests: XCTestCase {
         }
 
         var expected  = GeometryCollection()
-        expected.append(MultiPolygon([Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0)]], precision: precision, coordinateSystem: cs)]))
+        expected.append(MultiPolygon([Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0)]], precision: precision, coordinateSystem: cs)]))
 
         XCTAssertEqual(resultGeometry, expected)
     }
@@ -8393,14 +8393,14 @@ class IntersectionTests: XCTestCase {
         }
 
         var expected  = GeometryCollection()
-        expected.append(MultiPolygon([Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -7.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -7.0, y: -8.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -8.0, y: -7.0)], [Coordinate(x: -6.0, y: -5.0), Coordinate(x: -6.0, y: -6.0), Coordinate(x: -5.0, y: -6.0), Coordinate(x: -5.0, y: -5.0), Coordinate(x: -6.0, y: -5.0)]], precision: precision, coordinateSystem: cs)]))
+        expected.append(MultiPolygon([Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -8.0), Coordinate(x: -7.0, y: -8.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -8.0, y: -7.0), Coordinate(x: -8.0, y: -8.0)], [Coordinate(x: -6.0, y: -5.0), Coordinate(x: -6.0, y: -6.0), Coordinate(x: -5.0, y: -6.0), Coordinate(x: -5.0, y: -5.0), Coordinate(x: -6.0, y: -5.0)]], precision: precision, coordinateSystem: cs)]))
 
         XCTAssertEqual(resultGeometry, expected)
     }
 
     func testPolygon_Polygon_withHoles_firstSameAsSecondButWithOneExtraHole() {
 
-        let geometry1 = Polygon([Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -7.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -7.0, y: -8.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -8.0, y: -7.0)], [Coordinate(x: -6.0, y: -5.0), Coordinate(x: -6.0, y: -6.0), Coordinate(x: -5.0, y: -6.0), Coordinate(x: -5.0, y: -5.0), Coordinate(x: -6.0, y: -5.0)]], precision: precision, coordinateSystem: cs)
+        let geometry1 = Polygon([Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -8.0), Coordinate(x: -7.0, y: -8.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -8.0, y: -7.0), Coordinate(x: -8.0, y: -8.0)], [Coordinate(x: -6.0, y: -5.0), Coordinate(x: -6.0, y: -6.0), Coordinate(x: -5.0, y: -6.0), Coordinate(x: -5.0, y: -5.0), Coordinate(x: -6.0, y: -5.0)]], precision: precision, coordinateSystem: cs)
         let geometry2 = Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -7.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -7.0, y: -8.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -8.0, y: -7.0)]], precision: precision, coordinateSystem: cs)
 
         guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
@@ -8408,7 +8408,7 @@ class IntersectionTests: XCTestCase {
         }
 
         var expected  = GeometryCollection()
-        expected.append(MultiPolygon([Polygon([Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -7.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -7.0, y: -8.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -8.0, y: -7.0)], [Coordinate(x: -6.0, y: -5.0), Coordinate(x: -6.0, y: -6.0), Coordinate(x: -5.0, y: -6.0), Coordinate(x: -5.0, y: -5.0), Coordinate(x: -6.0, y: -5.0)]], precision: precision, coordinateSystem: cs)]))
+        expected.append(MultiPolygon([Polygon([Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -8.0), Coordinate(x: -7.0, y: -8.0), Coordinate(x: -7.0, y: -7.0), Coordinate(x: -8.0, y: -7.0), Coordinate(x: -8.0, y: -8.0)], [Coordinate(x: -6.0, y: -5.0), Coordinate(x: -6.0, y: -6.0), Coordinate(x: -5.0, y: -6.0), Coordinate(x: -5.0, y: -5.0), Coordinate(x: -6.0, y: -5.0)]], precision: precision, coordinateSystem: cs)]))
 
         XCTAssertEqual(resultGeometry, expected)
     }
@@ -8528,8 +8528,23 @@ class IntersectionTests: XCTestCase {
         }
 
         var expected  = GeometryCollection()
-//        expected.append(MultiPolygon([Polygon([Coordinate(x: 60.0, y: 20.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 60.0), Coordinate(x: 60.0, y: 60.0), Coordinate(x: 60.0, y: 20.0)], innerRings: [[Coordinate(x: 30.0, y: 55.0), Coordinate(x: 50.0, y: 55.0), Coordinate(x: 50.0, y: 45.0), Coordinate(x: 40.0, y: 45.0), Coordinate(x: 40.0, y: 45.0), Coordinate(x: 40.0, y: 40.0), Coordinate(x: 50.0, y: 40.0), Coordinate(x: 50.0, y: 30.0), Coordinate(x: 30.0, y: 30.0), Coordinate(x: 30.0, y: 55.0)]])], precision: precision, coordinateSystem: cs))
-        expected.append(MultiPolygon([Polygon([Coordinate(x: 60.0, y: 60.0), Coordinate(x: 60.0, y: 20.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 60.0), Coordinate(x: 60.0, y: 60.0)], innerRings: [[Coordinate(x: 30.0, y: 30.0), Coordinate(x: 30.0, y: 55.0), Coordinate(x: 50.0, y: 55.0), Coordinate(x: 50.0, y: 45.0), Coordinate(x: 40.0, y: 45.0), Coordinate(x: 40.0, y: 40.0), Coordinate(x: 50.0, y: 40.0), Coordinate(x: 50.0, y: 30.0), Coordinate(x: 30.0, y: 30.0)]])], precision: precision, coordinateSystem: cs))
+        expected.append(MultiPolygon([Polygon([Coordinate(x: 60.0, y: 60.0), Coordinate(x: 60.0, y: 20.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 60.0), Coordinate(x: 60.0, y: 60.0)], innerRings: [[Coordinate(x: 30.0, y: 30.0), Coordinate(x: 50.0, y: 30.0), Coordinate(x: 50.0, y: 40.0), Coordinate(x: 40.0, y: 40.0), Coordinate(x: 40.0, y: 45.0), Coordinate(x: 50.0, y: 45.0), Coordinate(x: 50.0, y: 55.0), Coordinate(x: 30.0, y: 55.0), Coordinate(x: 30.0, y: 30.0)]])], precision: precision, coordinateSystem: cs))
+//        expected.append(MultiPolygon([Polygon([Coordinate(x: 60.0, y: 60.0), Coordinate(x: 60.0, y: 20.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 60.0), Coordinate(x: 60.0, y: 60.0)], innerRings: [[Coordinate(x: 30.0, y: 30.0), Coordinate(x: 30.0, y: 55.0), Coordinate(x: 50.0, y: 55.0), Coordinate(x: 50.0, y: 45.0), Coordinate(x: 40.0, y: 45.0), Coordinate(x: 40.0, y: 40.0), Coordinate(x: 50.0, y: 40.0), Coordinate(x: 50.0, y: 30.0), Coordinate(x: 30.0, y: 30.0)]])], precision: precision, coordinateSystem: cs))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPolygon_Polygon_twoSimilarPolygonsOneRotated_overlappingHoles() {
+
+        let geometry1 = Polygon([Coordinate(x: 40.0, y: 0.0), Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 40.0), Coordinate(x: 40.0, y: 40.0), Coordinate(x: 40.0, y: 0.0)], innerRings: [[Coordinate(x: 10.0, y: 20.0), Coordinate(x: 25.0, y: 20.0), Coordinate(x: 25.0, y: 30.0), Coordinate(x: 10.0, y: 30.0), Coordinate(x: 10.0, y: 20.0)]], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 50.0, y: 20.0), Coordinate(x: 20.0, y: -10.0), Coordinate(x: -10.0, y: 20.0), Coordinate(x: 20.0, y: 50.0), Coordinate(x: 50.0, y: 20.0)], innerRings: [[Coordinate(x: 30.0, y: 20.0), Coordinate(x: 30.0, y: 30.0), Coordinate(x: 15.0, y: 30.0), Coordinate(x: 15.0, y: 20.0), Coordinate(x: 30.0, y: 20.0)]], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPolygon([Polygon([Coordinate(x: 30.0, y: 0.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 0.0, y: 30.0), Coordinate(x: 10.0, y: 40.0), Coordinate(x: 30.0, y: 40.0), Coordinate(x: 40.0, y: 30.0), Coordinate(x: 40.0, y: 10.0), Coordinate(x: 30.0, y: 0.0)], innerRings: [[Coordinate(x: 10.0, y: 20.0), Coordinate(x: 30.0, y: 20.0), Coordinate(x: 30.0, y: 30.0), Coordinate(x: 10.0, y: 30.0), Coordinate(x: 10.0, y: 20.0)]], precision: precision, coordinateSystem: cs)]))
 
         XCTAssertEqual(resultGeometry, expected)
     }

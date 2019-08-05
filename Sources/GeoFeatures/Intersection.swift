@@ -5126,15 +5126,22 @@ func angleBetweenVectors(_ prevCoord: Coordinate, _ currCoord: Coordinate, _ nex
 /// - parameters:
 ///     - linearRing1: The first linear ring.
 ///     - linearRing2: The second linear ring.
+///     - areHoles: Boolean indicating whether the two linear rings are holes.  Holes are counter clockwise order,
+///                 rather than normal clockwise order.  The algorithm here generates a clockwise solution,
+///                 which needs to be made counter clockwise, in the case of holes.
 ///
 ///  - returns: An array consisting of one or two linear rings.  One, if the linear rings can be combined, else
 ///             the original two linear rings will be returned.
 ///
-fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> [LinearRing] {
+fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearRing, _ areHoles: Bool = false) -> [LinearRing] {
+
+    /// Reverse the linear rings, if holes.
+    let tempLinearRing1 = (areHoles ? LinearRing(linearRing1.reversed()) : linearRing1)
+    let tempLinearRing2 = (areHoles ? LinearRing(linearRing2.reversed()) : linearRing2)
 
     /// Simplify each geometry first
-    let simplifiedLinearRing1 = linearRing1.simplify(tolerance: 1.0)
-    let simplifiedLinearRing2 = linearRing2.simplify(tolerance: 1.0)
+    let simplifiedLinearRing1 = tempLinearRing1.simplify(tolerance: 1.0)
+    let simplifiedLinearRing2 = tempLinearRing2.simplify(tolerance: 1.0)
 
     /// Check to see whether there is a non-zero dimensional intersection.
     /// If there is not, return the two original linear rings.  We're done.  No combination is possible.
@@ -5301,7 +5308,9 @@ fileprivate func generateUnion(_ linearRing1: LinearRing, _ linearRing2: LinearR
     } while currentGraphItem.coordinate != startingCoordinate
 
     /// The starting coordinate was reached, and we have a complete new linear ring.  Return it.
-    return [newLinearRing]
+    /// However, if two holes have been combined, reverse the solution first.
+    let finalNewLinearRing = (areHoles ? LinearRing(newLinearRing.reversed()) : newLinearRing)
+    return [finalNewLinearRing]
 }
 
 fileprivate func generateIntersection(_ linearRing: LinearRing, _ multiLineString: MultiLineString) -> Geometry {
@@ -6526,7 +6535,7 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
                     var nextIndicesToCheck = [Int]()
                     for index2 in indicesToCheck {
                         let secondHole = potentialLinearRingHolesForPolygon[index2]
-                        let unionLinearRings = generateUnion(firstHole, secondHole)
+                        let unionLinearRings = generateUnion(firstHole, secondHole, true)
                         if unionLinearRings.count == 1 {
                             /// Holes were combined
                             holesWereCombined = true
