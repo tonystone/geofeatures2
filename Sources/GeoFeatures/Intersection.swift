@@ -4506,14 +4506,7 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
     guard let resultGeometryCollection = resultGeometry as? GeometryCollection else {
         return GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
     }
-    let resultMultiPoint = getMultiPoint(resultGeometryCollection)
     let resultMultiLineString = getMultiLineString(resultGeometryCollection)
-    var resultMultiLineStringEndPoints = MultiPoint()
-    if let tempMultiLineString = resultMultiLineString {
-        if let boundary = tempMultiLineString.boundary() as? MultiPoint {
-            resultMultiLineStringEndPoints = boundary
-        }
-    }
 
     /// Find and collect all intersections that will consist of LineStrings or Points.
     /// Also, generate two new linear rings that will consist of the original linear ring points
@@ -4540,22 +4533,9 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
             /// Check for a LineString or Point intersection or no intersection.
             if let lineString = lineSegmentIntersection.geometry as? LineString {
                 guard lineString.count == 2 else { continue }
-                if isHole1 && !isHole2 {
-                    if let tempMultiLineString = resultMultiLineString {
-                        if subset(lineString, tempMultiLineString) {
-                            /// The line string segment is part of a hole boundary, so don't include it in the final set of line segments or strings.
-                            /// Do, however, include the end coordinates of the line string as intersection coordinates.
-                            let firstCoordinate = lineString[0]
-                            let lastCoordinate = lineString[lineString.count - 1]
-                            if subset(firstCoordinate, resultMultiLineStringEndPoints) { intersectionCoordinates.append(firstCoordinate) }
-                            if subset(lastCoordinate, resultMultiLineStringEndPoints) { intersectionCoordinates.append(lastCoordinate) }
-                        }
-                    }
-                } else {
-                    multiLineStringGeometry.append(lineString)
-                    intersectionCoordinates.append(lineString[0])
-                    intersectionCoordinates.append(lineString[1])
-                }
+                multiLineStringGeometry.append(lineString)
+                intersectionCoordinates.append(lineString[0])
+                intersectionCoordinates.append(lineString[1])
             } else if let point = lineSegmentIntersection.geometry as? Point {
                 if isHole1 && !isHole2 {
                     if let tempMultiLineString = resultMultiLineString {
@@ -4596,21 +4576,8 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
             /// Check for a LineString or Point intersection.
             if let lineString = lineSegmentIntersection.geometry as? LineString {
                 guard lineString.count == 2 else { continue }
-                if isHole1 && !isHole2 {
-                    if let tempMultiLineString = resultMultiLineString {
-                        if subset(lineString, tempMultiLineString) {
-                            /// The line string segment is part of a hole boundary, so don't include it in the final set of line segments or strings.
-                            /// Do, however, include the end coordinates of the line string as intersection coordinates.
-                            let firstCoordinate = lineString[0]
-                            let lastCoordinate = lineString[lineString.count - 1]
-                            if subset(firstCoordinate, resultMultiLineStringEndPoints) { intersectionCoordinates.append(firstCoordinate) }
-                            if subset(lastCoordinate, resultMultiLineStringEndPoints) { intersectionCoordinates.append(lastCoordinate) }
-                        }
-                    }
-                } else {
-                    intersectionCoordinates.append(lineString[0])
-                    intersectionCoordinates.append(lineString[1])
-                }
+                intersectionCoordinates.append(lineString[0])
+                intersectionCoordinates.append(lineString[1])
             } else if let point = lineSegmentIntersection.geometry as? Point {
                 if isHole1 && !isHole2 {
                     if let tempMultiLineString = resultMultiLineString {
