@@ -6230,6 +6230,77 @@ fileprivate func appendCollection(_ newGeometryCollection: GeometryCollection, _
     existingGeometryCollection = updatedGeometryCollection
 }
 
+///
+/// Generates a single array of linear rings from two, possibly overlapping, arrays of linear rings.
+/// The final array of linear rings will be a collection of non-overlapping linear rings.
+/// For now we will assume the resulting linear rings will be completely disjoint.
+/// This function essentially performs a union on all possibly combinations of linear rings.
+///
+/// This was developed to help to determine the intersection between two Polygons, and its initial
+/// intent is to combine linear ring holes into the simplest collection possible.
+///
+/// - parameters:
+///     - linearRingArray1: The first linear ring array.
+///     - linearRingArray2: The second linear ring array.
+///
+///  - returns: An array consisting of non-overlapping linear rings.
+///
+fileprivate func combine(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> [LinearRing] {
+
+    var tempLinearRings = [LinearRing]()
+    var linearRings = linearRingArray1 + linearRingArray2
+
+    guard linearRingArray1.count > 0 && linearRingArray2.count > 0 else {
+        return linearRings
+    }
+
+    /// We have at least two potential holes that can be combined.
+    while linearRings.count >= 2 {
+        var indicesOfRemovedLinearRingHoles = [Int]()
+        let index1 = 0
+        var indicesToCheck = [Int]()
+        for tempIndex in 1..<linearRings.count {
+            indicesToCheck.append(tempIndex)
+        }
+        var firstHole = linearRings[index1]
+        indicesOfRemovedLinearRingHoles.append(index1)
+        var holesWereCombined = false
+        var firstTime = true
+        while (firstTime || holesWereCombined) && indicesToCheck.count > 0 {
+            firstTime = false
+            holesWereCombined = false
+            var nextIndicesToCheck = [Int]()
+            for index2 in indicesToCheck {
+                let secondHole = linearRings[index2]
+                let unionLinearRings = generateUnion(firstHole, secondHole, true)
+                if unionLinearRings.count == 1 {
+                    /// Holes were combined
+                    holesWereCombined = true
+                    firstHole = unionLinearRings[0]
+                    indicesOfRemovedLinearRingHoles.append(index2)
+                } else {
+                    /// Holes were not combined
+                    nextIndicesToCheck.append(index2)
+                }
+            }
+            indicesToCheck = nextIndicesToCheck
+        }
+        tempLinearRings.append(firstHole)
+        linearRings = removeAtIndices(linearRings, indicesOfRemovedLinearRingHoles)
+    }
+    if linearRings.count == 1 {
+        tempLinearRings.append(linearRings[0])
+    }
+
+    /// Simplify the linear rings
+    var finalLinearRings = [LinearRing]()
+    for linearRing in tempLinearRings {
+        finalLinearRings.append(linearRing.simplify(tolerance: 1.0))
+    }
+
+    return finalLinearRings
+}
+
 fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) -> Geometry {
 
     /// Simplify each geometry first
@@ -6259,7 +6330,6 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
     if multipolygonIntersection == nil {
         return geometryCollection
     }
-    var multiPolygonOuterLinearRings = outerLinearRings(multipolygonIntersection!)
 
     /// The two outer linear rings, main polygons, intersect on a two-dimensional section which is a multipolygon.
     /// Check for holes, or portions of holes, in the first polygon that are also in the intersection multipolygon.
@@ -6268,14 +6338,21 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
     /// Note some or all of these may be empty.
     /// Note, also, that the intersection multipolygon at this point does not have any holes.
 //    var done = false
+
+    /// Start by combining all the holes into a collection of non-overlapping holes.
+    let holes1 = holes(simplifiedPolygon1)
+    let holes2 = holes(simplifiedPolygon2)
+    let combinedHoles = combine(holes1, holes2)
+
+    /// See how the holes intersect with each intersection multipolygon.
+    var multiPolygonOuterLinearRings = outerLinearRings(multipolygonIntersection!)
     var multiPolygonGeometry = MultiPolygon(precision: Floating(), coordinateSystem: Cartesian())
     var potentialLinearRingHoles = [[LinearRing]]()
     for _ in 0..<multiPolygonOuterLinearRings.count {
         potentialLinearRingHoles.append([LinearRing]())
     }
     var outerLinearRingIndicesToIgnore = [Int]()  /// These are linear rings that have already been handled and need no further processing
-    let holes1 = holes(simplifiedPolygon1)
-    for holeLinearRing in holes1 {
+    for holeLinearRing in combinedHoles {
 //        if !done {
             for index in 0..<multiPolygonOuterLinearRings.count {
                 if outerLinearRingIndicesToIgnore.contains(index) { continue }
@@ -6358,80 +6435,78 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
 //    }
 
     /// Check for holes in the second polygon that overlap with the intersection multipolygon.
-    let holes2 = holes(simplifiedPolygon2)
-//    if !done {
-        for holeLinearRing in holes2 {
-//            if !done {
-                for index in 0..<multiPolygonOuterLinearRings.count {
-                    if outerLinearRingIndicesToIgnore.contains(index) { continue }
-                    let multiPolygonOuterLinearRing = multiPolygonOuterLinearRings[index]
-                    /// Get the intersection of each hole with the multi polygon.
-                    /// Each of the resulting two-dimensional intersections will be a potential hole in the multi polygon.
-                    var intersectionStatus = IntersectionStatus()
-                    guard let tempGeometryCollection = generateIntersectionAsSimplePolygons(holeLinearRing, multiPolygonOuterLinearRing, isHole1: true, status: &intersectionStatus) as? GeometryCollection else {
-                        return GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
-                    }
-                    
-                    let tempMultiPolygon = getMultiPolygon(tempGeometryCollection)
-                    if intersectionStatus.secondPolygonInsideFirst {
-                        /// Check the case that the outer linear ring is completely contained in the hole linear ring.
-                        outerLinearRingIndicesToIgnore.append(index)
-                        /// One polygon is inside the hole of another, but the hole and polygon may touch at a point or line string.
-                        //                    done = true
-                        var internalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
-                        if let multiPoint = getMultiPoint(tempGeometryCollection) {
-                            internalGeometryCollection.append(multiPoint)
-                        }
-                        if let multiLineString = getMultiLineString(tempGeometryCollection) {
-                            internalGeometryCollection.append(multiLineString)
-                        }
-                        appendCollection(internalGeometryCollection, &geometryCollection)
-//                        break
-                    } else if intersectionStatus.firstPolygonInsideSecond {
-                        /// If the hole is inside the outer linear ring, add it to the collection of potential holes.
-                        potentialLinearRingHoles[index].append(holeLinearRing)
-                    } else if tempMultiPolygon == nil {
-                        /// Check the case that the outer linear ring touches the hole linear ring by at most a one-dimensional object.
-                        var internalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
-                        if let multiPoint = getMultiPoint(tempGeometryCollection) {
-                            internalGeometryCollection.append(multiPoint)
-                        }
-                        if let multiLineString = getMultiLineString(tempGeometryCollection) {
-                            internalGeometryCollection.append(multiLineString)
-                        }
-                        appendCollection(internalGeometryCollection, &geometryCollection)
-                    } else {
-                        /// Check the case that the outer linear ring overlaps the hole linear ring by a two-dimensional area
-                        let multiPolygon = tempMultiPolygon!  /// Guaranteed to be not nil by virtue of the previous "else if" clause
-                        let outerLinearRingsArray = outerLinearRings(multiPolygon)
-                        
-                        //                    if (multiPolygonOuterLinearRings.count == 1) && (potentialHolesOuterLinearRings.count == 1) {
-                        //                        if linearRingsMatchTopo(holeLinearRing, potentialHolesOuterLinearRings[0]) {
-                        //                            /// potentialHolesOuterLinearRings[0] is just a hole. Do nothing.
-                        //                        } else {
-                        /// The holeLinearRing has been subtracted from the multiPolygonOuterLinearRing, and the remaining portion
-                        /// has been returned as outerLinearRingsArray[0].  This is true because outer linear rings are
-                        /// arranged clockwise and holes counter clockwise.
-                        //                            done = true
-                        var internalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
-                        if let multiPoint = getMultiPoint(tempGeometryCollection) {
-                            internalGeometryCollection.append(multiPoint)
-                        }
-                        if let multiLineString = getMultiLineString(tempGeometryCollection) {
-                            internalGeometryCollection.append(multiLineString)
-                        }
-//                        multiPolygonGeometry.append(Polygon(outerLinearRingsArray[0]))
-                        multiPolygonOuterLinearRings[index] = outerLinearRingsArray[0] /// Update the outer linear ring
-                        appendCollection(internalGeometryCollection, &geometryCollection)
-                        //                            geometryCollection = internalGeometryCollection
-                        //                            break
-                        //                        }
-                        //                    }
-                        //                    potentialLinearRingHoles[index] += potentialHolesOuterLinearRings
-                    }
-                    
-                    
-                    
+//    let holes2 = holes(simplifiedPolygon2)
+////    if !done {
+//        for holeLinearRing in holes2 {
+////            if !done {
+//                for index in 0..<multiPolygonOuterLinearRings.count {
+//                    if outerLinearRingIndicesToIgnore.contains(index) { continue }
+//                    let multiPolygonOuterLinearRing = multiPolygonOuterLinearRings[index]
+//                    /// Get the intersection of each hole with the multi polygon.
+//                    /// Each of the resulting two-dimensional intersections will be a potential hole in the multi polygon.
+//                    var intersectionStatus = IntersectionStatus()
+//                    guard let tempGeometryCollection = generateIntersectionAsSimplePolygons(holeLinearRing, multiPolygonOuterLinearRing, isHole1: true, status: &intersectionStatus) as? GeometryCollection else {
+//                        return GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+//                    }
+//
+//                    let tempMultiPolygon = getMultiPolygon(tempGeometryCollection)
+//                    if intersectionStatus.secondPolygonInsideFirst {
+//                        /// Check the case that the outer linear ring is completely contained in the hole linear ring.
+//                        outerLinearRingIndicesToIgnore.append(index)
+//                        /// One polygon is inside the hole of another, but the hole and polygon may touch at a point or line string.
+//                        //                    done = true
+//                        var internalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+//                        if let multiPoint = getMultiPoint(tempGeometryCollection) {
+//                            internalGeometryCollection.append(multiPoint)
+//                        }
+//                        if let multiLineString = getMultiLineString(tempGeometryCollection) {
+//                            internalGeometryCollection.append(multiLineString)
+//                        }
+//                        appendCollection(internalGeometryCollection, &geometryCollection)
+////                        break
+//                    } else if intersectionStatus.firstPolygonInsideSecond {
+//                        /// If the hole is inside the outer linear ring, add it to the collection of potential holes.
+//                        potentialLinearRingHoles[index].append(holeLinearRing)
+//                    } else if tempMultiPolygon == nil {
+//                        /// Check the case that the outer linear ring touches the hole linear ring by at most a one-dimensional object.
+//                        var internalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+//                        if let multiPoint = getMultiPoint(tempGeometryCollection) {
+//                            internalGeometryCollection.append(multiPoint)
+//                        }
+//                        if let multiLineString = getMultiLineString(tempGeometryCollection) {
+//                            internalGeometryCollection.append(multiLineString)
+//                        }
+//                        appendCollection(internalGeometryCollection, &geometryCollection)
+//                    } else {
+//                        /// Check the case that the outer linear ring overlaps the hole linear ring by a two-dimensional area
+//                        let multiPolygon = tempMultiPolygon!  /// Guaranteed to be not nil by virtue of the previous "else if" clause
+//                        let outerLinearRingsArray = outerLinearRings(multiPolygon)
+//
+//                        //                    if (multiPolygonOuterLinearRings.count == 1) && (potentialHolesOuterLinearRings.count == 1) {
+//                        //                        if linearRingsMatchTopo(holeLinearRing, potentialHolesOuterLinearRings[0]) {
+//                        //                            /// potentialHolesOuterLinearRings[0] is just a hole. Do nothing.
+//                        //                        } else {
+//                        /// The holeLinearRing has been subtracted from the multiPolygonOuterLinearRing, and the remaining portion
+//                        /// has been returned as outerLinearRingsArray[0].  This is true because outer linear rings are
+//                        /// arranged clockwise and holes counter clockwise.
+//                        //                            done = true
+//                        var internalGeometryCollection = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+//                        if let multiPoint = getMultiPoint(tempGeometryCollection) {
+//                            internalGeometryCollection.append(multiPoint)
+//                        }
+//                        if let multiLineString = getMultiLineString(tempGeometryCollection) {
+//                            internalGeometryCollection.append(multiLineString)
+//                        }
+////                        multiPolygonGeometry.append(Polygon(outerLinearRingsArray[0]))
+//                        multiPolygonOuterLinearRings[index] = outerLinearRingsArray[0] /// Update the outer linear ring
+//                        appendCollection(internalGeometryCollection, &geometryCollection)
+//                        //                            geometryCollection = internalGeometryCollection
+//                        //                            break
+//                        //                        }
+//                        //                    }
+//                        //                    potentialLinearRingHoles[index] += potentialHolesOuterLinearRings
+//                    }
+
 //                    if let multiPolygon = getMultiPolygon(tempGeometryCollection) {
 //                        let potentialHolesOuterLinearRings = outerLinearRings(multiPolygon)
 //                        /// Check for the special case that one polygon is completely contained in a hole of the other polygon.
@@ -6457,11 +6532,11 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
 //                        }
 //                        potentialLinearRingHoles[index] += potentialHolesOuterLinearRings
 //                    }
-                }
-//            }
-        }
+//                }
+////            }
+//        }
 //    }
-    
+
 //    if !done {
 //        let sorted = outerLingRingIndicesToRemove.sorted(by: { $1 < $0 })
 //        for index in sorted {
@@ -6472,62 +6547,62 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
     /// Combine all holes into larger holes, if possible. This will generate a final set of holes.
     /// Potential holes will be combined per each polygon in the intersection multipolygon.
 //    if !done {
-        var finalLinearRingHoles = [[LinearRing]]()
-        for _ in 0..<multiPolygonOuterLinearRings.count {
-            finalLinearRingHoles.append([LinearRing]())
-        }
-        for polygonIndex in 0..<potentialLinearRingHoles.count {
-            if outerLinearRingIndicesToIgnore.contains(polygonIndex) { continue }
-            var potentialLinearRingHolesForPolygon = potentialLinearRingHoles[polygonIndex]
-            if potentialLinearRingHolesForPolygon.count < 2 {
-                finalLinearRingHoles[polygonIndex] = potentialLinearRingHolesForPolygon
-                continue
-            }
-
-            /// We have at least two potential holes that can be combined.
-            while potentialLinearRingHolesForPolygon.count >= 2 {
-                var indicesOfRemovedLinearRingHoles = [Int]()
-                let index1 = 0
-                var indicesToCheck = [Int]()
-                for tempIndex in 1..<potentialLinearRingHolesForPolygon.count {
-                    indicesToCheck.append(tempIndex)
-                }
-                var firstHole = potentialLinearRingHolesForPolygon[index1]
-                indicesOfRemovedLinearRingHoles.append(index1)
-                var holesWereCombined = false
-                var firstTime = true
-                while (firstTime || holesWereCombined) && indicesToCheck.count > 0 {
-                    firstTime = false
-                    holesWereCombined = false
-                    var nextIndicesToCheck = [Int]()
-                    for index2 in indicesToCheck {
-                        let secondHole = potentialLinearRingHolesForPolygon[index2]
-                        let unionLinearRings = generateUnion(firstHole, secondHole, true)
-                        if unionLinearRings.count == 1 {
-                            /// Holes were combined
-                            holesWereCombined = true
-                            firstHole = unionLinearRings[0]
-                            indicesOfRemovedLinearRingHoles.append(index2)
-                        } else {
-                            /// Holes were not combined
-                            nextIndicesToCheck.append(index2)
-                        }
-                    }
-                    indicesToCheck = nextIndicesToCheck
-                }
-                finalLinearRingHoles[polygonIndex].append(firstHole)
-                potentialLinearRingHolesForPolygon = removeAtIndices(potentialLinearRingHolesForPolygon, indicesOfRemovedLinearRingHoles)
-            }
-            if potentialLinearRingHolesForPolygon.count == 1 {
-                finalLinearRingHoles[polygonIndex].append(potentialLinearRingHolesForPolygon[0])
-            }
-        }
+//        var finalLinearRingHoles = [[LinearRing]]()
+//        for _ in 0..<multiPolygonOuterLinearRings.count {
+//            finalLinearRingHoles.append([LinearRing]())
+//        }
+//        for polygonIndex in 0..<potentialLinearRingHoles.count {
+//            if outerLinearRingIndicesToIgnore.contains(polygonIndex) { continue }
+//            var potentialLinearRingHolesForPolygon = potentialLinearRingHoles[polygonIndex]
+//            if potentialLinearRingHolesForPolygon.count < 2 {
+//                finalLinearRingHoles[polygonIndex] = potentialLinearRingHolesForPolygon
+//                continue
+//            }
+//
+//            /// We have at least two potential holes that can be combined.
+//            while potentialLinearRingHolesForPolygon.count >= 2 {
+//                var indicesOfRemovedLinearRingHoles = [Int]()
+//                let index1 = 0
+//                var indicesToCheck = [Int]()
+//                for tempIndex in 1..<potentialLinearRingHolesForPolygon.count {
+//                    indicesToCheck.append(tempIndex)
+//                }
+//                var firstHole = potentialLinearRingHolesForPolygon[index1]
+//                indicesOfRemovedLinearRingHoles.append(index1)
+//                var holesWereCombined = false
+//                var firstTime = true
+//                while (firstTime || holesWereCombined) && indicesToCheck.count > 0 {
+//                    firstTime = false
+//                    holesWereCombined = false
+//                    var nextIndicesToCheck = [Int]()
+//                    for index2 in indicesToCheck {
+//                        let secondHole = potentialLinearRingHolesForPolygon[index2]
+//                        let unionLinearRings = generateUnion(firstHole, secondHole, true)
+//                        if unionLinearRings.count == 1 {
+//                            /// Holes were combined
+//                            holesWereCombined = true
+//                            firstHole = unionLinearRings[0]
+//                            indicesOfRemovedLinearRingHoles.append(index2)
+//                        } else {
+//                            /// Holes were not combined
+//                            nextIndicesToCheck.append(index2)
+//                        }
+//                    }
+//                    indicesToCheck = nextIndicesToCheck
+//                }
+//                finalLinearRingHoles[polygonIndex].append(firstHole)
+//                potentialLinearRingHolesForPolygon = removeAtIndices(potentialLinearRingHolesForPolygon, indicesOfRemovedLinearRingHoles)
+//            }
+//            if potentialLinearRingHolesForPolygon.count == 1 {
+//                finalLinearRingHoles[polygonIndex].append(potentialLinearRingHolesForPolygon[0])
+//            }
+//        }
 
         /// Build the final polygons and multipolygon
         for index in 0..<multiPolygonOuterLinearRings.count {
             if outerLinearRingIndicesToIgnore.contains(index) { continue }
             let outerLinearRing = multiPolygonOuterLinearRings[index]
-            let holes = finalLinearRingHoles[index]
+            let holes = potentialLinearRingHoles[index]
             var polygon: Polygon
             if holes.count > 0 {
                 polygon = Polygon(outerLinearRing, innerRings: holes)
