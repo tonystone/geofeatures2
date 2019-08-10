@@ -8583,6 +8583,22 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testPolygon_Polygon_intersectLineStringPolygons_noHoles() {
+
+        let geometry1 = Polygon([Coordinate(x: 0.0, y: 60.0), Coordinate(x: 40.0, y: 100.0), Coordinate(x: 40.0, y: 60.0), Coordinate(x: 60.0, y: 60.0), Coordinate(x: 60.0, y: 80.0), Coordinate(x: 100.0, y: 40.0), Coordinate(x: 60.0, y: 0.0), Coordinate(x: 40.0, y: 0.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 40.0, y: 20.0), Coordinate(x: 0.0, y: 60.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 100.0, y: 10.0), Coordinate(x: 30.0, y: 10.0), Coordinate(x: 30.0, y: 0.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 20.0, y: 80.0), Coordinate(x: 80.0, y: 80.0), Coordinate(x: 60.0, y: 100.0), Coordinate(x: 100.0, y: 100.0), Coordinate(x: 100.0, y: 60.0), Coordinate(x: 50.0, y: 60.0), Coordinate(x: 100.0, y: 10.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiLineString([LineString([Coordinate(x: 60.0, y: 60.0), Coordinate(x: 50.0, y: 60.0)])]))
+        expected.append(MultiPolygon([Polygon([Coordinate(x: 40.0, y: 80.0), Coordinate(x: 40.0, y: 60.0), Coordinate(x: 50.0, y: 60.0), Coordinate(x: 85.0, y: 25.0), Coordinate(x: 70.0, y: 10.0), Coordinate(x: 30.0, y: 10.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 40.0, y: 20.0), Coordinate(x: 20.0, y: 40.0), Coordinate(x: 20.0, y: 80.0), Coordinate(x: 40.0, y: 80.0)]), Polygon([Coordinate(x: 60.0, y: 60.0), Coordinate(x: 60.0, y: 80.0), Coordinate(x: 80.0, y: 60.0), Coordinate(x: 60.0, y: 60.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
 //    ///
 //    /// Polygon MultiPolygon tests
 //    ///

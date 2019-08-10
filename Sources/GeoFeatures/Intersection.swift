@@ -4506,6 +4506,10 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
     guard let resultGeometryCollection = resultGeometry as? GeometryCollection else {
         return GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
     }
+    let resultMultiPoint = getMultiPoint(resultGeometryCollection)
+    if resultMultiPoint != nil {
+        multiPointGeometry += resultMultiPoint!
+    }
     let resultMultiLineString = getMultiLineString(resultGeometryCollection)
 
     /// Find and collect all intersections that will consist of LineStrings or Points.
@@ -4607,8 +4611,8 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
     /// Being inside includes sharing a boundary at various points.
     if inside(finalLinearRingTuple1, finalLinearRingTuple2) {
 
-        let multiPointGeometry = generateMultiPoint(finalLinearRingTuple1)
-        let multiLineStringGeometry = generateMultiLineString(finalLinearRingTuple1, finalLinearRingTuple2)
+        let tempMultiPointGeometry = generateMultiPoint(finalLinearRingTuple1)
+        let tempMultiLineStringGeometry = generateMultiLineString(finalLinearRingTuple1, finalLinearRingTuple2)
 
         /// Handle the special case where the first linear ring is a hole and the second is not, and they share a common boundary.
         /// In this case, we cannot return here, but we must continue on to the code where the hole is subtracted from the other linear ring.
@@ -4625,14 +4629,14 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
                 multiPolygonGeometry.append(polygon)
             }
 
-            return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+            return cleanupGeometries(tempMultiPointGeometry, tempMultiLineStringGeometry, multiPolygonGeometry)
         }
     }
 
     if inside(finalLinearRingTuple2, finalLinearRingTuple1) {
 
-        let multiPointGeometry = generateMultiPoint(finalLinearRingTuple2)
-        let multiLineStringGeometry = generateMultiLineString(finalLinearRingTuple2, finalLinearRingTuple1)
+        let tempMultiPointGeometry = generateMultiPoint(finalLinearRingTuple2)
+        let tempMultiLineStringGeometry = generateMultiLineString(finalLinearRingTuple2, finalLinearRingTuple1)
 
         /// Handle the special case where the second linear ring is a hole and the first is not, and they share a common boundary.
         /// In this case, we cannot return here, but we must continue on to the code where the hole is subtracted from the other linear ring.
@@ -4649,7 +4653,7 @@ fileprivate func generateIntersectionAsSimplePolygons(_ linearRing1: LinearRing,
                 multiPolygonGeometry.append(polygon)
             }
 
-            return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
+            return cleanupGeometries(tempMultiPointGeometry, tempMultiLineStringGeometry, multiPolygonGeometry)
         }
     }
 
