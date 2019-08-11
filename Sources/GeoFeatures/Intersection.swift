@@ -397,8 +397,8 @@ fileprivate func intersectionTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry
 
     if let polgyon1 = geometry1 as? Polygon, let polygon2 = geometry2 as? Polygon {
         return generateIntersection(polgyon1, polygon2)
-//    } else if let polgyon = geometry1 as? Polygon, let multipolygon = geometry2 as? MultiPolygon {
-//        return generateIntersection(polgyon, multipolygon)
+    } else if let polgyon = geometry1 as? Polygon, let multipolygon = geometry2 as? MultiPolygon {
+        return generateIntersection(polgyon, multipolygon)
 //    } else if let multipolygon = geometry1 as? MultiPolygon, let polgyon = geometry2 as? Polygon {
 //        let intersectionMatrix = generateIntersection(polgyon, multipolygon)
 //        return intersectionMatrix.transposed()
@@ -6434,25 +6434,25 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
     return cleanupGeometries(multiPointGeometry, multiLineStringGeometry, multiPolygonGeometry)
 }
 
-//    fileprivate static func generateIntersection(_ polygon: Polygon, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
-//
-//        var matrixIntersects = IntersectionMatrix()
-//
-//        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
-//
-//        for polygonFromMP in multipolygon {
-//
-//            /// Get the relationship between the point and the polygon
-//            let intersectionMatrixResult = generateIntersection(polygon, polygonFromMP)
-//
-//            /// Update the intersection matrix as needed
-//            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
-//
-//        }
-//
-//        return matrixIntersects
-//    }
-//
+fileprivate func generateIntersection(_ polygon: Polygon, _ multipolygon: MultiPolygon) -> Geometry {
+
+    /// Simplify each geometry first
+    let simplifiedPolygon = polygon.simplify(tolerance: 1.0)
+    let simplifiedMultiPolygon = multipolygon.simplify(tolerance: 1.0)
+
+    /// Loop over the polygons in the multipolygon and get the intersections with the main polygon.
+    /// Note the polygons in the multipolygon will not intersect with each other.
+    var currentIntersection = GeometryCollection()
+    for polygonFromMP in simplifiedMultiPolygon {
+
+        if let polygonIntersection = intersection(simplifiedPolygon, polygonFromMP) as? GeometryCollection {
+            appendCollection(polygonIntersection, &currentIntersection)
+        }
+    }
+
+    return currentIntersection
+}
+
 //    fileprivate static func generateIntersection(_ multipolygon1: MultiPolygon, _ multipolygon2: MultiPolygon) -> IntersectionMatrix {
 //
 //        var matrixIntersects = IntersectionMatrix()
