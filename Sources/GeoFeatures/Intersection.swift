@@ -6305,6 +6305,25 @@ fileprivate func combine(_ linearRingArray1: [LinearRing], _ linearRingArray2: [
     return finalLinearRings
 }
 
+///
+/// Generates an array of linear ring arrays from a single linear ring array.
+///
+/// This was developed to help to determine the intersection between two Polygons, and its initial
+/// intent is to keep track of linear rings generated for each hole/polygon intersection.
+///
+/// - parameters:
+///     - linearRings: Linear ring array.
+///
+///  - returns: An array consisting of an array of linear rings.
+///
+fileprivate func generateLinearRingArrays(_ linearRings: [LinearRing]) -> [[LinearRing]] {
+    var linearRingsArrays = [[LinearRing]]()
+    for linearRing in linearRings {
+        linearRingsArrays.append([linearRing])
+    }
+    return linearRingsArrays
+}
+
 fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) -> Geometry {
 
     /// Simplify each geometry first
@@ -6349,6 +6368,7 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
 
     /// See how the holes intersect with each intersection multipolygon.
     var multiPolygonOuterLinearRings = outerLinearRings(multipolygonIntersection!)
+    var finalMultiPolygonOuterLinearRings = generateLinearRingArrays(multiPolygonOuterLinearRings)
     var multiPolygonGeometry = MultiPolygon(precision: Floating(), coordinateSystem: Cartesian())
     var potentialLinearRingHoles = [[LinearRing]]()
     for _ in 0..<multiPolygonOuterLinearRings.count {
@@ -6408,7 +6428,10 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
                 if let multiLineString = getMultiLineString(tempGeometryCollection) {
                     internalGeometryCollection.append(multiLineString)
                 }
-                multiPolygonOuterLinearRings[index] = outerLinearRingsArray[0] /// Update the outer linear ring
+                if outerLinearRingsArray.count == 1 {
+                    multiPolygonOuterLinearRings[index] = outerLinearRingsArray[0] /// Update the outer linear ring
+                }
+                finalMultiPolygonOuterLinearRings[index] = outerLinearRingsArray /// Update the outer linear rings array
                 appendCollection(internalGeometryCollection, &geometryCollection)
             }
         }
@@ -6417,15 +6440,24 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
     /// Build the final polygons and multipolygon
     for index in 0..<multiPolygonOuterLinearRings.count {
         if outerLinearRingIndicesToIgnore.contains(index) { continue }
-        let outerLinearRing = multiPolygonOuterLinearRings[index]
-        let holes = potentialLinearRingHoles[index]
-        var polygon: Polygon
-        if holes.count > 0 {
-            polygon = Polygon(outerLinearRing, innerRings: holes)
+        let outerLinearRingsArray = finalMultiPolygonOuterLinearRings[index]
+        if outerLinearRingsArray.count == 1 {
+            let outerLinearRing = outerLinearRingsArray[0]
+            let holes = potentialLinearRingHoles[index]
+            var polygon: Polygon
+            if holes.count > 0 {
+                polygon = Polygon(outerLinearRing, innerRings: holes)
+            } else {
+                polygon = Polygon(outerLinearRing)
+            }
+            multiPolygonGeometry.append(polygon)
         } else {
-            polygon = Polygon(outerLinearRing)
+            /// outerLinearRingsArray.count > 1
+            for outerLinearRing in outerLinearRingsArray {
+                let polygon = Polygon(outerLinearRing)
+                multiPolygonGeometry.append(polygon)
+            }
         }
-        multiPolygonGeometry.append(polygon)
     }
 
     /// Clean up and return
