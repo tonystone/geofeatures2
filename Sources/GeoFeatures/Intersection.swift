@@ -4084,6 +4084,34 @@ fileprivate func inside(_ linearRingTupleArray1: [(Coordinate, Bool, Bool)], _ l
 }
 
 ///
+/// Determines whether one linear ring is inside another linear ring.  Note that sharing all or part of a boundary is inside.
+///
+/// This was developed to help to determine the intersection between two Polygons.
+/// Note the current algorithm is very simple and checks only if all the vertices of the first linear ring are inside
+/// the second linear ring.  This algorithm will likely be improved later to cover the general case.
+///
+/// - parameters:
+///     - linearRingTupleArray1: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+///     - linearRingTupleArray2: Array of (coordinate, intersection coordinate flag, inbound intersection coordinate flag)
+///
+///  - returns: A boolean indicating whether the first linear ring tuple is inside the second linear ring tuple.
+///
+fileprivate func inside(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> Bool {
+
+    guard (linearRing1.count > 1) && (linearRing2.count > 1) else { return false }
+
+    /// Check each vertex of the first linear ring to see whether it is inside the second linear ring.
+    for coordinate1 in linearRing1 {
+        if !inside(coordinate1, linearRing2) {
+            return false
+        }
+    }
+
+    /// Passed all the checks.  It must be inside.
+    return true
+}
+
+///
 /// Determines whether a linear ring is inside a multi polygon.  Note that sharing all or part of a boundary is fine.
 /// No part of the linear ring can be outside the multi polygon or inside a hole of one of the polygons.
 ///
@@ -6440,10 +6468,10 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
     /// Build the final polygons and multipolygon
     for index in 0..<multiPolygonOuterLinearRings.count {
         if outerLinearRingIndicesToIgnore.contains(index) { continue }
+        let holes = potentialLinearRingHoles[index]
         let outerLinearRingsArray = finalMultiPolygonOuterLinearRings[index]
         if outerLinearRingsArray.count == 1 {
             let outerLinearRing = outerLinearRingsArray[0]
-            let holes = potentialLinearRingHoles[index]
             var polygon: Polygon
             if holes.count > 0 {
                 polygon = Polygon(outerLinearRing, innerRings: holes)
@@ -6453,9 +6481,25 @@ fileprivate func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) 
             multiPolygonGeometry.append(polygon)
         } else {
             /// outerLinearRingsArray.count > 1
+            var remainingHoles = holes
+            var nextHoles = [LinearRing]()
             for outerLinearRing in outerLinearRingsArray {
-                let polygon = Polygon(outerLinearRing)
+                var holesForThisLinearRing = [LinearRing]()
+                for currentHole in remainingHoles {
+                    if inside(currentHole, outerLinearRing) {
+                        holesForThisLinearRing.append(currentHole)
+                    } else {
+                        nextHoles.append(currentHole)
+                    }
+                }
+                var polygon: Polygon
+                if holesForThisLinearRing.count > 0 {
+                    polygon = Polygon(outerLinearRing, innerRings: holesForThisLinearRing)
+                } else {
+                    polygon = Polygon(outerLinearRing)
+                }
                 multiPolygonGeometry.append(polygon)
+                remainingHoles = nextHoles
             }
         }
     }

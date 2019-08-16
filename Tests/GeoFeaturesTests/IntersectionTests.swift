@@ -8826,6 +8826,21 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testPolygon_MultiPolygon_interiorsIntersect_bothPolygons_withMultipleHoles() {
+
+        let geometry1 = Polygon([Coordinate(x: -90.0, y: 20.0), Coordinate(x: -90.0, y: 60.0), Coordinate(x: 100.0, y: 60.0), Coordinate(x: 100.0, y: 20.0), Coordinate(x: -90.0, y: 20.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: -80.0, y: 0.0), Coordinate(x: -80.0, y: 80.0), Coordinate(x: 0.0, y: 80.0), Coordinate(x: 0.0, y: 0.0), Coordinate(x: -80.0, y: 0.0)], innerRings: [[Coordinate(x: -70.0, y: 30.0), Coordinate(x: -50.0, y: 30.0), Coordinate(x: -50.0, y: 50.0), Coordinate(x: -70.0, y: 50.0), Coordinate(x: -70.0, y: 30.0)], [Coordinate(x: -30.0, y: 10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: -10.0, y: 70.0), Coordinate(x: -30.0, y: 70.0), Coordinate(x: -30.0, y: 10.0)]]), Polygon([Coordinate(x: 10.0, y: 80.0), Coordinate(x: 90.0, y: 80.0), Coordinate(x: 90.0, y: 0.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 10.0, y: 80.0)], innerRings: [[Coordinate(x: 20.0, y: 10.0), Coordinate(x: 40.0, y: 10.0), Coordinate(x: 40.0, y: 70.0), Coordinate(x: 20.0, y: 70.0), Coordinate(x: 20.0, y: 1.0)], [Coordinate(x: 60.0, y: 30.0), Coordinate(x: 80.0, y: 30.0), Coordinate(x: 80.0, y: 50.0), Coordinate(x: 60.0, y: 50.0), Coordinate(x: 60.0, y: 30.0)]])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPolygon([Polygon([Coordinate(x: -10.0, y: 20.0), Coordinate(x: -10.0, y: 60.0), Coordinate(x: 0.0, y: 60.0), Coordinate(x: 0.0, y: 20.0), Coordinate(x: -10.0, y: 20.0)]), Polygon([Coordinate(x: -30.0, y: 60.0), Coordinate(x: -30.0, y: 20.0), Coordinate(x: -80.0, y: 20.0), Coordinate(x: -80.0, y: 60.0), Coordinate(x: -30.0, y: 60.0)], innerRings: [[Coordinate(x: -70.0, y: 30.0), Coordinate(x: -50.0, y: 30.0), Coordinate(x: -50.0, y: 50.0), Coordinate(x: -70.0, y: 50.0), Coordinate(x: -70.0, y: 30.0)]]), Polygon([Coordinate(x: 40.0, y: 20.0), Coordinate(x: 40.0, y: 60.0), Coordinate(x: 90.0, y: 60.0), Coordinate(x: 90.0, y: 20.0), Coordinate(x: 40.0, y: 20.0)], innerRings: [[Coordinate(x: 60.0, y: 30.0), Coordinate(x: 80.0, y: 30.0), Coordinate(x: 80.0, y: 50.0), Coordinate(x: 60.0, y: 50.0), Coordinate(x: 60.0, y: 30.0)]]), Polygon([Coordinate(x: 20.0, y: 60.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 10.0, y: 20.0), Coordinate(x: 10.0, y: 60.0), Coordinate(x: 20.0, y: 60.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// MultiPolygon Point tests
     ///
