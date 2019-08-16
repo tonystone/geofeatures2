@@ -399,9 +399,8 @@ fileprivate func intersectionTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry
         return generateIntersection(polgyon1, polygon2)
     } else if let polgyon = geometry1 as? Polygon, let multipolygon = geometry2 as? MultiPolygon {
         return generateIntersection(polgyon, multipolygon)
-//    } else if let multipolygon = geometry1 as? MultiPolygon, let polgyon = geometry2 as? Polygon {
-//        let intersectionMatrix = generateIntersection(polgyon, multipolygon)
-//        return intersectionMatrix.transposed()
+    } else if let multipolygon = geometry1 as? MultiPolygon, let polgyon = geometry2 as? Polygon {
+        return generateIntersection(polgyon, multipolygon)
 //    } else if let multipolygon1 = geometry1 as? MultiPolygon, let multipolygon2 = geometry2 as? MultiPolygon {
 //        return generateIntersection(multipolygon1, multipolygon2)
     }
