@@ -401,8 +401,8 @@ fileprivate func intersectionTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry
         return generateIntersection(polgyon, multipolygon)
     } else if let multipolygon = geometry1 as? MultiPolygon, let polgyon = geometry2 as? Polygon {
         return generateIntersection(polgyon, multipolygon)
-//    } else if let multipolygon1 = geometry1 as? MultiPolygon, let multipolygon2 = geometry2 as? MultiPolygon {
-//        return generateIntersection(multipolygon1, multipolygon2)
+    } else if let multipolygon1 = geometry1 as? MultiPolygon, let multipolygon2 = geometry2 as? MultiPolygon {
+        return generateIntersection(multipolygon1, multipolygon2)
     }
     return GeometryCollection()
 }
@@ -6528,22 +6528,25 @@ fileprivate func generateIntersection(_ polygon: Polygon, _ multipolygon: MultiP
     return currentIntersection
 }
 
-//    fileprivate static func generateIntersection(_ multipolygon1: MultiPolygon, _ multipolygon2: MultiPolygon) -> IntersectionMatrix {
-//
-//        var matrixIntersects = IntersectionMatrix()
-//
-//        /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
-//
-//        for polygonFromMP in multipolygon1 {
-//
-//            /// Get the relationship between the point and the polygon
-//            let intersectionMatrixResult = generateIntersection(polygonFromMP, multipolygon2)
-//
-//            /// Update the intersection matrix as needed
-//            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
-//
-//        }
-//
-//        return matrixIntersects
-//    }
-//}
+fileprivate func generateIntersection(_ multipolygon1: MultiPolygon, _ multipolygon2: MultiPolygon) -> Geometry {
+
+    /// Simplify each geometry first
+    let simplifiedMultiPolygon1 = multipolygon1.simplify(tolerance: 1.0)
+    let simplifiedMultiPolygon2 = multipolygon2.simplify(tolerance: 1.0)
+
+    /// Loop over the polygons in the first multipolygon and get the intersections with each polygon in the second multipolygon.
+    /// For now we will simply combine all these intersections into a single final collection and return it.
+    /// It's likely that a more complex and complete algorithm will need to be added later to find the union of the intersections,
+    /// so that a simpler collection of geometries will be returned.
+    var currentIntersection = GeometryCollection()
+    for polygonFromMP1 in simplifiedMultiPolygon1 {
+        for polygonFromMP2 in simplifiedMultiPolygon2 {
+
+            if let polygonIntersection = intersection(polygonFromMP1, polygonFromMP2) as? GeometryCollection {
+                appendCollection(polygonIntersection, &currentIntersection)
+            }
+        }
+    }
+
+    return currentIntersection
+}
