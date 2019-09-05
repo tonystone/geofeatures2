@@ -21,6 +21,7 @@ struct Constants {
     static let NOT_FOUND: Int = -1
     static let EPSILON: Double = 0.000001
     static let TWO_PI: Double = 2.0 * Double.pi
+    static let DEFAULT_TOLERANCE = 1.0
 }
 
 /// Describes the relationship between the first and second geometries
@@ -191,9 +192,38 @@ struct IntersectionStatus {
 
 func intersection(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
 
-    let resultIntersectionGeometry = intersectionGeometry(geometry1, geometry2)
+    let geometryCollection1 = geometry1 as? GeometryCollection
+    let geometryCollection2 = geometry2 as? GeometryCollection
 
-    return resultIntersectionGeometry
+    if (geometryCollection1 == nil) && (geometryCollection2 == nil) {
+        let resultIntersectionGeometry = intersectionGeometry(geometry1, geometry2)
+        return resultIntersectionGeometry
+    } else if (geometryCollection1 == nil) && (geometryCollection2 != nil) {
+        let simplifiedCollection2 = geometryCollection2!.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
+        var tempGeometryCollection = GeometryCollection()
+        for tempGeometry2 in simplifiedCollection2 {
+            tempGeometryCollection.append(intersectionGeometry(geometry1, tempGeometry2))
+        }
+        return tempGeometryCollection.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
+    } else if (geometryCollection1 != nil) && (geometryCollection2 == nil) {
+        let simplifiedCollection1 = geometryCollection1!.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
+        var tempGeometryCollection = GeometryCollection()
+        for tempGeometry1 in simplifiedCollection1 {
+            tempGeometryCollection.append(intersectionGeometry(tempGeometry1, geometry2))
+        }
+        return tempGeometryCollection.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
+    } else {
+        /// Both geometries are geometry collections.
+        let simplifiedCollection1 = geometryCollection1!.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
+        let simplifiedCollection2 = geometryCollection2!.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
+        var tempGeometryCollection = GeometryCollection()
+        for tempGeometry1 in simplifiedCollection1 {
+            for tempGeometry2 in simplifiedCollection2 {
+                tempGeometryCollection.append(intersectionGeometry(tempGeometry1, tempGeometry2))
+            }
+        }
+        return tempGeometryCollection.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
+    }
 }
 
 /// Returns the intersection geometry.
