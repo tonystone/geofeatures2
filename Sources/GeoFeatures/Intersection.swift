@@ -202,14 +202,24 @@ func intersection(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
         let simplifiedCollection2 = geometryCollection2!.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
         var tempGeometryCollection = GeometryCollection()
         for tempGeometry2 in simplifiedCollection2 {
-            tempGeometryCollection.append(intersectionGeometry(geometry1, tempGeometry2))
+            let resultGeometry = intersectionGeometry(geometry1, tempGeometry2)
+            if let newGeometryCollection = resultGeometry as? GeometryCollection {
+                tempGeometryCollection.updateCollection(newGeometryCollection)
+            } else {
+                tempGeometryCollection.update(resultGeometry)
+            }
         }
         return tempGeometryCollection.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
     } else if (geometryCollection1 != nil) && (geometryCollection2 == nil) {
         let simplifiedCollection1 = geometryCollection1!.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
         var tempGeometryCollection = GeometryCollection()
         for tempGeometry1 in simplifiedCollection1 {
-            tempGeometryCollection.append(intersectionGeometry(tempGeometry1, geometry2))
+            let resultGeometry = intersectionGeometry(tempGeometry1, geometry2)
+            if let newGeometryCollection = resultGeometry as? GeometryCollection {
+                tempGeometryCollection.updateCollection(newGeometryCollection)
+            } else {
+                tempGeometryCollection.update(resultGeometry)
+            }
         }
         return tempGeometryCollection.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
     } else {
@@ -219,7 +229,12 @@ func intersection(_ geometry1: Geometry, _ geometry2: Geometry) -> Geometry {
         var tempGeometryCollection = GeometryCollection()
         for tempGeometry1 in simplifiedCollection1 {
             for tempGeometry2 in simplifiedCollection2 {
-                tempGeometryCollection.append(intersectionGeometry(tempGeometry1, tempGeometry2))
+                let resultGeometry = intersectionGeometry(tempGeometry1, tempGeometry2)
+                if let newGeometryCollection = resultGeometry as? GeometryCollection {
+                    tempGeometryCollection.updateCollection(newGeometryCollection)
+                } else {
+                    tempGeometryCollection.update(resultGeometry)
+                }
             }
         }
         return tempGeometryCollection.simplify(tolerance: Constants.DEFAULT_TOLERANCE)
@@ -6241,7 +6256,7 @@ fileprivate func cleanupGeometries(_ multiPoint: MultiPoint?, _ multiLineString:
 }
 
 ///
-/// Appends a new geometry collection to an existing a geometry collection.
+/// Appends a new geometry collection to an existing geometry collection.
 ///
 /// This was developed to help to determine the intersection between two Polygons.
 ///

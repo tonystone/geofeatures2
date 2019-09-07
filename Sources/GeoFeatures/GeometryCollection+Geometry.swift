@@ -125,6 +125,168 @@ extension GeometryCollection {
     }
 
     ///
+    /// Appends a new geometry collection to the current geometry collection by mutating the original.
+    ///
+    /// - parameters:
+    ///     - newGeometryCollection: A geometry collection consisting of a subset of one MultiPoint, one MultiLineString and one MultiPolygon.
+    ///
+    ///  - returns: An updated version of itself consisting of at most three items: a MultiPoint, a MultiLineString, and a MultiPolygon.
+    ///
+    public mutating func updateCollection(_ newGeometryCollection: GeometryCollection) {
+        /// Get the existing collections
+        var multiPoint = MultiPoint()
+        var multiLineString = MultiLineString()
+        var multiPolygon = MultiPolygon()
+        for geometryCollection in self {
+            if let tempMultiPoint = geometryCollection as? MultiPoint {
+                multiPoint = tempMultiPoint
+            } else if let tempMultiLineString = geometryCollection as? MultiLineString {
+                multiLineString = tempMultiLineString
+            } else if let tempMultiPolygon = geometryCollection as? MultiPolygon {
+                multiPolygon = tempMultiPolygon
+            }
+        }
+
+        /// Get the new collections and append them to the existing collections
+        for geometryCollection in newGeometryCollection {
+            if let tempMultiPoint = geometryCollection as? MultiPoint {
+                multiPoint += tempMultiPoint
+            } else if let tempMultiLineString = geometryCollection as? MultiLineString {
+                multiLineString += tempMultiLineString
+            } else if let tempMultiPolygon = geometryCollection as? MultiPolygon {
+                multiPolygon += tempMultiPolygon
+            }
+        }
+
+        /// Return an updated collection
+        var updatedGeometryCollection = GeometryCollection()
+        if multiPoint.count > 0 {
+            updatedGeometryCollection.append(multiPoint)
+        }
+        if multiLineString.count > 0 {
+            updatedGeometryCollection.append(multiLineString)
+        }
+        if multiPolygon.count > 0 {
+            updatedGeometryCollection.append(multiPolygon)
+        }
+        self = updatedGeometryCollection
+    }
+
+    ///
+    /// Appends a new geometry to the current geometry collection without mutating the original.
+    ///
+    /// - parameters:
+    ///     - newGeometry: A geometry consisting which can be a Point, MultiPoint, LineString, LinearRing, MultiLineString, Polygon or MultiPolygon.
+    ///                    This code does not currently address the case where the geometry is a GeometryCollection.
+    ///                    For that, you should call the appendCollection function.
+    ///
+    ///  - returns: A GeometryCollection consisting of at most three items: a MultiPoint, a MultiLineString, and a MultiPolygon.
+    ///
+    public func appendGeometry(_ newGeometry: Geometry) -> GeometryCollection {
+        /// Get the existing collections
+        var multiPoint = MultiPoint()
+        var multiLineString = MultiLineString()
+        var multiPolygon = MultiPolygon()
+        for geometryCollection in self {
+            if let tempMultiPoint = geometryCollection as? MultiPoint {
+                multiPoint = tempMultiPoint
+            } else if let tempMultiLineString = geometryCollection as? MultiLineString {
+                multiLineString = tempMultiLineString
+            } else if let tempMultiPolygon = geometryCollection as? MultiPolygon {
+                multiPolygon = tempMultiPolygon
+            }
+        }
+
+        /// Append the new geometry to the correct collection
+        if let point = newGeometry as? Point {
+            multiPoint.append(point)
+        } else if let multipoint = newGeometry as? MultiPoint {
+            multiPoint += multipoint
+        } else if let lineString = newGeometry as? LineString {
+            multiLineString.append(lineString)
+        } else if let linearRing = newGeometry as? LinearRing {
+            let lineString = linearRing.convertToLineString()
+            multiLineString.append(lineString)
+        } else if let newMultiLineString = newGeometry as? MultiLineString {
+            multiLineString += newMultiLineString
+        } else if let polygon = newGeometry as? Polygon {
+            multiPolygon.append(polygon)
+        } else if let newMultiPolygon = newGeometry as? MultiPolygon {
+            multiPolygon += newMultiPolygon
+        }
+
+        /// Return an updated collection
+        var updatedGeometryCollection = GeometryCollection()
+        if multiPoint.count > 0 {
+            updatedGeometryCollection.append(multiPoint)
+        }
+        if multiLineString.count > 0 {
+            updatedGeometryCollection.append(multiLineString)
+        }
+        if multiPolygon.count > 0 {
+            updatedGeometryCollection.append(multiPolygon)
+        }
+        return updatedGeometryCollection
+    }
+
+    ///
+    /// Appends a new geometry to the current geometry collection by mutating the original.
+    ///
+    /// - parameters:
+    ///     - newGeometry: A geometry consisting which can be a Point, MultiPoint, LineString, LinearRing, MultiLineString, Polygon or MultiPolygon.
+    ///                    This code does not currently address the case where the geometry is a GeometryCollection.
+    ///                    For that, you should call the appendCollection function.
+    ///
+    ///  - returns: An updated version of itself consisting of at most three items: a MultiPoint, a MultiLineString, and a MultiPolygon.
+    ///
+    public mutating func update(_ newGeometry: Geometry) {
+        /// Get the existing collections
+        var multiPoint = MultiPoint()
+        var multiLineString = MultiLineString()
+        var multiPolygon = MultiPolygon()
+        for geometryCollection in self {
+            if let tempMultiPoint = geometryCollection as? MultiPoint {
+                multiPoint = tempMultiPoint
+            } else if let tempMultiLineString = geometryCollection as? MultiLineString {
+                multiLineString = tempMultiLineString
+            } else if let tempMultiPolygon = geometryCollection as? MultiPolygon {
+                multiPolygon = tempMultiPolygon
+            }
+        }
+
+        /// Append the new geometry to the correct collection
+        if let point = newGeometry as? Point {
+            multiPoint.append(point)
+        } else if let multipoint = newGeometry as? MultiPoint {
+            multiPoint += multipoint
+        } else if let lineString = newGeometry as? LineString {
+            multiLineString.append(lineString)
+        } else if let linearRing = newGeometry as? LinearRing {
+            let lineString = linearRing.convertToLineString()
+            multiLineString.append(lineString)
+        } else if let newMultiLineString = newGeometry as? MultiLineString {
+            multiLineString += newMultiLineString
+        } else if let polygon = newGeometry as? Polygon {
+            multiPolygon.append(polygon)
+        } else if let newMultiPolygon = newGeometry as? MultiPolygon {
+            multiPolygon += newMultiPolygon
+        }
+
+        /// Return an updated collection
+        var updatedGeometryCollection = GeometryCollection()
+        if multiPoint.count > 0 {
+            updatedGeometryCollection.append(multiPoint)
+        }
+        if multiLineString.count > 0 {
+            updatedGeometryCollection.append(multiLineString)
+        }
+        if multiPolygon.count > 0 {
+            updatedGeometryCollection.append(multiPolygon)
+        }
+        self = updatedGeometryCollection
+    }
+
+    ///
     /// Finds the multipoint in a geometry collection.
     ///
     ///  - returns: The multipoint in the geometry collection.
