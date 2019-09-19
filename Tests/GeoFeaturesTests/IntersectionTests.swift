@@ -360,6 +360,76 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testPoint_MultiLineString_emptyMultiLineString() {
+
+        let geometry1 = Point(Coordinate(x: 0.0, y: 0.0))
+        let geometry2 = MultiLineString()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiLineString_multiLineStringCrossesItself_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 2.0, y: 3.0), Coordinate(x: 2.0, y: 0.0)])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiLineString_multiLineStringCrossesItself_withIntersection() {
+
+        let geometry1 = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 2.0, y: 3.0), Coordinate(x: 2.0, y: 0.0)])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = Point(Coordinate(x: 2.0, y: 2.0))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiLineString_multiLineStringFormsClosedLoop_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 0.0)]), LineString([Coordinate(x: 1.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)]), LineString([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 1.0)]), LineString([Coordinate(x: 0.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiLineString_multiLineStringFormsClosedLoop_withIntersection() {
+
+        let geometry1 = Point(Coordinate(x: 0.5, y: 0.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 0.0)]), LineString([Coordinate(x: 1.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)]), LineString([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 1.0)]), LineString([Coordinate(x: 0.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = Point(Coordinate(x: 0.5, y: 0.0))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// Point Polygon tests
     ///
@@ -476,6 +546,119 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testPoint_Polygon_emptyPolygon() {
+
+        let geometry1 = Point(Coordinate(x: 0.0, y: 0.0))
+        let geometry2 = Polygon()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_invalidPolygon_polygonCrossesItself_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 0.0, y: 0.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 0.0, y: 0.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_invalidPolygon_polygonCrossesItself_withIntersection() {
+
+        let geometry1 = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 0.0, y: 0.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 0.0, y: 0.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = Point(Coordinate(x: 2.0, y: 2.0))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_invalidPolygon_polygonWithHoleInsideAndOutsidePolygon_noIntersection_outsideHole() {
+
+        let geometry1 = Point(Coordinate(x: -100.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 0.0, y: -12.0), Coordinate(x: 12.0, y: 0.0), Coordinate(x: 0.0, y: 12.0), Coordinate(x: -12.0, y: 0.0), Coordinate(x: 0.0, y: -12.0)]])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_invalidPolygon_polygonWithHoleInsideAndOutsidePolygon_noIntersection_insideHole() {
+
+        let geometry1 = Point(Coordinate(x: -9.0, y: 0.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 0.0, y: -12.0), Coordinate(x: 12.0, y: 0.0), Coordinate(x: 0.0, y: 12.0), Coordinate(x: -12.0, y: 0.0), Coordinate(x: 0.0, y: -12.0)]])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_invalidPolygon_polygonWithHoleInsideAndOutsidePolygon_withIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -9.0, y: 9.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], innerRings: [[Coordinate(x: 0.0, y: -12.0), Coordinate(x: 12.0, y: 0.0), Coordinate(x: 0.0, y: 12.0), Coordinate(x: -12.0, y: 0.0), Coordinate(x: 0.0, y: -12.0)]])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = Point(Coordinate(x: -9.0, y: 9.0))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_Polygon_invalidPolygon_polygonNotClosed_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: 0.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// The following test works, although I'm not sure it should, given the polygon is not closed.
+    func testPoint_Polygon_invalidPolygon_polygonNotClosed_withIntersection() {
+
+        let geometry1 = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: 0.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = Point(Coordinate(x: 2.0, y: 2.0))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// Point MultiPolygon tests
     ///
@@ -588,6 +771,120 @@ class IntersectionTests: XCTestCase {
         }
 
         let expected  = geometry1
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiPolygon_emptyPolygon() {
+
+        let geometry1 = Point(Coordinate(x: 0.0, y: 0.0))
+        let geometry2 = MultiPolygon()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiPolygon_invalidMultiPolygon_multiPolygonCrossesItself_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: -10.0, y: 0.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: -10.0, y: 0.0)]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 10.0, y: -12.0), Coordinate(x: 0.0, y: -2.0), Coordinate(x: 40.0, y: -2.0), Coordinate(x: 40.0, y: -12.0), Coordinate(x: 20.0, y: -12.0), Coordinate(x: 20.0, y: -2.0)])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiPolygon_invalidMultiPolygon_multiPolygonCrossesItself_withIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -10.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: -10.0, y: 0.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: -10.0, y: 0.0)]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 10.0, y: -12.0), Coordinate(x: 0.0, y: -2.0), Coordinate(x: 40.0, y: -2.0), Coordinate(x: 40.0, y: -12.0), Coordinate(x: 20.0, y: -12.0), Coordinate(x: 20.0, y: -2.0)])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = Point(Coordinate(x: -10.0, y: 2.0))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiPolygon_invalidMultiPolygon_polygonsWithHolesInsideAndOutsideMultiPolygon_noIntersection_outsideHole() {
+
+        let geometry1 = Point(Coordinate(x: -100.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: 100.0, y: 100.0), Coordinate(x: 100.0, y: 200.0), Coordinate(x: 200.0, y: 200.0), Coordinate(x: 200.0, y: 100.0), Coordinate(x: 100.0, y: 100.0)], innerRings: [[Coordinate(x: 150.0, y: 90.0), Coordinate(x: 210.0, y: 150.0), Coordinate(x: 150.0, y: 210.0), Coordinate(x: 90.0, y: 150.0), Coordinate(x: 150.0, y: 90.0)]]), Polygon([Coordinate(x: 100.0, y: -100.0), Coordinate(x: 200.0, y: -100.0), Coordinate(x: 200.0, y: -200.0), Coordinate(x: 100.0, y: -200.0), Coordinate(x: 100.0, y: -100.0)], innerRings: [[Coordinate(x: 150.0, y: -90.0), Coordinate(x: 90.0, y: -150.0), Coordinate(x: 150.0, y: -210.0), Coordinate(x: 210.0, y: -150.0), Coordinate(x: 150.0, y: -90.0)]])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiPolygon_invalidMultiPolygon_polygonsWithHolesInsideAndOutsideMultiPolygon_noIntersection_insideHole() {
+
+        let geometry1 = Point(Coordinate(x: 150.0, y: 150.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: 100.0, y: 100.0), Coordinate(x: 100.0, y: 200.0), Coordinate(x: 200.0, y: 200.0), Coordinate(x: 200.0, y: 100.0), Coordinate(x: 100.0, y: 100.0)], innerRings: [[Coordinate(x: 150.0, y: 90.0), Coordinate(x: 210.0, y: 150.0), Coordinate(x: 150.0, y: 210.0), Coordinate(x: 90.0, y: 150.0), Coordinate(x: 150.0, y: 90.0)]]), Polygon([Coordinate(x: 100.0, y: -100.0), Coordinate(x: 200.0, y: -100.0), Coordinate(x: 200.0, y: -200.0), Coordinate(x: 100.0, y: -200.0), Coordinate(x: 100.0, y: -100.0)], innerRings: [[Coordinate(x: 150.0, y: -90.0), Coordinate(x: 90.0, y: -150.0), Coordinate(x: 150.0, y: -210.0), Coordinate(x: 210.0, y: -150.0), Coordinate(x: 150.0, y: -90.0)]])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testPoint_MultiPolygon_invalidMultiPolygon_polygonsWithHolesInsideAndOutsideMultiPolygon_withIntersection() {
+
+        let geometry1 = Point(Coordinate(x: 101.0, y: 199.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: 100.0, y: 100.0), Coordinate(x: 100.0, y: 200.0), Coordinate(x: 200.0, y: 200.0), Coordinate(x: 200.0, y: 100.0), Coordinate(x: 100.0, y: 100.0)], innerRings: [[Coordinate(x: 150.0, y: 90.0), Coordinate(x: 210.0, y: 150.0), Coordinate(x: 150.0, y: 210.0), Coordinate(x: 90.0, y: 150.0), Coordinate(x: 150.0, y: 90.0)]]), Polygon([Coordinate(x: 100.0, y: -100.0), Coordinate(x: 200.0, y: -100.0), Coordinate(x: 200.0, y: -200.0), Coordinate(x: 100.0, y: -200.0), Coordinate(x: 100.0, y: -100.0)], innerRings: [[Coordinate(x: 150.0, y: -90.0), Coordinate(x: 90.0, y: -150.0), Coordinate(x: 150.0, y: -210.0), Coordinate(x: 210.0, y: -150.0), Coordinate(x: 150.0, y: -90.0)]])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = Point(Coordinate(x: 101.0, y: 199.0))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// The following test works, although I'm not sure it should, given the polygons are not closed.
+    func testPoint_MultiPolygon_invalidMultiPolygon_polygonsNotClosed_noIntersection() {
+
+        let geometry1 = Point(Coordinate(x: -1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: 100.0, y: 100.0), Coordinate(x: 100.0, y: 200.0), Coordinate(x: 200.0, y: 200.0), Coordinate(x: 200.0, y: 100.0)], innerRings: [[Coordinate(x: 160.0, y: 160.0), Coordinate(x: 120.0, y: 160.0), Coordinate(x: 120.0, y: 120.0), Coordinate(x: 160.0, y: 120.0), Coordinate(x: 160.0, y: 160.0)]]), Polygon([Coordinate(x: 100.0, y: -100.0), Coordinate(x: 200.0, y: -100.0), Coordinate(x: 200.0, y: -200.0), Coordinate(x: 100.0, y: -200.0)], innerRings: [[Coordinate(x: 120.0, y: -120.0), Coordinate(x: 120.0, y: -160.0), Coordinate(x: 160.0, y: -160.0), Coordinate(x: 160.0, y: -120.0), Coordinate(x: 120.0, y: -120.0)]])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// The following test works, although I'm not sure it should, given the polygons are not closed.
+    func testPoint_MultiPolygon_invalidMultiPolygon_polygonsNotClosed_withIntersection() {
+
+        let geometry1 = Point(Coordinate(x: 110.0, y: -110.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: 100.0, y: 100.0), Coordinate(x: 100.0, y: 200.0), Coordinate(x: 200.0, y: 200.0), Coordinate(x: 200.0, y: 100.0)], innerRings: [[Coordinate(x: 160.0, y: 160.0), Coordinate(x: 120.0, y: 160.0), Coordinate(x: 120.0, y: 120.0), Coordinate(x: 160.0, y: 120.0), Coordinate(x: 160.0, y: 160.0)]]), Polygon([Coordinate(x: 100.0, y: -100.0), Coordinate(x: 200.0, y: -100.0), Coordinate(x: 200.0, y: -200.0), Coordinate(x: 100.0, y: -200.0)], innerRings: [[Coordinate(x: 120.0, y: -120.0), Coordinate(x: 120.0, y: -160.0), Coordinate(x: 160.0, y: -160.0), Coordinate(x: 160.0, y: -120.0), Coordinate(x: 120.0, y: -120.0)]])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = Point(Coordinate(x: 110.0, y: -110.0))
 
         XCTAssertEqual(resultGeometry, expected)
     }
