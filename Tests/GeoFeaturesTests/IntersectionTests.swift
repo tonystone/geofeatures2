@@ -12352,6 +12352,20 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testMultiPolygon_Point_firstEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = Point(Coordinate(x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// MultiPolygon MultiPoint tests
     ///
@@ -12762,6 +12776,48 @@ class IntersectionTests: XCTestCase {
         compare(resultGeometry, expected)
     }
 
+    func testMultiPolygon_MultiPoint_bothEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = MultiPoint()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_MultiPoint_firstEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = MultiPoint([Point(Coordinate(x: 10.0, y: 2.0)), Point(Coordinate(x: 0.5, y: -4.0)), Point(Coordinate(x: -1.0, y: 5.0))], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_MultiPoint_secondEmpty() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.0, y: 5.0), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 1.0, y: 3.0)]), Polygon([Coordinate(x: -6.0, y: 2.0), Coordinate(x: -4.0, y: 6.0), Coordinate(x: -2.0, y: 2.0), Coordinate(x: -6.0, y: 2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPoint()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// MultiPolygon LineString tests
     ///
@@ -12992,6 +13048,48 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testMultiPolygon_LineString_bothEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = LineString()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_firstEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LineString_secondEmpty() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// MultiPolygon LinearRing tests
     ///
@@ -13216,6 +13314,48 @@ class IntersectionTests: XCTestCase {
         var expected  = GeometryCollection()
         expected.append(MultiPoint([Point(Coordinate(x: 20.0, y: -2.0))]))
         expected.append(MultiLineString([LineString([Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0)]), LineString([Coordinate(x: -20.0, y: 9.0), Coordinate(x: -8.0, y: 9.0), Coordinate(x: -8.0, y: 3.0)]), LineString([Coordinate(x: 20.0, y: -3.0), Coordinate(x: 2.0, y: -3.0)])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LinearRing_bothEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = LinearRing()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LinearRing_firstEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_LinearRing_secondEmpty() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
 
         XCTAssertEqual(resultGeometry, expected)
     }
@@ -13538,6 +13678,48 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testMultiPolygon_MultiLineString_bothEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = MultiLineString()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_MultiLineString_firstEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)]), LineString([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -20.0), Coordinate(x: -20.0, y: -20.0), Coordinate(x: -20.0, y: -10.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_MultiLineString_secondEmpty() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// MultiPolygon Polygon tests
     ///
@@ -13779,6 +13961,48 @@ class IntersectionTests: XCTestCase {
 
         var expected  = GeometryCollection()
         expected.append(MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])], precision: precision, coordinateSystem: cs))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_Polygon_bothEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = Polygon()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_Polygon_firstEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = Polygon([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_Polygon_secondEmpty() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
 
         XCTAssertEqual(resultGeometry, expected)
     }
@@ -14029,6 +14253,48 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testMultiPolygon_MultiPolygon_bothEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = MultiPolygon()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_MultiPolygon_firstEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 1.0, y: 1.0)]), Polygon([Coordinate(x: 10.0, y: 10.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 10.0, y: 30.0), Coordinate(x: 10.0, y: 10.0)])], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygon_MultiPolygon_secondEmpty() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -10.0, y: 3.0), Coordinate(x: -10.0, y: 13.0), Coordinate(x: -2.0, y: 13.0), Coordinate(x: -2.0, y: 3.0)]), Polygon([Coordinate(x: 8.0, y: -2.0), Coordinate(x: 8.0, y: -8.0), Coordinate(x: 2.0, y: -8.0), Coordinate(x: 8.0, y: -2.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// MultiPolygon GeometryCollection tests
     ///
@@ -14265,6 +14531,49 @@ class IntersectionTests: XCTestCase {
         var expected  = GeometryCollection()
         expected.append(MultiLineString([LineString([Coordinate(x: 3.0, y: -8.0), Coordinate(x: 3.0, y: -18.0), Coordinate(x: 6.0, y: -18.0)])]))
         expected.append(MultiPolygon([Polygon([Coordinate(x: -3.0, y: 3.0), Coordinate(x: -5.0, y: 3.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -3.0, y: 3.0) ])]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygonGeometryCollection_bothEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = GeometryCollection()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testMultiPolygonGeometryCollection_firstEmpty() {
+
+        let geometry1 = MultiPolygon()
+        let geometry2 = GeometryCollection([MultiPolygon([Polygon([Coordinate(x: 1.0, y: 0.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 2.0, y: 0.0), Coordinate(x: 1.0, y: 0.0)]), Polygon([Coordinate(x: -6.0, y: 2.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -2.0, y: 2.0), Coordinate(x: -6.0, y: 2.0)])]), Point(Coordinate(x: 5.0, y: 5.0)), MultiLineString([LineString([Coordinate(x: 3.0, y: -8.0), Coordinate(x: 3.0, y: -18.0), Coordinate(x: 6.0, y: -18.0)])])])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// This test is redundant but added for consistency.
+    func testMultiPolygonGeometryCollection_secondEmpty() {
+
+        let geometry1 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[Coordinate(x: 16.0, y: -16.0), Coordinate(x: 16.0, y: -12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: 12.0, y: -16.0), Coordinate(x: 16.0, y: -16.0)]])])
+        let geometry2 = GeometryCollection()
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
 
         XCTAssertEqual(resultGeometry, expected)
     }
