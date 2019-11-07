@@ -3415,6 +3415,34 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testLineString_Point_invalidLineString_noIntersection() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = Point(Coordinate(x: 0.0, y: 0.0), precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_Point_invalidLineString_firstSubsetOfSecondInterior() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 5.0, y: 1.0), Coordinate(x: 3.0, y: 1.0), Coordinate(x: 3.0, y: 10.0)])
+        let geometry2 = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? Point else {
+            return XCTFail()
+        }
+
+        let expected  = geometry2
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// LineString MultiPoint tests
     ///
@@ -3613,6 +3641,50 @@ class IntersectionTests: XCTestCase {
         let expected = GeometryCollection()
 
         XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_MultiPoint_invalidLineString_noIntersection() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = MultiPoint([Point(Coordinate(x: 0.0, y: 0.0)), Point(Coordinate(x: 2.0, y: 2.0))])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([])
+
+        compare(resultGeometry, expected)
+    }
+
+    ///  The following test does have an intersection, but since the line string is invalid, it returns none.
+    ///  We may want to change this later.
+    func testLineString_MultiPoint_invalidLineString_intersectsAtLineStringBoundaryButNoIntersectionReturned() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = MultiPoint([Point(Coordinate(x: 0.0, y: 0.0)), Point(Coordinate(x: 1.0, y: 1.0))])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([])
+
+        compare(resultGeometry, expected)
+    }
+
+    func testLineString_MultiPoint_invalidLineString_secondSubsetOfFirstInterior() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 5.0, y: 5.0), Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 5.0, y: 5.0))])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? MultiPoint else {
+            return XCTFail()
+        }
+
+        let expected = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 5.0, y: 5.0))])
+
+        compare(resultGeometry, expected)
     }
 
     ///
@@ -3933,6 +4005,113 @@ class IntersectionTests: XCTestCase {
         XCTAssertEqual(resultGeometry, expected)
     }
 
+    func testLineString_LineString_invalidFirstLineString_noIntersection() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_LineString_invalidSecondLineString_noIntersection() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)])
+        let geometry2 = LineString([Coordinate(x: 1.0, y: -1.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_LineString_bothLineStringsInvalid_noIntersection() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = LineString([Coordinate(x: 1.0, y: -1.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// These two line strings do intersect, but because the first one is invalid, no intersection is returned.
+    /// We may wish to change this later.
+    func testLineString_LineString_invalidFirstLineString_intersectAtOnePoint() {
+
+        let geometry1 = LineString([Coordinate(x: -1.0, y: -1.0)])
+        let geometry2 = LineString([Coordinate(x: -2.0, y: 0.0), Coordinate(x: 0.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// These two line strings do intersect, but because the second one is invalid, no intersection is returned.
+    /// We may wish to change this later.
+    func testLineString_LineString_invalidSecondLineString_intersectAtOnePoint() {
+
+        let geometry1 = LineString([Coordinate(x: 0.0, y: 2.0), Coordinate(x: 2.0, y: 0.0), Coordinate(x: 4.0, y: 2.0)])
+        let geometry2 = LineString([Coordinate(x: 1.0, y: 1.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// These two line strings do intersect, but because the second one is invalid, no intersection is returned.
+    /// Note the first line string is also invalid, but it is invalid in a way that is different from the second.
+    /// We may wish to change this later.
+    func testLineString_LineString_bothLineStringsInvalid_intersectAtOnePoint() {
+
+        let geometry1 = LineString([Coordinate(x: 0.0, y: 2.0), Coordinate(x: 2.0, y: 0.0), Coordinate(x: 4.0, y: 2.0), Coordinate(x: 4.0, y: 4.0), Coordinate(x: -4.0, y: -4.0)])
+        let geometry2 = LineString([Coordinate(x: 1.0, y: 1.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// These two line strings do intersect, but because both are invalid, no intersection is returned.
+    /// We may wish to change this later.
+    func testLineString_LineString_bothLineStringsInvalid_intersectAtOnePoint2() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = LineString([Coordinate(x: 1.0, y: 1.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
     ///
     /// LineString LinearRing tests
     ///
@@ -4217,6 +4396,122 @@ class IntersectionTests: XCTestCase {
         }
 
         let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_LinearRing_invalidLineString_noIntersection() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0), Coordinate(x: 1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_LinearRing_invalidLinearRing_noIntersection() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_LinearRing_invalidLineStringAndLinearRing_noIntersection() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0)])
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_LinearRing_invalidLineStringAndLinearRing_noIntersection2() {
+
+        let geometry1 = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)])
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0), Coordinate(x: 1.0, y: -1.0), Coordinate(x: 1.0, y: -3.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// The two geometries intersect, but because the line string has only one point, no intersection is returned.
+    func testLineString_LinearRing_invalidLineString_intersectAtOnePoint() {
+
+        let geometry1 = LineString([Coordinate(x: -2.0, y: -2.0)])
+        let geometry2 = LinearRing([Coordinate(x: -2.0, y: 0.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -5.0, y: -2.0), Coordinate(x: -2.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_LinearRing_invalidLineString_intersectAtOnePoint2() {
+
+        let geometry1 = LineString([Coordinate(x: -5.0, y: -5.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 20.0, y: 20.0)])
+        let geometry2 = LinearRing([Coordinate(x: -2.0, y: 0.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -5.0, y: -2.0), Coordinate(x: -2.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -2.0, y: -2.0))]))
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    /// The two geometries intersect, but because the linear ring has only one point, no intersection is returned.
+    func testLineString_LinearRing_invalidLinearRing_intersectAtOnePoint() {
+
+        let geometry1 = LineString([Coordinate(x: -5.0, y: -5.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 20.0, y: 20.0)])
+        let geometry2 = LinearRing([Coordinate(x: -2.0, y: -2.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        let expected  = GeometryCollection()
+
+        XCTAssertEqual(resultGeometry, expected)
+    }
+
+    func testLineString_LinearRing_invalidLinearRing_intersectAtOnePoint2() {
+
+        let geometry1 = LineString([Coordinate(x: -5.0, y: -5.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 20.0, y: 20.0)])
+        let geometry2 = LinearRing([Coordinate(x: -2.0, y: 0.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -5.0, y: -2.0), Coordinate(x: -2.0, y: 0.0), Coordinate(x: -5.0, y: -2.0)])
+
+        guard let resultGeometry = intersection(geometry1, geometry2) as? GeometryCollection else {
+            return XCTFail()
+        }
+
+        var expected  = GeometryCollection()
+        expected.append(MultiPoint([Point(Coordinate(x: -2.0, y: -2.0))]))
 
         XCTAssertEqual(resultGeometry, expected)
     }
