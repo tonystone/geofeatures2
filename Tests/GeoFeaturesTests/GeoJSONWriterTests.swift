@@ -526,17 +526,19 @@ private extension Dictionary where Key == String, Value == Any {
 
     func egaul(jsonObject other: [Key: Value]) -> Bool {
 
+        /// The dictionaries should be the same size.
+        guard self.count == other.count
+            else { return false }
+
         for i in self.indices {
-            /// Does other contain the same indice?
-            guard other.indices.contains(i)
+
+            /// Does the key at the current index exist in the other dictionary?
+            let theKey = self[i].key
+            guard let theOtherValue = other[theKey]
                 else { return false }
 
-            /// Does the element at indice contain the same key?
-            guard self[i].key == other[i].key
-                else { return false }
-
-            /// Does the element at indice contain the same type and value?
-            guard jsonObjectEqual(self[i].value, other[i].value)
+            /// Is the value at the current index the same type and value?
+            guard jsonObjectEqual(self[i].value, theOtherValue)
                 else { return false }
         }
         return true

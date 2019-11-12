@@ -24,7 +24,9 @@ import Swift
 ///
 public struct Geographic: CoordinateSystem, Equatable, Hashable {
     public init() {}
-    public var hashValue: Int = String(reflecting: Geographic.self).hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(String(reflecting: Geographic.self))
+    }
 }
 
 ///

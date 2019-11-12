@@ -42,14 +42,14 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
     ///
     /// - SeeAlso: Dimension
     ///
-    public var dimension: Dimension {
+    var dimension: Dimension {
         return self.isEmpty() ? .empty : .one
     }
 
     ///
     /// - Returns: true if this Geometry is an empty Geometry.
     ///
-    public func isEmpty() -> Bool {
+    func isEmpty() -> Bool {
         return self.isEmpty
     }
 
@@ -58,7 +58,7 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
     ///
     /// - Note: The boundary of a LineString if empty is the empty MultiPoint. If not empty it is the first and last point.
     ///
-    public func boundary() -> Geometry {
+    func boundary() -> Geometry {
 
         var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
@@ -71,7 +71,7 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
         return boundary
     }
 
-    public func bounds() -> Bounds? {
+    func bounds() -> Bounds? {
 
         var iterator = self.makeIterator()
 
