@@ -33,7 +33,7 @@ public protocol CoordinateCollectionType: MutableCollection where Element == Coo
 ///
 /// - Remarks: This covers `LineString` and `LinearRing`.
 ///
-public extension CoordinateCollectionType where Self: Geometry & Curve {
+extension CoordinateCollectionType where Self: Geometry & Curve {
 
     ///
     /// The spatial dimension of `self`.
@@ -42,14 +42,14 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
     ///
     /// - SeeAlso: Dimension
     ///
-    var dimension: Dimension {
+    public var dimension: Dimension {
         return self.isEmpty() ? .empty : .one
     }
 
     ///
     /// - Returns: true if this Geometry is an empty Geometry.
     ///
-    func isEmpty() -> Bool {
+    public func isEmpty() -> Bool {
         return self.isEmpty
     }
 
@@ -58,7 +58,7 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
     ///
     /// - Note: The boundary of a LineString if empty is the empty MultiPoint. If not empty it is the first and last point.
     ///
-    func boundary() -> Geometry {
+    public func boundary() -> Geometry {
 
         var boundary = MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
 
@@ -71,7 +71,7 @@ public extension CoordinateCollectionType where Self: Geometry & Curve {
         return boundary
     }
 
-    func bounds() -> Bounds? {
+    public func bounds() -> Bounds? {
 
         var iterator = self.makeIterator()
 

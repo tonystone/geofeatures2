@@ -27,14 +27,14 @@ import GeoFeatures
 ///
 /// - Note: The path routines translate all Coordinate types to 2d flat space dropping z and m from 2DM, 3D, and 3DM coordinates.
 ///
-public extension CGContext {
+extension CGContext {
 
     ///
     /// Adds a previously created Geometry object to the current path in a graphics context.
     ///
     /// - Parameter geometry: A Geometry object.
     ///
-    func add(_ geometry: Geometry) {
+    public func add(_ geometry: Geometry) {
 
         guard let representable = geometry as? PathRepresentable
             else { return }
@@ -48,7 +48,7 @@ public extension CGContext {
 ///
 /// Note: The drawing routines translate all Coordinate types to 2d flat space dropping z and m from 2DM, 3D, and 3DM coordinates.
 ///
-public extension CGContext {
+extension CGContext {
 
     ///
     /// Draws the `Point`.
@@ -59,7 +59,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ point: Point, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ point: Point, using mode: CGPathDrawingMode? = nil) {
         self.add(point)
         self.drawPath(using: mode ?? .fillStroke)
     }
@@ -73,7 +73,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ lineString: LineString, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ lineString: LineString, using mode: CGPathDrawingMode? = nil) {
         self.add(lineString)
         self.drawPath(using: mode ?? (lineString.isClosed() ? .fillStroke : .stroke))
     }
@@ -87,7 +87,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ linearRing: LinearRing, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ linearRing: LinearRing, using mode: CGPathDrawingMode? = nil) {
         self.add(linearRing)
         self.drawPath(using: mode ?? (linearRing.isClosed() ? .fillStroke : .stroke))
     }
@@ -101,7 +101,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ polygon: Polygon, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ polygon: Polygon, using mode: CGPathDrawingMode? = nil) {
         self.add(polygon)
         self.drawPath(using: mode ?? .fillStroke)
     }
@@ -115,7 +115,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ multiPoint: MultiPoint, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ multiPoint: MultiPoint, using mode: CGPathDrawingMode? = nil) {
         for point in multiPoint {
             self.draw(point, using: mode)
         }
@@ -130,7 +130,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ multiLineString: MultiLineString, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ multiLineString: MultiLineString, using mode: CGPathDrawingMode? = nil) {
         for lineString in multiLineString {
             self.draw(lineString, using: mode)
         }
@@ -145,7 +145,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ multiPolygon: MultiPolygon, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ multiPolygon: MultiPolygon, using mode: CGPathDrawingMode? = nil) {
         for polygon in multiPolygon {
             self.draw(polygon, using: mode)
         }
@@ -160,7 +160,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ geometryCollection: GeometryCollection, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ geometryCollection: GeometryCollection, using mode: CGPathDrawingMode? = nil) {
         for geometry in geometryCollection {
             self.draw(geometry, using: mode)
         }
@@ -175,7 +175,7 @@ public extension CGContext {
     ///
     /// - Remarks: If nil is passed as the mode (the default value), the geometry will be drawn and filled based on the shape type (e.g. a closed LineString is filled, while an open LineString is not).
     ///
-    func draw(_ geometry: Geometry, using mode: CGPathDrawingMode? = nil) {
+    public func draw(_ geometry: Geometry, using mode: CGPathDrawingMode? = nil) {
         switch geometry {
         case let point              as Point:               self.draw(point, using: mode);              break
         case let lineString         as LineString:          self.draw(lineString, using: mode);         break
