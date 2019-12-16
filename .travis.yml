@@ -70,7 +70,7 @@ before_install:
   - |
     if [ -e Gemfile ]; then
        export BUNDLE_GEMFILE=Gemfile
-       gem install bundler
+       gem install bundler -v 1.9.10
        bundler install
     fi
   #
