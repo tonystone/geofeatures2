@@ -74,14 +74,6 @@ before_install:
        bundler install
     fi
   #
-  # OSX requires swiftlint be installed
-  #
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        brew unlink swiftlint
-        brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/b4bd27d43e3df20735e2704eaf05b37ce5a6d626/Formula/swiftlint.rb
-    fi
-  #
   # Linux requires downloading Swift and tools
   #
   - |
