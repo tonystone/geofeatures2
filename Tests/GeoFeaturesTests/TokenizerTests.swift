@@ -54,6 +54,11 @@ private class TestToken: Token, CustomStringConvertible {
         return self.description == TestToken.NEW_LINE.description
     }
 
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.description)
+        hasher.combine(self.pattern)
+    }
+    
     var description: String
     var pattern: String
 }
