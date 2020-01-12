@@ -16,7 +16,7 @@ matrix:
   include:
     -
       os: linux
-      dist: xenial
+      dist: bionic
       sudo: required
       env:
          - BUILD="cmake build"
@@ -27,7 +27,7 @@ matrix:
          - BUILD="cmake build"
     -
       os: linux
-      dist: trusty
+      dist: bionic
       sudo: required
       env:
          - BUILD="swift build"
@@ -81,9 +81,9 @@ before_install:
       sudo apt-get update -y
       sudo apt-get -y install clang-3.8 lldb-3.8 libicu-dev
 
-      wget https://swift.org/builds/swift-5.1.2-release/ubuntu1604/swift-5.1.2-RELEASE/swift-5.1.2-RELEASE-ubuntu16.04.tar.gz
-      tar xzvf swift-5.1.2-RELEASE-ubuntu16.04.tar.gz
-      export PATH=$(pwd)/swift-5.1.2-RELEASE-ubuntu16.04/usr/bin:$PATH
+      wget https://swift.org/builds/swift-5.1.2-release/ubuntu1804/swift-5.1.2-RELEASE/swift-5.1.2-RELEASE-ubuntu18.04.tar.gz
+      tar xzvf swift-5.1.2-RELEASE-ubuntu18.04.tar.gz
+      export PATH=$(pwd)/swift-5.1.2-RELEASE-ubuntu18.04/usr/bin:$PATH
     fi
 
 script:
