@@ -253,7 +253,7 @@ class MultiPointPathRepresentableTests: XCTestCase {
             return path
         }()
 
-        XCTAssertEqual(input.path(), expected)
+        comparePointsAndTypes(input.path(), expected)
     }
 
     func testPathWithTansform() {
@@ -268,7 +268,7 @@ class MultiPointPathRepresentableTests: XCTestCase {
             return path
         }()
 
-        XCTAssertEqual(input.0.path(transform: input.transform), expected)
+        comparePointsAndTypes(input.0.path(transform: input.transform), expected)
     }
 }
 
@@ -290,7 +290,7 @@ class MultiLineStringPathRepresentableTests: XCTestCase {
             return path
         }()
 
-        XCTAssertEqual(input.path(), expected)
+        comparePointsAndTypes(input.path(), expected)
     }
 
     func testPathWithTansform() {
@@ -307,7 +307,7 @@ class MultiLineStringPathRepresentableTests: XCTestCase {
             return path
         }()
 
-        XCTAssertEqual(input.0.path(transform: input.transform), expected)
+        comparePointsAndTypes(input.0.path(transform: input.transform), expected)
     }
 }
 
@@ -441,6 +441,14 @@ class GeometryCollectionPathRepresentableTests: XCTestCase {
 
         XCTAssertEqual(input.0.path(transform: input.transform), expected)
     }
+}
+
+private func comparePointsAndTypes(_ inputPath: CGPath, _ expectedResult: CGPath) {
+
+    let firstPointsAndTypes = inputPath.getPathElementsPointsAndTypes()
+    let secondPointsAndTypes = expectedResult.getPathElementsPointsAndTypes()
+    XCTAssertEqual(firstPointsAndTypes.0, secondPointsAndTypes.0)
+    XCTAssertEqual(firstPointsAndTypes.1, secondPointsAndTypes.1)
 }
 
 #endif

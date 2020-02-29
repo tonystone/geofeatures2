@@ -24,7 +24,9 @@ import Swift
 ///
 public struct Cartesian: CoordinateSystem, Equatable, Hashable {
     public init() {}
-    public var hashValue: Int = String(reflecting: Cartesian.self).hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(String(reflecting: Cartesian.self))
+    }
 }
 
 ///

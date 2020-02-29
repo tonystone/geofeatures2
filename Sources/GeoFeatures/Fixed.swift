@@ -57,8 +57,8 @@ public struct Fixed: Precision {
 
 extension Fixed: Hashable {
 
-    public var hashValue: Int {
-        return 31.hashValue &+ scale.hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(scale)
     }
 }
 

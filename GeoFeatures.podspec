@@ -25,4 +25,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Sources/GeoFeatures/**/*.swift'
 
+  s.swift_version = '5.1'
+
 end
