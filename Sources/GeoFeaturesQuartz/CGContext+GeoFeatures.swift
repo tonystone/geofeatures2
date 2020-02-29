@@ -27,7 +27,7 @@ import GeoFeatures
 ///
 /// - Note: The path routines translate all Coordinate types to 2d flat space dropping z and m from 2DM, 3D, and 3DM coordinates.
 ///
-public extension CGContext {
+extension CGContext {
 
     ///
     /// Adds a previously created Geometry object to the current path in a graphics context.
@@ -48,7 +48,7 @@ public extension CGContext {
 ///
 /// Note: The drawing routines translate all Coordinate types to 2d flat space dropping z and m from 2DM, 3D, and 3DM coordinates.
 ///
-public extension CGContext {
+extension CGContext {
 
     ///
     /// Draws the `Point`.

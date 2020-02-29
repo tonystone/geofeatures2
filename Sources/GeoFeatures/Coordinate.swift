@@ -108,16 +108,16 @@ extension Coordinate: CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 extension Coordinate: Hashable {
-
-    public var hashValue: Int {
-        var hash = 31 &* x.hashValue ^ 37 &* y.hashValue
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
         if let z = self.z {
-            hash = hash ^ 41 &* z.hashValue
+            hasher.combine(z)
         }
         if let m = self.m {
-            hash = hash ^ 53 &* m.hashValue
+            hasher.combine(m)
         }
-        return hash
     }
 }
 

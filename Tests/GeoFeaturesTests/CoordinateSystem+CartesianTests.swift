@@ -21,7 +21,9 @@ import XCTest
 import GeoFeatures
 
 private struct DummyCoordinateReferenceSystem: CoordinateSystem, Equatable, Hashable {
-    public var hashValue: Int { return String(reflecting: self).hashValue }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(String(reflecting: self))
+    }
 }
 
 class CoordinateSystemCartesianTests: XCTestCase {

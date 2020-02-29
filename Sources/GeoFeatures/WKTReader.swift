@@ -75,6 +75,11 @@ extension WKTReader {
             return self.description == WKT.NEW_LINE.description
         }
 
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(self.description)
+            hasher.combine(self.pattern)
+        }
+
         var description: String
         var pattern: String
     }

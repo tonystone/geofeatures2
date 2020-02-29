@@ -242,7 +242,7 @@ class CGContextGeoFeaturesTests: XCTestCase {
 
         context?.add(input)
 
-        XCTAssertEqual(context?.path, expected)
+        comparePointsAndTypes(context, expected)
     }
 
     func testDrawMultiPoint() {
@@ -282,10 +282,10 @@ class CGContextGeoFeaturesTests: XCTestCase {
             path.addLine(to: CGPoint(x: 225, y: 100))
             return path
         }()
-        
+
         context?.add(input)
 
-        XCTAssertEqual(context?.path, expected)
+        comparePointsAndTypes(context, expected)
     }
 
     func testDrawMultiLineString() {
@@ -437,6 +437,83 @@ extension CGContextGeoFeaturesTests {
 
         return CGImageDestinationFinalize(destination)
     }
+}
+
+extension CGPath {
+    func forEachElement( body: @escaping @convention(block) (CGPathElement) -> Void) {
+        typealias Body = @convention(block) (CGPathElement) -> Void
+        let callback: @convention(c) (UnsafeMutableRawPointer, UnsafePointer<CGPathElement>) -> Void = { (info, element) in
+            let body = unsafeBitCast(info, to: Body.self)
+            body(element.pointee)
+        }
+        //print(MemoryLayout.size(ofValue: body))
+        let unsafeBody = unsafeBitCast(body, to: UnsafeMutableRawPointer.self)
+        self.apply(info: unsafeBody, function: unsafeBitCast(callback, to: CGPathApplierFunction.self))
+    }
+    func getPathElementsPoints() -> [CGPoint] {
+        var arrayPoints : [CGPoint]! = [CGPoint]()
+        self.forEachElement { element in
+            switch (element.type) {
+            case CGPathElementType.moveToPoint:
+                arrayPoints.append(element.points[0])
+            case .addLineToPoint:
+                arrayPoints.append(element.points[0])
+            case .addQuadCurveToPoint:
+                arrayPoints.append(element.points[0])
+                arrayPoints.append(element.points[1])
+            case .addCurveToPoint:
+                arrayPoints.append(element.points[0])
+                arrayPoints.append(element.points[1])
+                arrayPoints.append(element.points[2])
+            default: break
+            }
+        }
+        return arrayPoints
+    }
+    func getPathElementsPointsAndTypes() -> ([CGPoint],[CGPathElementType]) {
+        var arrayPoints : [CGPoint]! = [CGPoint]()
+        var arrayTypes : [CGPathElementType]! = [CGPathElementType]()
+        self.forEachElement { element in
+            switch (element.type) {
+            case CGPathElementType.moveToPoint:
+                arrayPoints.append(element.points[0])
+                arrayTypes.append(element.type)
+            case .addLineToPoint:
+                arrayPoints.append(element.points[0])
+                arrayTypes.append(element.type)
+            case .addQuadCurveToPoint:
+                arrayPoints.append(element.points[0])
+                arrayPoints.append(element.points[1])
+                arrayTypes.append(element.type)
+                arrayTypes.append(element.type)
+            case .addCurveToPoint:
+                arrayPoints.append(element.points[0])
+                arrayPoints.append(element.points[1])
+                arrayPoints.append(element.points[2])
+                arrayTypes.append(element.type)
+                arrayTypes.append(element.type)
+                arrayTypes.append(element.type)
+            default: break
+            }
+        }
+        return (arrayPoints,arrayTypes)
+    }
+}
+
+private func comparePointsAndTypes(_ context: CGContext?, _ expectedResult: CGPath) {
+
+    guard let safeContext = context else {
+        XCTFail("context unexpectedly nil."); return
+    }
+
+    guard let safePath = safeContext.path else {
+        XCTFail("Path for context unexpectedly nil."); return
+    }
+
+    let firstPointsAndTypes = safePath.getPathElementsPointsAndTypes()
+    let secondPointsAndTypes = expectedResult.getPathElementsPointsAndTypes()
+    XCTAssertEqual(firstPointsAndTypes.0, secondPointsAndTypes.0)
+    XCTAssertEqual(firstPointsAndTypes.1, secondPointsAndTypes.1)
 }
 
 #endif

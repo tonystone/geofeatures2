@@ -12,7 +12,7 @@
     <img src="https://img.shields.io/badge/Compatible-CocoaPods%20%7C%20Swift%20PM-lightgray.svg?style=flat" alt="Compatible: CocoaPods | Swift PM">
 </a>
 <a href="https://github.com/tonystone/geofeatures2/" target="_blank">
-   <img src="https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat" alt="Swift 4.0">
+   <img src="https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat" alt="Swift 5.0">
 </a>
 <a href="https://github.com/tonystone/geofeatures2/" target="_blank">
    <img src="https://img.shields.io/cocoapods/v/GeoFeatures.svg?style=flat" alt="Pod Version">
@@ -79,8 +79,8 @@ Build Environment
 
 | Platform | Swift | Swift Build | Xcode |
 |:--------:|:-----:|:----------:|:------:|
-| Linux    | [4.0.3](https://swift.org/builds/swift-4.0.3-release/ubuntu1404/swift-4.0.3-RELEASE/swift-4.0.3-RELEASE-ubuntu14.04.tar.gz) | &#x2714; | &#x2718; |
-| OSX      | [4.0.3](https://swift.org/builds/swift-4.0.3-release/xcode/swift-4.0.3-RELEASE/swift-4.0.3-RELEASE-osx.pkg) | &#x2714; | Xcode 9.2 |
+| Linux    | 5.0| &#x2714; | &#x2718; |
+| OSX      | 5.0| &#x2714; | Xcode 11.3 |
 
 Minimum Runtime Version
 

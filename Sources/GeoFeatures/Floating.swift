@@ -43,8 +43,8 @@ public struct Floating: Precision {
 
 extension Floating: Hashable {
 
-    public var hashValue: Int {
-        return 31.hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(31)
     }
 }
 
