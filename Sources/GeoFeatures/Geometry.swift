@@ -87,3 +87,80 @@ public protocol Geometry {
 public func == (lhs: Geometry, rhs: Geometry) -> Bool {
     return lhs.equals(rhs)
 }
+
+///
+/// Predicate implementation for `Geometry` protocol
+///
+/// - note: In the comments below P is used to refer to 0-dimensional geometries (Points and MultiPoints), \
+///         L is used to refer to 1-dimensional geometries (LineStrings and MultiLineStrings) and A is used\
+///         to refer to 2-dimensional geometries (Polygons and MultiPolygons).
+///
+extension Geometry {
+
+    func equals(_ other: Geometry) -> Bool {   // FIXME: equals is implemented but is still required to be implemented for a class implementing Geometry.  Figure out why it is.
+        return relate(other, pattern: "TFFFTFFFT")
+    }
+
+    public func disjoint(_ other: Geometry) -> Bool {
+        return relate(other, pattern: "FF*FF****")
+    }
+
+    public func intersects(_ other: Geometry) -> Bool {
+        return !disjoint(other)
+    }
+
+    public func touches(_ other: Geometry) -> Bool {
+
+        if self.dimension == .zero && other.dimension == .zero {
+            return false
+        }
+        return relate(other, pattern: "FT*******") || relate(other, pattern: "F**T*****") || relate(other, pattern: "F***T****")
+    }
+
+    public func crosses(_ other: Geometry) -> Bool {
+
+        if self.dimension == .zero && other.dimension == .one ||
+           self.dimension == .zero && other.dimension == .two ||
+           self.dimension == .one  && other.dimension == .two {
+
+            return relate(other, pattern: "T*T******")
+
+        } else if self.dimension == .one && other.dimension == .one {
+
+            return relate(other, pattern: "0********")
+        }
+        return false
+    }
+
+    public func within(_ other: Geometry) -> Bool {
+        return relate(other, pattern: "T*F**F***")
+    }
+
+    public func contains(_ other: Geometry) -> Bool {
+        return other.within(self)
+    }
+
+    public func overlaps(_ other: Geometry) -> Bool {
+
+        if self.dimension == .zero && other.dimension == .zero ||
+           self.dimension == .two  && other.dimension == .two {
+
+            return relate(other, pattern: "T*T***T**")
+
+        } else if self.dimension == .one && other.dimension == .one {
+
+            return relate(other, pattern: "1*T***T**")
+        }
+        return false
+    }
+
+    public func relate(_ other: Geometry, pattern: String) -> Bool {
+        let matrix = calculateIntersectionMatrix(other)
+
+        return matrix.matches(pattern)
+    }
+
+    fileprivate func calculateIntersectionMatrix(_ other: Geometry) -> IntersectionMatrix {
+        return IntersectionMatrix.generateMatrix(self, other)
+    }
+}
