@@ -46,16 +46,4 @@ extension Polygon {
 
         return GeometryCollection(boundary, precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
-
-    ///
-    /// - Returns: true if `self` is equal to the `other`.
-    ///
-    public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? Polygon {
-            return self.outerRing.equals(other.outerRing) && self.innerRings.elementsEqual(other.innerRings, by: { (lhs: LinearRing, rhs: LinearRing) -> Bool in
-                return lhs.equals(rhs)
-            })
-        }
-        return false
-    }
 }

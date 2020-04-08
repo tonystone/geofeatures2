@@ -47,15 +47,4 @@ extension GeometryCollection {
         return GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
-    ///
-    /// - Returns: true if `self` is equal to the `other`.
-    ///
-    public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? GeometryCollection {
-            return self.elementsEqual(other, by: { (lhs: Geometry, rhs: Geometry) -> Bool in
-                return lhs.equals(rhs)
-            })
-        }
-        return false
-    }
 }

@@ -24,17 +24,4 @@ import Swift
 ///
 /// Note: See `CoordinateCollectionType` for func implementations not present here.
 ///
-extension LineString {
-
-    ///
-    /// - Returns: true if `self` is equal to the `other`.
-    ///
-    public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? LineString {
-            return self.elementsEqual(other, by: { (lhs: Iterator.Element, rhs: Iterator.Element) -> Bool in
-                return lhs == rhs
-            })
-        }
-        return false
-    }
-}
+extension LineString {}

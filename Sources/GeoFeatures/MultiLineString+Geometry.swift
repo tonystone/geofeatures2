@@ -91,14 +91,4 @@ extension MultiLineString {
         }
         return boundary
     }
-
-    ///
-    /// - Returns: true if `self` is equal to the `other`.
-    ///
-    public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? MultiLineString {
-            return self.elementsEqual(other)
-        }
-        return false
-    }
 }

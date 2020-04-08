@@ -43,14 +43,4 @@ extension MultiPoint {
     public func boundary() -> Geometry {
         return MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
-
-    ///
-    /// - Returns: true if `self` is equal to the `other`.
-    ///
-    public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? MultiPoint {
-            return self.elementsEqual(other)
-        }
-        return false
-    }
 }

@@ -97,7 +97,7 @@ public func == (lhs: Geometry, rhs: Geometry) -> Bool {
 ///
 extension Geometry {
 
-    func equals(_ other: Geometry) -> Bool {   // FIXME: equals is implemented but is still required to be implemented for a class implementing Geometry.  Figure out why it is.
+    public func equals(_ other: Geometry) -> Bool {   // FIXME: equals is implemented but is still required to be implemented for a class implementing Geometry.  Figure out why it is.
         return relate(other, pattern: "TFFFTFFFT")
     }
 

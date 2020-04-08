@@ -61,14 +61,4 @@ extension Point {
     public func bounds() -> Bounds? {
         return Bounds(min: self.coordinate, max: self.coordinate)
     }
-
-    ///
-    /// - Returns: true if `self` is equal to the `other`.
-    ///
-    public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? Point {
-            return self.coordinate == other.coordinate
-        }
-        return false
-    }
 }

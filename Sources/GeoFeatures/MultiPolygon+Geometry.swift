@@ -52,16 +52,4 @@ extension MultiPolygon {
         }
         return boundary
     }
-
-    ///
-    /// - Returns: true if `self` is equal to the `other`.
-    ///
-    public func equals(_ other: Geometry) -> Bool {
-        if let other = other as? MultiPolygon{
-            return self.elementsEqual(other, by: { (lhs: Polygon, rhs: Polygon) -> Bool in
-                return lhs.equals(rhs)
-            })
-        }
-        return false
-    }
 }
