@@ -915,7 +915,6 @@ extension TokenizerTests {
                 ("testMatchUnicodeFlagFalse", testMatchUnicodeFlagFalse),
                 ("testMatchUnicodeEPlusAccent", testMatchUnicodeEPlusAccent),
                 ("testMatchUnicodeEPlusAccentFalse", testMatchUnicodeEPlusAccentFalse),
-                ("testMatchUnicodeEWithAccent", testMatchUnicodeEWithAccent),
                 ("testMatchUnicodeEWithAccentFalse", testMatchUnicodeEWithAccentFalse),
                 ("testColumnParens", testColumnParens),
                 ("testColumnUnicodeGlobes", testColumnUnicodeGlobes),

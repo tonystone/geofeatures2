@@ -61,7 +61,7 @@ public class GeoJSONReader {
     /// - Returns: A Geometry object representing the GeoJSON
     ///
     public func read(string: String) throws -> Geometry {
-        return try self.read(data: Data(bytes: Array(string.utf8)))
+        return try self.read(data: Data(Array(string.utf8)))
     }
 
     ///

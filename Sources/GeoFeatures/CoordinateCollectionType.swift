@@ -33,7 +33,7 @@ public protocol CoordinateCollectionType: MutableCollection where Element == Coo
 ///
 /// - Remarks: This covers `LineString` and `LinearRing`.
 ///
-public extension CoordinateCollectionType where Self: Geometry & Curve {
+extension CoordinateCollectionType where Self: Geometry & Curve {
 
     ///
     /// The spatial dimension of `self`.

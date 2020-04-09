@@ -44,7 +44,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReadUsingUTF8Data() {
 
-        let input = Data(bytes: Array("POINT (1.0 1.0)".utf8))
+        let input = Data(Array("POINT (1.0 1.0)".utf8))
         let expected = Point(Coordinate(x: 1.0, y: 1.0))
 
         XCTAssertEqual(try wktReader.read(data: input) as? Point, expected)
@@ -62,7 +62,7 @@ class WKTReaderCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReadDataNotConvertableUsingUTF8() {
 
-        let input = Data(bytes: [0xFF, 0xFF])
+        let input = Data([0xFF, 0xFF])
 
         let expected = "The Data object can not be converted using the given encoding 'Unicode (UTF-8)'."
 
