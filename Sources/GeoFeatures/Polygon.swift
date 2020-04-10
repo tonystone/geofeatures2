@@ -195,6 +195,8 @@ extension Polygon: CustomStringConvertible, CustomDebugStringConvertible {
 extension Polygon: Equatable {
 
     static public func == (lhs: Polygon, rhs: Polygon) -> Bool {
-        return lhs.equals(rhs)
+        return (lhs.outerRing == rhs.outerRing) && lhs.innerRings.elementsEqual(rhs.innerRings, by: { (lhs2: LinearRing, rhs2: LinearRing) -> Bool in
+            return lhs2 == rhs2
+        })
     }
 }

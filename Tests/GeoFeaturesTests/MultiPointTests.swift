@@ -81,7 +81,11 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input: MultiPoint = [Point([1.0, 1.0]), Point([2.0, 2.0])]
         let expected: [MultiPoint.Element] = [Point([1.0, 1.0]), Point([2.0, 2.0])]
 
-        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     func testInitCopy() {
@@ -89,7 +93,11 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input = MultiPoint(other: MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])]), precision: precision, coordinateSystem: cs)
         let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -141,7 +149,7 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
         let expected = Point([2.0, 2.0])
 
-        XCTAssertTrue(input[1].equals(expected))
+        XCTAssertTrue(input[1] == expected, "\(input) is not equal to \(expected)")
     }
 
     func testSubscriptSet() {
@@ -163,7 +171,11 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(
+            (input.geometry.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeInsert() {
@@ -173,7 +185,11 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(
+            (input.geometry.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeReplace() {
@@ -183,7 +199,11 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(
+            (input.geometry.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -267,7 +287,11 @@ class MultiPointCoordinate2DFixedCartesianTests: XCTestCase {
         let input: MultiPoint = [Point([1.001, 1.001]), Point([2.002, 2.002])]
         let expected: [MultiPoint.Element] = [Point([1.001, 1.001]), Point([2.002, 2.002])]
 
-        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     func testInitCopy() {
@@ -275,7 +299,11 @@ class MultiPointCoordinate2DFixedCartesianTests: XCTestCase {
         let input = MultiPoint(other: MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])]), precision: precision, coordinateSystem: cs)
         let expected = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(
+            (input.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -327,7 +355,7 @@ class MultiPointCoordinate2DFixedCartesianTests: XCTestCase {
         let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
         let expected = Point([2.0, 2.0])
 
-        XCTAssertTrue(input[1].equals(expected))
+        XCTAssertTrue(input[1] == expected)
     }
 
     func testSubscriptSet() {
@@ -349,7 +377,11 @@ class MultiPointCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(
+            (input.geometry.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeInsert() {
@@ -359,7 +391,11 @@ class MultiPointCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(
+            (input.geometry.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeReplace() {
@@ -369,7 +405,11 @@ class MultiPointCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(
+            (input.geometry.elementsEqual(expected) { (lhs: Point, rhs: Point) -> Bool in
+                    return lhs == rhs
+            }
+        ), "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {

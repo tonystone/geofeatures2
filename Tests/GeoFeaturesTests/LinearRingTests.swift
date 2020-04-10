@@ -187,7 +187,12 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testEquals() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).equals(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testIsEmpty() {
@@ -365,7 +370,12 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testEquals() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).equals(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testIsEmpty() {
@@ -542,8 +552,13 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testEquals() {
+        
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs).equals(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testIsEmpty() {
@@ -721,7 +736,12 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testEquals() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).equals(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testIsEmpty() {
@@ -899,7 +919,12 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testEquals() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs).equals(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testIsEmpty() {
@@ -1077,7 +1102,12 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
 
     func testEquals() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).equals(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testIsEmpty() {
@@ -1255,7 +1285,12 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
 
     func testEquals() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs).equals(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testIsEmpty() {
@@ -1433,7 +1468,12 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
 
     func testEquals() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).equals(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testIsEmpty() {

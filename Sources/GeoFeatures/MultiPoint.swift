@@ -179,6 +179,8 @@ extension MultiPoint: CustomStringConvertible, CustomDebugStringConvertible {
 
 extension MultiPoint: Equatable {
     static public func == (lhs: MultiPoint, rhs: MultiPoint) -> Bool {
-        return lhs.equals(rhs)
+        return lhs.elementsEqual(rhs, by: { (lhs2: Point, rhs2: Point) -> Bool in
+            return lhs2 == rhs2
+        })
     }
 }

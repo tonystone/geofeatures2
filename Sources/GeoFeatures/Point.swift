@@ -186,6 +186,6 @@ extension Point: CustomStringConvertible, CustomDebugStringConvertible {
 extension Point: Equatable {
 
     static public func == (lhs: Point, rhs: Point) -> Bool {
-        return lhs.equals(rhs)
+        return lhs.coordinate == rhs.coordinate
     }
 }

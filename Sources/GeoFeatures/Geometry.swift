@@ -127,7 +127,36 @@ public protocol Geometry {
 // MARK: Operators
 
 public func == (lhs: Geometry, rhs: Geometry) -> Bool {
-    return lhs.equals(rhs)
+
+    switch (lhs, rhs) {
+
+    case let (point1, point2) as (Point, Point):
+        return point1 == point2
+
+    case let (multiPoint1, multiPoint2) as (MultiPoint, MultiPoint):
+        return multiPoint1 == multiPoint2
+
+    case let (lineString1, lineString2) as (LineString, LineString):
+        return lineString1 == lineString2
+
+    case let (linearRing1, linearRing2) as (LinearRing, LinearRing):
+        return linearRing1 == linearRing2
+
+    case let (multiLineString1, multiLineString2) as (MultiLineString, MultiLineString):
+        return multiLineString1 == multiLineString2
+
+    case let (polygon1, polygon2) as (Polygon, Polygon):
+        return polygon1 == polygon2
+
+    case let (multiPolygon1, multiPolygon2) as (MultiPolygon, MultiPolygon):
+        return multiPolygon1 == multiPolygon2
+
+    case let (geometryCollection1, geometryCollection2) as (GeometryCollection, GeometryCollection):
+        return geometryCollection1 == geometryCollection2
+
+    default:
+        return false
+    }
 }
 
 ///

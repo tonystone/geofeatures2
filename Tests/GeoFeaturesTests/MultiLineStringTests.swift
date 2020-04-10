@@ -81,7 +81,9 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input: MultiLineString = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
         let expected: [MultiLineString.Element] = [LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]
 
-        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testInitCopy() {
@@ -89,7 +91,9 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input = MultiLineString(other: MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])]), precision: precision, coordinateSystem: cs)
         let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -141,7 +145,7 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
         let expected = LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])
 
-        XCTAssertTrue(input[1].equals(expected))
+        XCTAssertTrue(input[1] == expected)
     }
 
     func testSubscriptSet() {
@@ -163,7 +167,9 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeInsert() {
@@ -173,7 +179,9 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeReplace() {
@@ -183,7 +191,9 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {
@@ -267,7 +277,9 @@ class MultiLineStringCoordinate2DFixedCartesianTests: XCTestCase {
         let input: MultiLineString = [LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])]
         let expected: [MultiLineString.Element] = [LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])]
 
-        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testInitCopy() {
@@ -275,7 +287,9 @@ class MultiLineStringCoordinate2DFixedCartesianTests: XCTestCase {
         let input = MultiLineString(other: MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])]), precision: precision, coordinateSystem: cs)
         let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -327,7 +341,7 @@ class MultiLineStringCoordinate2DFixedCartesianTests: XCTestCase {
         let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
         let expected = LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])
 
-        XCTAssertTrue(input[1].equals(expected))
+        XCTAssertTrue(input[1] == expected)
     }
 
     func testSubscriptSet() {
@@ -349,7 +363,9 @@ class MultiLineStringCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeInsert() {
@@ -359,7 +375,9 @@ class MultiLineStringCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeReplace() {
@@ -369,7 +387,9 @@ class MultiLineStringCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LineString, rhs: LineString) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testEquals() {

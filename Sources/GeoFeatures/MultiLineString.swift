@@ -179,6 +179,6 @@ extension MultiLineString: CustomStringConvertible, CustomDebugStringConvertible
 
 extension MultiLineString: Equatable {
     static public func == (lhs: MultiLineString, rhs: MultiLineString) -> Bool {
-        return lhs.equals(rhs)
+        return lhs.elementsEqual(rhs)
     }
 }

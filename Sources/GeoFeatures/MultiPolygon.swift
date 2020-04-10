@@ -179,6 +179,9 @@ extension MultiPolygon: CustomStringConvertible, CustomDebugStringConvertible {
 
 extension MultiPolygon: Equatable {
     static public func == (lhs: MultiPolygon, rhs: MultiPolygon) -> Bool {
-        return lhs.equals(rhs)
+        return lhs.elementsEqual(rhs, by: { (lhs2: Polygon, rhs2: Polygon) -> Bool in
+            return lhs2 == rhs2
+        })
+
     }
 }

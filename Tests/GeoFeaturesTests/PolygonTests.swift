@@ -113,7 +113,7 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
         let expected = LinearRing([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(input[0].equals(expected))
+        XCTAssertEqual(input[0], expected)
     }
 
     func testSubscriptSet() {
@@ -122,7 +122,7 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry[0] = input.newElement
 
-        XCTAssertTrue(input.geometry[0].equals(expected))
+        XCTAssertEqual(input.geometry[0], expected)
     }
 
     // MARK: RangeReplaceableCollection Conformance
@@ -134,7 +134,9 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LinearRing, rhs: LinearRing) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeInsert() {
@@ -144,7 +146,9 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LinearRing, rhs: LinearRing) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeReplace() {
@@ -154,7 +158,9 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LinearRing, rhs: LinearRing) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible
@@ -286,7 +292,7 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
         let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
         let expected = LinearRing([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(input[0].equals(expected))
+        XCTAssertTrue(input[0] == expected)
     }
 
     func testSubscriptSet() {
@@ -295,7 +301,7 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry[0] = input.newElement
 
-        XCTAssertTrue(input.geometry[0].equals(expected))
+        XCTAssertEqual(input.geometry[0], expected)
     }
 
     // MARK: RangeReplaceableCollection Conformance
@@ -307,7 +313,9 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LinearRing, rhs: LinearRing) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeInsert() {
@@ -317,7 +325,9 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LinearRing, rhs: LinearRing) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     func testReplaceSubrangeReplace() {
@@ -327,7 +337,9 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
-        XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
+        XCTAssertTrue(input.geometry.elementsEqual(expected) { (lhs: LinearRing, rhs: LinearRing) -> Bool in
+                return lhs == rhs
+            }, "\(input) is not equal to \(expected)")
     }
 
     // MARK: CustomStringConvertible & CustomDebugStringConvertible

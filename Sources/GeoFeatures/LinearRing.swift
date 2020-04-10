@@ -195,6 +195,8 @@ extension LinearRing: CustomStringConvertible, CustomDebugStringConvertible {
 extension LinearRing: Equatable {
 
     static public func == (lhs: LinearRing, rhs: LinearRing) -> Bool {
-        return lhs.equals(rhs)
+        return lhs.elementsEqual(rhs, by: { (lhs2: Iterator.Element, rhs2: Iterator.Element) -> Bool in
+            return lhs2 == rhs2
+        })
     }
 }

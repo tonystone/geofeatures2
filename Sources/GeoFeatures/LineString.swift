@@ -191,6 +191,8 @@ extension LineString: CustomStringConvertible, CustomDebugStringConvertible {
 extension LineString: Equatable {
 
     static public func == (lhs: LineString, rhs: LineString) -> Bool {
-        return lhs.equals(rhs)
+        return lhs.elementsEqual(rhs, by: { (lhs2: Iterator.Element, rhs2: Iterator.Element) -> Bool in
+            return lhs2 == rhs2
+        })
     }
 }
