@@ -77,9 +77,38 @@ extension IntersectionMatrix {
 
     static func generateMatrix(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
-        let resultIntersectionMatrix = IntersectionMatrix.intersectionGeometry(geometry1, geometry2)
+//        /// Note in the cases where one or two of the input geometries is a GeometryCollection, it is assumed that the GeometryCollections are not nested,
+//        /// so you will not have a GeometryCollection inside a GeometryCollection.
+//        /// This commented out code that includes GeometryCollections may be thrown out later, if we can safely assume they
+//        /// will not be considered in intersection matrix calculations.
+//        if let geometryCollection1 = geometry1 as? GeometryCollection, let geometryCollection2 = geometry2 as? GeometryCollection {
+//            var finalIntersectionMatrix = IntersectionMatrix()
+//            for tempGeometry1 in geometryCollection1 {
+//                for tempGeometry2 in geometryCollection2 {
+//                    let resultIntersectionMatrix = IntersectionMatrix.intersectionGeometry(tempGeometry1, tempGeometry2)
+//                    update(intersectionMatrixBase: &finalIntersectionMatrix, intersectionMatrixNew: resultIntersectionMatrix)
+//                }
+//            }
+//            return finalIntersectionMatrix
+//        } else if let geometryCollection1 = geometry1 as? GeometryCollection {
+//            var finalIntersectionMatrix = IntersectionMatrix()
+//            for tempGeometry1 in geometryCollection1 {
+//                let resultIntersectionMatrix = IntersectionMatrix.intersectionGeometry(tempGeometry1, geometry2)
+//                update(intersectionMatrixBase: &finalIntersectionMatrix, intersectionMatrixNew: resultIntersectionMatrix)
+//            }
+//            return finalIntersectionMatrix
+//        } else if let geometryCollection2 = geometry2 as? GeometryCollection {
+//           var finalIntersectionMatrix = IntersectionMatrix()
+//           for tempGeometry2 in geometryCollection2 {
+//               let resultIntersectionMatrix = IntersectionMatrix.intersectionGeometry(geometry1, tempGeometry2)
+//               update(intersectionMatrixBase: &finalIntersectionMatrix, intersectionMatrixNew: resultIntersectionMatrix)
+//           }
+//           return finalIntersectionMatrix
+//        } else {
+//            return IntersectionMatrix.intersectionGeometry(geometry1, geometry2)
+//        }
 
-        return resultIntersectionMatrix
+        return IntersectionMatrix.intersectionGeometry(geometry1, geometry2)
     }
 
     /// Returns the intersection geometry and the intersection matrix.
