@@ -190,15 +190,18 @@ extension Geometry {
 
     public func crosses(_ other: Geometry) -> Bool {
 
-        if self.dimension == .zero && other.dimension == .one ||
-           self.dimension == .zero && other.dimension == .two ||
-           self.dimension == .one  && other.dimension == .two {
+        if self.dimension == .one || other.dimension == .one {
+
+            return relate(other, pattern: "0********")
+
+        } else if self.dimension < other.dimension {
 
             return relate(other, pattern: "T*T******")
 
-        } else if self.dimension == .one && other.dimension == .one {
+        } else if self.dimension > other.dimension {
 
-            return relate(other, pattern: "0********")
+            return relate(other, pattern: "T*****T**")
+
         }
         return false
     }

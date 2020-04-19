@@ -2248,7 +2248,9 @@ extension IntersectionMatrix {
                 let firstCoord  = lineString[firstCoordIndex]
                 let secondCoord = lineString[firstCoordIndex + 1]
                 let segment = Segment(left: firstCoord, right: secondCoord)
-                if coordinateIsOnLineSegment(coordinate, segment: segment) == .onInterior {
+                let touchesLineSegment = coordinateIsOnLineSegment(coordinate, segment: segment)
+                /// If touchesLineSegment == .onBoundary, it is a boundary point for the segment but interior to the line string.
+                if (touchesLineSegment == .onInterior) || (touchesLineSegment == .onBoundary) {
                     coordinateOnInterior = true
                     resultCoordinateArray.append(coordinate)
                 }
@@ -2588,6 +2590,11 @@ extension IntersectionMatrix {
         var firstSubsetOfSecond: Bool {
             return firstSegmentFirstBoundaryLocation  != .onExterior &&
                    firstSegmentSecondBoundaryLocation != .onExterior
+        }
+
+        var secondSubsetOfFirst: Bool {
+            return secondSegmentFirstBoundaryLocation  != .onExterior &&
+                   secondSegmentSecondBoundaryLocation != .onExterior
         }
 
         var geometry: Geometry?
@@ -3123,7 +3130,7 @@ extension IntersectionMatrix {
     }
 
     /// Is the line string contained in or a subset of the linear ring?
-    /// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     fileprivate static func subset(_ lineString: LineString, _ linearRing: LinearRing) -> Bool {
 
         for lsFirstCoordIndex in 0..<lineString.count - 1 {
@@ -3136,6 +3143,35 @@ extension IntersectionMatrix {
                 let lrFirstCoord  = linearRing[lrFirstCoordIndex]
                 let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
                 let segment2 = Segment(left: lrFirstCoord, right: lrSecondCoord)
+
+                if subset(segment1, segment2) {
+                    segment1IsSubsetOfOtherSegment = true
+                    break
+                }
+            }
+
+            if !segment1IsSubsetOfOtherSegment {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    /// Is the linear ring contained in or a subset of the line string?
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ linearRing: LinearRing, _ lineString: LineString) -> Bool {
+
+        for lrFirstCoordIndex in 0..<linearRing.count - 1 {
+            let lrFirstCoord  = linearRing[lrFirstCoordIndex]
+            let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
+            let segment1 = Segment(left: lrFirstCoord, right: lrSecondCoord)
+
+            var segment1IsSubsetOfOtherSegment = false
+            for lsFirstCoordIndex in 0..<lineString.count - 1 {
+                let lsFirstCoord  = lineString[lsFirstCoordIndex]
+                let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
+                let segment2 = Segment(left: lsFirstCoord, right: lsSecondCoord)
 
                 if subset(segment1, segment2) {
                     segment1IsSubsetOfOtherSegment = true
@@ -3503,7 +3539,6 @@ extension IntersectionMatrix {
 
         /// Default intersection matrix
         var matrixIntersects = IntersectionMatrix()
-        matrixIntersects[.exterior, .interior] = .one
         matrixIntersects[.exterior, .exterior] = .two
 
         /// Disjoint
@@ -3568,6 +3603,11 @@ extension IntersectionMatrix {
         /// Boundary, exterior
         if relatedBlsLr.firstTouchesSecondExterior != .empty {
             matrixIntersects[.boundary, .exterior] = .zero
+        }
+
+        /// Exterior, Interior
+        if !subset(reducedLr, reducedLs) {
+            matrixIntersects[.exterior, .interior] = .one
         }
 
         /// Return the matrix.
@@ -4103,6 +4143,7 @@ extension IntersectionMatrix {
 
         /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
 
+        var finalInteriorExteriorDimension: Dimension = .one
         for polygon in multipolygon {
 
             /// Get the relationship between the line string and the polygon
@@ -4110,7 +4151,20 @@ extension IntersectionMatrix {
 
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+            
+            /// Update the interior/exterior and boundary/exterior dimensions as needed
+            if intersectionMatrixResult[.interior, .exterior] < finalInteriorExteriorDimension {
+                finalInteriorExteriorDimension = intersectionMatrixResult[.interior, .exterior]
+            }
+        }
 
+        /// There is a special case here: line string interior with multipolygon exterior.
+        /// It's possible that the interior of the line string exists in one polygon but not another.
+        /// In that case, the dimension of the interior/exterior would be one for one polygon and zero for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.interior, .exterior] > finalInteriorExteriorDimension {
+            matrixIntersects[.interior, .exterior] = finalInteriorExteriorDimension
         }
 
         /// There is a special case here: line string boundary with multipolygon exterior.
