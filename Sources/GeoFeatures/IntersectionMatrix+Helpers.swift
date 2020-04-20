@@ -2908,6 +2908,18 @@ extension IntersectionMatrix {
         return newLinearRing
     }
 
+    /// Returns a boolean indicating whether the second/middle coordinate is unnecessary and should be removed,
+    /// since it's on the line segment between the first and third coordinates.
+    fileprivate static func removeCoordinate(_ firstCoord: Coordinate, _ secondCoord: Coordinate, _ thirdCoord: Coordinate) -> Bool {
+
+        let segment = Segment(left: firstCoord, right: thirdCoord)
+        let location = coordinateIsOnLineSegment(secondCoord, segment: segment)
+        if location == .onInterior || location == .onBoundary {
+            return true
+        }
+        return false
+    }
+
     /// Reduces a linear ring to a sequence of points such that each consecutive line segment will have a different slope
     fileprivate static func reduce(_ linearRing: LinearRing) -> LinearRing {
 
@@ -2925,10 +2937,8 @@ extension IntersectionMatrix {
             let lrFirstCoord  = linearRing[lrFirstCoordIndex]
             let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
             let lrThirdCoord  = linearRing[lrFirstCoordIndex + 2]
-            firstSlope = slope(lrFirstCoord, lrSecondCoord)
-            secondSlope = slope(lrSecondCoord, lrThirdCoord)
 
-            if firstSlope != secondSlope {
+            if !removeCoordinate(lrFirstCoord, lrSecondCoord, lrThirdCoord) {
                 newLinearRing.append(linearRing[lrFirstCoordIndex + 1])
             }
         }
@@ -4280,14 +4290,28 @@ extension IntersectionMatrix {
 
         /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
 
+        var finalInteriorExteriorDimension: Dimension = .one
         for polygon in multipolygon {
 
-            /// Get the relationship between the point and the polygon
+            /// Get the relationship between the linear ring and the polygon
             let intersectionMatrixResult = generateIntersection(linearRing, polygon)
 
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
+            /// Update the interior/exterior dimensions as needed
+            if intersectionMatrixResult[.interior, .exterior] < finalInteriorExteriorDimension {
+                finalInteriorExteriorDimension = intersectionMatrixResult[.interior, .exterior]
+            }
+        }
+
+        /// There is a special case here: linear ring interior with multipolygon exterior.
+        /// It's possible that the interior of the linear ring exists in one polygon but not another.
+        /// In that case, the dimension of the interior/exterior would be one for one polygon and zero for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.interior, .exterior] > finalInteriorExteriorDimension {
+            matrixIntersects[.interior, .exterior] = finalInteriorExteriorDimension
         }
 
         return matrixIntersects
