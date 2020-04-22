@@ -3664,7 +3664,8 @@ extension IntersectionMatrix {
             let ls1FirstCoord  = lineString[ls1FirstCoordIndex]
             let ls1SecondCoord = lineString[ls1FirstCoordIndex + 1]
             let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
-            let firstBoundary = (ls1FirstCoordIndex == 0)
+            let firstLSBoundary1 = (ls1FirstCoordIndex == 0)
+            let secondLSBoundary1 = (ls1FirstCoordIndex == lineString.count - 2)
 
             /// Any intersection from here on is guaranteed to be in the interior.
             for lineString2 in multiLineString {
@@ -3672,8 +3673,9 @@ extension IntersectionMatrix {
                     let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                     let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
                     let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
-                    let secondBoundary = (ls2FirstCoordIndex == lineString2.count - 2)
-                    let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
+                    let firstLSBoundary2 = (ls2FirstCoordIndex == 0)
+                    let secondLSBoundary2 = (ls2FirstCoordIndex == lineString2.count - 2)
+                    let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstLSBoundary1, secondCoordinateFirstSegmentBoundary: secondLSBoundary1, firstCoordinateSecondSegmentBoundary: firstLSBoundary2, secondCoordinateSecondSegmentBoundary: secondLSBoundary2)
 
                     /// Interior, interior
                     if lineSegmentIntersection.geometry?.dimension == .one {
@@ -3908,7 +3910,8 @@ extension IntersectionMatrix {
                 let ls1FirstCoord  = lineString1[ls1FirstCoordIndex]
                 let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
                 let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
-                let firstBoundary = (ls1FirstCoordIndex == 0)
+                let firstLSBoundary1 = (ls1FirstCoordIndex == 0)
+                let secondLSBoundary1 = (ls1FirstCoordIndex == lineString1.count - 2)
 
                 /// Any intersection from here on is guaranteed to be in the interior.
                 for lineString2 in multiLineString2 {
@@ -3916,8 +3919,9 @@ extension IntersectionMatrix {
                         let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
                         let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
                         let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
-                        let secondBoundary = (ls2FirstCoordIndex == lineString2.count - 2)
-                        let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstBoundary, secondCoordinateSecondSegmentBoundary: secondBoundary)
+                        let firstLSBoundary2 = (ls2FirstCoordIndex == 0)
+                        let secondLSBoundary2 = (ls2FirstCoordIndex == lineString2.count - 2)
+                        let lineSegmentIntersection = intersection(segment: segment1, other: segment2, firstCoordinateFirstSegmentBoundary: firstLSBoundary1, secondCoordinateFirstSegmentBoundary: secondLSBoundary1, firstCoordinateSecondSegmentBoundary: firstLSBoundary2, secondCoordinateSecondSegmentBoundary: secondLSBoundary2)
 
                         /// Interior, interior
                         if lineSegmentIntersection.geometry?.dimension == .one {
@@ -4029,6 +4033,7 @@ extension IntersectionMatrix {
 
         /// Relate the line string to the main polygon and each of its holes
         var isMainPolygon = true
+        var finalInteriorInteriorDimension: Dimension = .empty
         for element in polygonBoundary {
 
             guard let linearRing = element as? LinearRing else { return matrixIntersects }
@@ -4042,7 +4047,7 @@ extension IntersectionMatrix {
 
                 if lineStringRelatedToResult.firstTouchesSecondInterior > .empty {
                     lineStringInsideMainPolygon = true
-                    matrixIntersects[.interior, .interior] = .one
+                    finalInteriorInteriorDimension = .one
                 }
 
                 if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > .empty {
@@ -4095,11 +4100,7 @@ extension IntersectionMatrix {
                 /// those cases have already been addressed.
                 
                 if lineStringRelatedToResult.firstTouchesSecondInteriorOrBoundaryOnly {
-                    matrixIntersects[.interior, .interior] = .empty
-                }
-
-                if lineStringRelatedToResult.firstTouchesSecondExterior > matrixIntersects[.interior, .interior] {
-                    matrixIntersects[.interior, .interior] = lineStringRelatedToResult.firstTouchesSecondExterior
+                    finalInteriorInteriorDimension = .empty
                 }
 
                 if lineStringRelatedToResult.firstInteriorTouchesSecondBoundary > matrixIntersects[.interior, .boundary] {
@@ -4143,6 +4144,13 @@ extension IntersectionMatrix {
             matrixIntersects[.boundary, .interior] = .zero
         }
 
+        /// There is a special case here: line string interior with polygon interior.
+        /// It's possible that the interior of the line string exists in one polygon hole but not another.
+        /// In that case, the dimension of the interior/interior would be one for one hole and empty for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        matrixIntersects[.interior, .interior] = finalInteriorInteriorDimension
+
         /// No intersection
         return matrixIntersects
     }
@@ -4162,7 +4170,7 @@ extension IntersectionMatrix {
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
             
-            /// Update the interior/exterior and boundary/exterior dimensions as needed
+            /// Update the temporary interior/exterior dimensions as needed
             if intersectionMatrixResult[.interior, .exterior] < finalInteriorExteriorDimension {
                 finalInteriorExteriorDimension = intersectionMatrixResult[.interior, .exterior]
             }
@@ -4299,7 +4307,7 @@ extension IntersectionMatrix {
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
-            /// Update the interior/exterior dimensions as needed
+            /// Update the  interior/exterior dimensions as needed
             if intersectionMatrixResult[.interior, .exterior] < finalInteriorExteriorDimension {
                 finalInteriorExteriorDimension = intersectionMatrixResult[.interior, .exterior]
             }
@@ -4470,14 +4478,26 @@ extension IntersectionMatrix {
 
         /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
 
-        for polygon in multipolygon {
+        var finalInteriorExteriorDimension: Dimension = .empty
+        for lineString in multiLineString {
+            var tempInteriorExteriorDimension: Dimension = .one
+            for polygon in multipolygon {
 
-            /// Get the relationship between the point and the polygon
-            let intersectionMatrixResult = generateIntersection(multiLineString, polygon)
+                /// Get the relationship between the point and the polygon
+                let intersectionMatrixResult = generateIntersection(lineString, polygon)
 
-            /// Update the intersection matrix as needed
-            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+                /// Update the intersection matrix as needed
+                update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
+                /// Update the temporary interior/exterior dimensions as needed
+                if intersectionMatrixResult[.interior, .exterior] < tempInteriorExteriorDimension {
+                    tempInteriorExteriorDimension = intersectionMatrixResult[.interior, .exterior]
+                }
+            }
+            /// Update the final interior/exterior dimensions as needed
+            if finalInteriorExteriorDimension < tempInteriorExteriorDimension {
+                finalInteriorExteriorDimension = tempInteriorExteriorDimension
+            }
         }
 
         /// The boundary points of the multi line string could be distributed over multiple polygons.
@@ -4493,6 +4513,15 @@ extension IntersectionMatrix {
 
         if boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondExterior < matrixIntersects[.boundary, .exterior] {
             matrixIntersects[.boundary, .exterior] = boundaryCoordinatesRelatedToResult.firstBoundaryTouchesSecondExterior
+        }
+        
+        /// There is a special case here: multi line string interior with multipolygon exterior.
+        /// It's possible that the interior of the multi line string exists in one polygon but not another.
+        /// In that case, the dimension of the interior/exterior would be one for one polygon and empty for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.interior, .exterior] > finalInteriorExteriorDimension {
+            matrixIntersects[.interior, .exterior] = finalInteriorExteriorDimension
         }
 
         return matrixIntersects
