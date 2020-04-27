@@ -190,7 +190,7 @@ extension Geometry {
 
     public func crosses(_ other: Geometry) -> Bool {
 
-        if self.dimension == .one || other.dimension == .one {
+        if self.dimension == .one && other.dimension == .one {
 
             return relate(other, pattern: "0********")
 

@@ -293,13 +293,11 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     func testCrossesTrue() {
         let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
 
-        let point = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 11.0, y: 11.0)), Point(Coordinate(x: 22.0, y: 22.0)), Point(Coordinate(x: 22.0, y: 21.0))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[6.0, 8.0], [10.0, 4.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[0.0, 2.0], [0.0, 8.0], [4.0, 8.0], [4.0, 2.0], [0.0, 2.0]], precision: precision, coordinateSystem: cs)
         let multiLineString = MultiLineString([LineString([[0.0,  0.0], [0.0,  0.5]]), LineString([[1.5,  2.0], [3.0,  2.0]]), LineString([[5.0,  5.0], [5.0,  8.0]])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(testMultiLineString.crosses(point))
         XCTAssertTrue(testMultiLineString.crosses(multiPoint))
         XCTAssertTrue(testMultiLineString.crosses(lineString))
         XCTAssertTrue(testMultiLineString.crosses(linearRing))
@@ -324,10 +322,9 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         let multiLineString3 = MultiLineString([LineString([[-1.0,  1.0], [3.0,  -3.0]]), LineString([[0.0, 6.0], [6.0,  0.0]]), LineString([[6.0,  0.0], [6.0,  100.0]])], precision: precision, coordinateSystem: cs)
         let polygon1 = Polygon([[26.0, 1.0], [21.0, 1.0], [21.5, 1.5], [21.0, 3.0], [23.5, 4.0], [26.0, 3.0], [26.0, 1.0]], innerRings: [[[25.0, 2.0], [25.0, 3.0], [23.5, 3.5], [22.0, 3.0], [22.0, 2.0], [25.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [2.0, 1.0], [2.0, 1.5], [1.0, 1.5], [1.0, 1.0]]], precision: precision, coordinateSystem: cs)
-        let polygon3 = Polygon([[2.0, 0.0], [2.0, 3.0], [3.0, 3.0], [3.0, 0.0], [2.0, 0.0]], innerRings: [], precision: precision, coordinateSystem: cs)
         let multiPolygon1 = MultiPolygon([Polygon([[26.0, 1.0], [21.0, 1.0], [21.5, 1.5], [21.0, 6.0], [23.5, 6.0], [26.0, 6.0], [26.0, 1.0]], innerRings: [[[25.0, 2.0], [25.0, 3.0], [23.5, 3.5], [22.0, 3.0], [22.0, 2.0], [25.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 4.0], [10.0, 4.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
         let multiPolygon2 = MultiPolygon([Polygon([[6.0, 0.0], [6.0, 6.0], [12.0, 6.0], [12.0, 0.0], [6.0, 0.0]], innerRings: [[[8.0, 2.0], [10.0, 2.0], [10.0, 4.0], [8.0, 4.0], [8.0, 2.0]]]), Polygon([[0.0, 50.0], [0.0, 80.0], [30.0, 80.0], [30.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let multiPolygon3 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0], [1.0, 1.0]]], precision: precision, coordinateSystem: cs), Polygon([[0.0, 50.0], [0.0, 80.0], [110.0, 80.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon3 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 11.0], [2.0, 11.0], [2.0, 12.0], [1.0, 12.0], [1.0, 11.0]]], precision: precision, coordinateSystem: cs), Polygon([[-200.0, 50.0], [-200.0, 80.0], [-90.0, 80.0], [-90.0, 50.0], [-200.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testMultiLineString.crosses(point1))
         XCTAssertFalse(testMultiLineString.crosses(point2))
@@ -344,7 +341,6 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         XCTAssertFalse(testMultiLineString.crosses(multiLineString3))
         XCTAssertFalse(testMultiLineString.crosses(polygon1))
         XCTAssertFalse(testMultiLineString.crosses(polygon2))
-        XCTAssertFalse(testMultiLineString.crosses(polygon3))
         XCTAssertFalse(testMultiLineString.crosses(multiPolygon1))
         XCTAssertFalse(testMultiLineString.crosses(multiPolygon2))
         XCTAssertFalse(testMultiLineString.crosses(multiPolygon3))

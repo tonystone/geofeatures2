@@ -237,13 +237,11 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     func testCrossesTrue() {
         let testLineString = LineString([[1.0, 1.0], [1.0, 6.0], [6.0, 6.0]], precision: precision, coordinateSystem: cs)
 
-        let point = Point(Coordinate(x: 1.0, y: 3.0), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 11.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 6.0))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[0.0, 1.0], [6.0, 7.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[0.0, 2.0], [0.0, 8.0], [4.0, 8.0], [4.0, 2.0], [0.0, 2.0]], precision: precision, coordinateSystem: cs)
         let multiLineString = MultiLineString([LineString([[0.0,  0.0], [0.5,  0.5]]), LineString([[1.0,  1.0], [3.0,  3.0]]), LineString([[5.0,  5.0], [5.0,  8.0]])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(testLineString.crosses(point))
         XCTAssertTrue(testLineString.crosses(multiPoint))
         XCTAssertTrue(testLineString.crosses(lineString))
         XCTAssertTrue(testLineString.crosses(linearRing))
@@ -269,9 +267,9 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [2.0, 1.0], [2.0, 1.5], [1.0, 1.5], [1.0, 1.0]]], precision: precision, coordinateSystem: cs)
         let polygon3 = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0], [1.0, 1.0]]], precision: precision, coordinateSystem: cs)
-        let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let multiPolygon2 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[0.0, 50.0], [0.0, 110.0], [110.0, 110.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let multiPolygon3 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0], [1.0, 1.0]]], precision: precision, coordinateSystem: cs), Polygon([[0.0, 50.0], [0.0, 80.0], [110.0, 80.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon1 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [6.0, 1.0], [6.0, 6.0], [1.0, 6.0], [1.0, 1.0]]]), Polygon([[1.0, 1.0], [6.0, 1.0], [6.0, 6.0], [1.0, 6.0], [1.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[-4.0, 1.0], [-9.0, 1.0], [-9.0, 6.0], [-6.5, 6.0], [-4.0, 6.0], [-4.0, 1.0]], innerRings: [[[-5.0, 2.0], [-5.0, 3.0], [-6.5, 3.5], [-8.0, 3.0], [-8.0, 2.0], [-5.0, 2.0]]]), Polygon([[0.0, 50.0], [0.0, 80.0], [30.0, 80.0], [30.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon3 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 11.0], [2.0, 11.0], [2.0, 12.0], [1.0, 12.0], [1.0, 11.0]]], precision: precision, coordinateSystem: cs), Polygon([[0.0, 250.0], [0.0, 280.0], [110.0, 280.0], [110.0, 250.0], [0.0, 250.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testLineString.crosses(point1))
         XCTAssertFalse(testLineString.crosses(point2))

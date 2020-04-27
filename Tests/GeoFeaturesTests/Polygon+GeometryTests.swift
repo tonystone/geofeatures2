@@ -96,5 +96,378 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
      }
+
+    // MARK: - Disjoint
+
+    func testDisjointTrue() {
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[1.0, 1.0], [2.0, 2.0], [10.0, -85.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[1.0, 1.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [7.0,  7.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPolygon.disjoint(point))
+        XCTAssertTrue(testPolygon.disjoint(multiPoint))
+        XCTAssertTrue(testPolygon.disjoint(lineString))
+        XCTAssertTrue(testPolygon.disjoint(linearRing))
+        XCTAssertTrue(testPolygon.disjoint(multiLineString))
+        XCTAssertTrue(testPolygon.disjoint(polygon))
+        XCTAssertTrue(testPolygon.disjoint(multiPolygon))
+    }
+
+    func testDisjointFalse() {
+        let testPolygon = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 1.5, y: 1.5), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 1.5, y: 1.5))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[3.0, 3.0], [3.0, 10.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[3.0, 4.0], [3.0, 10.0], [10.0, 10.0], [10.0, 4.0], [3.0, 4.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [7.0,  7.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.6, 1.6], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPolygon.disjoint(point))
+        XCTAssertFalse(testPolygon.disjoint(multiPoint))
+        XCTAssertFalse(testPolygon.disjoint(lineString))
+        XCTAssertFalse(testPolygon.disjoint(linearRing))
+        XCTAssertFalse(testPolygon.disjoint(multiLineString))
+        XCTAssertFalse(testPolygon.disjoint(polygon))
+        XCTAssertFalse(testPolygon.disjoint(multiPolygon))
+    }
+
+    // MARK: - Intersects
+
+    func testIntersectsTrue() {
+        let testPolygon = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 1.5, y: 1.5), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 1.5, y: 1.5))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[3.0, 3.0], [3.0, 10.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[3.0, 4.0], [3.0, 10.0], [10.0, 10.0], [10.0, 4.0], [3.0, 4.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [7.0,  7.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.6, 1.6], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPolygon.intersects(point))
+        XCTAssertTrue(testPolygon.intersects(multiPoint))
+        XCTAssertTrue(testPolygon.intersects(lineString))
+        XCTAssertTrue(testPolygon.intersects(linearRing))
+        XCTAssertTrue(testPolygon.intersects(multiLineString))
+        XCTAssertTrue(testPolygon.intersects(polygon))
+        XCTAssertTrue(testPolygon.intersects(multiPolygon))
+    }
+
+    func testIntersectsFalse() {
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 11.0, y: 1.0)), Point(Coordinate(x: 12.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[11.0, 1.0], [12.0, 2.0], [12.0, 4.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [7.0,  7.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPolygon.intersects(point))
+        XCTAssertFalse(testPolygon.intersects(multiPoint))
+        XCTAssertFalse(testPolygon.intersects(lineString))
+        XCTAssertFalse(testPolygon.intersects(linearRing))
+        XCTAssertFalse(testPolygon.intersects(multiLineString))
+        XCTAssertFalse(testPolygon.intersects(polygon))
+        XCTAssertFalse(testPolygon.intersects(multiPolygon))
+    }
+
+    // MARK: - Touches
+
+    func testTouchesTrue() {
+        let testPolygon = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 34.0, y: 100.0), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 60.0, y: 70.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[1.0, -1.0], [2.0, 0.0], [3.0, -1.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[61.0, 60.0], [62.0, 61.0], [61.0, 62.0], [60.0, 61.0], [61.0, 60.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0, -1.0]]), LineString([[-1.5,  1.5], [-3.0,  3.0]]), LineString([[6.0,  -6.0], [7.0,  -7.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[100.0, 40.0], [140.0, 80.0], [180.0, 80.0], [220.0, 40.0], [180.0, 0.0], [140.0, 0.0], [100.0, 40.0]], innerRings: [[[170.0, 70.0], [150.0, 70.0], [150.0, 50.0], [170.0, 50.0], [170.0, 70.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[20.0, -20.0], [16.0, -20.0], [16.0, -10.0], [4.0, -10.0], [4.0, -1.0], [20.0, -1.0], [20.0, -20.0]], innerRings: [[[5.0, -2.0], [5.0, -3.0], [7.0, -3.0], [7.0, -2.0], [5.0, -2.0]]]), Polygon([[100.0, 100.0], [100.0, 110.0], [110.0, 110.0], [110.0, 100.0], [100.0, 100.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPolygon.intersects(point))
+        XCTAssertTrue(testPolygon.intersects(multiPoint))
+        XCTAssertTrue(testPolygon.touches(lineString))
+        XCTAssertTrue(testPolygon.touches(linearRing))
+        XCTAssertTrue(testPolygon.touches(multiLineString))
+        XCTAssertTrue(testPolygon.touches(polygon))
+        XCTAssertTrue(testPolygon.touches(multiPolygon))
+    }
+
+    func testTouchesFalse() {
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+
+        let point1 = Point(Coordinate(x: 24.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let point2 = Point(Coordinate(x: 110.0, y: 110.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 22.0, y: 103.0))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[1.0, 100.0], [24.0, 140.0]], precision: precision, coordinateSystem: cs)
+        let linearRing1 = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let linearRing2 = LinearRing([[0.0, 0.0], [0.0, 150.0], [100.0, 150.0], [100.0, 0.0], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  1.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  2.0], [6.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let polygon2 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[20.0, 20.0], [100.0, 20.0], [100.0, 101.0], [20.0, 101.0], [20.0, 20.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPolygon.touches(point1))
+        XCTAssertFalse(testPolygon.touches(point2))
+        XCTAssertFalse(testPolygon.touches(multiPoint1))
+        XCTAssertFalse(testPolygon.touches(multiPoint2))
+        XCTAssertFalse(testPolygon.touches(lineString1))
+        XCTAssertFalse(testPolygon.touches(lineString2))
+        XCTAssertFalse(testPolygon.touches(linearRing1))
+        XCTAssertFalse(testPolygon.touches(linearRing2))
+        XCTAssertFalse(testPolygon.touches(multiLineString1))
+        XCTAssertFalse(testPolygon.touches(multiLineString2))
+        XCTAssertFalse(testPolygon.touches(polygon1))
+        XCTAssertFalse(testPolygon.touches(polygon2))
+        XCTAssertFalse(testPolygon.touches(multiPolygon1))
+        XCTAssertFalse(testPolygon.touches(multiPolygon2))
+    }
+
+    // MARK: - Crosses
+
+    func testCrossesTrue() {
+        let testPolygon = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs)
+
+        let multiPoint = MultiPoint([Point(Coordinate(x: 11.0, y: 1.0)), Point(Coordinate(x: 200.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[-8.0, 1.0], [4.0, 5.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[0.0, -2.0], [0.0, 8.0], [3.0, 8.0], [3.0, -2.0], [0.0, -2.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [0.5,  0.5]]), LineString([[1.0,  2.0], [3.0,  2.0]]), LineString([[5.0,  5.0], [5.0,  -8.0]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPolygon.crosses(multiPoint))
+        XCTAssertTrue(testPolygon.crosses(lineString))
+        XCTAssertTrue(testPolygon.crosses(linearRing))
+        XCTAssertTrue(testPolygon.crosses(multiLineString))
+    }
+
+    func testCrossesFalse() {
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 20.0, y: 200.0))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[1.0, 1.0], [1.0, 1.5]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[24.0, 1.0], [100.0, 1.0], [100.0, 150.0]], precision: precision, coordinateSystem: cs)
+        let linearRing1 = LinearRing([[165.0, 165.0], [165.0, 175.0], [175.0, 175.0], [165.0, 175.0], [165.0, 165.0]], precision: precision, coordinateSystem: cs)
+        let linearRing2 = LinearRing([[40.0, 100.0], [0.0, 140.0], [100.0, 100.0], [40.0, 100.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[0.0,  3.0], [1.0,  1.0], [0.0,  0.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[100.0, 100.0], [100.0,  200.0]]), LineString([[24.0,  1.0], [24.0,  4.0]])], precision: precision, coordinateSystem: cs)
+        let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let polygon2 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[21.0, 1.0], [22.0, 1.0], [22.0, 1.5], [21.0, 1.5], [21.0, 1.0]]], precision: precision, coordinateSystem: cs)
+        let polygon3 = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[30.0, 0.5], [30.0, 10.0], [20.0, 10.0], [20.0, 0.5], [30.0, 0.5]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[21.0, 1.0], [22.0, 1.0], [22.0, 1.5], [21.0, 1.5], [21.0, 1.0]]]), Polygon([[0.0, 50.0], [0.0, 110.0], [110.0, 110.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon3 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[30.0, 0.5], [30.0, 10.0], [20.0, 10.0], [20.0, 0.5], [30.0, 0.5]]], precision: precision, coordinateSystem: cs), Polygon([[0.0, 50.0], [0.0, 80.0], [110.0, 80.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPolygon.crosses(point))
+        XCTAssertFalse(testPolygon.crosses(multiPoint1))
+        XCTAssertFalse(testPolygon.crosses(multiPoint2))
+        XCTAssertFalse(testPolygon.crosses(lineString1))
+        XCTAssertFalse(testPolygon.crosses(lineString2))
+        XCTAssertFalse(testPolygon.crosses(linearRing1))
+        XCTAssertFalse(testPolygon.crosses(linearRing2))
+        XCTAssertFalse(testPolygon.crosses(multiLineString1))
+        XCTAssertFalse(testPolygon.crosses(multiLineString2))
+        XCTAssertFalse(testPolygon.crosses(polygon1))
+        XCTAssertFalse(testPolygon.crosses(polygon2))
+        XCTAssertFalse(testPolygon.crosses(polygon3))
+        XCTAssertFalse(testPolygon.crosses(multiPolygon1))
+        XCTAssertFalse(testPolygon.crosses(multiPolygon2))
+        XCTAssertFalse(testPolygon.crosses(multiPolygon3))
+    }
+
+    // MARK: - Within
+
+    func testWithinTrue() {
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+
+        let polygon1 = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[175.0, 175.0], [165.0, 175.0], [165.0, 165.0], [175.0, 165.0], [175.0, 175.0]]], precision: precision, coordinateSystem: cs)
+        let polygon2 = Polygon([[1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0]], innerRings: [], precision: precision, coordinateSystem: cs)
+        let multiPolygon1 = MultiPolygon([Polygon([[26.0, 21.0], [21.0, 21.0], [21.0, 26.0], [23.5, 26.0], [26.0, 26.0], [26.0, 21.0]], innerRings: [[[25.0, 22.0], [25.0, 23.0], [23.5, 23.5], [22.0, 23.0], [22.0, 22.0], [25.0, 22.0]]]), Polygon([[1000.0, 90.0], [0.0, 90.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 90.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[500.0, 500.0], [500.0, 50.0], [-500.0, 50.0], [-500.0, 500.0], [500.0, 500.0]], innerRings: [[[-100.0, 20.0], [-90.0, 20.0], [-90.0, 30.0], [-100.0, 30.0], [-100.0, 20.0]]]), Polygon([[1.0, 1.0], [1.0, 2.1], [2.1, 2.1], [2.1, 1.0], [1.0, 1.0]], innerRings: [[[1.6, 1.7], [1.6, 1.8], [1.5, 1.8], [1.5, 1.7], [1.6, 1.7]]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPolygon.within(polygon1))
+        XCTAssertTrue(testPolygon.within(polygon2))
+        XCTAssertTrue(testPolygon.within(multiPolygon1))
+        XCTAssertTrue(testPolygon.within(multiPolygon2))
+    }
+
+    func testWithinFalse() {
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+
+        let point1 = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let point2 = Point(Coordinate(x: 170.0, y: 170.0), precision: precision, coordinateSystem: cs)
+        let point3 = Point(Coordinate(x: 160.0, y: 170.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 170.0, y: 170.0)), Point(Coordinate(x: 180.0, y: 180.0))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[0.0, 0.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[21.0, 1.0], [100.0, 2.0], [100.0, 200.0], [0.0, 200.0], [0.0, 180.0]], precision: precision, coordinateSystem: cs)
+        let linearRing1 = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let linearRing2 = LinearRing([[165.0, 165.0], [175.0, 165.0], [175.0, 175.0], [165.0, 175.0], [165.0, 165.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[21.0, 1.0], [22.0, 2.0], [22.0, 4.0], [24.0, 4.0], [24.0, 1.0]]), LineString([[6.0,  6.0], [100.0,  100.0]])], precision: precision, coordinateSystem: cs)
+        let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let polygon2 = Polygon([[0.0, 0.0], [0.0, 100.0], [1000.0, 100.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [100.0, 1.0], [100.0, 20.0], [1.0, 20.0], [1.0, 1.0]]], precision: precision, coordinateSystem: cs)
+        let polygon3 = Polygon([[-1000.0, 0.0], [-1000.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [-1000.0, 0.0]], innerRings: [[[-3.0, 3.0], [200.0, 3.0], [203.0, 203.0], [-3.0, 203.0], [-3.0, 3.0]], [[-51.0, 1.0], [-51.0, 20.0], [-100.0, 20.0], [-100.0, 1.0], [-51.0, 1.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[0.0, 50.0], [0.0, 100.0], [110.0, 100.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon3 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 0.0], [10.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [10.0, 0.0]], innerRings: [[[20.0, 2.0], [200.0, 2.0], [200.0, 200.0], [20.0, 200.0], [20.0, 2.0]]], precision: precision, coordinateSystem: cs)], precision: precision, coordinateSystem: cs)
+        let multiPolygon4 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[-10.0, 10.0], [-10.0, 1000.0], [1000.0, 1000.0], [1000.0, 10.0], [-10.0, 10.0]], innerRings: [[[-5.0, 50.0], [-5.0, 500.0], [500.0, 500.0], [500.0, 50.0], [-5.0, 50.0]]], precision: precision, coordinateSystem: cs)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPolygon.within(point1))
+        XCTAssertFalse(testPolygon.within(point2))
+        XCTAssertFalse(testPolygon.within(point3))
+        XCTAssertFalse(testPolygon.within(multiPoint1))
+        XCTAssertFalse(testPolygon.within(multiPoint2))
+        XCTAssertFalse(testPolygon.within(lineString1))
+        XCTAssertFalse(testPolygon.within(lineString2))
+        XCTAssertFalse(testPolygon.within(linearRing1))
+        XCTAssertFalse(testPolygon.within(linearRing2))
+        XCTAssertFalse(testPolygon.within(multiLineString1))
+        XCTAssertFalse(testPolygon.within(multiLineString2))
+        XCTAssertFalse(testPolygon.within(polygon1))
+        XCTAssertFalse(testPolygon.within(polygon2))
+        XCTAssertFalse(testPolygon.within(polygon3))
+        XCTAssertFalse(testPolygon.within(multiPolygon1))
+        XCTAssertFalse(testPolygon.within(multiPolygon2))
+        XCTAssertFalse(testPolygon.within(multiPolygon3))
+        XCTAssertFalse(testPolygon.within(multiPolygon4))
+    }
+
+    // MARK: - Contains
+
+    func testContainsTrue() {
+        let testPolygon = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 4.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 3.0, y: 1.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 80.0, y: 100.0)), Point(Coordinate(x: 4.0, y: 4.0))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[4.0, 1.0], [4.0, 4.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[60.0, 80.0], [60.0, 10.0], [2.0, 10.0], [1.5, 1.5]], precision: precision, coordinateSystem: cs)
+        let linearRing1 = LinearRing([[2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, 1.0], [1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let linearRing2 = LinearRing([[90.0, 90.0], [90.0, 50.0], [50.0, 50.0], [50.0, 90.0], [90.0, 90.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[4.0,  3.0], [4.0,  1.0], [3.0,  1.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[4.0,  4.0], [4.0,  2.0]]), LineString([[2.0,  2.0], [2.0,  4.0]]), LineString([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]])], precision: precision, coordinateSystem: cs)
+        let polygon1 = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs)
+        let polygon2 = Polygon([[50.0, 50.0], [50.0, 20.0], [20.0, 20.0], [20.0, 50.0], [50.0, 50.0]], innerRings: [], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[40.0, 40.0], [40.0, 10.0], [10.0, 10.0], [10.0, 40.0], [40.0, 40.0]], innerRings: [[[20.0, 30.0], [20.0, 20.0], [30.0, 20.0], [30.0, 30.0], [20.0, 2.0], [5.0, 2.0]]]), Polygon([[58.0, 1.0], [50.0, 1.0], [50.0, 10.0], [58.0, 10.0], [58.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPolygon.contains(point))
+        XCTAssertTrue(testPolygon.contains(multiPoint1))
+        XCTAssertTrue(testPolygon.contains(multiPoint2))
+        XCTAssertTrue(testPolygon.contains(lineString1))
+        XCTAssertTrue(testPolygon.contains(lineString2))
+        XCTAssertTrue(testPolygon.contains(linearRing1))
+        XCTAssertTrue(testPolygon.contains(linearRing2))
+        XCTAssertTrue(testPolygon.contains(multiLineString1))
+        XCTAssertTrue(testPolygon.contains(multiLineString2))
+        XCTAssertTrue(testPolygon.contains(polygon1))
+        XCTAssertTrue(testPolygon.contains(polygon2))
+        XCTAssertTrue(testPolygon.contains(multiPolygon))
+    }
+
+    func testContainsFalse() {
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([], precision: precision, coordinateSystem: cs)
+        let multiPoint3 = MultiPoint([Point(Coordinate(x: 170.0, y: 170.0)), Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 80.0, y: 180.0))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[1.0, 1.0], [1.0, 8.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[100.0, 100.0], [0.0, 100.0]], precision: precision, coordinateSystem: cs)
+        let linearRing1 = LinearRing([[-2.0, -2.0], [2.0, 2.0], [6.0, -2.0], [2.0, -6.0], [-2.0, -2.0]], precision: precision, coordinateSystem: cs)
+        let linearRing2 = LinearRing([[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[1.0,  0.0], [1.0,  6.0], [10.0,  6.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [0.0,  1.0]]), LineString([[50.0, 0.0], [40.0, 0.0]]), LineString([[162.0, 162.0], [162.0, 170.0], [170.0, 170.0]])], precision: precision, coordinateSystem: cs)
+        let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let polygon2 = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[78.0, 178.0], [62.0, 178.0], [62.0, 162.0], [78.0, 162.0], [78.0, 178.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [-1.0, 1.0], [-1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[100.0, 0.0], [0.0, 0.0], [0.0, 40.0], [100.0, 40.0], [100.0, 0.0]], innerRings: [[[0.5, 0.5], [20.0, 0.5], [20.0, 10.0], [0.5, 10.0], [0.5, 0.5]]]), Polygon([[0.0, 50.0], [0.0, 100.0], [110.0, 100.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPolygon.contains(point))
+        XCTAssertFalse(testPolygon.contains(multiPoint1))
+        XCTAssertFalse(testPolygon.contains(multiPoint2))
+        XCTAssertFalse(testPolygon.contains(multiPoint3))
+        XCTAssertFalse(testPolygon.contains(lineString1))
+        XCTAssertFalse(testPolygon.contains(lineString2))
+        XCTAssertFalse(testPolygon.contains(linearRing1))
+        XCTAssertFalse(testPolygon.contains(linearRing2))
+        XCTAssertFalse(testPolygon.contains(multiLineString1))
+        XCTAssertFalse(testPolygon.contains(multiLineString2))
+        XCTAssertFalse(testPolygon.contains(polygon1))
+        XCTAssertFalse(testPolygon.contains(polygon2))
+        XCTAssertFalse(testPolygon.contains(multiPolygon1))
+        XCTAssertFalse(testPolygon.contains(multiPolygon2))
+    }
+
+    // MARK: - Overlaps
+
+    func testOverlapsTrue() {
+        /// Overlaps can only be true for geometries of the same dimension, and each geometry must have points exterior to the other, and the interiors must touch.
+        let testPolygon = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs)
+
+        let polygon1 = Polygon([[-6.0, -6.0], [-6.0, 6.0], [6.0, 6.0], [6.0, -6.0], [-6.0, -6.0]], innerRings: [[[0.0, -1.0], [0.0, 0.0], [-1.0, 0.0], [-1.0, -1.0], [0.0, -1.0]]], precision: precision, coordinateSystem: cs)
+        let polygon2 = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[40.0, 20.0], [40.0, 40.0], [20.0, 40.0], [20.0, 20.0], [40.0, 20.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [-1.0, 1.0], [-1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[100.0, 0.0], [0.0, 0.0], [0.0, 40.0], [100.0, 40.0], [100.0, 0.0]], innerRings: [[[0.5, 0.5], [20.0, 0.5], [20.0, 10.0], [0.5, 10.0], [0.5, 0.5]]]), Polygon([[0.0, 50.0], [0.0, 100.0], [110.0, 100.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPolygon.overlaps(polygon1))
+        XCTAssertTrue(testPolygon.overlaps(polygon2))
+        XCTAssertTrue(testPolygon.overlaps(multiPolygon1))
+        XCTAssertTrue(testPolygon.overlaps(multiPolygon2))
+    }
+
+    func testOverlapsFalse() {
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]], precision: precision, coordinateSystem: cs)
+
+        let point1 = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let point2 = Point(Coordinate(x: 60.0, y: 160.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 0.0, y: 0.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 70.0, y: 170.0))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[0.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[2.0, 4.0], [4.0, 4.0], [4.0, 100.0], [400.0, 400.0]], precision: precision, coordinateSystem: cs)
+        let lineString3 = LineString([[0.0, 100.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
+        let linearRing1 = LinearRing([[-2.0, 2.0], [-2.0, 5.0], [0.0, 5.0], [0.0, 2.0], [-2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let linearRing2 = LinearRing([[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[4.0,  8.0], [4.0,  4.0], [10.0,  4.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[2.0, 500.0], [10.0, 3.0]]), LineString([[0.0, 100.0], [100.0, 200.0]])], precision: precision, coordinateSystem: cs)
+        let polygon1 = Polygon([[26.0, 1.0], [21.0, 1.0], [21.0, 3.0], [23.5, 4.0], [26.0, 3.0], [26.0, 1.0]], innerRings: [[[25.0, 2.0], [25.0, 3.0], [23.5, 3.5], [22.0, 3.0], [22.0, 2.0], [25.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let polygon2 = Polygon([[0.0, 0.0], [0.0, 100.0], [1000.0, 100.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[5.0, 5.0], [10.0, 5.0], [10.0, 10.0], [5.0, 10.0], [5.0, 5.0]]], precision: precision, coordinateSystem: cs)
+        let polygon3 = Polygon([[-2.0, -2.0], [-2.0, 1000.0], [1000.0, 1000.0], [1000.0, -2.0], [-2.0, -2.0]], innerRings: [[[0.0, 0.0], [100.0, 0.0], [100.0, 100.0], [0.0, 100.0], [0.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon1 = MultiPolygon([Polygon([[26.0, 1.0], [21.0, 1.0], [21.0, 3.0], [23.5, 4.0], [26.0, 3.0], [26.0, 1.0]], innerRings: [[[25.0, 2.0], [25.0, 3.0], [23.5, 3.5], [22.0, 3.0], [22.0, 2.0], [25.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, 1.0], [1.0, 1.0]], innerRings: []), Polygon([[0.0, 50.0], [110.0, 50.0], [110.0, 100.0], [0.0, 100.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon3 = MultiPolygon([Polygon([[26.0, 1.0], [21.0, 1.0], [21.0, 6.0], [23.5, 26.0], [26.0, 6.0], [26.0, 1.0]], innerRings: [[[25.0, 2.0], [25.0, 3.0], [23.5, 3.5], [22.0, 3.0], [22.0, 2.0], [25.0, 2.0]]]), Polygon([[-2.0, -2.0], [-2.0, 1000.0], [1000.0, 1000.0], [1000.0, -2.0], [-2.0, -2.0]], innerRings: [[[0.0, 0.0], [100.0, 0.0], [100.0, 100.0], [0.0, 100.0], [0.0, 0.0]]], precision: precision, coordinateSystem: cs)], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPolygon.overlaps(point1))
+        XCTAssertFalse(testPolygon.overlaps(point2))
+        XCTAssertFalse(testPolygon.overlaps(multiPoint1))
+        XCTAssertFalse(testPolygon.overlaps(multiPoint2))
+        XCTAssertFalse(testPolygon.overlaps(lineString1))
+        XCTAssertFalse(testPolygon.overlaps(lineString2))
+        XCTAssertFalse(testPolygon.overlaps(lineString3))
+        XCTAssertFalse(testPolygon.overlaps(linearRing1))
+        XCTAssertFalse(testPolygon.overlaps(linearRing2))
+        XCTAssertFalse(testPolygon.overlaps(multiLineString1))
+        XCTAssertFalse(testPolygon.overlaps(multiLineString2))
+        XCTAssertFalse(testPolygon.overlaps(polygon1))
+        XCTAssertFalse(testPolygon.overlaps(polygon2))
+        XCTAssertFalse(testPolygon.overlaps(polygon3))
+        XCTAssertFalse(testPolygon.overlaps(multiPolygon1))
+        XCTAssertFalse(testPolygon.overlaps(multiPolygon2))
+        XCTAssertFalse(testPolygon.overlaps(multiPolygon3))
+    }
 }
 

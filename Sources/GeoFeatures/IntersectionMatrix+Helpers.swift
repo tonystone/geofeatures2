@@ -1598,6 +1598,12 @@ extension IntersectionMatrix {
             relatedToResult.firstInteriorTouchesSecondExterior = .one
             relatedToResult.firstBoundaryTouchesSecondExterior = .zero
         }
+        
+        /// Update the exterior/interior and exterior/boundary values.
+        /// Note the values below may not be correct for degenerate polygons.
+
+        relatedToResult.firstExteriorTouchesSecondInterior = .two
+        relatedToResult.firstExteriorTouchesSecondBoundary = .one
 
         /// Check the cases where no further work is needed.
         if (relatedToResult.firstTouchesSecondBoundary == .one && relatedToResult.firstTouchesSecondInterior == .one && relatedToResult.firstTouchesSecondExterior == .one) ||
@@ -1703,6 +1709,12 @@ extension IntersectionMatrix {
             let outerLinearRing = polygonBoundary[0] as? LinearRing,
             outerLinearRing.count > 0 else {
                 return relatedToResult
+        }
+
+        relatedToResult.firstExteriorTouchesSecondInterior = .two
+        relatedToResult.firstExteriorTouchesSecondBoundary = .one
+        if matches(lineString, outerLinearRing) {
+            relatedToResult.firstExteriorTouchesSecondBoundary = .empty
         }
 
         /// Check the relationships between each line segment of the line string and the simple polygon
@@ -1900,66 +1912,213 @@ extension IntersectionMatrix {
 
         var relatedToResult = RelatedTo()
 
-        guard let polygonBoundary1 = simplePolygon1.boundary() as? MultiLineString,
+        guard let polygonBoundary1 = simplePolygon1.boundary() as? GeometryCollection,
             polygonBoundary1.count > 0,
-            let mainPolygon1 = polygonBoundary1.first,
-            mainPolygon1.count > 0 else {
+            let outerLinearRing1 = polygonBoundary1[0] as? LinearRing,
+            outerLinearRing1.count > 0 else {
                 return relatedToResult
         }
 
-        guard let polygonBoundary2 = simplePolygon2.boundary() as? MultiLineString,
+        guard let polygonBoundary2 = simplePolygon2.boundary() as? GeometryCollection,
             polygonBoundary2.count > 0,
-            let mainPolygon2 = polygonBoundary2.first,
-            mainPolygon2.count > 0 else {
+            let outerLinearRing2 = polygonBoundary2[0] as? LinearRing,
+            outerLinearRing2.count > 0 else {
                 return relatedToResult
         }
 
         /// Check whether the first polygon boundary is completely contained in the second polygon boundary
-        let reducedPB1 = reduce(polygonBoundary1)
-        let reducedPB2 = reduce(polygonBoundary2)
+        let reducedPB1 = reduce(outerLinearRing1)
+        let reducedPB2 = reduce(outerLinearRing2)
         if subset(reducedPB1, reducedPB2) {
+            /// More values needed here?
             relatedToResult.firstBoundaryTouchesSecondBoundary = .one
             return relatedToResult
         }
 
         /// Check the relationships between each line segment of the first polygon boundary and the second polygon
 
-        for lineString in polygonBoundary1 {
-            for firstCoordIndex in 0..<lineString.count - 1 {
+        for firstCoordIndex in 0..<outerLinearRing1.count - 1 {
 
-                let firstCoord  = lineString[firstCoordIndex]
-                let secondCoord = lineString[firstCoordIndex + 1]
-                let segment = Segment(left: firstCoord, right: secondCoord)
+            let firstCoord  = outerLinearRing1[firstCoordIndex]
+            let secondCoord = outerLinearRing1[firstCoordIndex + 1]
+            let segment = Segment(left: firstCoord, right: secondCoord)
 
-                let segmentRelatedToResult = relatedTo(segment, simplePolygon2)
+            let segmentRelatedToResult = relatedTo(segment, simplePolygon2)
 
-                if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
-                    relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
-                }
+            if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                relatedToResult.firstInteriorTouchesSecondInterior = .two
+            }
 
-                if segmentRelatedToResult.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
-                    relatedToResult.firstBoundaryTouchesSecondInterior = segmentRelatedToResult.firstBoundaryTouchesSecondInterior
-                }
+            if segmentRelatedToResult.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
+                relatedToResult.firstBoundaryTouchesSecondInterior = .one
+            }
 
-                if segmentRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
-                    relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
-                }
+            if segmentRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
+                relatedToResult.firstInteriorTouchesSecondBoundary = segmentRelatedToResult.firstInteriorTouchesSecondBoundary
+            }
 
-                if segmentRelatedToResult.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
-                    relatedToResult.firstBoundaryTouchesSecondBoundary = segmentRelatedToResult.firstBoundaryTouchesSecondBoundary
-                }
+            if segmentRelatedToResult.firstInteriorTouchesSecondBoundary == .one {
+                relatedToResult.firstBoundaryTouchesSecondBoundary = .one
+            }
 
-                if segmentRelatedToResult.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
-                    relatedToResult.firstInteriorTouchesSecondExterior = segmentRelatedToResult.firstInteriorTouchesSecondExterior
-                }
+            if segmentRelatedToResult.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
+                relatedToResult.firstBoundaryTouchesSecondBoundary = segmentRelatedToResult.firstBoundaryTouchesSecondBoundary
+            }
 
-                if segmentRelatedToResult.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
-                    relatedToResult.firstBoundaryTouchesSecondExterior = segmentRelatedToResult.firstBoundaryTouchesSecondExterior
-                }
+            if segmentRelatedToResult.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
+                /// This could be wrong if the polygon is collapsed into a straight line.
+                relatedToResult.firstInteriorTouchesSecondExterior = .two
+            }
+
+            if segmentRelatedToResult.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
+                relatedToResult.firstBoundaryTouchesSecondExterior = .one
+            }
+
+            if segmentRelatedToResult.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
+                relatedToResult.firstExteriorTouchesSecondInterior = .two
+            }
+
+            if segmentRelatedToResult.firstExteriorTouchesSecondBoundary > relatedToResult.firstExteriorTouchesSecondBoundary {
+                relatedToResult.firstExteriorTouchesSecondBoundary = .one
             }
         }
 
+        /// Check the relationships between each line segment of the second polygon boundary and the first polygon.
+        /// Update the relatedToResult based on that.
+
+        var noSegmentOutsidePolygon1 = true
+        for firstCoordIndex in 0..<outerLinearRing2.count - 1 {
+
+            let firstCoord  = outerLinearRing2[firstCoordIndex]
+            let secondCoord = outerLinearRing2[firstCoordIndex + 1]
+            let segment = Segment(left: firstCoord, right: secondCoord)
+
+            let segmentRelatedToResult = relatedTo(segment, simplePolygon1)
+
+            if segmentRelatedToResult.firstInteriorTouchesSecondInterior > .empty {
+                relatedToResult.firstInteriorTouchesSecondInterior = .two
+                relatedToResult.firstInteriorTouchesSecondBoundary = .one
+            }
+
+            if segmentRelatedToResult.firstInteriorTouchesSecondExterior > .empty {
+                noSegmentOutsidePolygon1 = false
+            }
+
+            if segmentRelatedToResult.firstBoundaryTouchesSecondExterior > .empty {
+                noSegmentOutsidePolygon1 = false
+            }
+        }
+
+        /// Check case where polygon2 is completely inside polygon1.
+
+        if noSegmentOutsidePolygon1 {
+            relatedToResult.firstExteriorTouchesSecondInterior = .empty
+            relatedToResult.firstExteriorTouchesSecondBoundary = .empty
+        }
+
         return relatedToResult
+    }
+
+    /// Assume here that both polygon arrays contain only simple polygons with no holes, just a single simple boundary.
+    fileprivate static func relatedTo(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> RelatedTo {
+
+        var relatedToResult = RelatedTo()
+
+        guard simplePolygonArray1.count > 0, simplePolygonArray2.count > 0 else {
+                return relatedToResult
+        }
+
+        /// Check the relationships between each pair of polygons
+
+        var finalInteriorExteriorDimension: Dimension = .empty
+        var finalBoundaryExteriorDimension: Dimension = .empty
+        var finalExteriorInteriorDimension: Dimension = .empty
+        var finalExteriorBoundaryDimension: Dimension = .empty
+        for simplePolygon1 in simplePolygonArray1 {
+            var tempInteriorExteriorDimension: Dimension = .two
+            var tempBoundaryExteriorDimension: Dimension = .one
+            var tempExteriorInteriorDimension: Dimension = .two
+            var tempExteriorBoundaryDimension: Dimension = .one
+            for simplePolygon2 in simplePolygonArray2 {
+
+                let polygonsRelatedToResult = relatedTo(simplePolygon1, simplePolygon2)
+
+                if polygonsRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
+                    relatedToResult.firstInteriorTouchesSecondInterior = polygonsRelatedToResult.firstInteriorTouchesSecondInterior
+                }
+
+                if polygonsRelatedToResult.firstInteriorTouchesSecondBoundary > relatedToResult.firstInteriorTouchesSecondBoundary {
+                    relatedToResult.firstInteriorTouchesSecondBoundary = polygonsRelatedToResult.firstInteriorTouchesSecondBoundary
+                }
+
+                if polygonsRelatedToResult.firstInteriorTouchesSecondExterior < tempInteriorExteriorDimension {
+                    tempInteriorExteriorDimension = polygonsRelatedToResult.firstInteriorTouchesSecondExterior
+                }
+
+                if polygonsRelatedToResult.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
+                    relatedToResult.firstBoundaryTouchesSecondInterior = polygonsRelatedToResult.firstBoundaryTouchesSecondInterior
+                }
+
+                if polygonsRelatedToResult.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
+                    relatedToResult.firstBoundaryTouchesSecondBoundary = polygonsRelatedToResult.firstBoundaryTouchesSecondBoundary
+                }
+
+                if polygonsRelatedToResult.firstBoundaryTouchesSecondExterior < tempBoundaryExteriorDimension {
+                    tempBoundaryExteriorDimension = polygonsRelatedToResult.firstBoundaryTouchesSecondExterior
+                }
+
+                if polygonsRelatedToResult.firstExteriorTouchesSecondInterior < tempExteriorInteriorDimension {
+                    tempExteriorInteriorDimension = polygonsRelatedToResult.firstExteriorTouchesSecondInterior
+                }
+
+                if polygonsRelatedToResult.firstExteriorTouchesSecondBoundary < tempExteriorBoundaryDimension {
+                    tempExteriorBoundaryDimension = polygonsRelatedToResult.firstExteriorTouchesSecondBoundary
+                }
+            }
+
+            /// Update the final interior/exterior dimensions as needed
+            if finalInteriorExteriorDimension < tempInteriorExteriorDimension {
+                finalInteriorExteriorDimension = tempInteriorExteriorDimension
+            }
+
+            /// Update the final interior/exterior dimensions as needed
+            if finalBoundaryExteriorDimension < tempBoundaryExteriorDimension {
+                finalBoundaryExteriorDimension = tempBoundaryExteriorDimension
+            }
+
+            /// Update the final interior/exterior dimensions as needed
+            if finalExteriorInteriorDimension < tempExteriorInteriorDimension {
+                finalExteriorInteriorDimension = tempExteriorInteriorDimension
+            }
+
+            /// Update the final interior/exterior dimensions as needed
+            if finalExteriorBoundaryDimension < tempExteriorBoundaryDimension {
+                finalExteriorBoundaryDimension = tempExteriorBoundaryDimension
+            }
+        }
+
+        /// There are special cases that need to be handled here.
+        /// These have to do with the interior and the boundary of one polygon array to the other polygon array.
+
+        relatedToResult.firstInteriorTouchesSecondExterior = finalInteriorExteriorDimension
+        relatedToResult.firstBoundaryTouchesSecondExterior = finalBoundaryExteriorDimension
+        relatedToResult.firstExteriorTouchesSecondInterior = finalExteriorInteriorDimension
+        relatedToResult.firstExteriorTouchesSecondBoundary = finalExteriorBoundaryDimension
+
+        return relatedToResult
+    }
+
+    /// Assume here that both polygon arrays contain only simple polygons with no holes, just a single simple boundary.
+    /// Is the first polygon array a subset, either proper or improper, of the second polygon array?
+    fileprivate static func subset(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> Bool {
+
+        guard simplePolygonArray1.count > 0, simplePolygonArray2.count > 0 else {
+                return false
+        }
+
+        let relatedToResult = relatedTo(simplePolygonArray1, simplePolygonArray2)
+
+        return ((relatedToResult.firstInteriorTouchesSecondExterior == .empty) && (relatedToResult.firstBoundaryTouchesSecondExterior == .empty))
     }
 
     fileprivate static func disjoint(_ polygon1: Polygon, _ polygon2: Polygon) -> Bool {
@@ -1984,6 +2143,16 @@ extension IntersectionMatrix {
 
         /// No overlaps
         return true
+    }
+
+    fileprivate static func linearRingsToPolygons(_ linearRings: [LinearRing]) -> [Polygon] {
+
+        var polygons = [Polygon]()
+        for linearRing in linearRings {
+            let polygon = Polygon(linearRing)
+            polygons.append(polygon)
+        }
+        return polygons
     }
 
     /// Assume here that both polygons are full polygons with holes
@@ -2045,12 +2214,15 @@ extension IntersectionMatrix {
                 relatedToResult.firstExteriorTouchesSecondInterior = .two
             } else {
                 /// Two different sets of inner rings that are both not empty
-                relatedToResult.firstInteriorTouchesSecondBoundary = relatedToInnerRings.firstExteriorTouchesSecondBoundary
-                relatedToResult.firstInteriorTouchesSecondExterior = relatedToInnerRings.firstExteriorTouchesSecondInterior
-                relatedToResult.firstBoundaryTouchesSecondInterior = relatedToInnerRings.firstBoundaryTouchesSecondExterior
-                relatedToResult.firstBoundaryTouchesSecondExterior = relatedToInnerRings.firstBoundaryTouchesSecondInterior
-                relatedToResult.firstExteriorTouchesSecondInterior = relatedToInnerRings.firstInteriorTouchesSecondExterior
-                relatedToResult.firstExteriorTouchesSecondBoundary = relatedToInnerRings.firstInteriorTouchesSecondBoundary
+                let innerPolygons1 = linearRingsToPolygons(innerRings1)
+                let innerPolygons2 = linearRingsToPolygons(innerRings2)
+                let relatedToPolygonInnerRings = relatedTo(innerPolygons1, innerPolygons2)
+                relatedToResult.firstInteriorTouchesSecondBoundary = relatedToPolygonInnerRings.firstExteriorTouchesSecondBoundary
+                relatedToResult.firstInteriorTouchesSecondExterior = relatedToPolygonInnerRings.firstExteriorTouchesSecondInterior
+                relatedToResult.firstBoundaryTouchesSecondInterior = relatedToPolygonInnerRings.firstBoundaryTouchesSecondExterior
+                relatedToResult.firstBoundaryTouchesSecondExterior = relatedToPolygonInnerRings.firstBoundaryTouchesSecondInterior
+                relatedToResult.firstExteriorTouchesSecondInterior = relatedToPolygonInnerRings.firstInteriorTouchesSecondExterior
+                relatedToResult.firstExteriorTouchesSecondBoundary = relatedToPolygonInnerRings.firstInteriorTouchesSecondBoundary
             }
 
             return relatedToResult
@@ -2139,6 +2311,31 @@ extension IntersectionMatrix {
     fileprivate static func countIdentical(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> Bool {
 
         return linearRingArray1.count == linearRingArray2.count
+    }
+
+    /// Does the line string match the linear ring?
+    fileprivate static func matches(_ lineString: LineString, _ linearRing: LinearRing) -> Bool {
+
+        guard lineString.count == linearRing.count else { return false }
+
+        guard lineString.count >= 2 else { return false }
+
+        guard lineString[0] == lineString[lineString.count - 1] else { return false }
+
+        var lineStringCoordinates = [Coordinate]()
+        for coordinate in lineString {
+            lineStringCoordinates.append(coordinate)
+        }
+
+        let lineStringLR = LinearRing(lineStringCoordinates)
+
+        let relatedToRings = relatedTo(lineStringLR, linearRing)
+
+        if areLinearRingsIdentical(relatedToRings) {
+            return true
+        }
+
+        return false
     }
 
     /// Does the linear ring match any of the linear rings in the array?
@@ -4560,6 +4757,8 @@ extension IntersectionMatrix {
 
         /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
 
+        var finalInteriorExteriorDimension: Dimension = .two
+        var finalBoundaryExteriorDimension: Dimension = .one
         for polygonFromMP in multipolygon {
 
             /// Get the relationship between the point and the polygon
@@ -4568,6 +4767,33 @@ extension IntersectionMatrix {
             /// Update the intersection matrix as needed
             update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
 
+            /// Update the  interior/exterior dimensions as needed
+            if intersectionMatrixResult[.interior, .exterior] < finalInteriorExteriorDimension {
+                finalInteriorExteriorDimension = intersectionMatrixResult[.interior, .exterior]
+            }
+
+            /// Update the  boundary/exterior dimensions as needed
+            if intersectionMatrixResult[.boundary, .exterior] < finalBoundaryExteriorDimension {
+                finalBoundaryExteriorDimension = intersectionMatrixResult[.boundary, .exterior]
+            }
+        }
+
+        /// There is a special case here: polygon interior with multipolygon exterior.
+        /// It's possible that the interior of the polygon exists in one polygon of the multi polygon but not another.
+        /// In that case, the dimension of the interior/exterior would be two for one polygon and zero for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.interior, .exterior] > finalInteriorExteriorDimension {
+            matrixIntersects[.interior, .exterior] = finalInteriorExteriorDimension
+        }
+
+        /// There is a special case here: polygon boundary with multipolygon exterior.
+        /// It's possible that the boundary of the polygon exists in one polygon of the multi polygon but not another.
+        /// In that case, the dimension of the boundary/exterior would be one for one polygon and zero for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.boundary, .exterior] > finalBoundaryExteriorDimension {
+            matrixIntersects[.boundary, .exterior] = finalBoundaryExteriorDimension
         }
 
         return matrixIntersects

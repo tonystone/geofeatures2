@@ -245,13 +245,11 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     func testCrossesTrue() {
         let testLinearRing = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
 
-        let point = Point(Coordinate(x: 4.0, y: 3.0), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 11.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 4.0))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[0.0, 1.0], [4.0, 5.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[0.0, 2.0], [0.0, 8.0], [3.0, 8.0], [3.0, 2.0], [0.0, 2.0]], precision: precision, coordinateSystem: cs)
         let multiLineString = MultiLineString([LineString([[0.0,  0.0], [0.5,  0.5]]), LineString([[1.0,  2.0], [3.0,  2.0]]), LineString([[5.0,  5.0], [5.0,  8.0]])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(testLinearRing.crosses(point))
         XCTAssertTrue(testLinearRing.crosses(multiPoint))
         XCTAssertTrue(testLinearRing.crosses(lineString))
         XCTAssertTrue(testLinearRing.crosses(linearRing))
