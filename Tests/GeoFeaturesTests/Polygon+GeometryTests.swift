@@ -100,7 +100,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: - Disjoint
 
     func testDisjointTrue() {
-        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
@@ -162,7 +162,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testIntersectsFalse() {
-        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 11.0, y: 1.0)), Point(Coordinate(x: 12.0, y: 2.0))], precision: precision, coordinateSystem: cs)
@@ -204,7 +204,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testTouchesFalse() {
-        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]], precision: precision, coordinateSystem: cs)
 
         let point1 = Point(Coordinate(x: 24.0, y: 3.0), precision: precision, coordinateSystem: cs)
         let point2 = Point(Coordinate(x: 110.0, y: 110.0), precision: precision, coordinateSystem: cs)
@@ -254,7 +254,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testCrossesFalse() {
-        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let multiPoint1 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
@@ -292,9 +292,9 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: - Within
 
     func testWithinTrue() {
-        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]], precision: precision, coordinateSystem: cs)
 
-        let polygon1 = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[175.0, 175.0], [165.0, 175.0], [165.0, 165.0], [175.0, 165.0], [175.0, 175.0]]], precision: precision, coordinateSystem: cs)
+        let polygon1 = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[75.0, 175.0], [65.0, 175.0], [65.0, 165.0], [75.0, 165.0], [75.0, 175.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0]], innerRings: [], precision: precision, coordinateSystem: cs)
         let multiPolygon1 = MultiPolygon([Polygon([[26.0, 21.0], [21.0, 21.0], [21.0, 26.0], [23.5, 26.0], [26.0, 26.0], [26.0, 21.0]], innerRings: [[[25.0, 22.0], [25.0, 23.0], [23.5, 23.5], [22.0, 23.0], [22.0, 22.0], [25.0, 22.0]]]), Polygon([[1000.0, 90.0], [0.0, 90.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 90.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
         let multiPolygon2 = MultiPolygon([Polygon([[500.0, 500.0], [500.0, 50.0], [-500.0, 50.0], [-500.0, 500.0], [500.0, 500.0]], innerRings: [[[-100.0, 20.0], [-90.0, 20.0], [-90.0, 30.0], [-100.0, 30.0], [-100.0, 20.0]]]), Polygon([[1.0, 1.0], [1.0, 2.1], [2.1, 2.1], [2.1, 1.0], [1.0, 1.0]], innerRings: [[[1.6, 1.7], [1.6, 1.8], [1.5, 1.8], [1.5, 1.7], [1.6, 1.7]]])], precision: precision, coordinateSystem: cs)
@@ -306,7 +306,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testWithinFalse() {
-        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[180.0, 180.0], [160.0, 180.0], [160.0, 160.0], [180.0, 160.0], [180.0, 180.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]], precision: precision, coordinateSystem: cs)
 
         let point1 = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let point2 = Point(Coordinate(x: 170.0, y: 170.0), precision: precision, coordinateSystem: cs)
