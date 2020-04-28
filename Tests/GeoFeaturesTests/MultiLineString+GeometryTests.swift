@@ -151,13 +151,13 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Disjoint
 
     func testDisjointTrue() {
-        let testMultiLineString = MultiLineString([LineString([[20.0,  0.0], [21.0,  1.0]]), LineString([[21.5,  1.5], [23.0,  3.0]]), LineString([[26.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[20.0, 0.0], [21.0, 1.0]]), LineString([[21.5, 1.5], [23.0, 3.0]]), LineString([[26.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[1.0, 1.0], [1.0, 3.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  -23.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [3.0, -23.0]])], precision: precision, coordinateSystem: cs)
         let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
@@ -171,13 +171,13 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testDisjointFalse() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 1.5, y: 1.5), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 1.5, y: 1.5))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[1.0, 1.0], [1.0, 3.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString = MultiLineString([LineString([[1.0,  3.0], [2.0,  2.0], [3.0,  3.0]]), LineString([[-1.0,  3.0], [-2.0,  2.0], [-3.0,  3.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[1.0, 3.0], [2.0, 2.0], [3.0, 3.0]]), LineString([[-1.0, 3.0], [-2.0, 2.0], [-3.0, 3.0]])], precision: precision, coordinateSystem: cs)
         let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.6, 1.6], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
@@ -193,13 +193,13 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Intersects
 
     func testIntersectsTrue() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 1.5, y: 1.5), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 1.5, y: 1.5))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[1.0, 1.0], [1.0, 3.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [7.0,  7.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [7.0, 7.0]])], precision: precision, coordinateSystem: cs)
         let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.6, 1.6], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
@@ -213,13 +213,13 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testIntersectsFalse() {
-        let testMultiLineString = MultiLineString([LineString([[20.0,  0.0], [21.0,  1.0]]), LineString([[21.5,  1.5], [23.0,  3.0]]), LineString([[26.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[20.0, 0.0], [21.0, 1.0]]), LineString([[21.5, 1.5], [23.0, 3.0]]), LineString([[26.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 11.0, y: 1.0)), Point(Coordinate(x: 12.0, y: 2.0))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[11.0, 1.0], [12.0, 2.0], [12.0, 4.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[1.0, 1.0], [1.0, 3.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [7.0,  7.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [7.0, 7.0]])], precision: precision, coordinateSystem: cs)
         let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
@@ -235,13 +235,13 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Touches
 
     func testTouchesTrue() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 1.5, y: 1.5), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 700.0, y: 700.0)), Point(Coordinate(x: 700.0, y: 1000.0))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[1.0, 1.0], [1.5, 1.5]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[1.0, 1.0], [1.0, 3.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString = MultiLineString([LineString([[0.0,  0.0], [0.0,  1.0]]), LineString([[1.5,  1.5], [1.5,  3.0]]), LineString([[6.0,  6.0], [6.0,  7.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[0.0, 0.0], [0.0, 1.0]]), LineString([[1.5, 1.5], [1.5, 3.0]]), LineString([[6.0, 6.0], [6.0, 7.0]])], precision: precision, coordinateSystem: cs)
         let polygon = Polygon([[6.0, 6.0], [6.0, 3.0], [3.0, 3.0], [3.0, 6.0], [6.0, 6.0]], innerRings: [[[5.0, 4.0], [5.0, 5.0], [4.0, 5.0], [4.0, 4.0], [5.0, 4.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([[6.0, 6.0], [6.0, 3.0], [3.0, 3.0], [3.0, 6.0], [6.0, 6.0]], innerRings: [[[5.0, 4.0], [5.0, 5.0], [4.0, 5.0], [4.0, 4.0], [5.0, 4.0]]], precision: precision, coordinateSystem: cs), Polygon([[4.0, 6.0], [4.0, 8.0], [6.0, 8.0], [6.0, 6.0], [4.0, 6.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
@@ -255,7 +255,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testTouchesFalse() {
-        let testMultiLineString = MultiLineString([LineString([[20.0,  0.0], [21.0,  1.0]]), LineString([[21.5,  1.5], [23.0,  3.0]]), LineString([[26.0,  26.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[20.0, 0.0], [21.0, 1.0]]), LineString([[21.5, 1.5], [23.0, 3.0]]), LineString([[26.0, 26.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point1 = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let point2 = Point(Coordinate(x: 100.0, y: 100.0), precision: precision, coordinateSystem: cs)
@@ -265,8 +265,8 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         let lineString2 = LineString([[1.0, 1.0], [200.0, 200.0]], precision: precision, coordinateSystem: cs)
         let linearRing1 = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
         let linearRing2 = LinearRing([[1.0, 1.0], [2.0, 2.0], [300.0, 300.0], [300.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
         let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
@@ -291,7 +291,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Crosses
 
     func testCrossesTrue() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let multiPoint = MultiPoint([Point(Coordinate(x: 11.0, y: 11.0)), Point(Coordinate(x: 22.0, y: 22.0)), Point(Coordinate(x: 22.0, y: 21.0))], precision: precision, coordinateSystem: cs)
         let lineString = LineString([[6.0, 8.0], [10.0, 4.0]], precision: precision, coordinateSystem: cs)
@@ -305,7 +305,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testCrossesFalse() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point1 = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let point2 = Point(Coordinate(x: 700.0, y: 700.0), precision: precision, coordinateSystem: cs)
@@ -317,9 +317,9 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         let lineString3 = LineString([[0.0, 1.0], [0.0, 200.0], [100.0, 200.0]], precision: precision, coordinateSystem: cs)
         let linearRing1 = LinearRing([[-1.0, 1.0], [-2.0, 2.0], [-3.0, 3.0], [-3.0, 1.0], [-1.0, 1.0]], precision: precision, coordinateSystem: cs)
         let linearRing2 = LinearRing([[1.0, 100.0], [1.0, 300.0], [50.0, 300.0], [50.0, 100.0], [1.0, 100.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[0.0,  2.0], [1.0,  1.0], [1.0,  2.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[0.0,  8.0], [1.0,  8.0]]), LineString([[1.5,  8.0], [3.0,  8.0]]), LineString([[6.0,  8.0], [6.0,  700.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString3 = MultiLineString([LineString([[-1.0,  1.0], [3.0,  -3.0]]), LineString([[0.0, 6.0], [6.0,  0.0]]), LineString([[6.0,  0.0], [6.0,  100.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[0.0, 2.0], [1.0, 1.0], [1.0, 2.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0, 8.0], [1.0, 8.0]]), LineString([[1.5, 8.0], [3.0, 8.0]]), LineString([[6.0, 8.0], [6.0, 700.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString3 = MultiLineString([LineString([[-1.0, 1.0], [3.0, -3.0]]), LineString([[0.0, 6.0], [6.0, 0.0]]), LineString([[6.0, 0.0], [6.0, 100.0]])], precision: precision, coordinateSystem: cs)
         let polygon1 = Polygon([[26.0, 1.0], [21.0, 1.0], [21.5, 1.5], [21.0, 3.0], [23.5, 4.0], [26.0, 3.0], [26.0, 1.0]], innerRings: [[[25.0, 2.0], [25.0, 3.0], [23.5, 3.5], [22.0, 3.0], [22.0, 2.0], [25.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [2.0, 1.0], [2.0, 1.5], [1.0, 1.5], [1.0, 1.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon1 = MultiPolygon([Polygon([[26.0, 1.0], [21.0, 1.0], [21.5, 1.5], [21.0, 6.0], [23.5, 6.0], [26.0, 6.0], [26.0, 1.0]], innerRings: [[[25.0, 2.0], [25.0, 3.0], [23.5, 3.5], [22.0, 3.0], [22.0, 2.0], [25.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 4.0], [10.0, 4.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
@@ -349,12 +349,12 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Within
 
     func testWithinTrue() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let lineString = LineString([[0.0, 0.0], [1000.0, 1000.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[0.0, 0.0], [0.0, 700.0], [700.0, 700.0], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [4.0,  4.0]]), LineString([[5.0,  5.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [4.0, 4.0]]), LineString([[5.0, 5.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
         let polygon1 = Polygon([[0.0, 0.0], [0.0, 700.0], [700.0, 700.0], [2.0, 2.0], [2.0, 0.0], [0.0, 0.0]], innerRings: [[[100.0, 100.0], [200.0, 100.0], [200.0, 200.0], [100.0, 200.0], [100.0, 100.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[100.0, 500.0], [100.0, 600.0], [50.0, 600.0], [50.0, 500.0], [100.0, 500.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon1 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 3.0], [3.0, 3.0], [3.0, 0.0], [0.0, 0.0]], innerRings: []), Polygon([[700.0, 700.0], [6.0, 6.0], [700.0, 6.0], [700.0, 700.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
@@ -371,15 +371,15 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testWithinFalse() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let multiPoint = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
         let lineString1 = LineString([[0.0, 0.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
         let lineString2 = LineString([[1.0, 1.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[1.0, 1.0], [1.0, 3.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [600.0,  600.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [600.0, 600.0]])], precision: precision, coordinateSystem: cs)
         let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 0.0], [0.0, 100.0], [1000.0, 100.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[1.0, 1.0], [100.0, 1.0], [100.0, 200.0], [1.0, 200.0], [1.0, 1.0]]], precision: precision, coordinateSystem: cs)
         let polygon3 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[5.0, 5.0], [200.0, 5.0], [200.0, 200.0], [5.0, 200.0], [5.0, 5.0]]], precision: precision, coordinateSystem: cs)
@@ -407,7 +407,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     // MARK: Contains
 
     func testContainsTrue() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 0.5, y: 0.5), precision: precision, coordinateSystem: cs)
         let multiPoint1 = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
@@ -416,7 +416,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         let lineString2 = LineString([[1.0, 1.0], [0.5, 0.5], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
         let linearRing = LinearRing([[60.0, 60.0], [6.0, 6.0], [60.0, 60.0]], precision: precision, coordinateSystem: cs)
         let multiLineString1 = MultiLineString([LineString([[700.0,  700.0], [600.0,  600.0], [500.0,  500.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[1.5,  1.5], [2.0,  2.0]]), LineString([[20.0,  20.0], [30.0,  30.0]]), LineString([[400.0,  400.0], [40.0,  40.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[1.5, 1.5], [2.0, 2.0]]), LineString([[20.0, 20.0], [30.0, 30.0]]), LineString([[400.0, 400.0], [40.0, 40.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testMultiLineString.contains(point))
         XCTAssertTrue(testMultiLineString.contains(multiPoint1))
@@ -429,7 +429,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testContainsFalse() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let multiPoint1 = MultiPoint([Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 1.5, y: 1.5))], precision: precision, coordinateSystem: cs)
@@ -438,8 +438,8 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         let lineString2 = LineString([[1.0, 1.0], [-1.0, -1.0]], precision: precision, coordinateSystem: cs)
         let linearRing1 = LinearRing([[1.0, 1.0], [1.0, 3.0], [3.0, 3.0], [3.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
         let linearRing2 = LinearRing([[0.0, 6.0], [6.0, 6.0], [4.0, 6.0], [0.0, 6.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[1.0,  0.0], [1.0,  6.0], [10.0,  6.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[5.0,  5.0], [100.0,  100.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[1.0, 0.0], [1.0, 6.0], [10.0, 6.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[5.0, 5.0], [100.0, 100.0]])], precision: precision, coordinateSystem: cs)
         let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 0.0], [0.0, 100.0], [1000.0, 100.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[5.0, 2.0], [5.0, 8.0], [3.5, 8.0], [3.5, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
@@ -464,14 +464,14 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
 
     func testOverlapsTrue() {
         /// Overlaps can only be true for geometries of the same dimension, and each geometry must have points exterior to the other, and the interiors must touch.
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let lineString1 = LineString([[1.0, 1.0], [8.0, 8.0]], precision: precision, coordinateSystem: cs)
         let lineString2 = LineString([[4.0, 6.0], [6.0, 6.0], [10.0, 10.0]], precision: precision, coordinateSystem: cs)
         let linearRing1 = LinearRing([[3.0, 3.0], [3.0, 8.0], [8.0, 8.0], [3.0, 3.0]], precision: precision, coordinateSystem: cs)
         let linearRing2 = LinearRing([[1.0, 1.0], [6.0, 6.0], [11.0, 1.0], [6.0, -4.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[10.0,  10.0], [10.0,  0.0], [0.0,  0.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.0,  1.5], [1.0,  3.0]]), LineString([[5.0,  5.0], [100.0,  100.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[10.0, 10.0], [10.0, 0.0], [0.0, 0.0], [3.0, 3.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.0, 1.5], [1.0, 3.0]]), LineString([[5.0, 5.0], [100.0, 100.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testMultiLineString.overlaps(lineString1))
         XCTAssertTrue(testMultiLineString.overlaps(lineString2))
@@ -482,7 +482,7 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testOverlapsFalse() {
-        let testMultiLineString = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [700.0,  700.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [700.0, 700.0]])], precision: precision, coordinateSystem: cs)
 
         let point1 = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
         let point2 = Point(Coordinate(x: 6.0, y: 6.0), precision: precision, coordinateSystem: cs)
@@ -493,8 +493,8 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         let lineString3 = LineString([[2.0, 2.0], [3.0, 3.0]], precision: precision, coordinateSystem: cs)
         let linearRing1 = LinearRing([[-2.0, 2.0], [-2.0, 5.0], [0.0, 5.0], [0.0, 2.0], [-2.0, 2.0]], precision: precision, coordinateSystem: cs)
         let linearRing2 = LinearRing([[0.0, 1.0], [0.0, 700.0], [700.0, 700.0], [700.0, 1.0], [0.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[3.0,  4.0], [3.0,  3.0], [1.0,  3.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[0.0,  0.0], [1.0,  1.0]]), LineString([[1.5,  1.5], [3.0,  3.0]]), LineString([[6.0,  6.0], [100.0,  100.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[3.0, 4.0], [3.0, 3.0], [1.0, 3.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[0.0, 0.0], [1.0, 1.0]]), LineString([[1.5, 1.5], [3.0, 3.0]]), LineString([[6.0, 6.0], [100.0, 100.0]])], precision: precision, coordinateSystem: cs)
         let polygon1 = Polygon([[26.0, 1.0], [21.0, 1.0], [21.0, 3.0], [23.5, 4.0], [26.0, 3.0], [26.0, 1.0]], innerRings: [[[25.0, 2.0], [25.0, 3.0], [23.5, 3.5], [22.0, 3.0], [22.0, 2.0], [25.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 0.0], [-100.0, 0.0], [-100.0, 100.0], [0.0, 100.0], [0.0, 0.0]], innerRings: [[[-5.0, 2.0], [-5.0, 3.0], [-6.0, 3.0], [-6.0, 2.0], [-5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon3 = Polygon([[1.0, 1.0], [100.0, 1.0], [100.0, -100.0], [1.0, -100.0], [1.0, 1.0]], innerRings: [], precision: precision, coordinateSystem: cs)
