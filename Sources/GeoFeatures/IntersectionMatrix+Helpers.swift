@@ -4214,6 +4214,13 @@ extension IntersectionMatrix {
             return matrixIntersects
         }
 
+        /// Check whether the lineStringBoundary has at least two points and is closed.
+        /// If so, the line string is really a linear ring, and we will treat it as such.
+        guard (lineString.count >= 2) && lineStringBoundary.count == 2 else {
+            let tempLinearRing = LinearRing(lineString)
+            return generateIntersection(tempLinearRing, polygon)
+        }
+
         let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
 
         let lineStringBoundaryCoordinate1 = lineStringBoundaryCoordinateArray[0]

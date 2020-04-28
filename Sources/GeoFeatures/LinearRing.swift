@@ -78,6 +78,23 @@ public struct LinearRing: Geometry, Curve {
     }
 
     ///
+    /// Construct a LinearRing from a LineString changing the precision and coordinateSystem.
+    /// It is assumed the LineString is closed.
+    ///
+    /// - parameters:
+    ///     - other: The LineString of the same type that you want to construct a new LinearRing from.
+    ///     - precision: Optionally change the `Precision` model this `LinearRing` should use in calculations on it's coordinates.
+    ///     - coordinateSystem: Optionally change the 'CoordinateSystem` this `LinearRing` should use in calculations on it's coordinates.
+    ///
+    public init(other: LineString, precision: Precision, coordinateSystem: CoordinateSystem) {
+        var lineStringCoordinates = [Coordinate]()
+        for coordinate in other {
+            lineStringCoordinates.append(coordinate)
+        }
+        self.init(lineStringCoordinates, precision: precision, coordinateSystem: coordinateSystem)
+    }
+
+    ///
     /// Construct a LinearRing from any `CoordinateCollectionType` changing the precision and coordinateSystem.
     ///
     /// - parameters:

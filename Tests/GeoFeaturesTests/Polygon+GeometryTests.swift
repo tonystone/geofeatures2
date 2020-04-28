@@ -194,8 +194,8 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let polygon = Polygon([[100.0, 40.0], [140.0, 80.0], [180.0, 80.0], [220.0, 40.0], [180.0, 0.0], [140.0, 0.0], [100.0, 40.0]], innerRings: [[[170.0, 70.0], [150.0, 70.0], [150.0, 50.0], [170.0, 50.0], [170.0, 70.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([[20.0, -20.0], [16.0, -20.0], [16.0, -10.0], [4.0, -10.0], [4.0, -1.0], [20.0, -1.0], [20.0, -20.0]], innerRings: [[[5.0, -2.0], [5.0, -3.0], [7.0, -3.0], [7.0, -2.0], [5.0, -2.0]]]), Polygon([[100.0, 100.0], [100.0, 110.0], [110.0, 110.0], [110.0, 100.0], [100.0, 100.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertTrue(testPolygon.intersects(point))
-        XCTAssertTrue(testPolygon.intersects(multiPoint))
+        XCTAssertTrue(testPolygon.touches(point))
+        XCTAssertTrue(testPolygon.touches(multiPoint))
         XCTAssertTrue(testPolygon.touches(lineString))
         XCTAssertTrue(testPolygon.touches(linearRing))
         XCTAssertTrue(testPolygon.touches(multiLineString))
@@ -269,8 +269,8 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let polygon2 = Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[21.0, 1.0], [22.0, 1.0], [22.0, 1.5], [21.0, 1.5], [21.0, 1.0]]], precision: precision, coordinateSystem: cs)
         let polygon3 = Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[30.0, 0.5], [30.0, 10.0], [20.0, 10.0], [20.0, 0.5], [30.0, 0.5]]], precision: precision, coordinateSystem: cs)
         let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.5, 1.5], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let multiPolygon2 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[21.0, 1.0], [22.0, 1.0], [22.0, 1.5], [21.0, 1.5], [21.0, 1.0]]]), Polygon([[0.0, 50.0], [0.0, 110.0], [110.0, 110.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let multiPolygon3 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[30.0, 0.5], [30.0, 10.0], [20.0, 10.0], [20.0, 0.5], [30.0, 0.5]]], precision: precision, coordinateSystem: cs), Polygon([[0.0, 50.0], [0.0, 80.0], [110.0, 80.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0]], innerRings: [[[21.0, 1.0], [22.0, 1.0], [22.0, 1.5], [21.0, 1.5], [21.0, 1.0]]]), Polygon([[-20.0, -50.0], [-20.0, -110.0], [-110.0, -110.0], [-110.0, -50.0], [-20.0, -50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let multiPolygon3 = MultiPolygon([Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[30.0, 0.5], [30.0, 10.0], [20.0, 10.0], [20.0, 0.5], [30.0, 0.5]]], precision: precision, coordinateSystem: cs), Polygon([[0.0, -80.0], [0.0, -50.0], [110.0, -50.0], [110.0, -80.0], [0.0, -80.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testPolygon.crosses(point))
         XCTAssertFalse(testPolygon.crosses(multiPoint1))
