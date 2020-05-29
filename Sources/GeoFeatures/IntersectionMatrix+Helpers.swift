@@ -381,11 +381,14 @@ extension IntersectionMatrix {
         disjoint[.exterior, .interior] = .zero
         disjoint[.exterior, .exterior] = .two
 
-        for tempPoint in points {
+        /// Remove duplicates from the multipoint
+        let reducedPoints = reduce(points)
+
+        for tempPoint in reducedPoints {
 
             if tempPoint == point {
 
-                if points.count > 1 {
+                if reducedPoints.count > 1 {
                     return firstInSecond
                 } else {
                     return identical
@@ -532,6 +535,11 @@ extension IntersectionMatrix {
 
     fileprivate static func generateIntersection(_ point: Point, _ lineString: LineString) -> IntersectionMatrix {
 
+        /// Simple line string where all points are the same
+        var simpleLineString = IntersectionMatrix()
+        simpleLineString[.interior, .boundary] = .zero
+        simpleLineString[.exterior, .exterior] = .two
+
         /// Point matches endpoint
         var matchesEndPoint = IntersectionMatrix()
         matchesEndPoint[.interior, .boundary] = .zero
@@ -552,6 +560,12 @@ extension IntersectionMatrix {
         disjoint[.exterior, .interior] = .one
         disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
+
+        /// Check if the line string is simple, where all points are the same
+        let reducedLineString = reduce(lineString)
+        if reducedLineString.count == 2 && reducedLineString[0] == point.coordinate && reducedLineString[1] == point.coordinate {
+            return simpleLineString
+        }
 
         /// Check if the point equals either of the two endpoints of the line string.
         let mainCoord = point.coordinate
@@ -578,6 +592,11 @@ extension IntersectionMatrix {
 
     fileprivate static func generateIntersection(_ point: Point, _ linearRing: LinearRing) -> IntersectionMatrix {
 
+        /// Point matches linear ring
+        var pointMatchesLinearRing = IntersectionMatrix()
+        pointMatchesLinearRing[.interior, .interior] = .zero
+        pointMatchesLinearRing[.exterior, .exterior] = .two
+
         /// Point on interior
         var pointOnInterior = IntersectionMatrix()
         pointOnInterior[.interior, .interior] = .zero
@@ -590,13 +609,20 @@ extension IntersectionMatrix {
         disjoint[.exterior, .interior] = .one
         disjoint[.exterior, .exterior] = .two
 
+        /// Check if the point matches the linear ring.  In this case, the linear ring is really just a single point repeated.
+        let reducedLinearRing = reduce(linearRing)
+        if reducedLinearRing.count == 2 && reducedLinearRing[0] == point.coordinate && reducedLinearRing[1] == point.coordinate  {
+            return pointMatchesLinearRing
+        }
+
         /// Check if the point is on any of the line segments in the line string.
         let mainCoord = point.coordinate
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
-            if coordinateIsOnLineSegment(mainCoord, segment: segment) == .onInterior {
+            let location = coordinateIsOnLineSegment(mainCoord, segment: segment)
+            if location == .onInterior || location == .onBoundary {
                 return pointOnInterior
             }
         }
@@ -606,6 +632,11 @@ extension IntersectionMatrix {
     }
 
     fileprivate static func generateIntersection(_ point: Point, _ multiLineString: MultiLineString) -> IntersectionMatrix {
+
+        /// Simple multi line string where all points are the same
+        var simpleMultiLineString = IntersectionMatrix()
+        simpleMultiLineString[.interior, .boundary] = .zero
+        simpleMultiLineString[.exterior, .exterior] = .two
 
         /// Point matches endpoint
         var matchesEndPoint = IntersectionMatrix()
@@ -627,6 +658,19 @@ extension IntersectionMatrix {
         disjoint[.exterior, .interior] = .one
         disjoint[.exterior, .boundary] = .zero
         disjoint[.exterior, .exterior] = .two
+
+        /// Check if the multi line string is simple, where all points are the same
+        var isSimpleMultiLineString = true
+        let reducedMultiLineString = reduce(multiLineString)
+        for reducedLineString in reducedMultiLineString {
+            if reducedLineString.count == 2 && reducedLineString[0] == point.coordinate && reducedLineString[1] == point.coordinate {
+                continue
+            } else {
+                isSimpleMultiLineString = false
+                break
+            }
+        }
+        if isSimpleMultiLineString { return simpleMultiLineString }
 
         /// Check if the point equals any of the endpoints of any line string.
         let mainCoord = point.coordinate
@@ -653,6 +697,31 @@ extension IntersectionMatrix {
 
         /// No intersection
         return disjoint
+    }
+
+    fileprivate static func reduce(_ points: MultiPoint) -> MultiPoint {
+
+        var initialPointsArray = [Point]()
+        for point in points {
+            initialPointsArray.append(point)
+        }
+
+        let uniquePointsArray = initialPointsArray
+        .enumerated()
+        .filter{ initialPointsArray.firstIndex(of: $0.1) == $0.0 }
+        .map{ $0.1 }
+
+        return MultiPoint(uniquePointsArray)
+    }
+
+    fileprivate static func subset(_ point: Point, _ points: [Point]) -> Bool {
+
+        for tempPoint in points {
+            if point.coordinate == tempPoint.coordinate {
+                return true
+            }
+        }
+        return false
     }
 
     fileprivate static func subset(_ coordinate: Coordinate, _ coordinates: [Coordinate]) -> Bool {
@@ -3216,7 +3285,7 @@ extension IntersectionMatrix {
             newLineString.append(lineString[lineString.count - 1])
 
             /// Add the new line string to the resulting multi line string
-            resultMultiLineString.append(lineString)
+            resultMultiLineString.append(newLineString)
         }
 
         return resultMultiLineString

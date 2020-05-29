@@ -117,6 +117,11 @@ public protocol Geometry {
     func overlaps(_ other: Geometry) -> Bool
 
     ///
+    /// - Returns: true if this geometric object is a superset of the other Geometry
+    ///
+    func covers(_ other: Geometry) -> Bool
+
+    ///
     /// - Returns true if this geometric object is spatially related to the other Geometry by testing for intersections between the interior, boundary and exterior of the two geometric objects as specified by the values in the intersectionPatternMatrix.
     /// - Returns: false if all the tested intersections are empty except exterior (this) intersect exterior (another).
     ///
@@ -226,6 +231,11 @@ extension Geometry {
             return relate(other, pattern: "1*T***T**")
         }
         return false
+    }
+
+    public func covers(_ other: Geometry) -> Bool {
+
+        return (relate(other, pattern: "T*****FF*") || relate(other, pattern: "*T****FF*") || relate(other, pattern: "***T**FF*") || relate(other, pattern: "****T*FF*"))
     }
 
     public func relate(_ other: Geometry, pattern: String) -> Bool {
