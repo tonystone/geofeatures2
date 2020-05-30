@@ -432,18 +432,19 @@ extension IntersectionMatrix {
         disjoint[.exterior, .interior] = .zero
         disjoint[.exterior, .exterior] = .two
 
-        /// Should use Set here, if possible.  That would simplify a lot of the calculations.
-        /// Let's assume points1 and points2 are both a unique set of points.
+        /// Reduce both multi points to a unique set of points.
+        let reducedPoints1 = reduce(points1)
+        let reducedPoints2 = reduce(points2)
 
         var pointsMatched = false
         var pointInGeometry1NotMatched = false
         var pointInGeometry2NotMatched = false
         var multiPointIntersection = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
         var multiPointGeometry2Matched = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
-        for tempPoint1 in points1 {
+        for tempPoint1 in reducedPoints1 {
 
             var foundMatchingPoint = false
-            for tempPoint2 in points2 {
+            for tempPoint2 in reducedPoints2 {
 
                 if tempPoint1 == tempPoint2 {
                     multiPointIntersection.append(tempPoint1)
@@ -460,7 +461,7 @@ extension IntersectionMatrix {
 
         }
 
-        if points2.count != multiPointGeometry2Matched.count {
+        if reducedPoints2.count != multiPointGeometry2Matched.count {
             pointInGeometry2NotMatched = true
         }
 
@@ -744,6 +745,16 @@ extension IntersectionMatrix {
             }
         }
         return true
+    }
+
+    fileprivate static func subset(_ coordinate: Coordinate, _ multiPoint: MultiPoint) -> Bool {
+
+        for point in multiPoint {
+            if coordinate == point.coordinate {
+                return true
+            }
+        }
+        return false
     }
 
     fileprivate static func subset(_ coordinate: Coordinate, _ lineString: LineString) -> Bool {
@@ -2487,6 +2498,13 @@ extension IntersectionMatrix {
             return disjoint
         }
 
+        /// Check whether the lineStringBoundary has at least two points and is closed.
+        /// If so, the line string is really a linear ring, and we will treat it as such.
+        guard (lineString.count >= 2) && lineStringBoundary.count == 2 else {
+            let tempLinearRing = LinearRing(lineString)
+            return generateIntersection(points, tempLinearRing)
+        }
+
         let lineStringBoundaryCoordinateArray = multiPointToCoordinateArray(lineStringBoundary)
         let coordinateArray = multiPointToCoordinateArray(points)
 
@@ -2610,6 +2628,11 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
+        let reducedLinearRing = reduce(linearRing)
+        if reducedLinearRing.count == 2 && reducedLinearRing[0] == reducedLinearRing[1] && subset(reducedLinearRing[0], points) {
+            matrixIntersects[.exterior, .interior] = .empty
+        }
+
         if coordinateOnInterior {
             return matrixIntersects
         }
@@ -2695,6 +2718,20 @@ extension IntersectionMatrix {
 
         if coordinateOnExterior {
             matrixIntersects[.interior, .exterior] = .zero
+        }
+
+        var multiLineStringTouchesMultiPointExterior = false
+        for lineString in multiLineString {
+            let reducedLineString = reduce(lineString)
+            if !(reducedLineString.count == 2 && reducedLineString[0] == reducedLineString[1] && subset(reducedLineString[0], points)) {
+                multiLineStringTouchesMultiPointExterior = true
+                break
+            }
+        }
+        if !multiLineStringTouchesMultiPointExterior {
+            coordinateOnInterior = true
+            matrixIntersects[.interior, .interior] = .zero
+            matrixIntersects[.exterior, .interior] = .empty
         }
 
         if !subset(multiLineStringBoundaryCoordinateArray, coordinateArray) {
