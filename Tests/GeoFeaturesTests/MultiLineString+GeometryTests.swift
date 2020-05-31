@@ -520,4 +520,50 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         XCTAssertFalse(testMultiLineString.overlaps(multiPolygon2))
         XCTAssertFalse(testMultiLineString.overlaps(multiPolygon3))
     }
+
+    func testCoversTrue() {
+        let testMultiLineString = MultiLineString([LineString([[100.0, 100.0], [1.0, 1.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0]])], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: -20.0, y: 20.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: -100.0, y: 100.0)), Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 1.0, y: 1.0)), Point(Coordinate(x: 12.0, y: 12.0))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[100.0, 100.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[-50.0, 50.0], [-61.0, 61.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[-100.0, 100.0], [-1.0, 1.0], [-100.0, 100.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[100.0, 100.0], [1.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[100.0, 100.0], [80.0, 80.0]]), LineString([[-70.0, 70.0], [-40.0, 40.0], [-30.0, 30.0]]), LineString([[1.0, 1.0], [2.0,  2.0], [3.0, 3.0]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testMultiLineString.covers(point))
+        XCTAssertTrue(testMultiLineString.covers(multiPoint1))
+        XCTAssertTrue(testMultiLineString.covers(multiPoint2))
+        XCTAssertTrue(testMultiLineString.covers(lineString1))
+        XCTAssertTrue(testMultiLineString.covers(lineString2))
+        XCTAssertTrue(testMultiLineString.covers(linearRing))
+        XCTAssertTrue(testMultiLineString.covers(multiLineString1))
+        XCTAssertTrue(testMultiLineString.covers(multiLineString2))
+    }
+
+    func testCoversFalse() {
+        let testMultiLineString = MultiLineString([LineString([[100.0, 100.0], [1.0, 1.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0]])], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: -100.0, y: 101.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 101.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 105.0, y: 100.0)), Point(Coordinate(x: -2.0, y: 2.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[-100.0, 100.0], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[100.0, 100.0], [0.0, 0.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[-100.0, 100.0], [-100.0, 101.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[-100.0, 100.0], [-90.0, 90.0]]), LineString([[-100.0, 100.0], [-100.0, 101.0]]), LineString([[-1.0, 1.0], [-2.0, 2.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[100.0, 100.0], [100.0, 101.0], [101.0, 101.0], [101.0, 100.0], [100.0, 100.0]], innerRings: [], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testMultiLineString.covers(point))
+        XCTAssertFalse(testMultiLineString.covers(multiPoint1))
+        XCTAssertFalse(testMultiLineString.covers(multiPoint2))
+        XCTAssertFalse(testMultiLineString.covers(lineString))
+        XCTAssertFalse(testMultiLineString.covers(linearRing))
+        XCTAssertFalse(testMultiLineString.covers(multiLineString1))
+        XCTAssertFalse(testMultiLineString.covers(multiLineString2))
+        XCTAssertFalse(testMultiLineString.covers(polygon))
+        XCTAssertFalse(testMultiLineString.covers(multiPolygon))
+    }
 }
