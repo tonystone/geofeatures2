@@ -122,6 +122,11 @@ public protocol Geometry {
     func covers(_ other: Geometry) -> Bool
 
     ///
+    /// - Returns: true if this geometric object is a subset of the other Geometry
+    ///
+    func coveredby(_ other: Geometry) -> Bool
+
+    ///
     /// - Returns true if this geometric object is spatially related to the other Geometry by testing for intersections between the interior, boundary and exterior of the two geometric objects as specified by the values in the intersectionPatternMatrix.
     /// - Returns: false if all the tested intersections are empty except exterior (this) intersect exterior (another).
     ///
@@ -236,6 +241,11 @@ extension Geometry {
     public func covers(_ other: Geometry) -> Bool {
 
         return (relate(other, pattern: "T*****FF*") || relate(other, pattern: "*T****FF*") || relate(other, pattern: "***T**FF*") || relate(other, pattern: "****T*FF*"))
+    }
+
+    public func coveredby(_ other: Geometry) -> Bool {
+
+        return (relate(other, pattern: "T*F**F***") || relate(other, pattern: "*TF**F***") || relate(other, pattern: "**FT*F***") || relate(other, pattern: "**F*TF***"))
     }
 
     public func relate(_ other: Geometry, pattern: String) -> Bool {

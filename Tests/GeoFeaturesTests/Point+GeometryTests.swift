@@ -416,6 +416,54 @@ class PointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertFalse(testPoint.covers(polygon))
         XCTAssertFalse(testPoint.covers(multiPolygon))
     }
+
+    func testCoveredByTrue() {
+        let testPoint = Point(Coordinate(x: 100.0, y: 100.0), precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 100.0, y: 100.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 0.0, y: 0.0)), Point(Coordinate(x: 100.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[0.0, 0.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[200.0, 200.0], [200.0, 100.0], [0.0, 100.0], [0.0, 200.0], [200.0, 200.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[0.0, 200.0], [200.0, 0.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[1000.0, 100.0], [1000.0, 200.0]]), LineString([[0.0, 0.0], [100.0, 0.0], [100.0, 500.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[0.0, 0.0], [0.0, 200.0], [200.0, 200.0], [200.0, 0.0], [0.0, 0.0]], innerRings: [], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[10.0, 10.0], [10.0, 50.0], [50.0, 50.0], [50.0, 10.0], [10.0, 10.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]]), Polygon([[1000.0, 100.0], [100.0, 100.0], [100.0, 200.0], [1000.0, 200.0], [1000.0, 100.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPoint.coveredby(point))
+        XCTAssertTrue(testPoint.coveredby(multiPoint1))
+        XCTAssertTrue(testPoint.coveredby(multiPoint2))
+        XCTAssertTrue(testPoint.coveredby(lineString))
+        XCTAssertTrue(testPoint.coveredby(linearRing))
+        XCTAssertTrue(testPoint.coveredby(multiLineString1))
+        XCTAssertTrue(testPoint.coveredby(multiLineString2))
+        XCTAssertTrue(testPoint.coveredby(polygon))
+        XCTAssertTrue(testPoint.coveredby(multiPolygon))
+    }
+
+    func testCoveredByFalse() {
+        let testPoint = Point(Coordinate(x: 100.0, y: 100.0), precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 100.0, y: 101.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 101.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 10.0)), Point(Coordinate(x: 105.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[100.0, 102.0], [100.0, 101.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[102.0, 102.0], [102.0, 101.0], [101.0, 101.0], [101.0, 102.0], [102.0, 102.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[10.0, 10.0], [10.0, 11.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[1.0, 1.0], [1.0, -1.0]]), LineString([[1000.0, 100.0], [1000.0, 101.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[1000.0, 1000.0], [1000.0, 1001.0], [1001.0, 1001.0], [1001.0, 100.0], [1000.0, 1000.0]], innerRings: [], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[10.0, 10.0], [10.0, 50.0], [50.0, 50.0], [50.0, 10.0], [10.0, 10.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]]), Polygon([[1000.0, 100.0], [200.0, 100.0], [200.0, 200.0], [1000.0, 200.0], [1000.0, 100.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPoint.coveredby(point))
+        XCTAssertFalse(testPoint.coveredby(multiPoint1))
+        XCTAssertFalse(testPoint.coveredby(multiPoint2))
+        XCTAssertFalse(testPoint.coveredby(lineString))
+        XCTAssertFalse(testPoint.coveredby(linearRing))
+        XCTAssertFalse(testPoint.coveredby(multiLineString1))
+        XCTAssertFalse(testPoint.coveredby(multiLineString2))
+        XCTAssertFalse(testPoint.coveredby(polygon))
+        XCTAssertFalse(testPoint.coveredby(multiPolygon))
+    }
 }
 
 // MARK: - Coordinate2DM, FloatingPrecision, Cartesian -
