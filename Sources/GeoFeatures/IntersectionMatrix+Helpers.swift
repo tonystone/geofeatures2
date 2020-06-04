@@ -1436,7 +1436,8 @@ extension IntersectionMatrix {
     }
 
     /// This code parallels that where the second geometry is a simple polygon.
-    fileprivate static func relatedTo(_ segment: Segment, _ linearRing: LinearRing) -> RelatedTo {
+    /// The leftCoordinateBoundaryPoint and rightCoordinateBoundaryPoint flags apply to the segment.
+    fileprivate static func relatedTo(_ segment: Segment, _ linearRing: LinearRing, leftCoordinateBoundaryPoint: Bool = false, rightCoordinateBoundaryPoint: Bool = false) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
 
@@ -1455,6 +1456,7 @@ extension IntersectionMatrix {
 
         /// Do a first pass to get the basic relationship of the line segment to the linear ring
         var segmentCompletelyContainedInLinearRing = false
+        var segmentInteriorTouchesLinearRingExterior = true
         for firstCoordIndex in 0..<linearRing.count - 1 {
             let firstCoord  = linearRing[firstCoordIndex]
             let secondCoord = linearRing[firstCoordIndex + 1]
@@ -1468,23 +1470,40 @@ extension IntersectionMatrix {
                 if intersectionGeometry.dimension == .one {
                     relatedToResult.firstInteriorTouchesSecondInterior = .one
                     if lineSegmentIntersection.firstSubsetOfSecond {
+                        /// The segment is completely contained in the linear ring
                         segmentCompletelyContainedInLinearRing = true
+                        relatedToResult.firstInteriorTouchesSecondInterior = .one
+                        if leftCoordinateBoundaryPoint || rightCoordinateBoundaryPoint {
+                            relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+                        }
                     }
                 } else if intersectionGeometry.dimension == .zero {
-                    if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior || lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior {
+                    if (lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior && leftCoordinateBoundaryPoint) || (lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior && rightCoordinateBoundaryPoint) {
                         relatedToResult.firstBoundaryTouchesSecondInterior = .zero
                     }
                 }
 
-                if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary || lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onBoundary {
+                if (lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary && leftCoordinateBoundaryPoint) ||
+                    (lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onBoundary && rightCoordinateBoundaryPoint) {
                     relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+                }
+
+                if lineSegmentIntersection.firstSubsetOfSecond {
+                    segmentInteriorTouchesLinearRingExterior = false
+                }
+
+                if !lineSegmentIntersection.secondSubsetOfFirst {
+                    relatedToResult.firstExteriorTouchesSecondInterior = .one
                 }
             }
         }
-        
+
+        if segmentInteriorTouchesLinearRingExterior {
+            relatedToResult.firstInteriorTouchesSecondExterior = .one
+        }
+
         if segmentCompletelyContainedInLinearRing {
-            relatedToResult.firstInteriorTouchesSecondInterior = .one
-            relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+            return relatedToResult
         } else {
             relatedToResult.firstInteriorTouchesSecondExterior = .one
             relatedToResult.firstBoundaryTouchesSecondExterior = .zero
@@ -1662,7 +1681,7 @@ extension IntersectionMatrix {
 
         if relatedToResultCoordinate1.firstInteriorTouchesSecondExterior > .empty {
             relatedToResult.firstInteriorTouchesSecondExterior = .one
-            relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+            if leftCoordinateBoundaryPoint { relatedToResult.firstBoundaryTouchesSecondExterior = .zero }
         }
 
         /// Get the relationship of the second coordinate of the line segment to the polygon.
@@ -1676,7 +1695,7 @@ extension IntersectionMatrix {
 
         if relatedToResultCoordinate2.firstInteriorTouchesSecondExterior > .empty {
             relatedToResult.firstInteriorTouchesSecondExterior = .one
-            relatedToResult.firstBoundaryTouchesSecondExterior = .zero
+            if rightCoordinateBoundaryPoint { relatedToResult.firstBoundaryTouchesSecondExterior = .zero }
         }
         
         /// Update the exterior/interior and exterior/boundary values.
@@ -1757,7 +1776,7 @@ extension IntersectionMatrix {
             }
 
             if pointRelatedToResult.firstInteriorTouchesSecondExterior > .empty {
-                relatedToResult.firstInteriorTouchesSecondExterior = pointRelatedToResult.firstInteriorTouchesSecondExterior
+                relatedToResult.firstInteriorTouchesSecondExterior = .one
             }
 
             if pointRelatedToResult.firstBoundaryTouchesSecondExterior > .empty {
@@ -1866,10 +1885,10 @@ extension IntersectionMatrix {
                 relatedToResult.firstInteriorTouchesSecondExterior = segmentRelatedToResult.firstInteriorTouchesSecondExterior
             }
 
-            if segmentRelatedToResult.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
-                relatedToResult.firstExteriorTouchesSecondInterior = segmentRelatedToResult.firstExteriorTouchesSecondInterior
-            }
+        }
 
+        if !subset(linearRing2, linearRing1) {
+            relatedToResult.firstExteriorTouchesSecondInterior = .one
         }
 
         return relatedToResult
@@ -2276,8 +2295,6 @@ extension IntersectionMatrix {
             }
 
             /// To reach this point, innerRings1.count > 0 && innerRings2.count > 0
-
-            let relatedToInnerRings = relatedTo(innerRings1, innerRings2)
 
             if matchesSubset(innerRings1, innerRings2) {
 
@@ -4918,14 +4935,101 @@ extension IntersectionMatrix {
 
         /// Loop over the polygons and update the matrixIntersects struct as needed on each pass.
 
-        for polygonFromMP in multipolygon1 {
+        var finalInteriorExteriorDimension: Dimension = .empty
+        var finalBoundaryExteriorDimension: Dimension = .empty
+        var finalExteriorInteriorDimension: Dimension = .empty
+        var finalExteriorBoundaryDimension: Dimension = .empty
+        for polygon1 in multipolygon1 {
 
-            /// Get the relationship between the point and the polygon
-            let intersectionMatrixResult = generateIntersection(polygonFromMP, multipolygon2)
+            var tempInteriorExteriorDimension: Dimension = .two
+            var tempBoundaryExteriorDimension: Dimension = .one
+            var tempExteriorInteriorDimension: Dimension = .two
+            var tempExteriorBoundaryDimension: Dimension = .one
 
-            /// Update the intersection matrix as needed
-            update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+            for polygon2 in multipolygon2 {
 
+                /// Get the relationship between the point and the polygon
+                let intersectionMatrixResult = generateIntersection(polygon1, polygon2)
+
+                /// Update the intersection matrix as needed
+                update(intersectionMatrixBase: &matrixIntersects, intersectionMatrixNew: intersectionMatrixResult)
+
+                /// Update the  interior/exterior dimension as needed
+                if intersectionMatrixResult[.interior, .exterior] < tempInteriorExteriorDimension {
+                    tempInteriorExteriorDimension = intersectionMatrixResult[.interior, .exterior]
+                }
+
+                /// Update the  boundary/exterior dimension as needed
+                if intersectionMatrixResult[.boundary, .exterior] < tempBoundaryExteriorDimension {
+                    tempBoundaryExteriorDimension = intersectionMatrixResult[.boundary, .exterior]
+                }
+
+                /// Update the  exterior/interior dimension as needed
+                if intersectionMatrixResult[.exterior, .interior] < tempExteriorInteriorDimension {
+                    tempExteriorInteriorDimension = intersectionMatrixResult[.exterior, .interior]
+                }
+
+                /// Update the  exterior/boundary dimension as needed
+                if intersectionMatrixResult[.exterior, .boundary] < tempExteriorBoundaryDimension {
+                    tempExteriorBoundaryDimension = intersectionMatrixResult[.exterior, .boundary]
+                }
+            }
+
+            /// Update the  interior/exterior dimension as needed
+            if finalInteriorExteriorDimension < tempInteriorExteriorDimension {
+                finalInteriorExteriorDimension = tempInteriorExteriorDimension
+            }
+
+            /// Update the  boundary/exterior dimension as needed
+            if finalBoundaryExteriorDimension < tempBoundaryExteriorDimension {
+                finalBoundaryExteriorDimension = tempBoundaryExteriorDimension
+            }
+
+            /// Update the  exterior/interior dimension as needed
+            if finalExteriorInteriorDimension < tempExteriorInteriorDimension {
+                finalExteriorInteriorDimension = tempExteriorInteriorDimension
+            }
+
+            /// Update the  exterior/boundary dimension as needed
+            if finalExteriorBoundaryDimension < tempExteriorBoundaryDimension {
+                finalExteriorBoundaryDimension = tempExteriorBoundaryDimension
+            }
+        }
+
+        /// There is a special case here: multipolygon interior with multipolygon exterior.
+        /// It's possible that the interior of a polygon in the first multipolygon exists in one polygon of the second multipolygon but not another.
+        /// In that case, the dimension of the interior/exterior would be two for one polygon and zero for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.interior, .exterior] > finalInteriorExteriorDimension {
+            matrixIntersects[.interior, .exterior] = finalInteriorExteriorDimension
+        }
+
+        /// There is a special case here: multipolygon boundary with multipolygon exterior.
+        /// It's possible that the boundary of a polygon in the first multipolygon exists in one polygon of the second multipolygon but not another.
+        /// In that case, the dimension of the boundary/exterior would be one for one polygon and zero for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.boundary, .exterior] > finalBoundaryExteriorDimension {
+            matrixIntersects[.boundary, .exterior] = finalBoundaryExteriorDimension
+        }
+
+        /// There is a special case here: multipolygon exterior with multipolygon interior.
+        /// It's possible that the interior of a polygon in the first multipolygon exists in one polygon of the second multipolygon but not another.
+        /// In that case, the dimension of the exterior/interior would be two for one polygon and zero for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.exterior, .interior] > finalExteriorInteriorDimension {
+            matrixIntersects[.exterior, .interior] = finalExteriorInteriorDimension
+        }
+
+        /// There is a special case here: multipolygon boundary with multipolygon exterior.
+        /// It's possible that the boundary of a polygon in the first multipolygon exists in one polygon of the second multipolygon but not another.
+        /// In that case, the dimension of the boundary/exterior would be one for one polygon and zero for the other.
+        /// It is the lower of the two values that should be the final value.
+
+        if matrixIntersects[.exterior, .boundary] > finalExteriorBoundaryDimension {
+            matrixIntersects[.exterior, .boundary] = finalExteriorBoundaryDimension
         }
 
         return matrixIntersects
