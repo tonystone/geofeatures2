@@ -566,4 +566,46 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         XCTAssertFalse(testMultiLineString.covers(polygon))
         XCTAssertFalse(testMultiLineString.covers(multiPolygon))
     }
+
+    func testCoveredByTrue() {
+        let testMultiLineString = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0]])], precision: precision, coordinateSystem: cs)
+
+        let lineString = LineString([[0.0, 0.0], [100.0, 100.0], [100.0, 200.0], [-100.0, 200.0], [-100.0, 100.0], [-0.5, 0.5]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[-100.0, 500.0], [-100.0, 100.0], [0.0, 0.0], [500.0, 500.0], [-100.0, 500.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[100.0, 100.0], [0.0, 0.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 500.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[1000.0, 100.0], [1000.0, 200.0]]), LineString([[-100.0, 1000.0], [-100.0, 100.0], [500.0, -500.0]]), LineString([[0.0, 0.0], [500.0, 500.0], [1000.0, 500.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[-300.0, -300.0], [-300.0, 200.0], [200.0, 200.0], [200.0, -300.0], [-300.0, -300.0]], innerRings: [[[80.0, 10.0], [90.0, 10.0], [90.0, 20.0], [80.0, 20.0], [80.0, 10.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[-1.0, 1.0], [-500.0, 1.0], [-500.0, 500.0], [-1.0, 500.0], [-1.0, 1.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]]), Polygon([[1000.0, 1.0], [1.0, 1.0], [1.0, 200.0], [1000.0, 200.0], [1000.0, 1.0]], innerRings: []), Polygon([[0.0, 0.0], [0.0, 0.5], [0.5, 0.5], [0.5, 0.0], [0.0, 0.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testMultiLineString.coveredby(lineString))
+        XCTAssertTrue(testMultiLineString.coveredby(linearRing))
+        XCTAssertTrue(testMultiLineString.coveredby(multiLineString1))
+        XCTAssertTrue(testMultiLineString.coveredby(multiLineString2))
+        XCTAssertTrue(testMultiLineString.coveredby(polygon))
+        XCTAssertTrue(testMultiLineString.coveredby(multiPolygon))
+    }
+
+    func testCoveredByFalse() {
+        let testMultiLineString = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0]])], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 100.0, y: 100.0), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 101.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 50.0, y: 50.0)), Point(Coordinate(x: -100.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[102.0, 102.0], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[100.0, 100.0], [0.0, 0.0], [-200.0, 200.0], [100.0, 200.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[10.0, 10.0], [10.0, 11.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[1.0, 1.0], [200.0, 200.0]]), LineString([[-100.0, 100.0], [0.0, 0.0], [1.0, -1000.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0]], innerRings: [], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[10.0, 10.0], [10.0, 50.0], [50.0, 50.0], [50.0, 10.0], [10.0, 10.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]]), Polygon([[1000.0, 100.0], [100.0, 100.0], [100.0, 200.0], [1000.0, 200.0], [1000.0, 100.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testMultiLineString.coveredby(point))
+        XCTAssertFalse(testMultiLineString.coveredby(multiPoint1))
+        XCTAssertFalse(testMultiLineString.coveredby(multiPoint2))
+        XCTAssertFalse(testMultiLineString.coveredby(lineString))
+        XCTAssertFalse(testMultiLineString.coveredby(linearRing))
+        XCTAssertFalse(testMultiLineString.coveredby(multiLineString1))
+        XCTAssertFalse(testMultiLineString.coveredby(multiLineString2))
+        XCTAssertFalse(testMultiLineString.coveredby(polygon))
+        XCTAssertFalse(testMultiLineString.coveredby(multiPolygon))
+    }
 }
