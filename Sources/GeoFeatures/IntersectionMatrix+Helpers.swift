@@ -21,23 +21,18 @@ enum Subset: Int {
 /// Describes the relationship between the first and second geometries
 struct RelatedTo {
 
-    var firstInteriorTouchesSecondBoundary: Dimension           = .empty
-    var firstBoundaryTouchesSecondBoundary: Dimension           = .empty
-    var firstExteriorTouchesSecondBoundary: Dimension           = .empty
-    var firstTouchesSecondBoundary: Dimension {
-        var tempDimension: Dimension = .empty
-        if firstInteriorTouchesSecondBoundary > tempDimension {
-            tempDimension = firstInteriorTouchesSecondBoundary
-        }
-        if firstBoundaryTouchesSecondBoundary > tempDimension {
-            tempDimension = firstBoundaryTouchesSecondBoundary
-        }
-        return tempDimension
-    }
-
     var firstInteriorTouchesSecondInterior: Dimension   = .empty
+    var firstInteriorTouchesSecondBoundary: Dimension   = .empty
+    var firstInteriorTouchesSecondExterior: Dimension   = .empty
+
     var firstBoundaryTouchesSecondInterior: Dimension   = .empty
+    var firstBoundaryTouchesSecondBoundary: Dimension   = .empty
+    var firstBoundaryTouchesSecondExterior: Dimension   = .empty
+
     var firstExteriorTouchesSecondInterior: Dimension   = .empty
+    var firstExteriorTouchesSecondBoundary: Dimension   = .empty
+    var firstExteriorTouchesSecondExterior: Dimension   = .two
+
     var firstTouchesSecondInterior: Dimension {
         var tempDimension: Dimension = .empty
         if firstInteriorTouchesSecondInterior > tempDimension {
@@ -55,9 +50,17 @@ struct RelatedTo {
         return (firstTouchesSecondInterior > .empty || firstTouchesSecondBoundary > .empty) && firstTouchesSecondExterior == .empty
     }
 
-    var firstInteriorTouchesSecondExterior: Dimension   = .empty
-    var firstBoundaryTouchesSecondExterior: Dimension   = .empty
-    var firstExteriorTouchesSecondExterior: Dimension   = .two
+    var firstTouchesSecondBoundary: Dimension {
+        var tempDimension: Dimension = .empty
+        if firstInteriorTouchesSecondBoundary > tempDimension {
+            tempDimension = firstInteriorTouchesSecondBoundary
+        }
+        if firstBoundaryTouchesSecondBoundary > tempDimension {
+            tempDimension = firstBoundaryTouchesSecondBoundary
+        }
+        return tempDimension
+    }
+
     var firstTouchesSecondExterior: Dimension {
         var tempDimension: Dimension = .empty
         if firstInteriorTouchesSecondExterior > tempDimension {
