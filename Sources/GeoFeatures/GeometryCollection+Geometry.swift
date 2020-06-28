@@ -47,4 +47,16 @@ extension GeometryCollection {
         return GeometryCollection(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
 
+    ///
+    /// - Returns: true if this geometric object meets the following constraints:
+    ///            • A linear ring must have either 0 or 4 or more coordinates.
+    ///            • The first and last coordinates must be equal.
+    ///            • Consecutive coordinates may be equal.
+    ///            • The interior of the linear ring must not self intersect, ignoring repeated coordinates.
+    ///            • If the number of coordinates is greater than 0, there must be at least three different coordinates.
+    ///
+    public func valid() -> Bool {
+        /// Placeholder
+        return true
+    }
 }

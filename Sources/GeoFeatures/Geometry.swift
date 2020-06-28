@@ -131,6 +131,11 @@ public protocol Geometry {
     /// - Returns: false if all the tested intersections are empty except exterior (this) intersect exterior (another).
     ///
     func relate(_ other: Geometry, pattern: String) -> Bool
+
+    ///
+    /// - Returns: true if this geometric object meets the constraints for that particular geometry
+    ///
+    func valid() -> Bool
 }
 
 

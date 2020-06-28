@@ -47,6 +47,10 @@ private class DummyGeometry: Geometry {
     func equals(_ other: Geometry) -> Bool {
         return false
     }
+
+    func valid() -> Bool {
+        return true
+    }
 }
 
 class CGContextGeoFeaturesTests: XCTestCase {

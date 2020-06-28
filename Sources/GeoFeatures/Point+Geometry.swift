@@ -61,4 +61,12 @@ extension Point {
     public func bounds() -> Bounds? {
         return Bounds(min: self.coordinate, max: self.coordinate)
     }
+
+    ///
+    /// - Returns: true if this geometric object meets the following constraints:
+    ///            • No coordinate value is NaN.
+    ///
+    public func valid() -> Bool {
+        return !coordinate.x.isNaN && !coordinate.y.isNaN
+    }
 }

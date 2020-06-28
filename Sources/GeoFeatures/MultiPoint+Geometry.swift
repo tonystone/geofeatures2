@@ -43,4 +43,15 @@ extension MultiPoint {
     public func boundary() -> Geometry {
         return MultiPoint(precision: self.precision, coordinateSystem: self.coordinateSystem)
     }
+
+    ///
+    /// - Returns: true if this geometric object meets the following constraints:
+    ///            • Each Point is valid
+    ///
+    public func valid() -> Bool {
+        for point in self {
+            if !point.valid() { return false }
+        }
+        return true
+    }
 }

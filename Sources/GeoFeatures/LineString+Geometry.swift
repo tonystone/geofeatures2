@@ -24,4 +24,31 @@ import Swift
 ///
 /// Note: See `CoordinateCollectionType` for func implementations not present here.
 ///
-extension LineString {}
+extension LineString {
+
+    ///
+    /// - Returns: true if this geometric object meets the following constraints:
+    ///            • A linestring must have either 0 or 2 or more coordinates.
+    ///            • Consecutive coordinates may be equal.
+    ///            • The line segments in the line may intersect each other (in other words, the linestring may "curl back" on itself and self-intersect).
+    ///            • If the number of coordinates is greater than 0, there must be at least two different coordinates.
+    ///
+    public func valid() -> Bool {
+        guard self.count != 1 else {
+            return false
+        }
+
+        if self.count == 0 {
+            return true
+        }
+
+        let coordinate1 = self[0]
+        for index in 1..<self.count {
+            let coordinate2 = self[index]
+            if coordinate1 != coordinate2 {
+                return true
+            }
+        }
+        return false
+    }
+}

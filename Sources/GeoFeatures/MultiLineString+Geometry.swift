@@ -91,4 +91,15 @@ extension MultiLineString {
         }
         return boundary
     }
+
+    ///
+    /// - Returns: true if this geometric object meets the following constraints:
+    ///            • Each LineString is valid
+    ///
+    public func valid() -> Bool {
+        for lineString in self {
+            if !lineString.valid() { return false }
+        }
+        return true
+    }
 }
