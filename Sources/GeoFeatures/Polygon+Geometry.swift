@@ -188,7 +188,7 @@ extension Polygon {
     ///
     /// - Returns: a Dimension of the intersection of the two line segments passed in, and a flag indicating whether the two interiors cross.
     ///
-    fileprivate func intersects(segment: Segment, other: Segment) -> (Dimension, Bool) {
+    fileprivate func intersects(segment: Segment, other: Segment) -> Dimension {
 
         ///
         /// Check the bounding boxes.  They must overlap if there is an intersection.
@@ -330,11 +330,6 @@ extension Polygon {
                 if thirdCoord == fourthCoord { continue }
                 let segment2 = Segment(left: thirdCoord, right: fourthCoord)
 
-                var segmentsTouchAtPoint = false
-                if ((firstCoordIndex + 1) == secondCoordIndex) || ((firstCoordIndex == 0) && (secondCoordIndex == (self.count - 2))) {
-                    segmentsTouchAtPoint = true
-                }
-
                 let intersectionDimension = intersects(segment: segment1, other: segment2)
 
                 switch intersectionDimension {
@@ -425,12 +420,12 @@ extension Polygon {
         }
 
         for holeChain in holeChains {
-            var holesTouchingOuterRing = 0
+            var holesTouchingOuterRingCount = 0
             /// Does the chain touch the outer ring of the polygon at two points fo two different holes?
             for hole in holeChain {
                 if holeTouchesOuterRing(hole, holesTouchingOuterRing) {
-                    holesTouchingOuterRing += 1
-                    if holesTouchingOuterRing >= 2 {
+                    holesTouchingOuterRingCount += 1
+                    if holesTouchingOuterRingCount >= 2 {
                         return true
                     }
                 }
@@ -472,14 +467,13 @@ extension Polygon {
         var newHoleChains = [[LinearRing]]()
         for holeChain in holeChains {
             guard holeChain.count > 0 else { continue }
-            let finalHole = holeChain[holeChain.count - 1] {
-                let touchingHoles = holesTouchingHole(hole, touchesTuple)
-                if touchingHoles.count > 0 {
-                    for touchingHole in touchingHoles {
-                        var newChain = holeChain
-                        newChain.append(touchingHole)
-                        newHoleChains.append(newChain)
-                    }
+            let finalHole = holeChain[holeChain.count - 1]
+            let touchingHoles = holesTouchingHole(finalHole, touchesTuple)
+            if touchingHoles.count > 0 {
+                for touchingHole in touchingHoles {
+                    var newChain = holeChain
+                    newChain.append(touchingHole)
+                    newHoleChains.append(newChain)
                 }
             }
         }
@@ -501,13 +495,13 @@ extension Polygon {
     ///
     fileprivate func polygonIsConnected(_ holesTouchingOuterRing: [LinearRing], _ touchesTuple: [(LinearRing, [LinearRing])]) -> Bool {
 
-        let totalHoles = touchesTuple.0
-        guard totalHoles.count >= 2 else {
+        let allTupleHoles = touchesTuple.map { $0.0 }
+        guard allTupleHoles.count >= 2 else {
             return true
         }
 
         var newChains = [[LinearRing]]()
-        for hole in totalHoles {
+        for hole in allTupleHoles {
             newChains.append([hole])
         }
 

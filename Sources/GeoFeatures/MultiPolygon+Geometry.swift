@@ -55,14 +55,36 @@ extension MultiPolygon {
 
     ///
     /// - Returns: true if this geometric object meets the following constraints:
-    ///            • A linear ring must have either 0 or 4 or more coordinates.
-    ///            • The first and last coordinates must be equal.
-    ///            • Consecutive coordinates may be equal.
-    ///            • The interior of the linear ring must not self intersect, ignoring repeated coordinates.
-    ///            • If the number of coordinates is greater than 0, there must be at least three different coordinates.
+    ///            • The MultiPolygon may be empty
+    ///            • The Polygons in a MultiPolygon may not overlap by a one or two-dimensional region
+    ///            • The Polygons in a MultiPolygon may only touch at a finite number of single points
     ///
     public func valid() -> Bool {
-        /// Placeholder
+
+        let polygonCount = self.count
+        guard polygonCount > 0 else { return true }
+
+        /// Check all the polygons are valid.
+        for polygon in self {
+            if !polygon.valid() {
+                return false
+            }
+        }
+
+        /// Check no two polygons overlap and do not touch the boundary of another polygon by more than a finite set of points
+        guard polygonCount >= 2 else { return true }
+
+        for polygon1Index in 0..<polygonCount - 1 {
+            let polygon1 = self[polygon1Index]
+            for polygon2Index in (polygon1Index + 1)..<polygonCount {
+                let polygon2 = self[polygon2Index]
+                let matrix = IntersectionMatrix.generateMatrix(polygon1, polygon2)
+                if (matrix[.interior, .interior] == .two) || (matrix[.boundary, .boundary] == .one) {
+                    return false
+                }
+            }
+        }
+
         return true
     }
 }
