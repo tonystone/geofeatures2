@@ -546,4 +546,34 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertFalse(testLineString.coveredby(polygon))
         XCTAssertFalse(testLineString.coveredby(multiPolygon))
     }
+
+    func testValidTrue() {
+        let testLineString1 = LineString([], precision: precision, coordinateSystem: cs)
+        let testLineString2 = LineString([[102.0, 102.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let testLineString3 = LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let testLineString4 = LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, 20.0]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testLineString1.valid())
+        XCTAssertTrue(testLineString2.valid())
+        XCTAssertTrue(testLineString3.valid())
+        XCTAssertTrue(testLineString4.valid())
+    }
+
+    func testValidFalse() {
+        let x1 = 0.0
+        let y1 = x1 * .infinity // y1 is a NaN
+
+        let x2 = Double.nan
+        let y2 = 4.0
+
+        let testLineString1 = LineString([[-102.0, 102.0]], precision: precision, coordinateSystem: cs)
+        let testLineString2 = LineString([[2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let testLineString3 = LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], Coordinate(x: x1, y: y1)], precision: precision, coordinateSystem: cs)
+        let testLineString4 = LineString([[1.0, 1.0], [2.0, 2.0], Coordinate(x: x2, y: y2), [2.0, 4.0], [4.0, 4.0], [4.0, 20.0]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testLineString1.valid())
+        XCTAssertFalse(testLineString2.valid())
+        XCTAssertFalse(testLineString3.valid())
+        XCTAssertFalse(testLineString4.valid())
+    }
 }

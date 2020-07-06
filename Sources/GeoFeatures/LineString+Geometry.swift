@@ -42,6 +42,14 @@ extension LineString {
             return true
         }
 
+        /// Check all coordinates are valid
+        for coordinate in self {
+            if coordinate.x.isNaN || coordinate.y.isNaN {
+                return false
+            }
+        }
+
+        /// Check there are at least two distinct coordinates
         let coordinate1 = self[0]
         for index in 1..<self.count {
             let coordinate2 = self[index]
