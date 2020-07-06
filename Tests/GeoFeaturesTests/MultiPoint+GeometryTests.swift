@@ -492,6 +492,29 @@ class MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertFalse(testMultiPoint.coveredby(polygon))
         XCTAssertFalse(testMultiPoint.coveredby(multiPolygon))
     }
+
+    func testValidTrue() {
+        let testMultiPoint1 = MultiPoint([Point(Coordinate(x: 101.0, y: 100.0))], precision: precision, coordinateSystem: cs)
+        let testMultiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 105.0, y: 100.0)), Point(Coordinate(x: 5.0, y: -100.0))], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testMultiPoint1.valid())
+        XCTAssertTrue(testMultiPoint2.valid())
+    }
+
+    func testValidFalse() {
+        let x1 = 0.0
+        let y1 = x1 * .infinity // y1 is a NaN
+        let testPoint1 = Point(Coordinate(x: x1, y: y1), precision: precision, coordinateSystem: cs)
+        let testMultiPoint1 = MultiPoint([Point(Coordinate(x: 101.0, y: 100.0)), testPoint1], precision: precision, coordinateSystem: cs)
+
+        let x2 = Double.nan
+        let y2 = 4.0
+        let testPoint2 = Point(Coordinate(x: x2, y: y2), precision: precision, coordinateSystem: cs)
+        let testMultiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), testPoint2, Point(Coordinate(x: 105.0, y: 100.0)), Point(Coordinate(x: 5.0, y: -100.0))], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testMultiPoint1.valid())
+        XCTAssertFalse(testMultiPoint2.valid())
+    }
 }
 
 // MARK: - Coordinate2DM, FloatingPrecision, Cartesian -

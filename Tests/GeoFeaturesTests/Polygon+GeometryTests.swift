@@ -470,6 +470,8 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertFalse(testPolygon.overlaps(multiPolygon3))
     }
 
+    // MARK: - Covers
+
     func testCoversTrue() {
         let testPolygon = Polygon([[1.0, 1.0], [100.0, 100.0], [100.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
 
@@ -529,6 +531,8 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertFalse(testPolygon.covers(polygon2))
         XCTAssertFalse(testPolygon.covers(multiPolygon))
     }
+
+    // MARK: - CoveredBy
 
     func testCoveredByTrue() {
         let testPolygon = Polygon([[1.0, 1.0], [100.0, 100.0], [100.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)

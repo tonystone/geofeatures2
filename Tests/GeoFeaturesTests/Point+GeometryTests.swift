@@ -464,6 +464,25 @@ class PointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertFalse(testPoint.coveredby(polygon))
         XCTAssertFalse(testPoint.coveredby(multiPolygon))
     }
+
+    func testValidTrue() {
+        let testPoint = Point(Coordinate(x: 1.5, y: 1.5), precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPoint.valid())
+    }
+
+    func testValidFalse() {
+        let x1 = 0.0
+        let y1 = x1 * .infinity // y1 is a NaN
+        let testPoint1 = Point(Coordinate(x: x1, y: y1), precision: precision, coordinateSystem: cs)
+
+        let x2 = Double.nan
+        let y2 = 4.0
+        let testPoint2 = Point(Coordinate(x: x2, y: y2), precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPoint1.valid())
+        XCTAssertFalse(testPoint2.valid())
+    }
 }
 
 // MARK: - Coordinate2DM, FloatingPrecision, Cartesian -
