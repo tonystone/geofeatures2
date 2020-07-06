@@ -553,4 +553,44 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertFalse(testLinearRing.coveredby(polygon))
         XCTAssertFalse(testLinearRing.coveredby(multiPolygon))
     }
+
+    func testValidTrue() {
+        let testLinearRing1 = LinearRing([], precision: precision, coordinateSystem: cs)
+        let testLinearRing2 = LinearRing([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing3 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing4 = LinearRing([[1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testLinearRing1.valid())
+        XCTAssertTrue(testLinearRing2.valid())
+        XCTAssertTrue(testLinearRing3.valid())
+        XCTAssertTrue(testLinearRing4.valid())
+    }
+
+    func testValidFalse() {
+        let x1 = 0.0
+        let y1 = x1 * .infinity // y1 is a NaN
+
+        let x2 = Double.nan
+        let y2 = 4.0
+
+        let testLinearRing1 = LinearRing([[-102.0, 102.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing2 = LinearRing([[-102.0, 102.0], [102.0, 102.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing3 = LinearRing([[-100.0, 100.0], [100.0, 100.0], [100.0, -100.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing4 = LinearRing([[2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing5 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing6 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [-2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing7 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], Coordinate(x: x1, y: y1)], precision: precision, coordinateSystem: cs)
+        let testLinearRing8 = LinearRing([[1.0, 1.0], [2.0, 2.0], Coordinate(x: x2, y: y2), [2.0, 4.0], [4.0, 4.0], [4.0, 20.0]], precision: precision, coordinateSystem: cs)
+        let testLinearRing9 = LinearRing([[1.0, 1.0], [1.0, -1.0], [-1.0, 1.0], [-1.0, -1.0], [1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testLinearRing1.valid())
+        XCTAssertFalse(testLinearRing2.valid())
+        XCTAssertFalse(testLinearRing3.valid())
+        XCTAssertFalse(testLinearRing4.valid())
+        XCTAssertFalse(testLinearRing5.valid())
+        XCTAssertFalse(testLinearRing6.valid())
+        XCTAssertFalse(testLinearRing7.valid())
+        XCTAssertFalse(testLinearRing8.valid())
+        XCTAssertFalse(testLinearRing9.valid())
+    }
 }

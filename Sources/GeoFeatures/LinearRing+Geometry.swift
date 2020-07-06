@@ -298,6 +298,27 @@ extension LinearRing {
             return .empty
         }
     }
+    
+    ///
+    /// - Returns: an integer that is the zero-based index of the coordinate that starts the final non-zero length segment of the linear ring.
+    ///            It is assumed that a check has already been performed to assure there are at least three distinct coordinates in the linear ring.
+    ///            Note consecutive coordinates can be repeated.
+    ///
+    fileprivate func lastSegmentStartIndex() -> Int {
+
+        guard self.count >= 4 else { return 0 }
+        
+        for index in (0..<self.count).reversed() {
+            let firstCoord  = self[index]
+            let secondCoord = self[index - 1]
+            if firstCoord == secondCoord { continue }
+            return index - 1
+        }
+        
+        /// This should never happen
+        return 0
+    }
+
 
     ///
     /// - Returns: true if any interior point of the linear ring touches or crosses another interior point.
@@ -307,12 +328,16 @@ extension LinearRing {
 
         guard self.count >= 4 else { return false }
 
+        var firstSegmentCount = 0
+        let finalSegmentStartIndex = lastSegmentStartIndex()
         for firstCoordIndex in 0..<self.count - 2 {
 
             let firstCoord  = self[firstCoordIndex]
             let secondCoord = self[firstCoordIndex + 1]
             if firstCoord == secondCoord { continue }
             let segment1 = Segment(left: firstCoord, right: secondCoord)
+            firstSegmentCount += 1
+            var segmentsAfterFirstSegment = 0
 
             for secondCoordIndex in (firstCoordIndex + 1)..<self.count - 1 {
 
@@ -320,9 +345,10 @@ extension LinearRing {
                 let fourthCoord = self[secondCoordIndex + 1]
                 if thirdCoord == fourthCoord { continue }
                 let segment2 = Segment(left: thirdCoord, right: fourthCoord)
+                segmentsAfterFirstSegment += 1
 
                 var segmentsTouchAtPoint = false
-                if ((firstCoordIndex + 1) == secondCoordIndex) || ((firstCoordIndex == 0) && (secondCoordIndex == (self.count - 2))) {
+                if (segmentsAfterFirstSegment == 1) || ((firstSegmentCount == 1) && (secondCoordIndex == finalSegmentStartIndex)) {
                     segmentsTouchAtPoint = true
                 }
 
@@ -389,6 +415,13 @@ extension LinearRing {
 
         if self[0] != self[coordinateCount - 1] {
             return false
+        }
+
+        /// Check all coordinates are valid
+        for coordinate in self {
+            if coordinate.x.isNaN || coordinate.y.isNaN {
+                return false
+            }
         }
 
         /// Check for three different coordinates
