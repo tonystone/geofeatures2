@@ -608,4 +608,40 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         XCTAssertFalse(testMultiLineString.coveredby(polygon))
         XCTAssertFalse(testMultiLineString.coveredby(multiPolygon))
     }
+
+    func testValidTrue() {
+        let testMultiLineString1 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString2 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString3 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString4 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0], [-200.0, 200.0], [-200.0, -200.0], [-100.0, -400.0], [400.0, -400.0]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testMultiLineString1.valid())
+        XCTAssertTrue(testMultiLineString2.valid())
+        XCTAssertTrue(testMultiLineString3.valid())
+        XCTAssertTrue(testMultiLineString4.valid())
+        
+        
+    }
+
+    func testValidFalse() {
+        let x1 = 0.0
+        let y1 = x1 * .infinity // y1 is a NaN
+
+        let x2 = Double.nan
+        let y2 = 4.0
+    
+        let testMultiLineString1 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0], Coordinate(x: x1, y: y1)])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString2 = MultiLineString([LineString([Coordinate(x: x1, y: y1)])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString3 = MultiLineString([LineString([[1.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString4 = MultiLineString([LineString([[1.0, 1.0], Coordinate(x: x2, y: y2), [100.0, 100.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString5 = MultiLineString([LineString([[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [2.0, 1.0]]), LineString([[-1.0, 1.0], [-1.0, 1.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0], [-200.0, 200.0], [-200.0, -200.0], [-100.0, -400.0], [400.0, -400.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString6 = MultiLineString([LineString([[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [2.0, 1.0]]), LineString([[-1.0, 1.0], [-1.0, -1.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0], [-200.0, 200.0], Coordinate(x: x2, y: y2), [-200.0, -200.0], [-100.0, -400.0], [400.0, -400.0]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testMultiLineString1.valid())
+        XCTAssertFalse(testMultiLineString2.valid())
+        XCTAssertFalse(testMultiLineString3.valid())
+        XCTAssertFalse(testMultiLineString4.valid())
+        XCTAssertFalse(testMultiLineString5.valid())
+        XCTAssertFalse(testMultiLineString6.valid())
+    }
 }
