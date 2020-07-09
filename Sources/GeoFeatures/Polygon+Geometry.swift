@@ -186,15 +186,17 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: a Dimension of the intersection of the two line segments passed in, and a flag indicating whether the two interiors cross.
+    /// - Returns: a tuple consisting of (1) a Dimension of the intersection of the two line segments passed in, and (2) a coordinate where the two intersect, if the Dimension is .zero.
+    ///            If it is not .zero, the Coordinate is irrelevant and will have a dummy value.
     ///
-    fileprivate func intersects(segment: Segment, other: Segment) -> Dimension {
+    fileprivate func intersects(segment: Segment, other: Segment) -> (Dimension, Coordinate) {
 
         ///
         /// Check the bounding boxes.  They must overlap if there is an intersection.
         ///
+        let dummyCoordinate = Coordinate(x: 0.0, y: 0.0)
         guard boundingBoxesOverlap2D(segment: segment, other: other) else {
-            return .empty
+            return (.empty, dummyCoordinate)
         }
 
         ///
@@ -218,32 +220,54 @@ extension Polygon {
 
             if (segment1Boundary1Location != .onExterior) &&  (segment1Boundary2Location != .onExterior) {
                 /// Segment is completely contained in other
-                return .one
+                return (.one, dummyCoordinate)
             } else if (segment2Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                 /// Other is completely contained in segment
-                return .one
+                return (.one, dummyCoordinate)
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                return .zero
+                return (.zero, segment.leftCoordinate)
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                return .zero
+                return (.zero, segment.leftCoordinate)
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                return .zero
+                return (.zero, segment.rightCoordinate)
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                return .zero
+                return (.zero, segment.rightCoordinate)
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
                       (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
-                /// Two segments meet at a single boundary point
-                return .zero
+                /// Two segments meet at a single boundary point.
+                /// This section may be redundant.  Possibly remove it later.
+                return (.zero, segment.rightCoordinate)
             } else if oneLine {
                 /// If you reach here, the two line segments overlap by an amount > 0, but neither line segment is contained in the other.
-                return .one
+                return (.one, dummyCoordinate)
             } else {
                 /// If you reach here, the two line segments touch at a single point that is on the boundary of one segment and the interior of the other.
-                return .zero
+                var intersectionCoordinate = dummyCoordinate
+//                var interiorsTouchAtPoint = false
+                if segment1Boundary1Location == .onInterior {
+                    /// Segment boundary point 1 is on the interior of other
+                    intersectionCoordinate = segment.leftCoordinate
+//                    if !firstCoordinateFirstSegmentBoundary {
+//                        interiorsTouchAtPoint = true
+//                    }
+                } else if segment1Boundary2Location == .onInterior {
+                    /// Segment boundary point 1 is on the interior of other
+                    intersectionCoordinate = segment.rightCoordinate
+                } else if segment2Boundary1Location == .onInterior {
+                    /// Segment boundary point 1 is on the interior of other
+                    intersectionCoordinate = other.leftCoordinate
+                } else if segment2Boundary2Location == .onInterior {
+                    /// Segment boundary point 1 is on the interior of other
+                    intersectionCoordinate = other.rightCoordinate
+//                    if !secondCoordinateSecondSegmentBoundary {
+//                        interiorsTouchAtPoint = true
+//                    }
+                }
+                return (.zero, intersectionCoordinate)
             }
         }
 
@@ -267,15 +291,15 @@ extension Polygon {
         let x4 = other.rightCoordinate.x
         let y4 = other.rightCoordinate.y
 
-//        let det1 = det2d(a: x1, b: y1, c: x2, d: y2)
-//        let det2 = det2d(a: x3, b: y3, c: x4, d: y4)
+        let det1 = det2d(a: x1, b: y1, c: x2, d: y2)
+        let det2 = det2d(a: x3, b: y3, c: x4, d: y4)
         let det3 = det2d(a: x1, b: 1, c: x2, d: 1)
         let det4 = det2d(a: x3, b: 1, c: x4, d: 1)
         let det5 = det2d(a: y1, b: 1, c: y2, d: 1)
         let det6 = det2d(a: y3, b: 1, c: y4, d: 1)
 
-//        let numx = det2d(a: det1, b: det3, c: det2, d: det4)
-//        let numy = det2d(a: det1, b: det5, c: det2, d: det6)
+        let numx = det2d(a: det1, b: det3, c: det2, d: det4)
+        let numy = det2d(a: det1, b: det5, c: det2, d: det6)
         let den  = det2d(a: det3, b: det5, c: det4, d: det6) // The denominator
 
         ///
@@ -288,11 +312,11 @@ extension Polygon {
         ///
         guard den != 0 else {
             /// TODO: Might also have to check for near zero.
-            return .empty
+            return (.empty, dummyCoordinate)
         }
 
-//        let x = numx / den
-//        let y = numy / den
+        let x = numx / den
+        let y = numy / den
 
         var interiorsIntersect = false
         if ((leftSign < 0 && rightSign > 0) || (leftSign > 0 && rightSign < 0)) && ((leftSign2 < 0 && rightSign2 > 0) || (leftSign2 > 0 && rightSign2 < 0)) {
@@ -300,9 +324,9 @@ extension Polygon {
         }
 
         if interiorsIntersect {
-            return .zero
+            return (.zero, Coordinate(x:x, y: y))
         } else {
-            return .empty
+            return (.empty, dummyCoordinate)
         }
     }
 
@@ -315,7 +339,7 @@ extension Polygon {
 
         guard (linearRing1.count >= 4) && (linearRing2.count >= 4) else { return 0 }
 
-        var totalTouchesCount = 0
+        var coordinateSet = Set<Coordinate>()
         for firstCoordIndex in 0..<linearRing1.count - 1 {
 
             let firstCoord  = linearRing1[firstCoordIndex]
@@ -330,13 +354,14 @@ extension Polygon {
                 if thirdCoord == fourthCoord { continue }
                 let segment2 = Segment(left: thirdCoord, right: fourthCoord)
 
-                let intersectionDimension = intersects(segment: segment1, other: segment2)
+                let (intersectionDimension, intersectionCoordinate) = intersects(segment: segment1, other: segment2)
 
                 switch intersectionDimension {
                 case .empty:
                     break
                 case .zero:
-                    totalTouchesCount += 1
+                    coordinateSet.insert(intersectionCoordinate)
+                    break
                 case .one,
                      .two:
                     /// This should never happen.  If it does, there is a problem with the input linear rings.
@@ -345,10 +370,7 @@ extension Polygon {
             }
         }
 
-        /// The totalTouchesCount is twice the actual count of touches because both the inbound and outbound segments will touch at the same point.
-        /// Therefore, the final value we are interested in is half this value.
-        /// Note, also, that totalTouchesCount should always be even.  If it's not, there is a problem.
-        return (totalTouchesCount/2)
+        return coordinateSet.count
     }
 
     ///
@@ -471,6 +493,10 @@ extension Polygon {
             let touchingHoles = holesTouchingHole(finalHole, touchesTuple)
             if touchingHoles.count > 0 {
                 for touchingHole in touchingHoles {
+                    if holeChain.count >= 2 {
+                        let almostFinalHole = holeChain[holeChain.count - 2]
+                        if touchingHole == almostFinalHole { continue }
+                    }
                     var newChain = holeChain
                     newChain.append(touchingHole)
                     newHoleChains.append(newChain)
@@ -552,11 +578,12 @@ extension Polygon {
         /// Check no hole overlaps another hole by more than a set of points
         var holesTouchingOtherHoles = [(LinearRing, [LinearRing])]()
         if holesCount >= 2 {
-            for hole1Index in 0..<holesCount - 1 {
+            for hole1Index in 0..<holesCount {
                 let hole1 = innerRings[hole1Index]
                 let hole1Polygon = Polygon(hole1)
                 var holesTouchingThisHole = [LinearRing]()
-                for hole2Index in (hole1Index + 1)..<holesCount {
+                for hole2Index in 0..<holesCount {
+                    guard hole1Index != hole2Index else { continue }
                     let hole2 = innerRings[hole2Index]
                     let hole2Polygon = Polygon(hole2)
                     let matrix = IntersectionMatrix.generateMatrix(hole1Polygon, hole2Polygon)

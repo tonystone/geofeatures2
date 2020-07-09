@@ -569,5 +569,65 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertFalse(testPolygon.coveredby(polygon))
         XCTAssertFalse(testPolygon.coveredby(multiPolygon))
     }
+
+    func testValidTrue() {
+        let testPolygon1 = Polygon([], precision: precision, coordinateSystem: cs)
+        let testPolygon2 = Polygon([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testPolygon3 = Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testPolygon4 = Polygon([[1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testPolygon5 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[10.0, 10.0], [10.0, -10.0], [-10.0, -10.0], [-10.0, 10.0], [10.0, 10.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon6 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon7 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon8 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[70.0, 40.0], [50.0, 40.0], [50.0, 60.0], [70.0, 60.0], [70.0, 40.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon9 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[70.0, 40.0], [70.0, 40.0], [70.0, 40.0], [50.0, 40.0], [50.0, 40.0], [50.0, 60.0], [70.0, 60.0], [70.0, 40.0], [70.0, 40.0], [70.0, 40.0]], [[-90.0, -90.0], [-80.0, -90.0], [-80.0, -80.0], [-90.0, -80.0], [-90.0, -90.0]]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPolygon1.valid())
+        XCTAssertTrue(testPolygon2.valid())
+        XCTAssertTrue(testPolygon3.valid())
+        XCTAssertTrue(testPolygon4.valid())
+        XCTAssertTrue(testPolygon5.valid())
+        XCTAssertTrue(testPolygon6.valid())
+        XCTAssertTrue(testPolygon7.valid())
+        XCTAssertTrue(testPolygon8.valid())
+        XCTAssertTrue(testPolygon9.valid())
+    }
+
+    func testValidFalse() {
+        let x1 = 0.0
+        let y1 = x1 * .infinity // y1 is a NaN
+
+        let x2 = Double.nan
+        let y2 = 4.0
+
+        let testPolygon1 = Polygon([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0], [1.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let testPolygon2 = Polygon([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], Coordinate(x: x1, y: y1), [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testPolygon3 = Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], Coordinate(x: x2, y: y2), [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testPolygon4 = Polygon([[1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 0.0], [4.0, 0.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let testPolygon5 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[200.0, 10.0], [200.0, -10.0], [220.0, -10.0], [220.0, 10.0], [200.0, 10.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon6 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-100.0, 0.0], [0.0, 100.0], [100.0, 0.0], [0.0, -100.0], [-100.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon7 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-50.0, -50.0], [0.0, -100.0], [50.0, -50.0], [0.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon8 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[0.0, -100.0], [30.0, -70.0], [0.0, -40.0], [-30.0, -70.0], [0.0, -100.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon9 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[20.0, -40.0], [100.0, -20.0], [20.0, 0.0], [20.0, 0.0], [20.0, -40.0]], [[-90.0, -90.0], [-80.0, -90.0], [-80.0, -80.0], [-90.0, -80.0], [-90.0, -90.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon10 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 10.0], [0.0, 10.0], [0.0, 10.0], [100.0, 10.0], [100.0, -10.0], [0.0, -10.0], [0.0, 10.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon11 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 10.0], [0.0, 10.0], [10.0, 0.0], [20.0, 10.0], [10.0, 20.0], [10.0, 0.0]], [[0.0, -10.0], [-10.0, 0.0], [-20.0, -10.0], [-20.0, -10.0], [-10.0, -20.0], [0.0, -10.0]], [[-10.0, 0.0], [-20.0, 10.0], [-10.0, 20.0], [0.0, 10.0], [-10.0, 0.0]], [[20.0, -10.0], [10.0, -20.0], [0.0, -10.0], [10.0, 0.0], [20.0, -10.0], [20.0, -10.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon12 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-120.0, 0.0], [0.0, 120.0], [120.0, 0.0], [0.0, -120.0], [-120.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon13 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-20.0, 0.0], [0.0, 20.0], [0.0, -20.0], [20.0, 0.0], [-20.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon14 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-20.0, 0.0], [0.0, 0.0], [-20.0, 0.0]]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testPolygon1.valid())
+        XCTAssertFalse(testPolygon2.valid())
+        XCTAssertFalse(testPolygon3.valid())
+        XCTAssertFalse(testPolygon4.valid())
+        XCTAssertFalse(testPolygon5.valid())
+        XCTAssertFalse(testPolygon6.valid())
+        XCTAssertFalse(testPolygon7.valid())
+        XCTAssertFalse(testPolygon8.valid())
+        XCTAssertFalse(testPolygon9.valid())
+        XCTAssertFalse(testPolygon10.valid())
+        XCTAssertFalse(testPolygon11.valid())
+        XCTAssertFalse(testPolygon12.valid())
+        XCTAssertFalse(testPolygon13.valid())
+        XCTAssertFalse(testPolygon14.valid())
+    }
 }
 
