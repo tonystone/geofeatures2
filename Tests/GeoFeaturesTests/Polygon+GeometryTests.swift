@@ -571,14 +571,23 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testValidTrue() {
+        /// Empty case
         let testPolygon1 = Polygon([], precision: precision, coordinateSystem: cs)
+        /// Simple polygon
         let testPolygon2 = Polygon([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Simple polygon with repeated coordinates
         let testPolygon3 = Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Simple polygon with repeated coordinates
         let testPolygon4 = Polygon([[1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole
         let testPolygon5 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[10.0, 10.0], [10.0, -10.0], [-10.0, -10.0], [-10.0, 10.0], [10.0, 10.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole that touches outer ring at one coordinate
         let testPolygon6 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole that touches outer ring and a second hole at one coordinate
         let testPolygon7 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole that touches outer ring and two other holes, each at one coordinate
         let testPolygon8 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[70.0, 40.0], [50.0, 40.0], [50.0, 60.0], [70.0, 60.0], [70.0, 40.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole that touches outer ring and two other holes, each at one coordinate.  There is also a fourth hole that touches none of the others.
         let testPolygon9 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[70.0, 40.0], [70.0, 40.0], [70.0, 40.0], [50.0, 40.0], [50.0, 40.0], [50.0, 60.0], [70.0, 60.0], [70.0, 40.0], [70.0, 40.0], [70.0, 40.0]], [[-90.0, -90.0], [-80.0, -90.0], [-80.0, -80.0], [-90.0, -80.0], [-90.0, -90.0]]], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testPolygon1.valid())
@@ -599,19 +608,33 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let x2 = Double.nan
         let y2 = 4.0
 
+        /// Polygon whose two endpoints don't match
         let testPolygon1 = Polygon([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0], [1.0, 2.0]], precision: precision, coordinateSystem: cs)
+        /// Polygon with invalid coordinate
         let testPolygon2 = Polygon([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], Coordinate(x: x1, y: y1), [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Polygon with invalid coordinate
         let testPolygon3 = Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], Coordinate(x: x2, y: y2), [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Polygon that crosses itself
         let testPolygon4 = Polygon([[1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 0.0], [4.0, 0.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Polygon whose hole is outside of the outer ring
         let testPolygon5 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[200.0, 10.0], [200.0, -10.0], [220.0, -10.0], [220.0, 10.0], [200.0, 10.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon whose one hole touches the outer ring multiple times
         let testPolygon6 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-100.0, 0.0], [0.0, 100.0], [100.0, 0.0], [0.0, -100.0], [-100.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with two holes that disconnect the polygon
         let testPolygon7 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-50.0, -50.0], [0.0, -100.0], [50.0, -50.0], [0.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with three holes that disconnect the polygon
         let testPolygon8 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[0.0, -100.0], [30.0, -70.0], [0.0, -40.0], [-30.0, -70.0], [0.0, -100.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with four holes, three of which disconnect the polygon.  The fourth is independent of the others.
         let testPolygon9 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[20.0, -40.0], [100.0, -20.0], [20.0, 0.0], [20.0, 0.0], [20.0, -40.0]], [[-90.0, -90.0], [-80.0, -90.0], [-80.0, -80.0], [-90.0, -80.0], [-90.0, -90.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole that touches the outer ring with dimension one
         let testPolygon10 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 10.0], [0.0, 10.0], [0.0, 10.0], [100.0, 10.0], [100.0, -10.0], [0.0, -10.0], [0.0, 10.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with four holes that touch each in a circular pattern that disconnects part of the interior from another part of the interior
         let testPolygon11 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 10.0], [0.0, 10.0], [10.0, 0.0], [20.0, 10.0], [10.0, 20.0], [10.0, 0.0]], [[0.0, -10.0], [-10.0, 0.0], [-20.0, -10.0], [-20.0, -10.0], [-10.0, -20.0], [0.0, -10.0]], [[-10.0, 0.0], [-20.0, 10.0], [-10.0, 20.0], [0.0, 10.0], [-10.0, 0.0]], [[20.0, -10.0], [10.0, -20.0], [0.0, -10.0], [10.0, 0.0], [20.0, -10.0], [20.0, -10.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole that falls outside the outer ring
         let testPolygon12 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-120.0, 0.0], [0.0, 120.0], [120.0, 0.0], [0.0, -120.0], [-120.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole that crosses itself
         let testPolygon13 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-20.0, 0.0], [0.0, 20.0], [0.0, -20.0], [20.0, 0.0], [-20.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with a one-dimensional hole
         let testPolygon14 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-20.0, 0.0], [0.0, 0.0], [-20.0, 0.0]]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testPolygon1.valid())
