@@ -572,4 +572,81 @@ class MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
         XCTAssertFalse(testMultiPolygon.coveredby(polygon))
         XCTAssertFalse(testMultiPolygon.coveredby(multiPolygon))
     }
+
+    func testValidTrue() {
+        /// Empty case
+        let testMultiPolygon1 = MultiPolygon([], precision: precision, coordinateSystem: cs)
+        /// Single polygon
+        let testMultiPolygon2 = MultiPolygon([Polygon([[1.0, 1.0], [100.0, 100.0], [100.0, 1.0], [1.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        /// Two polygons, one with a hole
+        let testMultiPolygon3 = MultiPolygon([Polygon([[1.0, 1.0], [100.0, 100.0], [100.0, 1.0], [1.0, 1.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]])], precision: precision, coordinateSystem: cs)
+        /// Four polygons, two with holes.  Some repeated coordinates.
+        let testMultiPolygon4 = MultiPolygon([Polygon([[1.0, 1.0], [100.0, 100.0], [100.0, 1.0], [1.0, 1.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]]), Polygon([[-1.0, -1.0], [-1.0, -1.0], [-1.0, -1.0], [-100.0, -1.0], [-100.0, -100.0], [-1.0, -100.0], [-1.0, -1.0]], innerRings: []), Polygon([[100.0, -100.0], [200.0, -100.0], [300.0, -200.0], [200.0, -300.0], [100.0, -300.0], [100.0, -100.0]], innerRings: [[[120.0, -120.0], [110.0, -120.0], [110.0, -110.0], [120.0, -110.0], [120.0, -120.0], [120.0, -120.0], [120.0, -120.0]]])], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole inside hole of another polygon.
+        let testMultiPolygon5 = MultiPolygon([Polygon([[1.0, 1.0], [1.0, 100.0], [100.0, 100.0], [100.0, 1.0], [1.0, 1.0]], innerRings: [[[10.0, 10.0], [10.0, 20.0], [20.0, 20.0], [20.0, 10.0], [10.0, 10.0]]]), Polygon([[-1000.0, -1000.0], [1000.0, -1000.0], [1000.0, 1000.0], [-1000.0, 1000.0], [-1000.0, -1000.0]], innerRings: [[[0.0, 0.0], [0.0, 200.0], [200.0, 200.0], [200.0, 0.0], [0.0, 0.0]]])], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole inside hole of another polygon.  Inner polygon touches the boundary of the hole it is inside of multiple times.
+        let testMultiPolygon6 = MultiPolygon([Polygon([[1.0, 1.0], [0.0, 50.0], [1.0, 100.0], [50.0, 200.0], [100.0, 100.0], [100.0, 1.0], [1.0, 1.0]], innerRings: [[[10.0, 10.0], [10.0, 20.0], [20.0, 20.0], [20.0, 10.0], [10.0, 10.0]]]), Polygon([[-1000.0, -1000.0], [1000.0, -1000.0], [1000.0, 1000.0], [-1000.0, 1000.0], [-1000.0, -1000.0]], innerRings: [[[0.0, 0.0], [0.0, 200.0], [200.0, 200.0], [100.0, 100.0], [200.0, 100.0], [200.0, 0.0], [60.0, 0.0], [50.0, 1.0], [40.0, 0.0], [0.0, 0.0]]])], precision: precision, coordinateSystem: cs)
+        /// Five polygons whose outer rings touch each other at a variety of coordinates.
+        let testMultiPolygon7 = MultiPolygon([Polygon([[0.0, 10.0], [10.0, 20.0], [20.0, 10.0], [10.0, 0.0], [0.0, 10.0]], innerRings: []), Polygon([[0.0, -10.0], [10.0, -20.0], [20.0, -10.0], [10.0, 0.0], [0.0, -10.0]], innerRings: []), Polygon([[-10.0, 0.0], [-20.0, -10.0], [-10.0, -20.0], [0.0, -10.0], [-10.0, 0.0]], innerRings: []), Polygon([[-10.0, 20.0], [0.0, 10.0], [-10.0, 0.0], [-20.0, 10.0], [-10.0, 20.0]], innerRings: []), Polygon([[-40.0, 40.0], [40.0, 40.0], [40.0, -40.0], [20.0, -40.0], [20.0, 20.0], [-40.0, 20.0], [-40.0, 40.0]], innerRings: [[[-30.0, 25.0], [-30.0, 30.0], [-25.0, 30.0], [-25.0, 25.0], [-30.0, 25.0]], [[30.0, 5.0], [30.0, 0.0], [25.0, 0.0], [25.0, 5.0], [30.0, 5.0]]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testMultiPolygon1.valid())
+        XCTAssertTrue(testMultiPolygon2.valid())
+        XCTAssertTrue(testMultiPolygon3.valid())
+        XCTAssertTrue(testMultiPolygon4.valid())
+        XCTAssertTrue(testMultiPolygon5.valid())
+        XCTAssertTrue(testMultiPolygon6.valid())
+        XCTAssertTrue(testMultiPolygon7.valid())
+    }
+
+    func testValidFalse() {
+        let x1 = 0.0
+        let y1 = x1 * .infinity // y1 is a NaN
+
+        let x2 = Double.nan
+        let y2 = 4.0
+
+        /// One polygon, start and end coordinates don't match.
+        let testMultiPolygon1 = MultiPolygon([Polygon([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0], [1.0, 2.0]])], precision: precision, coordinateSystem: cs)
+        /// Single polygon bad coordinate
+        let testMultiPolygon2 = MultiPolygon([Polygon([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], Coordinate(x: x1, y: y1), [1.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        /// Single polygon with repeated coordinates and another bad coordinate
+        let testMultiPolygon3 = MultiPolygon([Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], Coordinate(x: x2, y: y2), [1.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        /// Two polygons, one with a hole.  First polygon crosses itself and has repeated coordinates.
+        let testMultiPolygon4 = MultiPolygon([Polygon([[1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 0.0], [4.0, 0.0], [1.0, 1.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]])], precision: precision, coordinateSystem: cs)
+        /// Three polygons, the last one has holes outside of the polygon.
+        let testMultiPolygon5 = MultiPolygon([Polygon([[1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]]), Polygon([[100.0, 300.0], [100.0, 100.0], [-100.0, 100.0], [-100.0, 300.0], [100.0, 300.0]], innerRings: [[[200.0, 210.0], [200.0, 190.0], [220.0, 190.0], [220.0, 210.0], [200.0, 210.0]]])], precision: precision, coordinateSystem: cs)
+        /// One polygon, inner ring touches outer ring at more than one place.
+        let testMultiPolygon6 = MultiPolygon([Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-100.0, 0.0], [0.0, 100.0], [100.0, 0.0], [0.0, -100.0], [-100.0, 0.0]]])], precision: precision, coordinateSystem: cs)
+        /// Two polygons, both with holes.  First polygon's holes disconnect the polygon.
+        let testMultiPolygon7 = MultiPolygon([Polygon([[100.0, 200.0], [100.0, 0.0], [-100.0, -0.0], [-100.0, 200.0], [100.0, 200.0]], innerRings: [[[0.0, 100.0], [-50.0, 150.0], [0.0, 200.0], [50.0, 150.0], [0.0, 100.0]], [[0.0, 100.0], [-50.0, 50.0], [0.0, 0.0], [50.0, 50.0], [0.0, 100.0]]]), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]])], precision: precision, coordinateSystem: cs)
+        /// Two polygons, both with holes.  Second polygon's holes disconnect the polygon.
+        let testMultiPolygon8 = MultiPolygon([Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]]), Polygon([[100.0, 200.0], [100.0, 0.0], [-100.0, 0.0], [-100.0, 200.0], [100.0, 200.0]], innerRings: [[[0.0, 100.0], [-50.0, 150.0], [0.0, 200.0], [50.0, 150.0], [0.0, 100.0]], [[0.0, 100.0], [-20.0, 80.0], [0.0, 60.0], [20.0, 80.0], [0.0, 100.0]], [[0.0, 0.0], [30.0, 30.0], [0.0, 60.0], [-30.0, 30.0], [0.0, 0.0]]])], precision: precision, coordinateSystem: cs)
+        /// One polygon with holes.  Polygon's holes disconnect the polygon.
+        let testMultiPolygon9 = MultiPolygon([Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[20.0, -40.0], [100.0, -20.0], [20.0, 0.0], [20.0, 0.0], [20.0, -40.0]], [[-90.0, -90.0], [-80.0, -90.0], [-80.0, -80.0], [-90.0, -80.0], [-90.0, -90.0]]], precision: precision, coordinateSystem: cs)], precision: precision, coordinateSystem: cs)
+        /// Two polygons.  First polygon has hole that touches its outer ring with dimension one.
+        let testMultiPolygon10 = MultiPolygon([Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 10.0], [0.0, 10.0], [0.0, 10.0], [100.0, 10.0], [100.0, -10.0], [0.0, -10.0], [0.0, 10.0]]]), Polygon([[200.0, 200.0], [300.0, 200.0], [300.0, 300.0], [300.0, 300.0], [200.0, 300.0], [200.0, 200.0], [200.0, 200.0]])], precision: precision, coordinateSystem: cs)
+        /// Two polygons.  First polygon has hole that crosses itself.  Second polygon has one-dimensional hole.
+        let testMultiPolygon11 = MultiPolygon([Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-20.0, 0.0], [0.0, 20.0], [0.0, -20.0], [20.0, 0.0], [-20.0, 0.0]]], precision: precision, coordinateSystem: cs), Polygon([[200.0, 200.0], [300.0, 200.0], [300.0, 300.0], [300.0, 300.0], [200.0, 300.0], [200.0, 200.0], [200.0, 200.0]], innerRings: [[[220.0, 220.0], [250.0, 250.0], [220.0, 220.0], [220.0, 220.0]]])], precision: precision, coordinateSystem: cs)
+        /// Two polygons that touch at a one-dimensional edge along their outer rings.
+        let testMultiPolygon12 = MultiPolygon([Polygon([[0.0, 100.0], [100.0, 0.0], [-100.0, 0.0], [0.0, 100.0]], innerRings: [], precision: precision, coordinateSystem: cs), Polygon([[200.0, 0.0], [100.0, -200.0], [0.0, 0.0], [200.0, 0.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        /// Two polygons that touch at a one-dimensional edge inside a hole of one and the outer ring of the other.
+        let testMultiPolygon13 = MultiPolygon([Polygon([[0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0], [0.0, 100.0]], innerRings: [[[80.0, 80.0], [80.0, 20.0], [20.0, 20.0], [20.0, 80.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs), Polygon([[60.0, 80.0], [70.0, 80.0], [70.0, 70.0], [60.0, 70.0], [60.0, 80.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        /// Two polygons that touch at a two-dimensional region
+        let testMultiPolygon14 = MultiPolygon([Polygon([[0.0, 100.0], [100.0, 0.0], [-100.0, 0.0], [0.0, 100.0]], innerRings: [], precision: precision, coordinateSystem: cs), Polygon([[0.0, 0.0], [100.0, 100.0], [-100.0, 100.0], [0.0, 0.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testMultiPolygon1.valid())
+        XCTAssertFalse(testMultiPolygon2.valid())
+        XCTAssertFalse(testMultiPolygon3.valid())
+        XCTAssertFalse(testMultiPolygon4.valid())
+        XCTAssertFalse(testMultiPolygon5.valid())
+        XCTAssertFalse(testMultiPolygon6.valid())
+        XCTAssertFalse(testMultiPolygon7.valid())
+        XCTAssertFalse(testMultiPolygon8.valid())
+        XCTAssertFalse(testMultiPolygon9.valid())
+        XCTAssertFalse(testMultiPolygon10.valid())
+        XCTAssertFalse(testMultiPolygon11.valid())
+        XCTAssertFalse(testMultiPolygon12.valid())
+        XCTAssertFalse(testMultiPolygon13.valid())
+        XCTAssertFalse(testMultiPolygon14.valid())
+    }
 }
