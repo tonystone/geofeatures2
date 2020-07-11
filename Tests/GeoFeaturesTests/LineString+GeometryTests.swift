@@ -548,9 +548,13 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     }
 
     func testValidTrue() {
+        /// Empty case
         let testLineString1 = LineString([], precision: precision, coordinateSystem: cs)
+        /// Two coordinates
         let testLineString2 = LineString([[102.0, 102.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        /// Repeating coordinates
         let testLineString3 = LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        /// Normal line string with five coordinates
         let testLineString4 = LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, 20.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testLineString1.valid())
@@ -566,9 +570,13 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let x2 = Double.nan
         let y2 = 4.0
 
+        /// Only one coordinate
         let testLineString1 = LineString([[-102.0, 102.0]], precision: precision, coordinateSystem: cs)
+        /// Only one coordinate but repeated multiple times
         let testLineString2 = LineString([[2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        /// Invalid coordinate
         let testLineString3 = LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], Coordinate(x: x1, y: y1)], precision: precision, coordinateSystem: cs)
+        /// Invalid coordinate
         let testLineString4 = LineString([[1.0, 1.0], [2.0, 2.0], Coordinate(x: x2, y: y2), [2.0, 4.0], [4.0, 4.0], [4.0, 20.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testLineString1.valid())

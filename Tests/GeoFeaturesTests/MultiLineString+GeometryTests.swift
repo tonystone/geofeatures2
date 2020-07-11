@@ -610,17 +610,19 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
     }
 
     func testValidTrue() {
-        let testMultiLineString1 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]])], precision: precision, coordinateSystem: cs)
+        /// Empty case
+        let testMultiLineString1 = MultiLineString([], precision: precision, coordinateSystem: cs)
+        /// Single line string
         let testMultiLineString2 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]])], precision: precision, coordinateSystem: cs)
+        /// Two line strings
         let testMultiLineString3 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0]])], precision: precision, coordinateSystem: cs)
+        /// Three line strings
         let testMultiLineString4 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0], [-200.0, 200.0], [-200.0, -200.0], [-100.0, -400.0], [400.0, -400.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testMultiLineString1.valid())
         XCTAssertTrue(testMultiLineString2.valid())
         XCTAssertTrue(testMultiLineString3.valid())
         XCTAssertTrue(testMultiLineString4.valid())
-        
-        
     }
 
     func testValidFalse() {
@@ -629,12 +631,18 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
 
         let x2 = Double.nan
         let y2 = 4.0
-    
+
+        /// Invalid coordinate
         let testMultiLineString1 = MultiLineString([LineString([[1.0, 1.0], [100.0, 100.0], Coordinate(x: x1, y: y1)])], precision: precision, coordinateSystem: cs)
+        /// Invalid coordinate
         let testMultiLineString2 = MultiLineString([LineString([Coordinate(x: x1, y: y1)])], precision: precision, coordinateSystem: cs)
+        /// Line string with only one coordinate
         let testMultiLineString3 = MultiLineString([LineString([[1.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        /// Two line strings, one with invalid coordinate
         let testMultiLineString4 = MultiLineString([LineString([[1.0, 1.0], Coordinate(x: x2, y: y2), [100.0, 100.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0]])], precision: precision, coordinateSystem: cs)
+        /// Three line strings, one with a single repeated coordinate
         let testMultiLineString5 = MultiLineString([LineString([[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [2.0, 1.0]]), LineString([[-1.0, 1.0], [-1.0, 1.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0], [-200.0, 200.0], [-200.0, -200.0], [-100.0, -400.0], [400.0, -400.0]])], precision: precision, coordinateSystem: cs)
+        /// Three line strings, one with invalid coordinate
         let testMultiLineString6 = MultiLineString([LineString([[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [2.0, 1.0]]), LineString([[-1.0, 1.0], [-1.0, -1.0]]), LineString([[-1.0, 1.0], [-100.0, 100.0], [-100.0, 200.0], [-200.0, 200.0], Coordinate(x: x2, y: y2), [-200.0, -200.0], [-100.0, -400.0], [400.0, -400.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testMultiLineString1.valid())

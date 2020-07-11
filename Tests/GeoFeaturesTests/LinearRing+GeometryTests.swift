@@ -555,9 +555,13 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     }
 
     func testValidTrue() {
+        /// Empty case
         let testLinearRing1 = LinearRing([], precision: precision, coordinateSystem: cs)
+        /// Simple linear ring
         let testLinearRing2 = LinearRing([[1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Simple linear ring with repeated coordinates
         let testLinearRing3 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Simple linear ring with more repeated coordinates
         let testLinearRing4 = LinearRing([[1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testLinearRing1.valid())
@@ -573,14 +577,23 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let x2 = Double.nan
         let y2 = 4.0
 
+        /// Only one coordinate
         let testLinearRing1 = LinearRing([[-102.0, 102.0]], precision: precision, coordinateSystem: cs)
+        /// End coordinates don't match
         let testLinearRing2 = LinearRing([[-102.0, 102.0], [102.0, 102.0]], precision: precision, coordinateSystem: cs)
+        /// End coordinates don't match
         let testLinearRing3 = LinearRing([[-100.0, 100.0], [100.0, 100.0], [100.0, -100.0]], precision: precision, coordinateSystem: cs)
+        /// Only one coordinate but repeated
         let testLinearRing4 = LinearRing([[2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        /// One-dimensional linear ring
         let testLinearRing5 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// End coordinates don't match
         let testLinearRing6 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, -1.0], [-1.0, -1.0], [-1.0, 1.0], [-2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        /// Invalid coordinate
         let testLinearRing7 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], [2.0, 2.0], Coordinate(x: x1, y: y1)], precision: precision, coordinateSystem: cs)
+        /// Invalid coordinate
         let testLinearRing8 = LinearRing([[1.0, 1.0], [2.0, 2.0], Coordinate(x: x2, y: y2), [2.0, 4.0], [4.0, 4.0], [4.0, 20.0]], precision: precision, coordinateSystem: cs)
+        /// Linear ring crosses itself
         let testLinearRing9 = LinearRing([[1.0, 1.0], [1.0, -1.0], [-1.0, 1.0], [-1.0, -1.0], [1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testLinearRing1.valid())
