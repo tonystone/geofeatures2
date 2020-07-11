@@ -27,6 +27,59 @@ import Swift
 extension LinearRing {
 
     ///
+    /// - Returns: a new linear ring whose coordinates are in the reverse order of the coordinates of the input linear ring.
+    ///            This will change the orientation from clockwise to counter clockwise or vice versa.
+    ///
+    public func reverse() -> LinearRing {
+
+        guard self.count >= 1 else {
+            return self
+        }
+
+        var newLinearRing = LinearRing()
+        for index in (0..<self.count).reversed() {
+            let coordinate = self[index]
+            newLinearRing.append(coordinate)
+        }
+
+        return newLinearRing
+    }
+
+    ///
+    /// - Returns: a boolean indicating whether the linear ring is oriented in a clockwise (true) or counterclockwise (false) direction.
+    ///            Note it is assumed this is a valid linear ring.
+    ///
+    public func clockwise() -> Bool {
+
+        guard self.count >= 4 else {
+            /// A dummy value is returned that really has no meaning
+            return true
+        }
+
+        var signedArea = 0.0
+        for index in 0..<self.count {
+            let coordinate1 = self[index]
+            let x1 = coordinate1.x
+            let y1 = coordinate1.y
+            var coordinate2: Coordinate
+            var x2, y2: Double
+            if index == (self.count - 1) {
+                coordinate2 = self[0]
+                x2 = coordinate2.x
+                y2 = coordinate2.y
+            } else {
+                coordinate2 = self[index + 1]
+                x2 = coordinate2.x
+                y2 = coordinate2.y
+            }
+
+            signedArea += (x1 * y2 - x2 * y1)
+        }
+
+        return (signedArea < 0)
+    }
+
+    ///
     /// - Returns: the y-intercept of the line with the given slope that passes through the given coordinate, if the line is not vertical.
     ///            Else, if vertical, the x-intercept is returned.
     ///            The second value in the input tuple is true if the line is vertical.

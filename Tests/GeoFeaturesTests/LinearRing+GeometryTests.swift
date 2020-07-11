@@ -606,4 +606,51 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertFalse(testLinearRing8.valid())
         XCTAssertFalse(testLinearRing9.valid())
     }
+
+    func testReverse() {
+
+        /// Empty case
+        let testLinearRing1 = LinearRing([], precision: precision, coordinateSystem: cs)
+        let expectedLinearRing1 = LinearRing([], precision: precision, coordinateSystem: cs)
+
+        /// Only one coordinate
+        let testLinearRing2 = LinearRing([[-2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let expectedLinearRing2 = LinearRing([[-2.0, 2.0]], precision: precision, coordinateSystem: cs)
+
+        /// Several coordinates, one repeats
+        let testLinearRing3 = LinearRing([[-1.0, 1.0], [0.0, 0.0], [1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, -2.0], [-5.0, -2.0], [-5.0, 1.0], [-1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let expectedLinearRing3 = LinearRing([[-1.0, 1.0], [-5.0, 1.0], [-5.0, -2.0], [2.0, -2.0], [2.0, 2.0], [1.0, 1.0], [1.0, 1.0], [0.0, 0.0], [-1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertEqual(testLinearRing1.reverse(), expectedLinearRing1)
+        XCTAssertEqual(testLinearRing2.reverse(), expectedLinearRing2)
+        XCTAssertEqual(testLinearRing3.reverse(), expectedLinearRing3)
+    }
+
+    func testClockwise() {
+
+        /// Empty case
+        let testLinearRing1 = LinearRing([], precision: precision, coordinateSystem: cs)
+
+        /// Only one coordinate
+        let testLinearRing2 = LinearRing([[-2.0, 2.0]], precision: precision, coordinateSystem: cs)
+
+        /// A clockwise rectangle
+        let testLinearRing3 = LinearRing([[-10.0, 10.0], [10.0, 10.0], [10.0, -10.0], [-10.0, -10.0], [-10.0, 10.0]], precision: precision, coordinateSystem: cs)
+
+        /// A counter clockwise rectangle
+        let testLinearRing4 = LinearRing([[-10.0, 10.0], [-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]], precision: precision, coordinateSystem: cs)
+
+        /// Several coordinates, one repeats
+        let testLinearRing5 = LinearRing([[-1.0, 1.0], [0.0, 0.0], [1.0, 1.0], [1.0, 1.0], [2.0, 2.0], [2.0, -2.0], [-5.0, -2.0], [-5.0, 1.0], [-1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        /// The reverse of the previous linear ring
+        let testLinearRing6 = LinearRing([[-1.0, 1.0], [-5.0, 1.0], [-5.0, -2.0], [2.0, -2.0], [2.0, 2.0], [1.0, 1.0], [1.0, 1.0], [0.0, 0.0], [-1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertEqual(testLinearRing1.clockwise(), true)
+        XCTAssertEqual(testLinearRing2.clockwise(), true)
+        XCTAssertEqual(testLinearRing3.clockwise(), true)
+        XCTAssertEqual(testLinearRing4.clockwise(), false)
+        XCTAssertEqual(testLinearRing5.clockwise(), true)
+        XCTAssertEqual(testLinearRing6.clockwise(), false)
+    }
 }
