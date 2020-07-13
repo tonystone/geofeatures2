@@ -52,20 +52,36 @@ class MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     }
 
     func testEqualsTrue() {
-        /// I'll leave this as a placeholder now, but we need to sort out what equals means and implement that.
-        /// For the moment, with existing definition of equals in the Geometry.swift file, two identical multipoints will not be equal.
-        /// This is wrong and must be fixed.
-//        let testMultiPoint = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.0))], precision: precision, coordinateSystem: cs)
-//
-//        let multiPoint1 = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.0))], precision: precision, coordinateSystem: cs)
-//        let multiPoint2 = MultiPoint([Point(Coordinate(x: 200.0, y: 200.0)), Point(Coordinate(x: 100.1, y: 100.2))], precision: precision, coordinateSystem: cs)
-//
-//        XCTAssertTrue(testMultiPoint.equals(multiPoint1))
-//        XCTAssertTrue(testMultiPoint.equals(multiPoint2))
+        ///  Note that equals means equals topologically and not structurally.
+        let testMultiPoint = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.0))], precision: precision, coordinateSystem: cs)
+
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.0))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 200.0, y: 200.0)), Point(Coordinate(x: 100.1, y: 100.2))], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testMultiPoint.equals(multiPoint1))
+        XCTAssertTrue(testMultiPoint.equals(multiPoint2))
     }
 
     func testEqualsFalse() {
-        /// This is a placeholder and should be implemented soon.
+        let testMultiPoint = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.0))], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let multiPoint1 = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.1))], precision: precision, coordinateSystem: cs)
+        let multiPoint2 = MultiPoint([Point(Coordinate(x: 200.1, y: 200.0)), Point(Coordinate(x: 100.1, y: 100.2))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testMultiPoint.equals(point))
+        XCTAssertFalse(testMultiPoint.equals(multiPoint1))
+        XCTAssertFalse(testMultiPoint.equals(multiPoint2))
+        XCTAssertFalse(testMultiPoint.equals(lineString))
+        XCTAssertFalse(testMultiPoint.equals(linearRing))
+        XCTAssertFalse(testMultiPoint.equals(multiLineString))
+        XCTAssertFalse(testMultiPoint.equals(polygon))
+        XCTAssertFalse(testMultiPoint.equals(multiPolygon))
     }
 
     func testDisjointTrue() {

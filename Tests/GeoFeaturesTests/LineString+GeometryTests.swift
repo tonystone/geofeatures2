@@ -90,20 +90,38 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertEqual(input.bounds(), expected)
     }
 
-    // MARK: - Equal
+    // MARK: - Equals
 
-    func testEqualTrue() {
-        let input1 = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
-        let input2 = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+    func testEqualsTrue() {
+        let testLineString = LineString([[1.0, 1.0], [2.0, 2.0], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
 
-        XCTAssertEqual(input1, input2)
+        let lineString1 = LineString([[1.0, 1.0], [2.0, 2.0], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[4.0, -4.0], [2.0, 2.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testLineString.equals(lineString1))
+        XCTAssertTrue(testLineString.equals(lineString2))
      }
 
-     func testEqualFalse() {
-        let input1            = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = Point([1.0, 1.0], precision: precision, coordinateSystem: cs)
+     func testEqualsFalse() {
+        let testLineString = LineString([[1.0, 1.0], [2.0, 2.0], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
 
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
+        let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.1))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[1.0, 1.0], [2.0, 2.0], [4.0, 14.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[5.0, -5.0], [2.0, 2.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]), LineString([[2.0, 2.0], [4.0, -4.0], [13.0, -13.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testLineString.equals(point))
+        XCTAssertFalse(testLineString.equals(multiPoint))
+        XCTAssertFalse(testLineString.equals(lineString1))
+        XCTAssertFalse(testLineString.equals(lineString2))
+        XCTAssertFalse(testLineString.equals(linearRing))
+        XCTAssertFalse(testLineString.equals(multiLineString))
+        XCTAssertFalse(testLineString.equals(polygon))
+        XCTAssertFalse(testLineString.equals(multiPolygon))
      }
 
     func testDisjointTrue() {
