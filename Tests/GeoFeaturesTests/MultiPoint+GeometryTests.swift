@@ -425,18 +425,10 @@ class MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let point = Point(Coordinate(x: 100.0, y: 100.0), precision: precision, coordinateSystem: cs)
         let multiPoint1 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0))], precision: precision, coordinateSystem: cs)
         let multiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 1.0, y: 1.0))], precision: precision, coordinateSystem: cs)
-        let lineString = LineString([[100.0, 100.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
-        let linearRing = LinearRing([[100.0, 100.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[100.0, 100.0], [100.0, 100.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[100.0, 100.0], [100.0, 100.0]]), LineString([[100.0, 100.0], [100.0, 100.0], [100.0, 100.0]]), LineString([[1.0, 1.0], [1.0,  1.0], [1.0, 1.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testMultiPoint.covers(point))
         XCTAssertTrue(testMultiPoint.covers(multiPoint1))
         XCTAssertTrue(testMultiPoint.covers(multiPoint2))
-        XCTAssertTrue(testMultiPoint.covers(lineString))
-        XCTAssertTrue(testMultiPoint.covers(linearRing))
-        XCTAssertTrue(testMultiPoint.covers(multiLineString1))
-        XCTAssertTrue(testMultiPoint.covers(multiLineString2))
     }
 
     func testCoversFalse() {

@@ -90,20 +90,62 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertEqual(input.bounds(), expected)
     }
 
-    // MARK: - Equal
+    // MARK: - Equals
 
-    func testEqualTrue() {
-        let input1 = LinearRing([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
-        let input2 = LinearRing([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+    func testEqualsTrue() {
 
-        XCTAssertEqual(input1, input2)
+        let testLinearRing = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        let lineString1 = LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let lineString3 = LineString([[4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0], [1.0, -4.0], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
+        let lineString4 = LineString([[4.0, -4.0], [4.0, -4.0], [4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0], [1.0, -4.0], [4.0, -4.0], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
+        let linearRing1 = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let linearRing2 = LinearRing([[2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let linearRing3 = LinearRing([[4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0], [1.0, -4.0], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
+        let linearRing4 = LinearRing([[4.0, -4.0], [4.0, -4.0], [4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0], [1.0, -4.0], [4.0, -4.0], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0], [2.0, 2.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString3 = MultiLineString([LineString([[4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0], [1.0, -4.0], [4.0, -4.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString4 = MultiLineString([LineString([[4.0, -4.0], [4.0, -4.0], [4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0], [1.0, -4.0], [4.0, -4.0], [4.0, -4.0]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testLinearRing.equals(lineString1))
+        XCTAssertTrue(testLinearRing.equals(lineString2))
+        XCTAssertTrue(testLinearRing.equals(lineString3))
+        XCTAssertTrue(testLinearRing.equals(lineString4))
+        XCTAssertTrue(testLinearRing.equals(linearRing1))
+        XCTAssertTrue(testLinearRing.equals(linearRing2))
+        XCTAssertTrue(testLinearRing.equals(linearRing3))
+        XCTAssertTrue(testLinearRing.equals(linearRing4))
+        XCTAssertTrue(testLinearRing.equals(multiLineString1))
+        XCTAssertTrue(testLinearRing.equals(multiLineString2))
+        XCTAssertTrue(testLinearRing.equals(multiLineString3))
+        XCTAssertTrue(testLinearRing.equals(multiLineString4))
      }
 
-     func testEqualFalse() {
-        let input1            = LinearRing([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = Point([1.0, 1.0], precision: precision, coordinateSystem: cs)
+     func testEqualsFalse() {
 
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
+        let testLinearRing = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.1))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0], [1.0, 10.0]], precision: precision, coordinateSystem: cs)
+        let linearRing1 = LinearRing([[1.0, 1.1], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.1]], precision: precision, coordinateSystem: cs)
+        let linearRing2 = LinearRing([[2.0, 2.0], [2.0, 4.0], [4.0, 4.1], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let linearRing3 = LinearRing([[4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0], [1.0, -4.4], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[1.0, 1.0], [2.0, 0.0], [3.0, 3.0]]), LineString([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0]], innerRings: [[[2.0, 0.0], [3.0, 0.0], [3.0, -2.0], [2.0, -2.0], [2.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[-6.0, 0.0], [-1.0, 0.0], [-1.0, 6.0], [-3.0, 10.0], [-6.0, 6.0], [-6.0, 0.0]], innerRings: [[[-5.0, 2.0], [-5.0, 3.0], [-3.5, 3.5], [-2.0, 3.0], [-2.0, 2.0], [-5.0, 2.0]]]), Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.0, -4.0], [1.0, -4.0], [1.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testLinearRing.equals(point))
+        XCTAssertFalse(testLinearRing.equals(multiPoint))
+        XCTAssertFalse(testLinearRing.equals(lineString))
+        XCTAssertFalse(testLinearRing.equals(linearRing1))
+        XCTAssertFalse(testLinearRing.equals(linearRing2))
+        XCTAssertFalse(testLinearRing.equals(linearRing3))
+        XCTAssertFalse(testLinearRing.equals(multiLineString))
+        XCTAssertFalse(testLinearRing.equals(polygon))
+        XCTAssertFalse(testLinearRing.equals(multiPolygon))
      }
 
     // MARK: - Disjoint

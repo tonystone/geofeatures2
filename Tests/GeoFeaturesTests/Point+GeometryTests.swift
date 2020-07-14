@@ -379,18 +379,10 @@ class PointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let point = Point(Coordinate(x: 100.0, y: 100.0), precision: precision, coordinateSystem: cs)
         let multiPoint1 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0))], precision: precision, coordinateSystem: cs)
         let multiPoint2 = MultiPoint([Point(Coordinate(x: 100.0, y: 100.0)), Point(Coordinate(x: 100.0, y: 100.0))], precision: precision, coordinateSystem: cs)
-        let lineString = LineString([[100.0, 100.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
-        let linearRing = LinearRing([[100.0, 100.0], [100.0, 100.0]], precision: precision, coordinateSystem: cs)
-        let multiLineString1 = MultiLineString([LineString([[100.0,  100.0], [100.0,  100.0]])], precision: precision, coordinateSystem: cs)
-        let multiLineString2 = MultiLineString([LineString([[100.0,  100.0], [100.0,  100.0]]), LineString([[100.0,  100.0], [100.0,  100.0], [100.0,  100.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testPoint.covers(point))
         XCTAssertTrue(testPoint.covers(multiPoint1))
         XCTAssertTrue(testPoint.covers(multiPoint2))
-        XCTAssertTrue(testPoint.covers(lineString))
-        XCTAssertTrue(testPoint.covers(linearRing))
-        XCTAssertTrue(testPoint.covers(multiLineString1))
-        XCTAssertTrue(testPoint.covers(multiLineString2))
     }
 
     func testCoversFalse() {

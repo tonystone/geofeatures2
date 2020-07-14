@@ -3246,28 +3246,41 @@ extension IntersectionMatrix {
     /// Reduces a linear ring to a sequence of points such that each consecutive line segment will have a different slope
     fileprivate static func reduce(_ linearRing: LinearRing) -> LinearRing {
 
-        /// Must have at least 3 points or two lines segments for this algorithm to apply.
-        /// Could insist on 4 so you ignore the case where the segments overlap.
-        guard linearRing.count >= 3 else {
+        /// This algorithm will reduce even invalid linear rings.
+        guard linearRing.count >= 2 else {
             return linearRing
+        }
+
+        /// Remove duplicate coordinates
+        var tempLinearRing = LinearRing()
+        tempLinearRing.append(linearRing[0])
+        for lrFirstCoordIndex in 0..<(linearRing.count - 1) {
+            let lrFirstCoord  = linearRing[lrFirstCoordIndex]
+            let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
+            if lrFirstCoord == lrSecondCoord { continue }
+            tempLinearRing.append(lrSecondCoord)
+        }
+
+        guard tempLinearRing.count >= 3 else {
+            return tempLinearRing
         }
 
         var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
         var secondSlope: (Double, Bool)
         var newLinearRing = LinearRing()
-        newLinearRing.append(linearRing[0])
-        for lrFirstCoordIndex in 0..<linearRing.count - 2 {
-            let lrFirstCoord  = linearRing[lrFirstCoordIndex]
-            let lrSecondCoord = linearRing[lrFirstCoordIndex + 1]
-            let lrThirdCoord  = linearRing[lrFirstCoordIndex + 2]
+        newLinearRing.append(tempLinearRing[0])
+        for lrFirstCoordIndex in 0..<tempLinearRing.count - 2 {
+            let lrFirstCoord  = tempLinearRing[lrFirstCoordIndex]
+            let lrSecondCoord = tempLinearRing[lrFirstCoordIndex + 1]
+            let lrThirdCoord  = tempLinearRing[lrFirstCoordIndex + 2]
 
             if !removeCoordinate(lrFirstCoord, lrSecondCoord, lrThirdCoord) {
-                newLinearRing.append(linearRing[lrFirstCoordIndex + 1])
+                newLinearRing.append(lrSecondCoord)
             }
         }
 
         /// Add the last coordinate, which should be the same as the first
-        newLinearRing.append(linearRing[linearRing.count - 1])
+        newLinearRing.append(tempLinearRing[tempLinearRing.count - 1])
 
         /// Now check whether the first and last segments of the new linear ring are on a straight line.
         /// If they are, change the first point of the linear ring to be the second to last point of the new linear ring.
@@ -4077,6 +4090,7 @@ extension IntersectionMatrix {
         for lr1FirstCoordIndex in 0..<linearRing1.count - 1 {
             let lr1FirstCoord  = linearRing1[lr1FirstCoordIndex]
             let lr1SecondCoord = linearRing1[lr1FirstCoordIndex + 1]
+            if lr1FirstCoord == lr1SecondCoord { continue }
             let segment1 = Segment(left: lr1FirstCoord, right: lr1SecondCoord)
 
             /// Note the linear rings have no boundary.
@@ -4084,6 +4098,7 @@ extension IntersectionMatrix {
             for lr2FirstCoordIndex in 0..<linearRing2.count - 1 {
                 let lr2FirstCoord  = linearRing2[lr2FirstCoordIndex]
                 let lr2SecondCoord = linearRing2[lr2FirstCoordIndex + 1]
+                if lr2FirstCoord == lr2SecondCoord { continue }
                 let segment2 = Segment(left: lr2FirstCoord, right: lr2SecondCoord)
                 let lineSegmentIntersection = intersection(segment: segment1, other: segment2)
 
