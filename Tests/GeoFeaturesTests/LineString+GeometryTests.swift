@@ -97,9 +97,17 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
         let lineString1 = LineString([[1.0, 1.0], [2.0, 2.0], [4.0, -4.0]], precision: precision, coordinateSystem: cs)
         let lineString2 = LineString([[4.0, -4.0], [2.0, 2.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString1 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [4.0, -4.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[4.0, -4.0], [2.0, 2.0], [1.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString3 = MultiLineString([LineString([[4.0, -4.0], [2.0, 2.0], [1.0, 1.0]]), LineString([[1.0, 1.0], [2.0, 2.0], [4.0, -4.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString4 = MultiLineString([LineString([[4.0, -4.0], [2.0, 2.0]]), LineString([[1.0, 1.0], [2.0, 2.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testLineString.equals(lineString1))
         XCTAssertTrue(testLineString.equals(lineString2))
+        XCTAssertTrue(testLineString.equals(multiLineString1))
+        XCTAssertTrue(testLineString.equals(multiLineString2))
+        XCTAssertTrue(testLineString.equals(multiLineString3))
+        XCTAssertTrue(testLineString.equals(multiLineString4))
      }
 
      func testEqualsFalse() {
