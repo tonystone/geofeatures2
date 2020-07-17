@@ -2953,6 +2953,16 @@ extension IntersectionMatrix {
 
         return boundingBoxesOverlap1D(range1: box1.0, range2: box2.0) && boundingBoxesOverlap1D(range1: box1.1, range2: box2.1)
     }
+    
+    ///
+    /// Return the bounding box of a line segment.  This is a tuple of tuples.
+    /// The first element is the min and max x values, and the second element is the min and max y values.
+    ///
+    fileprivate static func boundingBox(_ segment: Segment) -> ((Double, Double), (Double, Double)) {
+        let rangex = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
+        let rangey = (Swift.min(segment.leftCoordinate.y, segment.rightCoordinate.y), Swift.max(segment.leftCoordinate.y, segment.rightCoordinate.y))
+        return (rangex, rangey)
+    }
 
     ///
     /// 2x2 Determinant
@@ -2985,7 +2995,7 @@ extension IntersectionMatrix {
     ///
     fileprivate static func intersection(segment: Segment, other: Segment, firstCoordinateFirstSegmentBoundary: Bool = false, secondCoordinateFirstSegmentBoundary: Bool = false, firstCoordinateSecondSegmentBoundary: Bool = false, secondCoordinateSecondSegmentBoundary: Bool = false) -> LineSegmentIntersection {
 
-        let precsion = Floating()
+        let precision = Floating()
         let csystem  = Cartesian()
 
         ///
@@ -3018,70 +3028,70 @@ extension IntersectionMatrix {
 
             if (segment1Boundary1Location != .onExterior) &&  (segment1Boundary2Location != .onExterior) {
                 /// Segment is completely contained in other
-                lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, segment.rightCoordinate], precision: precision, coordinateSystem: csystem)
             } else if (segment2Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                 /// Other is completely contained in segment
-                lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, segment.rightCoordinate], precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = LineString([other.leftCoordinate, other.rightCoordinate], precision: precision, coordinateSystem: csystem)
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precision, coordinateSystem: csystem)
                 if !firstCoordinateFirstSegmentBoundary && !firstCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precision, coordinateSystem: csystem)
                 if !firstCoordinateFirstSegmentBoundary && !secondCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precision, coordinateSystem: csystem)
                 if !secondCoordinateFirstSegmentBoundary && !firstCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precision, coordinateSystem: csystem)
                 if !secondCoordinateFirstSegmentBoundary && !secondCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
                       (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precision, coordinateSystem: csystem)
             } else if oneLine {
                 /// If you reach here, the two line segments overlap by an amount > 0, but neither line segment is contained in the other.
                 if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {
                     /// Line segments overlap from segment left to other left
-                    lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, other.leftCoordinate], precision: precision, coordinateSystem: csystem)
                 } else if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                     /// Line segments overlap from segment left to other right
-                    lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = LineString([segment.leftCoordinate, other.rightCoordinate], precision: precision, coordinateSystem: csystem)
                 } else if (segment1Boundary2Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {
                     /// Line segments overlap from segment left to other left
-                    lineSegmentIntersection.geometry = LineString([segment.rightCoordinate, other.leftCoordinate], precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = LineString([segment.rightCoordinate, other.leftCoordinate], precision: precision, coordinateSystem: csystem)
                 } else if (segment1Boundary2Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                     /// Line segments overlap from segment left to other right
-                    lineSegmentIntersection.geometry = LineString([segment.rightCoordinate, other.rightCoordinate], precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = LineString([segment.rightCoordinate, other.rightCoordinate], precision: precision, coordinateSystem: csystem)
                 }
             } else {
                 /// If you reach here, the two line segments touch at a single point that is on the boundary of one segment and the interior of the other.
                 if segment1Boundary1Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = Point(segment.leftCoordinate, precision: precision, coordinateSystem: csystem)
                     if !firstCoordinateFirstSegmentBoundary {
                         lineSegmentIntersection.interiorsTouchAtPoint = true
                     }
                 } else if segment1Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precision, coordinateSystem: csystem)
                 } else if segment2Boundary1Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    lineSegmentIntersection.geometry = Point(other.leftCoordinate, precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = Point(other.leftCoordinate, precision: precision, coordinateSystem: csystem)
                 } else if segment2Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
-                    lineSegmentIntersection.geometry = Point(other.rightCoordinate, precision: precsion, coordinateSystem: csystem)
+                    lineSegmentIntersection.geometry = Point(other.rightCoordinate, precision: precision, coordinateSystem: csystem)
                     if !secondCoordinateSecondSegmentBoundary {
                         lineSegmentIntersection.interiorsTouchAtPoint = true
                     }
@@ -3142,7 +3152,7 @@ extension IntersectionMatrix {
             interiorsIntersect = true
         }
 
-        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: interiorsIntersect, theGeometry: Point(Coordinate(x:x, y: y), precision: precsion, coordinateSystem: csystem))
+        return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: interiorsIntersect, theGeometry: Point(Coordinate(x:x, y: y), precision: precision, coordinateSystem: csystem))
     }
 
     fileprivate static func intersects(_ points1: MultiPoint, _ points2: MultiPoint) -> Bool {
@@ -3184,29 +3194,44 @@ extension IntersectionMatrix {
     /// Reduces a line string to a sequence of points such that each consecutive line segment will have a different slope
     fileprivate static func reduce(_ lineString: LineString) -> LineString {
 
-        /// Must have at least 3 points or two lines segments for this algorithm to apply
-        guard lineString.count >= 3 else {
+        /// Must have at least two coordinates to reduce
+        guard lineString.count >= 2 else {
             return lineString
+        }
+
+        /// Remove duplicate coordinates
+        var tempLineString = LineString()
+        tempLineString.append(lineString[0])
+        for lsFirstCoordIndex in 0..<(lineString.count - 1) {
+            let lsFirstCoord  = lineString[lsFirstCoordIndex]
+            let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
+            if lsFirstCoord == lsSecondCoord { continue }
+            tempLineString.append(lsSecondCoord)
+        }
+
+        /// Must have at least 3 coordinates or two lines segments for this algorithm to apply
+        guard tempLineString.count >= 3 else {
+            return tempLineString
         }
 
         var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
         var secondSlope: (Double, Bool)
         var newLineString = LineString()
-        newLineString.append(lineString[0])
-        for lsFirstCoordIndex in 0..<lineString.count - 2 {
-            let lsFirstCoord  = lineString[lsFirstCoordIndex]
-            let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
-            let lsThirdCoord  = lineString[lsFirstCoordIndex + 2]
+        newLineString.append(tempLineString[0])
+        for lsFirstCoordIndex in 0..<tempLineString.count - 2 {
+            let lsFirstCoord  = tempLineString[lsFirstCoordIndex]
+            let lsSecondCoord = tempLineString[lsFirstCoordIndex + 1]
+            let lsThirdCoord  = tempLineString[lsFirstCoordIndex + 2]
             firstSlope = slope(lsFirstCoord, lsSecondCoord)
             secondSlope = slope(lsSecondCoord, lsThirdCoord)
 
             if firstSlope != secondSlope {
-                newLineString.append(lineString[lsFirstCoordIndex + 1])
+                newLineString.append(tempLineString[lsFirstCoordIndex + 1])
             }
         }
 
         /// Add the last coordinate
-        newLineString.append(lineString[lineString.count - 1])
+        newLineString.append(tempLineString[tempLineString.count - 1])
 
         return newLineString
     }
@@ -3329,33 +3354,8 @@ extension IntersectionMatrix {
         /// Reduce each of the multi line string
         for lineString in multiLineString {
 
-            /// Must have at least 3 points or two lines segments for this algorithm to apply
-            guard lineString.count >= 3 else {
-                resultMultiLineString.append(lineString)
-                continue
-            }
-
-            var firstSlope: (Double, Bool)      /// The second value, if true, indicates a vertical line
-            var secondSlope: (Double, Bool)
-            var newLineString = LineString()
-            newLineString.append(lineString[0])
-            for lsFirstCoordIndex in 0..<lineString.count - 2 {
-                let lsFirstCoord  = lineString[lsFirstCoordIndex]
-                let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
-                let lsThirdCoord  = lineString[lsFirstCoordIndex + 2]
-                firstSlope = slope(lsFirstCoord, lsSecondCoord)
-                secondSlope = slope(lsSecondCoord, lsThirdCoord)
-
-                if firstSlope != secondSlope {
-                    newLineString.append(lineString[lsFirstCoordIndex + 1])
-                }
-            }
-
-            /// Add the last coordinate
-            newLineString.append(lineString[lineString.count - 1])
-
-            /// Add the new line string to the resulting multi line string
-            resultMultiLineString.append(newLineString)
+            let reducedLineString = reduce(lineString)
+            resultMultiLineString.append(reducedLineString)
         }
 
         return resultMultiLineString
@@ -3709,6 +3709,108 @@ extension IntersectionMatrix {
         return true
     }
 
+    /// Subtracts segment1 from segment2 and returns an array of resulting segments that may have zero, one or two Segments in it.
+    /// The algorithm here assumes that the segments have been previously checked to make sure they overlap by a segment of dimension one.
+    fileprivate static func subtract(_ segment1: Segment, _ segment2: Segment) -> [Segment] {
+
+        let boundingBox1 = boundingBox(segment1)
+        let boundingBox2 = boundingBox(segment2)
+        let boundingBox1XRange = boundingBox1.0
+        let boundingBox1YRange = boundingBox1.1
+        let boundingBox2XRange = boundingBox2.0
+        let boundingBox2YRange = boundingBox2.1
+        if (boundingBox1XRange.0 <= boundingBox2XRange.0) && (boundingBox1XRange.1 >= boundingBox2XRange.1) &&
+           (boundingBox1YRange.0 <= boundingBox2YRange.0) && (boundingBox1YRange.1 >= boundingBox2YRange.1) {
+            /// Segment1 subsumes segment2
+            return []
+        } else if (boundingBox1XRange.0 > boundingBox2XRange.0) && (boundingBox1XRange.1 < boundingBox2XRange.1) &&
+                  (boundingBox1YRange.0 > boundingBox2YRange.0) && (boundingBox1YRange.1 < boundingBox2YRange.1) {
+            /// Segment1 splits segment2 into two parts
+            let newSegment1LeftX  = boundingBox2XRange.0
+            let newSegment1LeftY  = boundingBox2YRange.0
+            let newSegment1RightX = boundingBox1XRange.0
+            let newSegment1RightY = boundingBox1YRange.0
+            let newSegment2LeftX  = boundingBox1XRange.1
+            let newSegment2LeftY  = boundingBox1YRange.1
+            let newSegment2RightX = boundingBox1XRange.1
+            let newSegment2RightY = boundingBox1YRange.1
+            let newSegment1 = Segment(left: Coordinate(x: newSegment1LeftX, y: newSegment1LeftY), right: Coordinate(x: newSegment1RightX, y: newSegment1RightY))
+            let newSegment2 = Segment(left: Coordinate(x: newSegment2LeftX, y: newSegment2LeftY), right: Coordinate(x: newSegment2RightX, y: newSegment2RightY))
+            return [newSegment1, newSegment2]
+        } else if (boundingBox1XRange.0 <= boundingBox2XRange.0) && (boundingBox1XRange.1 <= boundingBox2XRange.1) &&
+                  (boundingBox1YRange.0 <= boundingBox2YRange.0) && (boundingBox1YRange.1 <= boundingBox2YRange.1) {
+            /// Segment1 removes the left or bottom part of segment2
+            let newSegmentLeftX  = boundingBox1XRange.1
+            let newSegmentLeftY  = boundingBox1YRange.1
+            let newSegmentRightX = boundingBox2XRange.1
+            let newSegmentRightY = boundingBox2YRange.1
+            let newSegment = Segment(left: Coordinate(x: newSegmentLeftX, y: newSegmentLeftY), right: Coordinate(x: newSegmentRightX, y: newSegmentRightY))
+            return [newSegment]
+        } else if (boundingBox1XRange.0 <= boundingBox2XRange.0) && (boundingBox1XRange.1 <= boundingBox2XRange.1) &&
+                  (boundingBox1YRange.0 >= boundingBox2YRange.0) && (boundingBox1YRange.1 >= boundingBox2YRange.1) {
+            /// Segment1 removes the top or left part of segment2
+            let newSegmentLeftX  = boundingBox1XRange.1
+            let newSegmentLeftY  = boundingBox1YRange.0
+            let newSegmentRightX = boundingBox2XRange.1
+            let newSegmentRightY = boundingBox2YRange.0
+            let newSegment = Segment(left: Coordinate(x: newSegmentLeftX, y: newSegmentLeftY), right: Coordinate(x: newSegmentRightX, y: newSegmentRightY))
+            return [newSegment]
+        } else if (boundingBox1XRange.0 >= boundingBox2XRange.0) && (boundingBox1XRange.1 >= boundingBox2XRange.1) &&
+                  (boundingBox1YRange.0 >= boundingBox2YRange.0) && (boundingBox1YRange.1 >= boundingBox2YRange.1) {
+            /// Segment1 removes the top or right part of segment2
+            let newSegmentLeftX  = boundingBox2XRange.0
+            let newSegmentLeftY  = boundingBox2YRange.0
+            let newSegmentRightX = boundingBox1XRange.0
+            let newSegmentRightY = boundingBox1YRange.0
+            let newSegment = Segment(left: Coordinate(x: newSegmentLeftX, y: newSegmentLeftY), right: Coordinate(x: newSegmentRightX, y: newSegmentRightY))
+            return [newSegment]
+        } else if (boundingBox1XRange.0 >= boundingBox2XRange.0) && (boundingBox1XRange.1 >= boundingBox2XRange.1) &&
+                  (boundingBox1YRange.0 <= boundingBox2YRange.0) && (boundingBox1YRange.1 <= boundingBox2YRange.1) {
+            /// Segment1 removes the top or right part of segment2
+            let newSegmentLeftX  = boundingBox2XRange.0
+            let newSegmentLeftY  = boundingBox2YRange.1
+            let newSegmentRightX = boundingBox1XRange.0
+            let newSegmentRightY = boundingBox1YRange.1
+            let newSegment = Segment(left: Coordinate(x: newSegmentLeftX, y: newSegmentLeftY), right: Coordinate(x: newSegmentRightX, y: newSegmentRightY))
+            return [newSegment]
+        } else {
+            /// This should never happen.
+            print("The subtract function has unexpected values when subtracting segments.")
+            return []
+        }
+    }
+
+    /// Is the segment contained in or a subset of the multi line string?
+    /// The algorithm here assumes that the multi line string has been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ segment1: Segment, _ multiLineString: MultiLineString) -> Bool {
+
+        for lineString in multiLineString {
+            for lsFirstCoordIndex in 0..<lineString.count - 1 {
+                let lsFirstCoord  = lineString[lsFirstCoordIndex]
+                let lsSecondCoord = lineString[lsFirstCoordIndex + 1]
+                let segment2 = Segment(left: lsFirstCoord, right: lsSecondCoord)
+
+                let segmentIntersection = intersection(segment: segment1, other: segment2)
+                if let geometry = segmentIntersection.geometry as? LineString {
+                    let lineStringSegment = Segment(other: geometry)
+                    let segmentArray = subtract(lineStringSegment, segment1)
+                    if segmentArray.count == 0 {
+                        return true
+                    } else if segmentArray.count == 1 {
+                        return subset(segmentArray[0], multiLineString)
+                    } else {
+                        for segment in segmentArray {
+                            if !subset(segment, multiLineString) { return false }
+                        }
+                        return true
+                    }
+                }
+            }
+        }
+
+        return false
+    }
+
     /// Is the first multi line string contained in or a subset of the second multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     /// TODO:
@@ -3720,26 +3822,7 @@ extension IntersectionMatrix {
                 let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
                 let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
 
-                var segment1IsSubsetOfOtherSegment = false
-
-                for lineString2 in multiLineString2 {
-                    for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
-                        let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
-                        let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-                        let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
-
-                        if subset(segment1, segment2) {
-                            segment1IsSubsetOfOtherSegment = true
-                            break
-                        }
-                    }
-
-                    if segment1IsSubsetOfOtherSegment {
-                        break
-                    }
-                }
-
-                if !segment1IsSubsetOfOtherSegment {
+                if !subset(segment1, multiLineString2) {
                     return false
                 }
             }

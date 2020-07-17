@@ -31,4 +31,21 @@ internal class Segment {
         self.leftCoordinate  = left
         self.rightCoordinate = right
     }
+
+    ///
+    /// Construct a Segment from a LineString.
+    /// The LineString should have exactly two coordinates.  If not, a dummy value is returned.
+    ///
+    /// - parameters:
+    ///     - other: The LineString.
+    ///
+    public init(other: LineString) {
+        guard other.count == 2 else {
+            self.leftCoordinate  = Coordinate(x:0.0, y:0.0)
+            self.rightCoordinate = Coordinate(x:0.0, y:0.0)
+            return
+        }
+        self.leftCoordinate  = other[0]
+        self.rightCoordinate = other[1]
+    }
 }

@@ -132,20 +132,65 @@ class MultiLineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTest
         XCTAssertEqual(input.bounds(), expected)
     }
 
-    // MARK: Boundary Tests
+    // MARK: Equals
 
-    func testEqualTrue() {
-        let input1 = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0]]), LineString([[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
-        let input2 = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0]]), LineString([[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
+    func testEqualsTrue() {
 
-        XCTAssertEqual(input1, input2)
+        let testMultiLineString1 = MultiLineString([LineString([[6.0, -2.0], [2.0, 2.0], [1.0, 1.0]]), LineString([[0.0, 10.0], [0.0, -10.0], [4.0, -10.0], [4.0, 6.0], [8.0, 6.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString2 = MultiLineString([LineString([[-10.0, 0.0], [-10.0, 0.0], [-14.0, 0.0], [-20.0, 0.0], [-20.0, 0.0], [-20.0, 1.0], [-20.0, 10.0], [-15.0, 10.0], [-10.0, 10.0], [-10.0, 10.0], [-10.0, 10.0]]), LineString([[10.0, 20.0], [10.0, 20.0], [10.0, 20.0], [0.0, 10.0], [5.0, 5.0], [5.0, 5.0], [10.0, 0.0], [8.0, -2.0], [6.0, -4.0], [0.0, -10.0], [0.0, -10.0]])], precision: precision, coordinateSystem: cs)
+
+        let multiLineString1 = MultiLineString([LineString([[6.0, -2.0], [2.0, 2.0], [1.0, 1.0]]), LineString([[0.0, 10.0], [0.0, -10.0], [4.0, -10.0], [4.0, 6.0], [8.0, 6.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[6.0, -2.0], [2.0, 2.0], [1.0, 1.0]]), LineString([[8.0, 6.0], [4.0, 6.0], [4.0, -10.0], [0.0, -10.0], [0.0, 10.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString3 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [6.0, -2.0]]), LineString([[0.0, 10.0], [0.0, -10.0], [4.0, -10.0], [4.0, 6.0], [8.0, 6.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString4 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [6.0, -2.0]]), LineString([[8.0, 6.0], [4.0, 6.0], [4.0, -10.0], [0.0, -10.0], [0.0, 10.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString5 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [4.0, 0.0]]), LineString([[6.0, -2.0], [4.0, 0.0]]), LineString([[0.0, 10.0], [0.0, -10.0], [4.0, -10.0], [4.0, 0.0]]), LineString([[8.0, 6.0], [4.0, 6.0], [4.0, 0.0]])], precision: precision, coordinateSystem: cs)
+
+        let multiLineString6 = MultiLineString([LineString([[-10.0, 10.0], [-10.0, 10.0], [-10.0, 10.0], [-20.0, 10.0], [-20.0, 10.0], [-20.0, 8.0], [-20.0, 8.0]]), LineString([[-20.0, 0.0], [-20.0, 0.0], [-20.0, 0.0], [-17.0, 0.0], [-17.0, 0.0], [-10.0, 0.0], [-10.0, 0.0]]), LineString([[0.0, -10.0], [2.0, -8.0], [2.0, -8.0], [10.0, 0.0], [8.0, 2.0], [4.0, 6.0]]), LineString([[-18.0, 0.0], [-20.0, 0.0], [-20.0, 8.0], [-20.0, 10.0], [-18.0, 10.0]]), LineString([[5.0, 5.0], [5.0, 5.0], [0.0, 10.0], [2.0, 12.0], [2.0, 12.0], [10.0, 20.0], [10.0, 20.0]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testMultiLineString1.equals(multiLineString1))
+        XCTAssertTrue(testMultiLineString1.equals(multiLineString2))
+        XCTAssertTrue(testMultiLineString1.equals(multiLineString3))
+        XCTAssertTrue(testMultiLineString1.equals(multiLineString4))
+        XCTAssertTrue(testMultiLineString1.equals(multiLineString5))
+
+        XCTAssertTrue(testMultiLineString2.equals(multiLineString6))
      }
 
-     func testEqualFalse() {
-        let input1            = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0]]), LineString([[3.0,  3.0], [4.0,  4.0]])], precision: precision, coordinateSystem: cs)
-        let input2: Geometry  = LineString([[1.0,  1.0], [2.0,  2.0]], precision: precision, coordinateSystem: cs)
+     func testEqualsFalse() {
 
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
+        let testMultiLineString1 = MultiLineString([LineString([[6.0, -2.0], [2.0, 2.0], [1.0, 1.0]]), LineString([[0.0, 10.0], [0.0, -10.0], [4.0, -10.0], [4.0, 6.0], [8.0, 6.0]])], precision: precision, coordinateSystem: cs)
+        let testMultiLineString2 = MultiLineString([LineString([[-10.0, 0.0], [-10.0, 0.0], [-14.0, 0.0], [-20.0, 0.0], [-20.0, 0.0], [-20.0, 1.0], [-20.0, 10.0], [-15.0, 10.0], [-10.0, 10.0], [-10.0, 10.0], [-10.0, 10.0]]), LineString([[10.0, 20.0], [10.0, 20.0], [10.0, 20.0], [0.0, 10.0], [5.0, 5.0], [5.0, 5.0], [10.0, 0.0], [8.0, -2.0], [6.0, -4.0], [0.0, -10.0], [0.0, -10.0]])], precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 10.4, y: 20.5), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.1))], precision: precision, coordinateSystem: cs)
+        let lineString1 = LineString([[6.0, -2.0], [2.0, 2.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let lineString2 = LineString([[0.0, 10.0], [0.0, -10.0], [4.0, -10.0], [4.0, 6.0], [8.0, 6.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+
+        let multiLineString1 = MultiLineString([LineString([[6.0, -2.0], [2.0, 2.0], [1.0, 1.0]]), LineString([[0.0, 10.0], [0.0, -9.0], [4.0, -10.0], [4.0, 6.0], [8.0, 6.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString2 = MultiLineString([LineString([[6.0, -2.0], [2.0, 2.0], [1.1, 1.0]]), LineString([[8.0, 6.0], [4.0, 6.0], [4.0, -10.0], [0.0, -10.0], [0.0, 10.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString3 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [6.0, -2.0]]), LineString([[0.0, 10.0], [0.0, -10.0], [4.0, -10.0], [4.0, 7.0], [8.0, 6.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString4 = MultiLineString([LineString([[1.0, 1.0], [2.2, 2.2], [6.0, -2.0]]), LineString([[8.0, 6.0], [4.0, 6.0], [4.0, -10.0], [0.0, -10.0], [0.0, 10.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString5 = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [4.0, 0.0]]), LineString([[7.0, -3.0], [4.0, 0.0]]), LineString([[0.0, 10.0], [0.0, -10.0], [4.0, -10.0], [4.0, 0.0]]), LineString([[8.0, 6.0], [4.0, 6.0], [4.0, 0.0]])], precision: precision, coordinateSystem: cs)
+
+        let multiLineString6 = MultiLineString([LineString([[-10.0, 10.0], [-10.0, 10.0], [-10.0, 10.0], [-20.0, 10.0], [-20.0, 10.0], [-20.0, 8.0], [-20.0, 8.0]]), LineString([[-20.0, 0.0], [-20.0, 0.0], [-20.0, 0.0], [-17.0, 0.0], [-17.0, 0.0], [-10.0, 0.0], [-10.0, 0.0]]), LineString([[0.0, -10.0], [2.0, -8.0], [2.0, -8.0], [10.0, 0.0], [8.0, 2.0], [4.0, 6.0]]), LineString([[-18.0, 0.0], [-20.0, 0.0], [-20.0, 8.0], [-20.0, 10.0], [-18.0, 10.0]]), LineString([[5.0, 5.0], [5.0, 6.0], [0.0, 10.0], [2.0, 12.0], [2.0, 12.0], [10.0, 20.0], [10.0, 20.0]])], precision: precision, coordinateSystem: cs)
+
+        let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(testMultiLineString1.equals(point))
+        XCTAssertFalse(testMultiLineString1.equals(multiPoint))
+        XCTAssertFalse(testMultiLineString1.equals(lineString1))
+        XCTAssertFalse(testMultiLineString1.equals(lineString2))
+        XCTAssertFalse(testMultiLineString1.equals(linearRing))
+        XCTAssertFalse(testMultiLineString1.equals(multiLineString1))
+        XCTAssertFalse(testMultiLineString1.equals(multiLineString2))
+        XCTAssertFalse(testMultiLineString1.equals(multiLineString3))
+        XCTAssertFalse(testMultiLineString1.equals(multiLineString4))
+        XCTAssertFalse(testMultiLineString1.equals(multiLineString5))
+        XCTAssertFalse(testMultiLineString2.equals(multiLineString6))
+        XCTAssertFalse(testMultiLineString1.equals(polygon))
+        XCTAssertFalse(testMultiLineString1.equals(multiPolygon))
      }
 
     // MARK: Disjoint
