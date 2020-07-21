@@ -46,19 +46,34 @@ class PointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
-    func testEqualsWithIntOneTrue() {
-        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs))
+    func testEqualsTrue() {
+        let testPoint = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 1.001, y: 1.001)), Point(Coordinate(x: 1.001, y: 1.001))], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPoint.equals(point))
+        XCTAssertTrue(testPoint.equals(multiPoint))
     }
 
-    func testEqualsWithIntOneFalse() {
-        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs))
-    }
+    func testEqualsFalse() {
+        let testPoint = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
 
-    func testEqualsWithPointNonPointFalse() {
-        let input1           = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
-        let input2: Geometry = LineString()
+        let point = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0)), Point(Coordinate(x: 3.0, y: 3.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([[1.0,  1.0], [2.0,  2.0], [3.0,  3.0]])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
+        XCTAssertFalse(testPoint.equals(point))
+        XCTAssertFalse(testPoint.equals(multiPoint))
+        XCTAssertFalse(testPoint.equals(lineString))
+        XCTAssertFalse(testPoint.equals(linearRing))
+        XCTAssertFalse(testPoint.equals(multiLineString))
+        XCTAssertFalse(testPoint.equals(polygon))
+        XCTAssertFalse(testPoint.equals(multiPolygon))
     }
 
     func testBoundary() {
@@ -501,19 +516,34 @@ class PointGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.bounds(), expected)
     }
 
-    func testEqualsWithIntOneTrue() {
-        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs))
+    func testEqualsTrue() {
+        let testPoint = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 1.001, y: 1.001, m: 1.001)), Point(Coordinate(x: 1.001, y: 1.001, m: 1.001))], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPoint.equals(point))
+        XCTAssertTrue(testPoint.equals(multiPoint))
     }
 
-    func testEqualsWithIntOneFalse() {
-        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.002, y: 2.002, m: 2.002), precision: precision, coordinateSystem: cs))
-    }
+    func testEqualsFalse() {
+        let testPoint = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
-    func testEqualsWithPointNonPointFalse() {
-        let input1           = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
-        let input2: Geometry = LineString()
+        let point = Point(Coordinate(x: 2.002, y: 2.002, m: 2.002), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0, m: 2.0)), Point(Coordinate(x: 3.0, y: 3.0, m: 3.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0)])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([Coordinate(x: 6.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 2.0), Coordinate(x: 1.0, y: 3.0, m: 1.0), Coordinate(x: 3.5, y: 4.0, m: 2.0), Coordinate(x: 6.0, y: 3.0, m: 1.0), Coordinate(x: 6.0, y: 1.0, m: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0, m: 1.0), Coordinate(x: 5.0, y: 3.0, m: 2.0), Coordinate(x: 3.5, y: 3.5, m: 1.0), Coordinate(x: 2.0, y: 3.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, m: 1.0), Coordinate(x: 5.0, y: 2.0, m: 1.0)]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([Coordinate(x: 6.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 2.0), Coordinate(x: 1.0, y: 3.0, m: 1.0), Coordinate(x: 3.5, y: 4.0, m: 2.0), Coordinate(x: 6.0, y: 3.0, m: 1.0), Coordinate(x: 6.0, y: 1.0, m: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0, m: 1.0), Coordinate(x: 5.0, y: 3.0, m: 2.0), Coordinate(x: 3.5, y: 3.5, m: 1.0), Coordinate(x: 2.0, y: 3.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, m: 1.0), Coordinate(x: 5.0, y: 2.0, m: 1.0)]]), Polygon([Coordinate(x: 10.0, y: 1.0, m: 1.0), Coordinate(x: 8.0, y: 1.0, m: 2.0), Coordinate(x: 8.0, y: 10.0, m: 1.0), Coordinate(x: 10.0, y: 10.0, m: 2.0), Coordinate(x: 10.0, y: 1.0, m: 1.0)], innerRings: [])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
+        XCTAssertFalse(testPoint.equals(point))
+        XCTAssertFalse(testPoint.equals(multiPoint))
+        XCTAssertFalse(testPoint.equals(lineString))
+        XCTAssertFalse(testPoint.equals(linearRing))
+        XCTAssertFalse(testPoint.equals(multiLineString))
+        XCTAssertFalse(testPoint.equals(polygon))
+        XCTAssertFalse(testPoint.equals(multiPolygon))
     }
 
     func testBoundary() {
@@ -548,19 +578,34 @@ class PointGeometryCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.bounds(), expected)
     }
 
-    func testEqualsWithIntOneTrue() {
-        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs))
+    func testEqualsTrue() {
+        let testPoint = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 1.001, y: 1.001, z: 1.001)), Point(Coordinate(x: 1.001, y: 1.001, z: 1.001))], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPoint.equals(point))
+        XCTAssertTrue(testPoint.equals(multiPoint))
     }
 
-    func testEqualsWithIntOneFalse() {
-        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0), precision: precision, coordinateSystem: cs))
-    }
+    func testEqualsFalse() {
+        let testPoint = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
 
-    func testEqualsWithPointNonPointFalse() {
-        let input1           = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
-        let input2: Geometry = LineString()
+        let point = Point(Coordinate(x: 2.002, y: 2.002, z: 2.002), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0, z: 2.0)), Point(Coordinate(x: 3.0, y: 3.0, z: 3.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 1.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 1.0, z: 1.0)])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([Coordinate(x: 6.0, y: 1.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 2.0), Coordinate(x: 1.0, y: 3.0, z: 1.0), Coordinate(x: 3.5, y: 4.0, z: 2.0), Coordinate(x: 6.0, y: 3.0, z: 1.0), Coordinate(x: 6.0, y: 1.0, z: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0, z: 1.0), Coordinate(x: 5.0, y: 3.0, z: 2.0), Coordinate(x: 3.5, y: 3.5, z: 1.0), Coordinate(x: 2.0, y: 3.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 5.0, y: 2.0, z: 1.0)]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([Coordinate(x: 6.0, y: 1.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 2.0), Coordinate(x: 1.0, y: 3.0, z: 1.0), Coordinate(x: 3.5, y: 4.0, z: 2.0), Coordinate(x: 6.0, y: 3.0, z: 1.0), Coordinate(x: 6.0, y: 1.0, z: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0, z: 1.0), Coordinate(x: 5.0, y: 3.0, z: 2.0), Coordinate(x: 3.5, y: 3.5, z: 1.0), Coordinate(x: 2.0, y: 3.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 5.0, y: 2.0, z: 1.0)]]), Polygon([Coordinate(x: 10.0, y: 1.0, z: 1.0), Coordinate(x: 8.0, y: 1.0, z: 2.0), Coordinate(x: 8.0, y: 10.0, z: 1.0), Coordinate(x: 10.0, y: 10.0, z: 2.0), Coordinate(x: 10.0, y: 1.0, z: 1.0)], innerRings: [])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
+        XCTAssertFalse(testPoint.equals(point))
+        XCTAssertFalse(testPoint.equals(multiPoint))
+        XCTAssertFalse(testPoint.equals(lineString))
+        XCTAssertFalse(testPoint.equals(linearRing))
+        XCTAssertFalse(testPoint.equals(multiLineString))
+        XCTAssertFalse(testPoint.equals(polygon))
+        XCTAssertFalse(testPoint.equals(multiPolygon))
     }
 
     func testBoundary() {
@@ -595,19 +640,34 @@ class PointGeometryCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input.bounds(), expected)
     }
 
-    func testEqualsWithIntOneTrue() {
-        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs))
+    func testEqualsTrue() {
+        let testPoint = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+
+        let point = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)), Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001))], precision: precision, coordinateSystem: cs)
+
+        XCTAssertTrue(testPoint.equals(point))
+        XCTAssertTrue(testPoint.equals(multiPoint))
     }
 
-    func testEqualsWithIntOneFalse() {
-        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), precision: precision, coordinateSystem: cs))
-    }
+    func testEqualsFalse() {
+        let testPoint = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
-    func testEqualsWithPointNonPointFalse() {
-        let input1           = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
-        let input2: Geometry = LineString()
+        let point = Point(Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), precision: precision, coordinateSystem: cs)
+        let multiPoint = MultiPoint([Point(Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)), Point(Coordinate(x: 3.0, y: 3.0, z: 3.0, m: 3.0))], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let linearRing = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, z: 1.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        let multiLineString = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, z: 1.0, m: 2.0)])], precision: precision, coordinateSystem: cs)
+        let polygon = Polygon([Coordinate(x: 6.0, y: 1.0, z: 1.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 3.0, z: 1.0, m: 2.0), Coordinate(x: 3.5, y: 4.0, z: 2.0, m: 2.0), Coordinate(x: 6.0, y: 3.0, z: 1.0, m: 2.0), Coordinate(x: 6.0, y: 1.0, z: 1.0, m: 2.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0, z: 1.0, m: 2.0), Coordinate(x: 5.0, y: 3.0, z: 2.0, m: 2.0), Coordinate(x: 3.5, y: 3.5, z: 1.0, m: 2.0), Coordinate(x: 2.0, y: 3.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 2.0), Coordinate(x: 5.0, y: 2.0, z: 1.0, m: 2.0)]], precision: precision, coordinateSystem: cs)
+        let multiPolygon = MultiPolygon([Polygon([Coordinate(x: 6.0, y: 1.0, z: 1.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 3.0, z: 1.0, m: 2.0), Coordinate(x: 3.5, y: 4.0, z: 2.0, m: 2.0), Coordinate(x: 6.0, y: 3.0, z: 1.0, m: 2.0), Coordinate(x: 6.0, y: 1.0, z: 1.0, m: 2.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0, z: 1.0, m: 2.0), Coordinate(x: 5.0, y: 3.0, z: 2.0, m: 2.0), Coordinate(x: 3.5, y: 3.5, z: 1.0, m: 2.0), Coordinate(x: 2.0, y: 3.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 2.0), Coordinate(x: 5.0, y: 2.0, z: 1.0, m: 2.0)]]), Polygon([Coordinate(x: 10.0, y: 1.0, z: 1.0, m: 2.0), Coordinate(x: 8.0, y: 1.0, z: 2.0, m: 2.0), Coordinate(x: 8.0, y: 10.0, z: 1.0, m: 2.0), Coordinate(x: 10.0, y: 10.0, z: 2.0, m: 2.0), Coordinate(x: 10.0, y: 1.0, z: 1.0, m: 2.0)], innerRings: [])], precision: precision, coordinateSystem: cs)
 
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
+        XCTAssertFalse(testPoint.equals(point))
+        XCTAssertFalse(testPoint.equals(multiPoint))
+        XCTAssertFalse(testPoint.equals(lineString))
+        XCTAssertFalse(testPoint.equals(linearRing))
+        XCTAssertFalse(testPoint.equals(multiLineString))
+        XCTAssertFalse(testPoint.equals(polygon))
+        XCTAssertFalse(testPoint.equals(multiPolygon))
     }
 
     func testBoundary() {
@@ -642,21 +702,6 @@ class PointGeometryCoordinate2DFixedCartesianTests: XCTestCase {
         XCTAssertEqual(input.bounds(), expected)
     }
 
-    func testEqualsWithIntOneTrue() {
-        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.0, y: 1.0), precision: precision, coordinateSystem: cs))
-    }
-
-    func testEqualsWithIntOneFalse() {
-        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs))
-    }
-
-    func testEqualsWithPointNonPointFalse() {
-        let input1           = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs)
-        let input2: Geometry = LineString()
-
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
-    }
-
     func testBoundary() {
         let geometry = Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs)
@@ -687,21 +732,6 @@ class PointGeometryCoordinate2DMFixedCartesianTests: XCTestCase {
         let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
 
         XCTAssertEqual(input.bounds(), expected)
-    }
-
-    func testEqualsWithIntOneTrue() {
-        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.0, y: 1.0, m: 1.0), precision: precision, coordinateSystem: cs))
-    }
-
-    func testEqualsWithIntOneFalse() {
-        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0, m: 2.0), precision: precision, coordinateSystem: cs))
-    }
-
-    func testEqualsWithPointNonPointFalse() {
-        let input1           = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
-        let input2: Geometry = LineString()
-
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
     }
 
     func testBoundary() {
@@ -736,21 +766,6 @@ class PointGeometryCoordinate3DFixedCartesianTests: XCTestCase {
         XCTAssertEqual(input.bounds(), expected)
     }
 
-    func testEqualsWithIntOneTrue() {
-        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.0, y: 1.0, z: 1.0), precision: precision, coordinateSystem: cs))
-    }
-
-    func testEqualsWithIntOneFalse() {
-        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0), precision: precision, coordinateSystem: cs))
-    }
-
-    func testEqualsWithPointNonPointFalse() {
-        let input1           = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs)
-        let input2: Geometry = LineString()
-
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
-    }
-
     func testBoundary() {
         let geometry = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs)
@@ -781,21 +796,6 @@ class PointGeometryCoordinate3DMFixedCartesianTests: XCTestCase {
         let expected = Bounds(min: (x: 2.0, y: 3.0), max: (x: 2.0, y: 3.0))
 
         XCTAssertEqual(input.bounds(), expected)
-    }
-
-    func testEqualsWithIntOneTrue() {
-        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), precision: precision, coordinateSystem: cs))
-    }
-
-    func testEqualsWithIntOneFalse() {
-        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), precision: precision, coordinateSystem: cs))
-    }
-
-    func testEqualsWithPointNonPointFalse() {
-        let input1           = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
-        let input2: Geometry = LineString()
-
-        XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
     }
 
     func testBoundary() {

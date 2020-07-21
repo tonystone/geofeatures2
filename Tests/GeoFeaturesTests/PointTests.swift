@@ -113,6 +113,16 @@ class PointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.debugDescription, "Point(x: 1.001, y: 1.001)")
     }
+
+    // MARK: Double Equals (==), Structural Equality
+
+    func testDoubleEqualsWithIntOneTrue() {
+        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs))
+    }
+
+    func testDoubleEqualsWithIntOneFalse() {
+        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs))
+    }
 }
 
 // MARK: - Coordinate2DM, FloatingPrecision, Cartesian -
@@ -155,6 +165,16 @@ class PointCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         let input = Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.debugDescription, "Point(x: 1.001, y: 1.001, m: 1.001)")
+    }
+
+    // MARK: Double Equals (==), Structural Equality
+
+    func testDoubleEqualsWithIntOneTrue() {
+        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs))
+    }
+
+    func testDoubleEqualsWithIntOneFalse() {
+        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0, m: 2.0), precision: precision, coordinateSystem: cs))
     }
 }
 
@@ -204,6 +224,16 @@ class PointCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
         XCTAssertEqual(input.debugDescription, "Point(x: 1.001, y: 1.001, z: 1.001)")
     }
+
+    // MARK: Double Equals (==), Structural Equality
+
+    func testDoubleEqualsWithIntOneTrue() {
+        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs))
+    }
+
+    func testDoubleEqualsWithIntOneFalse() {
+        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0), precision: precision, coordinateSystem: cs))
+    }
 }
 
 // MARK: - Coordinate3DM, FloatingPrecision, Cartesian -
@@ -252,6 +282,16 @@ class PointCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         let input = Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input.debugDescription, "Point(x: 1.001, y: 1.001, z: 1.001, m: 1.001)")
+    }
+
+    // MARK: Double Equals (==), Structural Equality
+
+    func testDoubleEqualsWithIntOneTrue() {
+        XCTAssertEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs))
+    }
+
+    func testDoubleEqualsWithIntOneFalse() {
+        XCTAssertNotEqual(Point(Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), precision: precision, coordinateSystem: cs), Point(Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), precision: precision, coordinateSystem: cs))
     }
 }
 

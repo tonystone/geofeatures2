@@ -141,6 +141,8 @@ public protocol Geometry {
 
 // MARK: Operators
 
+/// TBD: I'll leave this in for now, but this should never be called because the cases addressed here are only those where the two geometries are the same.
+/// However, that is built in.  In the case of ==, if the two objects types differ, there will be a compile-time error which will flag the differences.
 public func == (lhs: Geometry, rhs: Geometry) -> Bool {
 
     switch (lhs, rhs) {
