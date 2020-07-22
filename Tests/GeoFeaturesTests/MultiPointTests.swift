@@ -206,12 +206,20 @@ class MultiPointCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         ), "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
         let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
         let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let input    = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0]), Point([3.0, 3.0])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertNotEqual(input, expected)
     }
 
     func testIsEmpty() {
@@ -412,12 +420,20 @@ class MultiPointCoordinate2DFixedCartesianTests: XCTestCase {
         ), "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
         let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002])], precision: precision, coordinateSystem: cs)
         let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let input    = MultiPoint([Point([1.001, 1.001]), Point([2.002, 2.002]), Point([3.003, 3.003])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertNotEqual(input, expected)
     }
 
     func testIsEmpty() {

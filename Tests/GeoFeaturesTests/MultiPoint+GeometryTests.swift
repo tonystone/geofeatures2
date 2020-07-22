@@ -57,9 +57,11 @@ class MultiPointGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
 
         let multiPoint1 = MultiPoint([Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.0))], precision: precision, coordinateSystem: cs)
         let multiPoint2 = MultiPoint([Point(Coordinate(x: 200.0, y: 200.0)), Point(Coordinate(x: 100.1, y: 100.2))], precision: precision, coordinateSystem: cs)
+        let multiPoint3 = MultiPoint([Point(Coordinate(x: 200.0, y: 200.0)), Point(Coordinate(x: 100.1, y: 100.2)), Point(Coordinate(x: 200.0, y: 200.0)), Point(Coordinate(x: 100.1, y: 100.2))], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testMultiPoint.equals(multiPoint1))
         XCTAssertTrue(testMultiPoint.equals(multiPoint2))
+        XCTAssertTrue(testMultiPoint.equals(multiPoint3))
     }
 
     func testEqualsFalse() {
