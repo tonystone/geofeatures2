@@ -185,9 +185,18 @@ class LineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        XCTAssertEqual(LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).equals(LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let testLineString = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertEqual(testLineString, lineString)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let testLineString = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(testLineString, lineString)
     }
 
     func testIsEmpty() {
@@ -363,9 +372,18 @@ class LineStringCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        XCTAssertEqual(LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).equals(LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let testLineString = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertEqual(testLineString, lineString)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let testLineString = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(testLineString, lineString)
     }
 
     func testIsEmpty() {
@@ -541,9 +559,18 @@ class LineStringCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        XCTAssertEqual(LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs).equals(LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let testLineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertEqual(testLineString, lineString)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let testLineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(testLineString, lineString)
     }
 
     func testIsEmpty() {
@@ -719,9 +746,18 @@ class LineStringCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        XCTAssertEqual(LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).equals(LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let testLineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertEqual(testLineString, lineString)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let testLineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(testLineString, lineString)
     }
 
     func testIsEmpty() {
@@ -897,9 +933,18 @@ class LineStringCoordinate2DFixedCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        XCTAssertEqual(LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs).equals(LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let testLineString = LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertEqual(testLineString, lineString)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let testLineString = LineString([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(testLineString, lineString)
     }
 
     func testIsEmpty() {
@@ -1075,9 +1120,18 @@ class LineStringCoordinate2DMFixedCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        XCTAssertEqual(LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).equals(LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let testLineString = LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertEqual(testLineString, lineString)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let testLineString = LineString([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(testLineString, lineString)
     }
 
     func testIsEmpty() {
@@ -1253,9 +1307,18 @@ class LineStringCoordinate3DFixedCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        XCTAssertEqual(LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs).equals(LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let testLineString = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertEqual(testLineString, lineString)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let testLineString = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(testLineString, lineString)
     }
 
     func testIsEmpty() {
@@ -1431,9 +1494,18 @@ class LineStringCoordinate3DMFixedCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        XCTAssertEqual(LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).equals(LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)), true)
+        let testLineString = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertEqual(testLineString, lineString)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let testLineString = LineString([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let lineString = LineString([Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(testLineString, lineString)
     }
 
     func testIsEmpty() {
