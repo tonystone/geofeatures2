@@ -196,12 +196,19 @@ class MultiLineStringCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
         let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
         let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let input = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [1.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+        XCTAssertNotEqual(input, expected)
     }
 
     func testIsEmpty() {
@@ -392,12 +399,20 @@ class MultiLineStringCoordinate2DFixedCartesianTests: XCTestCase {
             }, "\(input) is not equal to \(expected)")
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
         let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
         let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let input    = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.001], [0.0, 2.002], [0.0, 3.003], [2.002, 0.0], [0.0, 1.001]])], precision: precision, coordinateSystem: cs)
+        let expected = MultiLineString([LineString([[0.0, 0.0], [0.0, 2.1], [0.0, 3.0], [2.0, 0.0], [0.0, 0.0]]), LineString([[0.0, 1.0], [0.0, 2.0], [0.0, 3.0], [2.0, 0.0], [0.0, 1.0]])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertNotEqual(input, expected)
     }
 
     func testIsEmpty() {
