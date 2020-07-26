@@ -86,6 +86,22 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertEqual(input, expected)
      }
 
+    func testDoubleEqualsTrue() {
+
+       let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+       let expected = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+
+       XCTAssertEqual(input, expected)
+    }
+
+    func testDoubleEqualsFalse() {
+
+       let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+       let expected = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5)]], precision: precision, coordinateSystem: cs)
+
+       XCTAssertNotEqual(input, expected)
+    }
+
     // MARK: MutableCollection Conformance
 
     func testStartIndex() {
@@ -264,6 +280,22 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
 
         XCTAssertEqual(input, expected)
      }
+
+    func testDoubleEqualsTrue() {
+
+       let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
+       let expected = Polygon([Coordinate(x: 6.01, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.01, y: 3.0), Coordinate(x: 6.01, y: 1.0)], innerRings: [[Coordinate(x: 5.01, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.01, y: 3.0), Coordinate(x: 5.01, y: 2.0)]], precision: precision, coordinateSystem: cs)
+
+       XCTAssertEqual(input, expected)
+    }
+
+    func testDoubleEqualsFalse() {
+
+       let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
+       let expected = Polygon([Coordinate(x: 6.01, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.01, y: 3.0), Coordinate(x: 6.01, y: 1.0)], innerRings: [[Coordinate(x: 5.01, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.02, y: 3.0), Coordinate(x: 5.01, y: 2.0)]], precision: precision, coordinateSystem: cs)
+
+       XCTAssertNotEqual(input, expected)
+    }
 
     // MARK: MutableCollection Conformance
 
