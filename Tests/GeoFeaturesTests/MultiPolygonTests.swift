@@ -186,12 +186,20 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertTrue(input.geometry.elementsEqual(expected) { $0.equals($1) })
     }
 
-    func testEquals() {
+    func testDoubleEqualsTrue() {
 
-        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon([Polygon([[-10.0, 0.0], [-10.0, 10.0], [0.0, 10.0], [0.0, 0.0], [-10.0, 0.0]], innerRings: [[[-8.0, 2.0], [-8.0, 8.0], [-2.0, 8.0], [-2.0, 2.0], [-8.0, 2.0]]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPolygon([Polygon([[-10.0, 0.0], [-10.0, 10.0], [0.0, 10.0], [0.0, 0.0], [-10.0, 0.0]], innerRings: [[[-8.0, 2.0], [-8.0, 8.0], [-2.0, 8.0], [-2.0, 2.0], [-8.0, 2.0]]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
+    }
+
+    func testDoubleEqualsFalse() {
+
+        let input    = MultiPolygon([Polygon([[-10.0, 0.0], [-10.0, 10.0], [0.0, 10.0], [0.0, 0.0], [-10.0, 0.0]], innerRings: [[[-8.0, 2.0], [-8.0, 8.0], [-2.0, 8.0], [-2.0, 2.0], [-8.0, 2.0]]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPolygon([Polygon([[-10.0, 0.0], [-10.0, 10.0], [0.0, 10.0], [0.0, 0.0], [-10.0, 0.0]], innerRings: [[[-8.0, 2.0], [-8.0, 8.0], [-2.0, 8.0], [-2.0, 2.0], [-8.0, 2.0]]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 4.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        XCTAssertNotEqual(input, expected)
     }
 
     func testIsEmpty() {
