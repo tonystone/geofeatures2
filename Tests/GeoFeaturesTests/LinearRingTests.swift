@@ -54,8 +54,8 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitConverting() {
 
-        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -66,8 +66,8 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -77,8 +77,8 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: LinearRing = [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)]
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)])
+        let input: LinearRing = [Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)]
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -91,16 +91,16 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 2.0, y: 1.0), (x: 1.0, y: 1.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 2.0, y: 1.0), (x: 1.0, y: 1.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -109,7 +109,7 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -117,8 +117,8 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = 2
+        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = 4
 
         XCTAssertEqual(input.endIndex, expected)
     }
@@ -128,19 +128,19 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[1], Coordinate(x: 2.0, y: 2.0))
     }
 
     func testSubscriptSet() {
 
-        var input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        var input = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
 
         input[1] = Coordinate(x: 1.0, y: 1.0)
 
@@ -206,12 +206,12 @@ class LinearRingCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).isEmpty(), false)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
     func testCount() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs).count, 2)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs).count, 4)
     }
 }
 
@@ -241,8 +241,8 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitConverting() {
 
-        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -253,8 +253,8 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -264,8 +264,8 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: LinearRing = [Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)]
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)])
+        let input: LinearRing = [Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)]
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -278,16 +278,16 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0), (x: 2.0, y: 1.0, m: 1.0), (x: 1.0, y: 1.0, m: 1.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0), (x: 2.0, y: 1.0, m: 1.0), (x: 1.0, y: 1.0, m: 1.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -296,7 +296,7 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -304,8 +304,8 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = 2
+        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = 4
 
         XCTAssertEqual(input.endIndex, expected)
     }
@@ -315,19 +315,19 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[1], Coordinate(x: 2.0, y: 2.0, m: 2.0))
     }
 
     func testSubscriptSet() {
 
-        var input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        var input = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         input[1] = Coordinate(x: 1.0, y: 1.0, m: 1.0)
 
@@ -393,12 +393,12 @@ class LinearRingCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).isEmpty(), false)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
     func testCount() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).count, 2)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs).count, 4)
     }
 }
 
@@ -428,8 +428,8 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitConverting() {
 
-        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -440,8 +440,8 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -451,8 +451,8 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: LinearRing = [Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)]
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)])
+        let input: LinearRing = [Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)]
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -465,16 +465,16 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0), (x: 2.0, y: 2.0, z: 1.0), (x: 1.0, y: 1.0, z: 1.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0), (x: 2.0, y: 2.0, z: 1.0), (x: 1.0, y: 1.0, z: 1.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -483,7 +483,7 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -491,8 +491,8 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = 2
+        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = 4
 
         XCTAssertEqual(input.endIndex, expected)
     }
@@ -502,19 +502,19 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[1], Coordinate(x: 2.0, y: 2.0, z: 2.0))
     }
 
     func testSubscriptSet() {
 
-        var input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        var input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
 
         input[1] = Coordinate(x: 1.0, y: 1.0, z: 1.0)
 
@@ -580,12 +580,12 @@ class LinearRingCoordinate3DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs).isEmpty(), false)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
     func testCount() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs).count, 2)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs).count, 4)
     }
 }
 
@@ -615,8 +615,8 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitConverting() {
 
-        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -627,8 +627,8 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(other: LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -638,8 +638,8 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: LinearRing = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)]
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)])
+        let input: LinearRing = [Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)]
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -652,16 +652,16 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0), (x: 2.0, y: 2.0, z: 1.0, m: 1.0), (x: 1.0, y: 1.0, z: 1.0, m: 1.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0), (x: 2.0, y: 2.0, z: 1.0, m: 1.0), (x: 1.0, y: 1.0, z: 1.0, m: 1.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -670,7 +670,7 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -678,8 +678,8 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
-        let expected = 2
+        let input    = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
+        let expected = 4
 
         XCTAssertEqual(input.endIndex, expected)
     }
@@ -689,19 +689,19 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[1], Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0))
     }
 
     func testSubscriptSet() {
 
-        var input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        var input = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         input[1] = Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)
 
@@ -767,12 +767,12 @@ class LinearRingCoordinate3DMFloatingPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).isEmpty(), false)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
     func testCount() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs).count, 2)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs).count, 4)
     }
 }
 
@@ -802,8 +802,8 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testInitConverting() {
 
-        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -814,8 +814,8 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing(other: LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(other: LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -825,8 +825,8 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: LinearRing = [Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)]
-        let expected = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)])
+        let input: LinearRing = [Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)]
+        let expected = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -839,16 +839,16 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 2.0, y: 1.0), (x: 1.0, y: 1.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0), (x: 2.0, y: 2.0), (x: 2.0, y: 1.0), (x: 1.0, y: 1.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -857,7 +857,7 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
+        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -865,8 +865,8 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = 2
+        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = 4
 
         XCTAssertEqual(input.endIndex, expected)
     }
@@ -876,19 +876,19 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[1], Coordinate(x: 2.0, y: 2.0))
     }
 
     func testSubscriptSet() {
 
-        var input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs)
+        var input = LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs)
 
         input[1] = Coordinate(x: 1.001, y: 1.001)
 
@@ -954,12 +954,12 @@ class LinearRingCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs).isEmpty(), false)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
     func testCount() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002)], precision: precision, coordinateSystem: cs).count, 2)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001), Coordinate(x: 2.002, y: 2.002), Coordinate(x: 2.002, y: 1.001), Coordinate(x: 1.001, y: 1.001)], precision: precision, coordinateSystem: cs).count, 4)
     }
 }
 
@@ -989,8 +989,8 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
 
     func testInitConverting() {
 
-        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1001,8 +1001,8 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing(other: LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(other: LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1012,8 +1012,8 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: LinearRing = [Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)]
-        let expected = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)])
+        let input: LinearRing = [Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)]
+        let expected = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1026,16 +1026,16 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0), (x: 2.0, y: 1.0, m: 1.0), (x: 1.0, y: 1.0, m: 1.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, m: 1.0), (x: 2.0, y: 2.0, m: 2.0), (x: 2.0, y: 1.0, m: 1.0), (x: 1.0, y: 1.0, m: 1.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -1044,7 +1044,7 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -1052,8 +1052,8 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = 2
+        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = 4
 
         XCTAssertEqual(input.endIndex, expected)
     }
@@ -1063,19 +1063,19 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[1], Coordinate(x: 2.0, y: 2.0, m: 2.0))
     }
 
     func testSubscriptSet() {
 
-        var input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        var input = LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
 
         input[1] = Coordinate(x: 1.001, y: 1.001, m: 1.001)
 
@@ -1141,12 +1141,12 @@ class LinearRingCoordinate2DMFixedCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).isEmpty(), false)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
     func testCount() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).count, 2)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, m: 2.002), Coordinate(x: 2.002, y: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs).count, 4)
     }
 }
 
@@ -1176,8 +1176,8 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
 
     func testInitConverting() {
 
-        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1188,8 +1188,8 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing(other: LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(other: LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1199,8 +1199,8 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: LinearRing = [Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)]
-        let expected = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)])
+        let input: LinearRing = [Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)]
+        let expected = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1213,16 +1213,16 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0), (x: 2.0, y: 2.0, z: 1.0), (x: 1.0, y: 1.0, z: 1.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0), (x: 2.0, y: 2.0, z: 2.0), (x: 2.0, y: 2.0, z: 1.0), (x: 1.0, y: 1.0, z: 1.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -1231,7 +1231,7 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
+        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -1239,8 +1239,8 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = 2
+        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = 4
 
         XCTAssertEqual(input.endIndex, expected)
     }
@@ -1250,19 +1250,19 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[1], Coordinate(x: 2.0, y: 2.0, z: 2.0))
     }
 
     func testSubscriptSet() {
 
-        var input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs)
+        var input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs)
 
         input[1] = Coordinate(x: 1.001, y: 1.001, z: 1.001)
 
@@ -1328,12 +1328,12 @@ class LinearRingCoordinate3DFixedCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs).isEmpty(), false)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
     func testCount() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002)], precision: precision, coordinateSystem: cs).count, 2)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002), Coordinate(x: 2.001, y: 2.002, z: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001)], precision: precision, coordinateSystem: cs).count, 4)
     }
 }
 
@@ -1363,8 +1363,8 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
 
     func testInitConverting() {
 
-        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(converting: LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1375,8 +1375,8 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
 
     func testInitCopy() {
 
-        let input = LinearRing(other: LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)]), precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing(other: LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)]), precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, z: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, z: 1.0, m: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1386,8 +1386,8 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: LinearRing = [Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)]
-        let expected = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)])
+        let input: LinearRing = [Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)]
+        let expected = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)])
 
         XCTAssertTrue(
             (input.elementsEqual(expected) { (lhs: Coordinate, rhs: Coordinate) -> Bool in
@@ -1400,16 +1400,16 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0), (x: 2.0, y: 2.0, z: 1.0, m: 1.0), (x: 1.0, y: 1.0, z: 1.0, m: 1.0)])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0)])"
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = "LinearRing([(x: 1.0, y: 1.0, z: 1.0, m: 1.0), (x: 2.0, y: 2.0, z: 2.0, m: 2.0), (x: 2.0, y: 2.0, z: 1.0, m: 1.0), (x: 1.0, y: 1.0, z: 1.0, m: 1.0)])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -1418,7 +1418,7 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -1426,8 +1426,8 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
-        let expected = 2
+        let input    = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
+        let expected = 4
 
         XCTAssertEqual(input.endIndex, expected)
     }
@@ -1437,19 +1437,19 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        let input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[1], Coordinate(x: 2.0, y: 2.0, z: 2.0, m: 2.0))
     }
 
     func testSubscriptSet() {
 
-        var input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs)
+        var input = LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs)
 
         input[1] = Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)
 
@@ -1515,11 +1515,11 @@ class LinearRingCoordinate3DMFixedCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).isEmpty(), false)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs).isEmpty(), false)
     }
 
     func testCount() {
 
-        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002)], precision: precision, coordinateSystem: cs).count, 2)
+        XCTAssertEqual(LinearRing([Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001), Coordinate(x: 2.002, y: 2.002, z: 2.002, m: 2.002), Coordinate(x: 2.002, y: 2.002, z: 1.001, m: 1.001), Coordinate(x: 1.001, y: 1.001, z: 1.001, m: 1.001)], precision: precision, coordinateSystem: cs).count, 4)
     }
 }
