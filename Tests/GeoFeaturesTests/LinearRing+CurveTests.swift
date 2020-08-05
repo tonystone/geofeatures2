@@ -28,23 +28,23 @@ class LinearRingCurveCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     let cs       = Cartesian()
 
     func testLengthTest1() {
-        XCTAssertEqual(LinearRing([Coordinate(x: 0, y: 0), Coordinate(x: 1, y: 1)], precision: precision, coordinateSystem: cs).length(), 1.4142135623730951)
+        XCTAssertEqual(LinearRing([Coordinate(x: 0, y: 0), Coordinate(x: 1, y: 1), Coordinate(x: 1, y: 0), Coordinate(x: 0, y: 0)], precision: precision, coordinateSystem: cs).length(), 3.4142135623730951)
     }
 
     func testLengthTest2() {
-        XCTAssertEqual(LinearRing([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2)], precision: precision, coordinateSystem: cs).length(), 2.0)
+        XCTAssertEqual(LinearRing([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 2, y: 2), Coordinate(x: 2, y: 0), Coordinate(x: 0, y: 0)], precision: precision, coordinateSystem: cs).length(), 8.0)
     }
 
     func testLengthTest3() {
-        XCTAssertEqual(LinearRing([Coordinate(x: 0, y: 0), Coordinate(x: 7, y:0)], precision: precision, coordinateSystem: cs).length(), 7.0)
+        XCTAssertEqual(LinearRing([Coordinate(x: 0, y: 0), Coordinate(x: 7, y: 0), Coordinate(x: 7, y: 7), Coordinate(x: 0, y: 7), Coordinate(x: 0, y: 0)], precision: precision, coordinateSystem: cs).length(), 28.0)
     }
 
     func testLengthTest4() {
-        XCTAssertEqual(LinearRing([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5)], precision: precision, coordinateSystem: cs).length(), 5.0)
+        XCTAssertEqual(LinearRing([Coordinate(x: 0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5), Coordinate(x: 5, y: 5), Coordinate(x: 5, y: 0), Coordinate(x: 0, y: 0)], precision: precision, coordinateSystem: cs).length(), 20.0)
     }
 
     func testLengthPerformance() {
-        let lineString = LinearRing([Coordinate(x:0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5)], precision: precision, coordinateSystem: cs)
+        let lineString = LinearRing([Coordinate(x:0, y: 0), Coordinate(x: 0, y: 2), Coordinate(x: 0, y: 3), Coordinate(x: 0, y: 4), Coordinate(x: 0, y: 5), Coordinate(x: 5, y: 5), Coordinate(x: 5, y: 0), Coordinate(x: 0, y: 0)], precision: precision, coordinateSystem: cs)
 
         self.measure {
 
