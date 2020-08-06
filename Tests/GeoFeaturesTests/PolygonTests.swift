@@ -70,18 +70,18 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testInitWithRings() {
 
-        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let expected = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+        let expected = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
 
-        XCTAssertEqual(input.outerRing.count, 5)
+        XCTAssertEqual(input.outerRing.count, 6)
         XCTAssertEqual(input.innerRings.count, 1)
         XCTAssertEqual(input, expected)
     }
 
     func testInitWithTuple() {
 
-        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let expected = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+        let expected = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input, expected)
      }
@@ -105,14 +105,14 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: MutableCollection Conformance
 
     func testStartIndex() {
-        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
     }
 
     func testEndIndex() {
-        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.endIndex, expected)
@@ -126,8 +126,8 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testSubscriptGet() {
-        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], precision: precision, coordinateSystem: cs)
 
         XCTAssertEqual(input[0], expected)
     }
@@ -183,16 +183,16 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let expected = "Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)]), LinearRing([(x: 5.0, y: 2.0), (x: 3.0, y: 1.5), (x: 3.0, y: 3.0), (x: 4.0, y: 3.5), (x: 5.0, y: 3.0)])])"
+        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+        let expected = "Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0), (x: 6.0, y: 1.0)]), LinearRing([(x: 5.0, y: 2.0), (x: 3.0, y: 1.5), (x: 3.0, y: 3.0), (x: 4.0, y: 3.5), (x: 5.0, y: 3.0), (x: 5.0, y: 2.0)])])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let expected = "Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)]), LinearRing([(x: 5.0, y: 2.0), (x: 3.0, y: 1.5), (x: 3.0, y: 3.0), (x: 4.0, y: 3.5), (x: 5.0, y: 3.0)])])"
+        let input    = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+        let expected = "Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0), (x: 6.0, y: 1.0)]), LinearRing([(x: 5.0, y: 2.0), (x: 3.0, y: 1.5), (x: 3.0, y: 3.0), (x: 4.0, y: 3.5), (x: 5.0, y: 3.0), (x: 5.0, y: 2.0)])])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -206,15 +206,15 @@ class PolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testOperatorEqualGeometryPolygon() {
-        let input: Geometry                 = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let expected: Polygon = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input: Geometry                 = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+        let expected: Polygon = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input == expected)
     }
 
     func testOperatorEqualPolygonGeometry() {
-        let input: Polygon = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
-        let expected: Geometry           = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input: Polygon = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
+        let expected: Geometry           = Polygon([Coordinate(x: 6.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.0, y: 3.0), Coordinate(x: 6.0, y: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.0, y: 3.0), Coordinate(x: 5.0, y: 2.0)]], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input == expected)
     }
@@ -265,18 +265,18 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testInitWithRings() {
 
-        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
-        let expected = Polygon([Coordinate(x: 6.01, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.01, y: 3.0)], innerRings: [[Coordinate(x: 5.01, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.01, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
+        let expected = Polygon([Coordinate(x: 6.01, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.01, y: 3.0), Coordinate(x: 6.01, y: 1.0)], innerRings: [[Coordinate(x: 5.01, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.01, y: 3.0), Coordinate(x: 5.01, y: 2.0)]], precision: precision, coordinateSystem: cs)
 
-        XCTAssertEqual(input.outerRing.count, 5)
+        XCTAssertEqual(input.outerRing.count, 6)
         XCTAssertEqual(input.innerRings.count, 1)
         XCTAssertEqual(input, expected)
     }
 
     func testInitArrayLiteral() {
 
-        let input: Polygon   = [[Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], [Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]]
-        let expected = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]])
+        let input: Polygon   = [[Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], [Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]]
+        let expected = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]])
 
         XCTAssertEqual(input, expected)
      }
@@ -300,14 +300,14 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
     // MARK: MutableCollection Conformance
 
     func testStartIndex() {
-        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
     }
 
     func testEndIndex() {
-        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.endIndex, expected)
@@ -321,15 +321,15 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
     }
 
     func testSubscriptGet() {
-        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
-        let expected = LinearRing([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], precision: precision, coordinateSystem: cs)
+        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
+        let expected = LinearRing([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input[0] == expected)
     }
 
     func testSubscriptSet() {
-        var input    = (geometry: Polygon([Coordinate(x: 6.006, y: 1.001)], precision: precision, coordinateSystem: cs), newElement: LinearRing([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], precision: precision, coordinateSystem: cs))
-        let expected = LinearRing([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], precision: precision, coordinateSystem: cs)
+        var input    = (geometry: Polygon([Coordinate(x: 6.006, y: 1.001)], precision: precision, coordinateSystem: cs), newElement: LinearRing([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], precision: precision, coordinateSystem: cs))
+        let expected = LinearRing([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], precision: precision, coordinateSystem: cs)
 
         input.geometry[0] = input.newElement
 
@@ -378,30 +378,30 @@ class PolygonCoordinate2DFixedCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
-        let expected = "Polygon([LinearRing([(x: 6.01, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.01, y: 3.0)]), LinearRing([(x: 5.01, y: 2.0), (x: 3.0, y: 1.5), (x: 3.0, y: 3.0), (x: 4.0, y: 3.5), (x: 5.01, y: 3.0)])])"
+        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
+        let expected = "Polygon([LinearRing([(x: 6.01, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.01, y: 3.0), (x: 6.01, y: 1.0)]), LinearRing([(x: 5.01, y: 2.0), (x: 3.0, y: 1.5), (x: 3.0, y: 3.0), (x: 4.0, y: 3.5), (x: 5.01, y: 3.0), (x: 5.01, y: 2.0)])])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
-        let expected = "Polygon([LinearRing([(x: 6.01, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.01, y: 3.0)]), LinearRing([(x: 5.01, y: 2.0), (x: 3.0, y: 1.5), (x: 3.0, y: 3.0), (x: 4.0, y: 3.5), (x: 5.01, y: 3.0)])])"
+        let input    = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
+        let expected = "Polygon([LinearRing([(x: 6.01, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.01, y: 3.0), (x: 6.01, y: 1.0)]), LinearRing([(x: 5.01, y: 2.0), (x: 3.0, y: 1.5), (x: 3.0, y: 3.0), (x: 4.0, y: 3.5), (x: 5.01, y: 3.0), (x: 5.01, y: 2.0)])])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
 
     func testOperatorEqualWithGeometryAndPolygon() {
-        let input: Geometry                 = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
-        let expected: Polygon = Polygon([Coordinate(x: 6.01, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.01, y: 3.0)], innerRings: [[Coordinate(x: 5.01, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.01, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input: Geometry                 = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
+        let expected: Polygon = Polygon([Coordinate(x: 6.01, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.01, y: 3.0), Coordinate(x: 6.01, y: 1.0)], innerRings: [[Coordinate(x: 5.01, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.01, y: 3.0), Coordinate(x: 5.01, y: 2.0)]], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input == expected)
     }
 
     func testOperatorEqualWithPolygonAndGeometry() {
-        let input: Polygon = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003)]], precision: precision, coordinateSystem: cs)
-        let expected: Geometry           = Polygon([Coordinate(x: 6.01, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.01, y: 3.0)], innerRings: [[Coordinate(x: 5.01, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.01, y: 3.0)]], precision: precision, coordinateSystem: cs)
+        let input: Polygon = Polygon([Coordinate(x: 6.006, y: 1.001), Coordinate(x: 1.001, y: 1.001), Coordinate(x: 1.001, y: 3.003), Coordinate(x: 3.501, y: 4.001), Coordinate(x: 6.006, y: 3.003), Coordinate(x: 6.006, y: 1.001)], innerRings: [[Coordinate(x: 5.005, y: 2.002), Coordinate(x: 3.003, y: 1.501), Coordinate(x: 3.003, y: 3.003), Coordinate(x: 4.004, y: 3.503), Coordinate(x: 5.005, y: 3.003), Coordinate(x: 5.005, y: 2.002)]], precision: precision, coordinateSystem: cs)
+        let expected: Geometry           = Polygon([Coordinate(x: 6.01, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 3.5, y: 4.0), Coordinate(x: 6.01, y: 3.0), Coordinate(x: 6.01, y: 1.0)], innerRings: [[Coordinate(x: 5.01, y: 2.0), Coordinate(x: 3.0, y: 1.5), Coordinate(x: 3.0, y: 3.0), Coordinate(x: 4.0, y: 3.5), Coordinate(x: 5.01, y: 3.0), Coordinate(x: 5.01, y: 2.0)]], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input == expected)
     }

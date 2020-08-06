@@ -46,14 +46,14 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
-    func testBoundaryWith2Element() {
+    func testBoundaryWith2ElementOpenInvalid() {
         let input = LinearRing([[1.0, 1.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint([Point([1.0, 1.0]), Point([2.0, 2.0])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
-    func testBoundaryWith3ElementOpen() {
+    func testBoundaryWith3ElementOpenInvalid() {
         let input = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]], precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint([Point([1.0, 1.0]), Point([3.0, 3.0])], precision: precision, coordinateSystem: cs)
 
@@ -61,7 +61,7 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     }
 
     func testBoundaryWith4ElementClosed() {
-        let input = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
+        let input = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs).boundary()
         let expected = MultiPoint(precision: precision, coordinateSystem: cs) // Empty Set
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
@@ -84,8 +84,8 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
     }
 
     func testBoundsWithElements() {
-        let input = LinearRing([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
-        let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 3.0, y: 3.0))
+        let input = LinearRing([[1.0, 1.0], [2.0, 2.0], [2.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 2.0, y: 2.0))
 
         XCTAssertEqual(input.bounds(), expected)
     }
