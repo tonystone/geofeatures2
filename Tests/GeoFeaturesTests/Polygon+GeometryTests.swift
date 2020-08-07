@@ -35,7 +35,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: - Dimension
 
     func testDimension () {
-        XCTAssertEqual(Polygon([[[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]]], precision: precision, coordinateSystem: cs).dimension, .two)
+        XCTAssertEqual(Polygon([[[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]]], precision: precision, coordinateSystem: cs).dimension, .two)
     }
 
     func testDimensionEmpty () {
@@ -45,15 +45,15 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     // MARK: - Boundary
 
     func testBoundaryWithOuterRing() {
-        let input = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [], precision: precision, coordinateSystem: cs).boundary()
-        let expected = GeometryCollection([LinearRing([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]])], precision: precision, coordinateSystem: cs)
+        let input = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [], precision: precision, coordinateSystem: cs).boundary()
+        let expected = GeometryCollection([LinearRing([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
 
     func testBoundaryWithOuterRingAnd1InnerRing() {
-        let input = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [[[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0]]], precision: precision, coordinateSystem: cs).boundary()
-        let expected = GeometryCollection([LinearRing([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]]), LinearRing([[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0]])], precision: precision, coordinateSystem: cs)
+        let input = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs).boundary()
+        let expected = GeometryCollection([LinearRing([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]]), LinearRing([[5.0, 2.0], [2.0, 2.0], [2.0, 3.0], [3.5, 3.5], [5.0, 3.0], [5.0, 2.0]])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input == expected, "\(input) is not equal to \(expected)")
     }
@@ -75,7 +75,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testBounds() {
-        let input = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [], precision: precision, coordinateSystem: cs)
+        let input = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [], precision: precision, coordinateSystem: cs)
         let expected = Bounds(min: (x: 1.0, y: 1.0), max: (x: 6.0, y: 4.0))
 
         XCTAssertEqual(input.bounds(), expected)
