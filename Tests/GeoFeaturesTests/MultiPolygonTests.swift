@@ -78,16 +78,16 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
     }
 
     func testInitWithArrayLiteral() {
-        let input: MultiPolygon = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
-        let expected: [MultiPolygon.Element] = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+        let input: MultiPolygon = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])]
+        let expected: [MultiPolygon.Element] = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])]
 
         XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
     }
 
     func testInitCopy() {
 
-        let input = MultiPolygon(other: MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]), precision: precision, coordinateSystem: cs)
-        let expected = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let input = MultiPolygon(other: MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])]), precision: precision, coordinateSystem: cs)
+        let expected = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(input.elementsEqual(expected) { $0.equals($1) }, "\(input) is not equal to \(expected)")
     }
@@ -96,16 +96,16 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testDescription() {
 
-        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiPolygon([Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)])]), Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)])])])"
+        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiPolygon([Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0), (x: 6.0, y: 1.0)])]), Polygon([LinearRing([(x: 6.0, y: -1.0), (x: 1.0, y: -1.0), (x: 1.0, y: -3.0), (x: 3.5, y: -4.0), (x: 6.0, y: -3.0), (x: 6.0, y: -1.0)])])])"
 
         XCTAssertEqual(input.description, expected)
     }
 
     func testDebugDescription() {
 
-        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let expected = "MultiPolygon([Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)])]), Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0)])])])"
+        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let expected = "MultiPolygon([Polygon([LinearRing([(x: 6.0, y: 1.0), (x: 1.0, y: 1.0), (x: 1.0, y: 3.0), (x: 3.5, y: 4.0), (x: 6.0, y: 3.0), (x: 6.0, y: 1.0)])]), Polygon([LinearRing([(x: 6.0, y: -1.0), (x: 1.0, y: -1.0), (x: 1.0, y: -3.0), (x: 3.5, y: -4.0), (x: 6.0, y: -3.0), (x: 6.0, y: -1.0)])])])"
 
         XCTAssertEqual(input.debugDescription, expected)
     }
@@ -114,7 +114,7 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testStartIndex() {
 
-        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
         let expected = 0
 
         XCTAssertEqual(input.startIndex, expected)
@@ -122,7 +122,7 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testEndIndex() {
 
-        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.endIndex, expected)
@@ -133,23 +133,23 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let input    = 0
         let expected = 1
 
-        XCTAssertEqual(MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs).index(after: input), expected)
+        XCTAssertEqual(MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs).index(after: input), expected)
     }
 
     func testSubscriptGet() {
 
-        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let expected = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])
+        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let expected = Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])
 
         XCTAssertTrue(input[1].equals(expected))
     }
 
     func testSubscriptSet() {
 
-        var input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
-        let expected = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        var input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let expected = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -6.0], [6.0, -6.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
-        input[1] = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])
+        input[1] = Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -6.0], [6.0, -6.0], [6.0, -1.0]], innerRings: [])
 
         XCTAssertEqual(input, expected)
     }
@@ -158,8 +158,8 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeAppend() {
 
-        var input: (geometry: MultiPolygon, newElements: [MultiPolygon.Element]) = (MultiPolygon(precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
-        let expected: [MultiPolygon.Element] = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+        var input: (geometry: MultiPolygon, newElements: [MultiPolygon.Element]) = (MultiPolygon(precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [])])
+        let expected: [MultiPolygon.Element] = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -168,8 +168,8 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeInsert() {
 
-        var input: (geometry: MultiPolygon, newElements: [MultiPolygon.Element]) = (MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
-        let expected: [MultiPolygon.Element]  = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+        var input: (geometry: MultiPolygon, newElements: [MultiPolygon.Element]) = (MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [])])
+        let expected: [MultiPolygon.Element]  = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [])]
 
         input.geometry.replaceSubrange(0..<0, with: input.newElements)
 
@@ -178,8 +178,8 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testReplaceSubrangeReplace() {
 
-        var input: (geometry: MultiPolygon, newElements: [MultiPolygon.Element]) = (MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])])
-        let expected: [MultiPolygon.Element]  = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])]
+        var input: (geometry: MultiPolygon, newElements: [MultiPolygon.Element]) = (MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs), [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [])])
+        let expected: [MultiPolygon.Element]  = [Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [])]
 
         input.geometry.replaceSubrange(0..<1, with: input.newElements)
 
@@ -212,7 +212,7 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testIsEmptyFalse() {
 
-        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
         let expected = false
 
         XCTAssertEqual(input.isEmpty(), expected)
@@ -220,7 +220,7 @@ class MultiPolygonCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
 
     func testCount() {
 
-        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: []), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let input    = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0], [1.0, 1.0]], innerRings: []), Polygon([[6.0, -1.0], [1.0, -1.0], [1.0, -3.0], [3.5, -4.0], [6.0, -3.0], [6.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
         let expected = 2
 
         XCTAssertEqual(input.count, expected)
