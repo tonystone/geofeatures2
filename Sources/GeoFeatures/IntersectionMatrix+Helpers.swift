@@ -3336,6 +3336,8 @@ extension IntersectionMatrix {
                 return reducedLinearRings
             }
 
+            if linearRing.count == 0 { continue }
+
             let reducedLinearRing = reduce(linearRing)
             reducedLinearRings.append(reducedLinearRing)
         }
@@ -3353,6 +3355,8 @@ extension IntersectionMatrix {
 
         /// Reduce each of the multi line string
         for lineString in multiLineString {
+
+            if lineString.count == 0 { continue }
 
             let reducedLineString = reduce(lineString)
             resultMultiLineString.append(reducedLineString)
@@ -4760,6 +4764,19 @@ extension IntersectionMatrix {
         matrixIntersects[.exterior, .interior] = .two
         matrixIntersects[.exterior, .exterior] = .two
 
+        /// Quick check for at least one non-empty line string in the multi line string
+        var hasNonemptyLineString = false
+        for lineString in multiLineString {
+
+            if lineString.count > 0 {
+                hasNonemptyLineString = true
+                break
+            }
+        }
+        if !hasNonemptyLineString {
+            return matrixIntersects
+        }
+
         /// Get the polygon boundary
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
             polygonBoundary.count > 0,
@@ -4783,9 +4800,6 @@ extension IntersectionMatrix {
         /// a polygon boundary cannot be completely inside a multi line string.  Therefore, the subset test
         /// will be commented out, but possibly should be added in if that definition changes.
         matrixIntersects[.exterior, .boundary] = .one
-//        if subset(reducedPB, reducedMls) {
-//            matrixIntersects[.exterior, .boundary] = .empty
-//        }
 
         /// From here on we know the multi line string is not completely contained in the polygon boundary,
         /// and we know whether the polygon boundary is completely contained in the multi line string.
@@ -4818,7 +4832,7 @@ extension IntersectionMatrix {
         /// Relate the multi line string to the main polygon.
         /// Collect an array of line strings that touch the interior of the main polygon
         /// that will be used to check against the holes.
-        var interiorLineStrings = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
+        var interiorLineStrings = [LineString]()
 
         guard let mainLinearRing = polygonBoundary[0] as? LinearRing,
             mainLinearRing.count > 0 else {
@@ -4826,6 +4840,10 @@ extension IntersectionMatrix {
         }
 
         for lineString in multiLineString {
+
+            guard lineString.count > 0 else {
+                continue
+            }
 
             let tempPolygon = Polygon(mainLinearRing, precision: Floating(), coordinateSystem: Cartesian())
 
@@ -4855,19 +4873,14 @@ extension IntersectionMatrix {
         var multiLineStringTouchesInterior = false
         let holesArray = holes(polygon)
 
-        for tempLineString in interiorLineStrings {
-
-            guard let lineString = tempLineString as? LineString,
-                lineString.count > 0 else {
-                    return matrixIntersects
-            }
+        for lineString in interiorLineStrings {
 
             var lineStringTouchesInterior = true
 
             for linearRing in holesArray {
 
                 guard linearRing.count > 0 else {
-                    return matrixIntersects
+                    continue
                 }
 
                 let tempPolygon = Polygon(linearRing, precision: Floating(), coordinateSystem: Cartesian())

@@ -6707,6 +6707,70 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testMultiLineString_Polygon_invalidEmptyMultiLineString1() {
+
+        let geometry1 = MultiLineString([], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0)]], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .empty]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_Polygon_invalidEmptyMultiLineString2() {
+
+        let geometry1 = MultiLineString([LineString(), LineString(), LineString()], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0)]], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .empty],
+            [.empty, .empty, .empty],
+            [.two,   .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_Polygon_invalidEmptyLineString() {
+
+        let geometry1 = MultiLineString([LineString(), LineString([Coordinate(x: -7.0, y: -7.0), Coordinate(x: 0.0, y: -14.0), Coordinate(x: 0.0, y: -6.0), Coordinate(x: -6.0, y: -6.0)]), LineString()], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0)]], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .zero,  .one],
+            [.empty, .empty, .zero],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_Polygon_invalidPolygonHasHoleWithNoCoordinates() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: -7.0, y: -7.0), Coordinate(x: 0.0, y: -14.0), Coordinate(x: 0.0, y: -6.0), Coordinate(x: -6.0, y: -6.0)]), LineString([Coordinate(x: 8.0, y: 0.0), Coordinate(x: 8.0, y: -12.0), Coordinate(x: -10.0, y: 6.0), Coordinate(x: 10.0, y: 26.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -10.0, y: -2.0), Coordinate(x: -2.0, y: -2.0), Coordinate(x: -2.0, y: -10.0), Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: -2.0)], innerRings: [[Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0)], []], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .zero,  .one],
+            [.empty, .empty, .zero],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// MultiLineString MultiPolygon tests
     ///
