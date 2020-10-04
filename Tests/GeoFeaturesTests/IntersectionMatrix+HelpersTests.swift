@@ -6755,6 +6755,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testMultiLineString_Polygon_invalidPolygonHasOuterRingWithNoCoordinates() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: -7.0, y: -7.0), Coordinate(x: 0.0, y: -14.0), Coordinate(x: 0.0, y: -6.0), Coordinate(x: -6.0, y: -6.0)]), LineString([Coordinate(x: 8.0, y: 0.0), Coordinate(x: 8.0, y: -12.0), Coordinate(x: -10.0, y: 6.0), Coordinate(x: 10.0, y: 26.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([], innerRings: [[Coordinate(x: -8.0, y: -4.0), Coordinate(x: -8.0, y: -8.0), Coordinate(x: -4.0, y: -8.0), Coordinate(x: -4.0, y: -4.0), Coordinate(x: -8.0, y: -4.0)]], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .empty],
+            [.empty, .empty, .empty],
+            [.two,   .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     func testMultiLineString_Polygon_invalidPolygonHasHoleWithNoCoordinates() {
 
         let geometry1 = MultiLineString([LineString([Coordinate(x: -7.0, y: -7.0), Coordinate(x: 0.0, y: -14.0), Coordinate(x: 0.0, y: -6.0), Coordinate(x: -6.0, y: -6.0)]), LineString([Coordinate(x: 8.0, y: 0.0), Coordinate(x: 8.0, y: -12.0), Coordinate(x: -10.0, y: 6.0), Coordinate(x: 10.0, y: 26.0)])], precision: precision, coordinateSystem: cs)

@@ -4834,18 +4834,13 @@ extension IntersectionMatrix {
         /// that will be used to check against the holes.
         var interiorLineStrings = [LineString]()
 
-        guard let mainLinearRing = polygonBoundary[0] as? LinearRing,
-            mainLinearRing.count > 0 else {
-            return matrixIntersects
-        }
-
         for lineString in multiLineString {
 
             guard lineString.count > 0 else {
                 continue
             }
 
-            let tempPolygon = Polygon(mainLinearRing, precision: Floating(), coordinateSystem: Cartesian())
+            let tempPolygon = Polygon(outerLinearRing, precision: Floating(), coordinateSystem: Cartesian())
 
             let lineStringRelatedToResult = relatedTo(lineString, tempPolygon)
 
