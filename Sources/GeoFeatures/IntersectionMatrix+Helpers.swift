@@ -4670,6 +4670,8 @@ extension IntersectionMatrix {
 
             guard let linearRingPolygon = tempLinearRingPolygon as? LinearRing else { return matrixIntersects }
 
+            guard linearRingPolygon.count > 0 else { continue }
+
             let tempPolygon = Polygon(linearRingPolygon, precision: Floating(), coordinateSystem: Cartesian())
 
             let linearRingRelatedToResult = relatedTo(linearRing, tempPolygon)
