@@ -4469,6 +4469,9 @@ extension IntersectionMatrix {
         for element in polygonBoundary {
 
             guard let linearRing = element as? LinearRing else { return matrixIntersects }
+
+            guard linearRing.count > 0 else { continue }
+
             let tempPolygon = Polygon(linearRing)
 
             let boundaryCoordinate1RelatedToResult  = relatedTo([(lineStringBoundaryCoordinate1, true)], tempPolygon)
