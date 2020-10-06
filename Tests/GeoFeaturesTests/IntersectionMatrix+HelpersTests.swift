@@ -4207,7 +4207,7 @@ class IntersectionMatrixHelperTests: XCTestCase {
 
     func testLinearRing_MultiLineString_interiorsIntersectAtOnePointSecondSegmentsSecondLineString() {
 
-        let geometry1 = LineString([Coordinate(x: -12.0, y: -8.0), Coordinate(x: -3.0, y: -8.0), Coordinate(x: -3.0, y: 10.0), Coordinate(x: -12.0, y: -8.0)], precision: precision, coordinateSystem: cs)
+        let geometry1 = LinearRing([Coordinate(x: -12.0, y: -8.0), Coordinate(x: -3.0, y: -8.0), Coordinate(x: -3.0, y: 10.0), Coordinate(x: -12.0, y: -8.0)], precision: precision, coordinateSystem: cs)
         let geometry2 = MultiLineString([LineString([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 1.0, y: -3.0)]), LineString([Coordinate(x: -4.0, y: 1.0), Coordinate(x: -4.0, y: 4.0), Coordinate(x: -1.0, y: 4.0), Coordinate(x: -1.0, y: 1.0)])], precision: precision, coordinateSystem: cs)
 
         let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)

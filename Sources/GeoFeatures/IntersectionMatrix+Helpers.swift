@@ -3568,7 +3568,6 @@ extension IntersectionMatrix {
 
     /// Is the line string contained in or a subset of the multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    /// TODO:
     fileprivate static func subset(_ lineString1: LineString, _ multiLineString: MultiLineString) -> Bool {
 
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
@@ -3576,26 +3575,7 @@ extension IntersectionMatrix {
             let ls1SecondCoord = lineString1[ls1FirstCoordIndex + 1]
             let segment1 = Segment(left: ls1FirstCoord, right: ls1SecondCoord)
 
-            var segment1IsSubsetOfOtherSegment = false
-
-            for lineString2 in multiLineString {
-                for ls2FirstCoordIndex in 0..<lineString2.count - 1 {
-                    let ls2FirstCoord  = lineString2[ls2FirstCoordIndex]
-                    let ls2SecondCoord = lineString2[ls2FirstCoordIndex + 1]
-                    let segment2 = Segment(left: ls2FirstCoord, right: ls2SecondCoord)
-
-                    if subset(segment1, segment2) {
-                        segment1IsSubsetOfOtherSegment = true
-                        break
-                    }
-                }
-
-                if segment1IsSubsetOfOtherSegment {
-                    break
-                }
-            }
-
-            if !segment1IsSubsetOfOtherSegment {
+            if !subset(segment1, multiLineString) {
                 return false
             }
         }
@@ -3768,8 +3748,9 @@ extension IntersectionMatrix {
             let newSegmentRightY = boundingBox1YRange.0
             let newSegment = Segment(left: Coordinate(x: newSegmentLeftX, y: newSegmentLeftY), right: Coordinate(x: newSegmentRightX, y: newSegmentRightY))
             return [newSegment]
-        } else if (boundingBox1XRange.0 >= boundingBox2XRange.0) && (boundingBox1XRange.1 >= boundingBox2XRange.1) &&
-                  (boundingBox1YRange.0 <= boundingBox2YRange.0) && (boundingBox1YRange.1 <= boundingBox2YRange.1) {
+        } else {
+            /// (boundingBox1XRange.0 >= boundingBox2XRange.0) && (boundingBox1XRange.1 >= boundingBox2XRange.1) &&
+            /// (boundingBox1YRange.0 <= boundingBox2YRange.0) && (boundingBox1YRange.1 <= boundingBox2YRange.1)
             /// Segment1 removes the top or right part of segment2
             let newSegmentLeftX  = boundingBox2XRange.0
             let newSegmentLeftY  = boundingBox2YRange.1
@@ -3777,10 +3758,6 @@ extension IntersectionMatrix {
             let newSegmentRightY = boundingBox1YRange.1
             let newSegment = Segment(left: Coordinate(x: newSegmentLeftX, y: newSegmentLeftY), right: Coordinate(x: newSegmentRightX, y: newSegmentRightY))
             return [newSegment]
-        } else {
-            /// This should never happen.
-            print("The subtract function has unexpected values when subtracting segments.")
-            return []
         }
     }
 

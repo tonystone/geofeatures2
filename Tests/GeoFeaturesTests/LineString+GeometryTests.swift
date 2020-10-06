@@ -538,6 +538,8 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let linearRing = LinearRing([[-200.0, -200.0], [200.0, 200.0], [200.0, -200.0], [-200.0, -200.0]], precision: precision, coordinateSystem: cs)
         let multiLineString1 = MultiLineString([LineString([[200.0, 200.0], [0.0, 0.0]])], precision: precision, coordinateSystem: cs)
         let multiLineString2 = MultiLineString([LineString([[1000.0, 100.0], [1000.0, 200.0]]), LineString([[0.0, 0.0], [500.0, 0.0], [500.0, 500.0], [0.5, 0.5]]), LineString([[0.0, 0.0], [-100.0, -100.0], [-100.0, -500.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString3 = MultiLineString([LineString([[-3.0, -3.0], [0.0, 0.0]]), LineString([[0.5, 0.5], [10.0, 10.0], [10.0, 500.0], [0.5, 500.0]]), LineString([[50.0, 0.0], [50.0, 50.0], [1000.0, 1000.0], [1000.0, 100.0]]), LineString([[8.0, -100.0], [8.0, 0.0], [8.0, 8.0], [60.0, 60.0]])], precision: precision, coordinateSystem: cs)
+        let multiLineString4 = MultiLineString([LineString([[60.0, 60.0], [40.0, 40.0]]), LineString([[60.0, 60.0], [100.0, 100.0]]), LineString([[1.0, 1.0], [40.0, 40.0]])], precision: precision, coordinateSystem: cs)
         let polygon = Polygon([[0.0, 0.0], [0.0, 200.0], [200.0, 200.0], [200.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 10.0], [90.0, 10.0], [90.0, 20.0], [80.0, 20.0], [80.0, 10.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([[-10.0, 10.0], [-50.0, 10.0], [-50.0, 50.0], [-10.0, 50.0], [-10.0, 10.0]], innerRings: []), Polygon([[40.0, -40.0], [80.0, -40.0], [80.0, -80.0], [40.0, -80.0], [40.0, -40.0]], innerRings: [[[70.0, -70.0], [70.0, -50.0], [50.0, -50.0], [50.0, -70.0], [70.0, -70.0]]]), Polygon([[1000.0, 1.0], [1.0, 1.0], [1.0, 200.0], [1000.0, 200.0], [1000.0, 1.0]], innerRings: []), Polygon([[0.0, 0.0], [0.0, 0.5], [0.5, 0.5], [0.5, 0.0], [0.0, 0.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
@@ -545,6 +547,8 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertTrue(testLineString.coveredby(linearRing))
         XCTAssertTrue(testLineString.coveredby(multiLineString1))
         XCTAssertTrue(testLineString.coveredby(multiLineString2))
+        XCTAssertTrue(testLineString.coveredby(multiLineString3))
+        XCTAssertTrue(testLineString.coveredby(multiLineString4))
         XCTAssertTrue(testLineString.coveredby(polygon))
         XCTAssertTrue(testLineString.coveredby(multiPolygon))
     }
