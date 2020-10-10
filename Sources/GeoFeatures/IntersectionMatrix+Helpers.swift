@@ -3528,6 +3528,21 @@ extension IntersectionMatrix {
         return true
     }
 
+    /// Is the line string contained in or a subset of the linear ring array?
+    /// The algorithm here assumes that all geometries have been reduced, so that no two consecutive segments have the same slope.
+    /// It also assumes the line string is a subset of just one linear ring rather than some combination of linear rings.
+    fileprivate static func subset(_ lineString: LineString, _ linearRings: [LinearRing]) -> Bool {
+
+        for linearRing in linearRings {
+
+            if subset(lineString, linearRing) {
+                return true
+            }
+        }
+
+        return false
+    }
+
     /// Is the linear ring contained in or a subset of the line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
     fileprivate static func subset(_ linearRing: LinearRing, _ lineString: LineString) -> Bool {
@@ -3618,7 +3633,9 @@ extension IntersectionMatrix {
         }
 
         /// Check if the line string is inside the main linear ring
-        guard subset(lineString, outerLinearRing) else { return false }
+        let outerRingPolygon = Polygon(outerLinearRing)
+        let relatedToResult = relatedTo(lineString, outerRingPolygon)
+        guard relatedToResult.firstTouchesSecondExterior == .empty else { return false }
 
         /// At this point, the line string is inside the main boundary.
         /// If there are no holes, we are done.
@@ -3632,7 +3649,8 @@ extension IntersectionMatrix {
             guard linearRing.count > 0 else { continue }
 
             /// Get the relationship between the point and the hole
-            let relatedToResult = relatedTo(lineString, linearRing)
+            let holePolygon = Polygon(linearRing)
+            let relatedToResult = relatedTo(lineString, holePolygon)
 
             /// Check if the line string is on the interior of the hole
             if relatedToResult.firstTouchesSecondInterior > .empty {
@@ -4438,8 +4456,9 @@ extension IntersectionMatrix {
 
         /// Check whether the line string is completely contained in the polygon boundary
         let reducedLs = reduce(lineString)
-        let reducedPolygon = reduce(polygon)
-        if subset(reducedLs, reducedPolygon) {
+        let reducedPolygonBoundary = reduce(polygonBoundary)
+        let polygonBoundaryLinearRings = geometryCollectionToLinearRingArray(reducedPolygonBoundary)
+        if subset(reducedLs, polygonBoundaryLinearRings) {
             matrixIntersects[.interior, .boundary] = .one
             matrixIntersects[.boundary, .boundary] = .zero
             return matrixIntersects

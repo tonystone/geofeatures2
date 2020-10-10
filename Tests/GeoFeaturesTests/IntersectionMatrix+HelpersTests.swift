@@ -3640,6 +3640,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testLineString_MultiPolygon_lineStringInsidePolygonHole() {
+
+        let geometry1 = LineString([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 4.0), Coordinate(x: 4.0, y: 4.0), Coordinate(x: 4.0, y: 2.0), Coordinate(x: 3.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[Coordinate(x: -8.0, y: 9.0), Coordinate(x: -16.0, y: 9.0), Coordinate(x: -16.0, y: 16.0), Coordinate(x: -8.0, y: 16.0), Coordinate(x: -8.0, y: 9.0)]]), Polygon([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 20.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)], innerRings: [[Coordinate(x: 16.0, y: 16.0), Coordinate(x: 16.0, y: 12.0), Coordinate(x: 12.0, y: 12.0), Coordinate(x: 12.0, y: 16.0), Coordinate(x: 16.0, y: 16.0)], [Coordinate(x: 5.0, y: 5.0), Coordinate(x: 5.0, y: 1.0), Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 5.0), Coordinate(x: 5.0, y: 5.0)]])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .one],
+            [.empty, .empty, .zero],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// LinearRing Point tests
     ///
