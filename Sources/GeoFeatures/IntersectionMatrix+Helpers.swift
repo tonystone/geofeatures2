@@ -2247,6 +2247,26 @@ extension IntersectionMatrix {
         return true
     }
 
+    /// This will pick out the linear rings in a geometry collection and return an array of those linear rings.
+    /// For our current purposes, all of the objects in the geometry collection should be linear rings.
+    fileprivate static func geometryCollectionToLinearRingArray(_ geometryCollection: GeometryCollection) -> [LinearRing] {
+
+        var linearRings = [LinearRing]()
+
+        for index in 0..<geometryCollection.count {
+
+            guard let linearRing = geometryCollection[index] as? LinearRing else {
+                continue
+            }
+
+            if linearRing.count == 0 { continue }
+
+            linearRings.append(linearRing)
+        }
+
+        return linearRings
+    }
+
     fileprivate static func linearRingsToPolygons(_ linearRings: [LinearRing]) -> [Polygon] {
 
         var polygons = [Polygon]()
@@ -3333,7 +3353,7 @@ extension IntersectionMatrix {
         for index in 0..<geometryCollection.count {
 
             guard let linearRing = geometryCollection[index] as? LinearRing else {
-                return reducedLinearRings
+                continue
             }
 
             if linearRing.count == 0 { continue }
@@ -3370,7 +3390,7 @@ extension IntersectionMatrix {
     fileprivate static func reduce(_ linearRingArray: [LinearRing]) -> [LinearRing] {
 
         /// Define the inear ring array that might be returned
-        var resultLinearRingArray = [LinearRing(precision: Floating(), coordinateSystem: Cartesian())]
+        var resultLinearRingArray = [LinearRing]()
 
         /// Reduce each of the linear rings
         for linearRing in linearRingArray {
@@ -3661,6 +3681,21 @@ extension IntersectionMatrix {
         return true
     }
 
+    /// Is the linear ring contained in or a subset of the linear ring array?
+    /// If the linear ring is a subset of the collection, it must match one of the linear rings, although the sequence of points need not match.
+    /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    fileprivate static func subset(_ linearRing: LinearRing, _ linearRings: [LinearRing]) -> Bool {
+
+        for linearRing2 in linearRings {
+
+            /// Check if the linear ring is inside the currently selected linear ring from the collection.
+            if subset(linearRing, linearRing2) { return true }
+        }
+
+        /// The linear ring does not match any linear ring in the collection.
+        return false
+    }
+
     /// Is the linear ring contained in or a subset of the collection of linear rings?
     /// If the linear ring is a subset of the collection, it must match one of linear rings, although the sequence of points need not match.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
@@ -3669,7 +3704,7 @@ extension IntersectionMatrix {
         for index in 0..<geometryCollection.count {
 
             guard let linearRing2 = geometryCollection[index] as? LinearRing else {
-                return false
+                continue
             }
 
             /// Check if the linear ring is inside the currently selected linear ring from the collection.
@@ -4626,11 +4661,14 @@ extension IntersectionMatrix {
             outerLinearRing.count > 0 else {
                 return matrixIntersects
         }
+        
+        /// Convert the polygon boundary to an array of linear rings
+        let polygonBoundaryLinearRings = geometryCollectionToLinearRingArray(polygonBoundary)
 
         /// Check whether the linear ring is completely contained in the polygon boundary.
         /// If not, the exterior of the linear ring must intersect with the polygon boundary.
         let reducedLr  = reduce(linearRing)
-        let reducedPB = reduce(polygonBoundary)
+        let reducedPB = reduce(polygonBoundaryLinearRings)
         if subset(reducedLr, reducedPB) {
             matrixIntersects[.interior, .boundary] = .one
             return matrixIntersects
@@ -4646,9 +4684,7 @@ extension IntersectionMatrix {
 
         /// Relate the linear ring to the main polygon and each of its holes
         var isMainPolygon = true
-        for tempLinearRingPolygon in polygonBoundary {
-
-            guard let linearRingPolygon = tempLinearRingPolygon as? LinearRing else { return matrixIntersects }
+        for linearRingPolygon in polygonBoundaryLinearRings {
 
             guard linearRingPolygon.count > 0 else { continue }
 
