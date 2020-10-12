@@ -3076,10 +3076,6 @@ extension IntersectionMatrix {
                 if !secondCoordinateFirstSegmentBoundary && !secondCoordinateSecondSegmentBoundary {
                     lineSegmentIntersection.interiorsTouchAtPoint = true
                 }
-            } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
-                      (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
-                /// Two segments meet at a single boundary point
-                lineSegmentIntersection.geometry = Point(segment.rightCoordinate, precision: precision, coordinateSystem: csystem)
             } else if oneLine {
                 /// If you reach here, the two line segments overlap by an amount > 0, but neither line segment is contained in the other.
                 if (segment1Boundary1Location != .onExterior) &&  (segment2Boundary1Location != .onExterior) {

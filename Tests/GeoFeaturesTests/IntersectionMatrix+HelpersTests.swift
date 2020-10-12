@@ -4005,6 +4005,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testLinearRing_LineString_invalidLineStringWithOneCoordinate() {
+
+        let geometry1 = LinearRing([Coordinate(x: 1.0, y: -1.0), Coordinate(x: 5.0, y: -1.0), Coordinate(x: 1.0, y: -5.0), Coordinate(x: 1.0, y: -1.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 0.0, y: -2.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .empty, .one],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// LinearRing LinearRing tests
     ///
@@ -4148,6 +4164,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
             [.one,   .empty, .one],
             [.empty, .empty, .empty],
             [.one,   .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testLinearRing_LinearRing_sameLinearRingReversed() {
+
+        let geometry1 = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 1.0, y: 5.0), Coordinate(x: 5.0, y: 1.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 5.0, y: 1.0), Coordinate(x: 1.0, y: 5.0), Coordinate(x: 1.0, y: 1.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .empty, .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
             ])
 
         XCTAssertEqual(matrix, expected)
