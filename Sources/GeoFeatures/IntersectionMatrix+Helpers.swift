@@ -3269,6 +3269,7 @@ extension IntersectionMatrix {
             if lrFirstCoord == lrSecondCoord { continue }
             tempLinearRing.append(lrSecondCoord)
         }
+        tempLinearRing.append(linearRing[linearRing.count - 1])
 
         guard tempLinearRing.count >= 3 else {
             return tempLinearRing
