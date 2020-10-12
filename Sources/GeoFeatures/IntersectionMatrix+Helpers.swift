@@ -2760,20 +2760,6 @@ extension IntersectionMatrix {
             matrixIntersects[.interior, .exterior] = .zero
         }
 
-        var multiLineStringTouchesMultiPointExterior = false
-        for lineString in multiLineString {
-            let reducedLineString = reduce(lineString)
-            if !(reducedLineString.count == 2 && reducedLineString[0] == reducedLineString[1] && subset(reducedLineString[0], points)) {
-                multiLineStringTouchesMultiPointExterior = true
-                break
-            }
-        }
-        if !multiLineStringTouchesMultiPointExterior {
-            coordinateOnInterior = true
-            matrixIntersects[.interior, .interior] = .zero
-            matrixIntersects[.exterior, .interior] = .empty
-        }
-
         if !subset(multiLineStringBoundaryCoordinateArray, coordinateArray) {
             matrixIntersects[.exterior, .boundary] = .zero
         }
@@ -2861,16 +2847,6 @@ extension IntersectionMatrix {
         return coordinateArray
     }
 
-    fileprivate static func coordinateArrayToMultiPoint(_ coordinates: [Coordinate]) -> MultiPoint {
-
-        var multiPoint = MultiPoint(precision: Floating(), coordinateSystem: Cartesian())
-        for coordinate in coordinates {
-            let point = Point(coordinate)
-            multiPoint.append(point)
-        }
-        return multiPoint
-    }
-
     fileprivate static func generateIntersection(_ points: MultiPoint, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -2921,14 +2897,6 @@ extension IntersectionMatrix {
         var secondSegmentFirstBoundaryLocation: LocationType    // The location of the first boundary point of the second segment relative to the first segment
         var secondSegmentSecondBoundaryLocation: LocationType   // The location of the second boundary point of the second segment relative to the first segment
         var interiorsTouchAtPoint: Bool
-
-        var segmentsIntersect: Bool {
-            return  firstSegmentFirstBoundaryLocation   != .onExterior ||
-                    firstSegmentSecondBoundaryLocation  != .onExterior ||
-                    secondSegmentFirstBoundaryLocation  != .onExterior ||
-                    secondSegmentSecondBoundaryLocation != .onExterior ||
-                    interiorsTouchAtPoint
-        }
         
         var firstSubsetOfSecond: Bool {
             return firstSegmentFirstBoundaryLocation  != .onExterior &&
