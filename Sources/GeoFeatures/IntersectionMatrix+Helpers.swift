@@ -2488,34 +2488,6 @@ extension IntersectionMatrix {
         return true
     }
 
-    /// Does the simple polygon match any of the simple polygons in the array?
-    fileprivate static func matchesOne(_ simplePolygon1: Polygon, _ simplePolygonArray: [Polygon]) -> Bool {
-
-        for simplePolygon2 in simplePolygonArray {
-
-            if areSimplePolygonsIdentical(simplePolygon1, simplePolygon2) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    /// Does the first array of simple polygons match a subset of the simple polygons in the second array?
-    fileprivate static func matchesSubset(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> Bool {
-
-        for simplePolygon1 in simplePolygonArray1 {
-
-            if matchesOne(simplePolygon1, simplePolygonArray2) {
-                continue
-            } else {
-                return false
-            }
-        }
-
-        return true
-    }
-
     fileprivate static func generateIntersection(_ points: MultiPoint, _ lineString: LineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
