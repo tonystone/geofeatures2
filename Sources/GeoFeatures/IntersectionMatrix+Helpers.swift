@@ -2121,14 +2121,10 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that both polygon arrays contain only simple polygons with no holes, just a single simple boundary.
+    /// Assume here that both polygon arrays are the holes of a polygon and both arrays are non-empty.
     fileprivate static func relatedTo(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
-
-        guard simplePolygonArray1.count > 0, simplePolygonArray2.count > 0 else {
-                return relatedToResult
-        }
 
         /// Check the relationships between each pair of polygons
 
@@ -2208,19 +2204,6 @@ extension IntersectionMatrix {
         relatedToResult.firstExteriorTouchesSecondBoundary = finalExteriorBoundaryDimension
 
         return relatedToResult
-    }
-
-    /// Assume here that both polygon arrays contain only simple polygons with no holes, just a single simple boundary.
-    /// Is the first polygon array a subset, either proper or improper, of the second polygon array?
-    fileprivate static func subset(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> Bool {
-
-        guard simplePolygonArray1.count > 0, simplePolygonArray2.count > 0 else {
-                return false
-        }
-
-        let relatedToResult = relatedTo(simplePolygonArray1, simplePolygonArray2)
-
-        return ((relatedToResult.firstInteriorTouchesSecondExterior == .empty) && (relatedToResult.firstBoundaryTouchesSecondExterior == .empty))
     }
 
     fileprivate static func disjoint(_ polygon1: Polygon, _ polygon2: Polygon) -> Bool {
@@ -2415,17 +2398,6 @@ extension IntersectionMatrix {
     /// and now we want to know if the two match.
     fileprivate static func areLinearRingsIdentical(_ relatedToLinearRings: RelatedTo) -> Bool {
         return relatedToLinearRings.firstTouchesSecondInterior == .one && relatedToLinearRings.firstTouchesSecondExterior == .empty
-    }
-
-    /// It is assumed that a RelatedTo structure has been generated for two polgyons,
-    /// and now we want to know if the main boundaries of the polygons are match.
-    fileprivate static func areMainPolygonBoundariesIdentical(_ relatedToPolygons: RelatedTo) -> Bool {
-        return relatedToPolygons.firstTouchesSecondInterior == .empty && relatedToPolygons.firstTouchesSecondExterior == .empty
-    }
-
-    fileprivate static func areSimplePolygonsIdentical(_ simplePolygon1: Polygon, _ simplePolygon2: Polygon) -> Bool {
-        let relatedToPolygons = relatedTo(simplePolygon1, simplePolygon2)
-        return areMainPolygonBoundariesIdentical(relatedToPolygons)
     }
 
     fileprivate static func countIdentical(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> Bool {
