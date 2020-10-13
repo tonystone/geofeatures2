@@ -397,7 +397,9 @@ class MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
         let multiLineString2 = MultiLineString([LineString([[4.0, 4.0], [4.0, 2.0]]), LineString([[2.0, 2.0], [2.0, 4.0]]), LineString([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]]), LineString([[9.0, -9.0], [9.0, -7.0]]), LineString([[-21.0, 39.0], [-39.0, 39.0], [-39.0, 21.0]])], precision: precision, coordinateSystem: cs)
         let polygon1 = Polygon([[1.0, 1.0], [1.0, 100.0], [100.0, 100.0], [100.0, 1.0], [1.0, 1.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[50.0, 50.0], [50.0, 20.0], [20.0, 20.0], [20.0, 50.0], [50.0, 50.0]], innerRings: [], precision: precision, coordinateSystem: cs)
-        let multiPolygon = MultiPolygon([Polygon([[40.0, 40.0], [40.0, 10.0], [10.0, 10.0], [10.0, 40.0], [40.0, 40.0]], innerRings: [[[20.0, 30.0], [20.0, 20.0], [30.0, 20.0], [30.0, 30.0], [20.0, 2.0], [5.0, 2.0]]]), Polygon([[58.0, 1.0], [50.0, 1.0], [50.0, 10.0], [58.0, 10.0], [58.0, 1.0]], innerRings: []), Polygon([[-20.0, 20.0], [-40.0, 20.0], [-40.0, 40.0], [-20.0, 40.0], [-20.0, 20.0]], innerRings: [[[-25.0, 25.0], [-25.0, 30.0], [-30.0, 30.0], [-30.0, 25.0], [-25.0, 25.0]]])], precision: precision, coordinateSystem: cs)
+        let polygon3 = Polygon([[-20.0, 20.0], [-40.0, 20.0], [-40.0, 40.0], [-20.0, 40.0], [-20.0, 20.0]], innerRings: [[[-23.0, 23.0], [-23.0, 32.0], [-32.0, 32.0], [-32.0, 23.0], [-23.0, 23.0]]])
+        let multiPolygon1 = MultiPolygon([Polygon([[40.0, 40.0], [40.0, 10.0], [10.0, 10.0], [10.0, 40.0], [40.0, 40.0]], innerRings: [[[20.0, 30.0], [20.0, 20.0], [30.0, 20.0], [30.0, 30.0], [20.0, 2.0], [5.0, 2.0]]]), Polygon([[58.0, 1.0], [50.0, 1.0], [50.0, 10.0], [58.0, 10.0], [58.0, 1.0]], innerRings: []), Polygon([[-20.0, 20.0], [-40.0, 20.0], [-40.0, 40.0], [-20.0, 40.0], [-20.0, 20.0]], innerRings: [[[-25.0, 25.0], [-25.0, 30.0], [-30.0, 30.0], [-30.0, 25.0], [-25.0, 25.0]]])], precision: precision, coordinateSystem: cs)
+        let multiPolygon2 = MultiPolygon([Polygon([[-20.0, 20.0], [-40.0, 20.0], [-40.0, 40.0], [-20.0, 40.0], [-20.0, 20.0]], innerRings: [[[-25.0, 25.0], [-25.0, 30.0], [-30.0, 30.0], [-30.0, 25.0], [-25.0, 25.0]]]), Polygon([[0.0, 0.0], [0.0, 100.0], [100.0, 100.0], [100.0, 0.0], [0.0, 0.0]], innerRings: [[[80.0, 80.0], [60.0, 80.0], [60.0, 60.0], [80.0, 60.0], [80.0, 80.0]]]), Polygon([[10.0, -1.0], [10.0, -10.0], [8.0, -10.0], [8.0, -1.0], [10.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testMultiPolygon.contains(point))
         XCTAssertTrue(testMultiPolygon.contains(multiPoint1))
@@ -412,7 +414,9 @@ class MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
         XCTAssertTrue(testMultiPolygon.contains(multiLineString2))
         XCTAssertTrue(testMultiPolygon.contains(polygon1))
         XCTAssertTrue(testMultiPolygon.contains(polygon2))
-        XCTAssertTrue(testMultiPolygon.contains(multiPolygon))
+        XCTAssertTrue(testMultiPolygon.contains(polygon3))
+        XCTAssertTrue(testMultiPolygon.contains(multiPolygon1))
+        XCTAssertTrue(testMultiPolygon.contains(multiPolygon2))
     }
 
     func testContainsFalse() {
@@ -431,6 +435,7 @@ class MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
         let polygon1 = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let polygon2 = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[78.0, 178.0], [62.0, 178.0], [62.0, 162.0], [78.0, 162.0], [78.0, 178.0]]], precision: precision, coordinateSystem: cs)
         let polygon3 = Polygon([[1000.0, 1000.0], [1000.0, 0.0], [0.0, 0.0], [0.0, 1000.0], [1000.0, 1000.0]], innerRings: [], precision: precision, coordinateSystem: cs)
+        let polygon4 = Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[78.0, 182.0], [62.0, 182.0], [62.0, 158.0], [78.0, 158.0], [78.0, 182.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon1 = MultiPolygon([Polygon([[6.0, 1.0], [-1.0, 1.0], [-1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
         let multiPolygon2 = MultiPolygon([Polygon([[100.0, 0.0], [0.0, 0.0], [0.0, 40.0], [100.0, 40.0], [100.0, 0.0]], innerRings: [[[0.5, 0.5], [20.0, 0.5], [20.0, 10.0], [0.5, 10.0], [0.5, 0.5]]]), Polygon([[0.0, 50.0], [0.0, 100.0], [110.0, 100.0], [110.0, 50.0], [0.0, 50.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
         let multiPolygon3 = MultiPolygon([Polygon([[-20.0, 20.0], [-40.0, 20.0], [-40.0, 40.0], [-20.0, 40.0], [-20.0, 20.0]], innerRings: [[[-25.0, 25.0], [-25.0, 30.0], [-30.0, 30.0], [-30.0, 25.0], [-25.0, 25.0]]]), Polygon([[0.0, 100.0], [0.0, 200.0], [100.0, 200.0], [100.0, 100.0], [0.0, 100.0]], innerRings: [[[80.0, 180.0], [60.0, 180.0], [60.0, 160.0], [80.0, 160.0], [80.0, 180.0]]]), Polygon([[10.0, -1.0], [10.0, -10.0], [1.0, -10.0], [1.0, -1.0], [10.0, -1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
@@ -448,6 +453,7 @@ class MultiPolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCas
         XCTAssertFalse(testMultiPolygon.contains(polygon1))
         XCTAssertFalse(testMultiPolygon.contains(polygon2))
         XCTAssertFalse(testMultiPolygon.contains(polygon3))
+        XCTAssertFalse(testMultiPolygon.contains(polygon4))
         XCTAssertFalse(testMultiPolygon.contains(multiPolygon1))
         XCTAssertFalse(testMultiPolygon.contains(multiPolygon2))
         XCTAssertFalse(testMultiPolygon.contains(multiPolygon3))

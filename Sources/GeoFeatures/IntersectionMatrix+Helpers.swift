@@ -2028,15 +2028,6 @@ extension IntersectionMatrix {
                 return relatedToResult
         }
 
-        /// Check whether the first polygon boundary is completely contained in the second polygon boundary
-        let reducedPB1 = reduce(outerLinearRing1)
-        let reducedPB2 = reduce(outerLinearRing2)
-        if subset(reducedPB1, reducedPB2) {
-            /// More values needed here?
-            relatedToResult.firstBoundaryTouchesSecondBoundary = .one
-            return relatedToResult
-        }
-
         /// Check the relationships between each line segment of the first polygon boundary and the second polygon
 
         for firstCoordIndex in 0..<outerLinearRing1.count - 1 {
@@ -2063,17 +2054,9 @@ extension IntersectionMatrix {
                 relatedToResult.firstBoundaryTouchesSecondBoundary = .one
             }
 
-            if segmentRelatedToResult.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
-                relatedToResult.firstBoundaryTouchesSecondBoundary = segmentRelatedToResult.firstBoundaryTouchesSecondBoundary
-            }
-
             if segmentRelatedToResult.firstInteriorTouchesSecondExterior > relatedToResult.firstInteriorTouchesSecondExterior {
                 /// This could be wrong if the polygon is collapsed into a straight line.
                 relatedToResult.firstInteriorTouchesSecondExterior = .two
-            }
-
-            if segmentRelatedToResult.firstBoundaryTouchesSecondExterior > relatedToResult.firstBoundaryTouchesSecondExterior {
-                relatedToResult.firstBoundaryTouchesSecondExterior = .one
             }
 
             if segmentRelatedToResult.firstExteriorTouchesSecondInterior > relatedToResult.firstExteriorTouchesSecondInterior {
@@ -2103,10 +2086,6 @@ extension IntersectionMatrix {
             }
 
             if segmentRelatedToResult.firstInteriorTouchesSecondExterior > .empty {
-                noSegmentOutsidePolygon1 = false
-            }
-
-            if segmentRelatedToResult.firstBoundaryTouchesSecondExterior > .empty {
                 noSegmentOutsidePolygon1 = false
             }
         }
