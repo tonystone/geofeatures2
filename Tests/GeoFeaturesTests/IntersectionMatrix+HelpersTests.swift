@@ -4947,6 +4947,38 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testLinearRing_Polygon_eachLinearRingSegmentTouchesPolygonBoundary() {
+
+        let geometry1 = LinearRing([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 100.0), Coordinate(x: 100.0, y: 100.0), Coordinate(x: 100.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 10.0, y: 10.0), Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 20.0), Coordinate(x: 0.0, y: 30.0), Coordinate(x: 10.0, y: 40.0), Coordinate(x: 10.0, y: 60.0), Coordinate(x: 0.0, y: 70.0), Coordinate(x: 10.0, y: 80.0), Coordinate(x: 10.0, y: 90.0), Coordinate(x: 40.0, y: 90.0), Coordinate(x: 50.0, y: 100.0), Coordinate(x: 60.0, y: 90.0), Coordinate(x: 90.0, y: 90.0), Coordinate(x: 90.0, y: 80.0), Coordinate(x: 100.0, y: 80.0), Coordinate(x: 100.0, y: 60.0), Coordinate(x: 90.0, y: 60.0), Coordinate(x: 90.0, y: 40.0), Coordinate(x: 100.0, y: 40.0), Coordinate(x: 100.0, y: 20.0), Coordinate(x: 90.0, y: 20.0), Coordinate(x: 90.0, y: 10.0), Coordinate(x: 60.0, y: 10.0), Coordinate(x: 50.0, y: 0.0), Coordinate(x: 40.0, y: 10.0), Coordinate(x: 30.0, y: 10.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 10.0, y: 10.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .one,   .one],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testLinearRing_Polygon_eachLinearRingSegmentCrossesPolygonBoundary() {
+
+        let geometry1 = LinearRing([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 100.0), Coordinate(x: 100.0, y: 100.0), Coordinate(x: 100.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 10.0, y: 10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: -10.0, y: 30.0), Coordinate(x: 10.0, y: 30.0), Coordinate(x: 10.0, y: 50.0), Coordinate(x: -10.0, y: 50.0), Coordinate(x: -10.0, y: 90.0), Coordinate(x: 10.0, y: 90.0), Coordinate(x: 10.0, y: 110.0), Coordinate(x: 30.0, y: 110.0), Coordinate(x: 30.0, y: 90.0), Coordinate(x: 70.0, y: 90.0), Coordinate(x: 70.0, y: 110.0), Coordinate(x: 90.0, y: 110.0), Coordinate(x: 90.0, y: 90.0), Coordinate(x: 110.0, y: 90.0), Coordinate(x: 110.0, y: 70.0), Coordinate(x: 90.0, y: 70.0), Coordinate(x: 90.0, y: 40.0), Coordinate(x: 110.0, y: 40.0), Coordinate(x: 110.0, y: 10.0), Coordinate(x: 90.0, y: 10.0), Coordinate(x: 90.0, y: -10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: 10.0, y: 10.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,   .zero,  .one],
+            [.empty, .empty, .empty],
+            [.two,   .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// LinearRing MultiPolygon tests
     ///

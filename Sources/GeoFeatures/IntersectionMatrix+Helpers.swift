@@ -1624,7 +1624,8 @@ extension IntersectionMatrix {
         ///
         /// Also, add functions to RelatedTo like isInside, isOutside, isInBoundary.
 
-        /// Array of geometries at which the segment intersects the polygon boundary
+        /// Array of geometries at which the segment intersects the polygon boundary.
+        /// This array may contain duplicate items.
         var intersectionGeometries = [Geometry]()
 
         /// Do a first pass to get the intersections of the line segment and the polygon.
@@ -1640,12 +1641,18 @@ extension IntersectionMatrix {
 
             /// If the two segments intersect, set boundary properties
             if let intersectionGeometry = lineSegmentIntersection.geometry {
+
                 /// Append the new geometry to the geometry array, only if the geometry does not currently exist in the array
                 let matchingGeometries = intersectionGeometries.filter{
-                    if ($0 as? Point) == (intersectionGeometry as? Point) {
-                        return true
+                    switch ($0, intersectionGeometry) {
+                    case is (Point, Point):
+                        if $0 == intersectionGeometry {
+                            return true
+                        }
+                        return false
+                    default:
+                        return false
                     }
-                    return false
                 }
                 if matchingGeometries.count == 0 {
                     intersectionGeometries.append(intersectionGeometry)
@@ -1725,12 +1732,14 @@ extension IntersectionMatrix {
         /// Note that this algorithm can likely be made better in the cases where two midpoints are created rather than just one.
 
         guard intersectionGeometries.count >= 2 else { return relatedToResult }
+        
+        let reducedGeometries = reduce(intersectionGeometries)
 
         var midpointCoordinates = [Coordinate]()
 
-        for firstGeometryIndex in 0..<intersectionGeometries.count - 1 {
-            let intersectionGeometry1 = intersectionGeometries[firstGeometryIndex]
-            let intersectionGeometry2 = intersectionGeometries[firstGeometryIndex + 1]
+        for firstGeometryIndex in 0..<reducedGeometries.count - 1 {
+            let intersectionGeometry1 = reducedGeometries[firstGeometryIndex]
+            let intersectionGeometry2 = reducedGeometries[firstGeometryIndex + 1]
 
             var midpointCoord1: Coordinate?
             var midpointCoord2: Coordinate?
@@ -1738,23 +1747,29 @@ extension IntersectionMatrix {
 
                 midpointCoord1 = midpoint(point1.coordinate, point2.coordinate)
 
-            } else if let point = intersectionGeometry1 as? Point, let segment = intersectionGeometry2 as? Segment {
+            } else if let point = intersectionGeometry1 as? Point, let lineString = intersectionGeometry2 as? LineString {
 
                 /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
+                let segment = Segment(other: lineString)
                 midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
                 midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
 
-            } else if let point = intersectionGeometry2 as? Point, let segment = intersectionGeometry1 as? Segment {
+//            } else if let point = intersectionGeometry2 as? Point, let lineString = intersectionGeometry1 as? LineString {
 
                 /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
-                midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
-                midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
+                /// (Note I'm leaving this section in for the time being, although it will never be executed because when reducing the geometry array,
+                /// points will always come before line strings.)
+//                let segment = Segment(other: lineString)
+//                midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
+//                midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
 
-            } else if let segment1 = intersectionGeometry1 as? Segment, let segment2 = intersectionGeometry2 as? Segment {
+            } else if let lineString1 = intersectionGeometry1 as? LineString, let lineString2 = intersectionGeometry2 as? LineString {
 
                 /// Both line segments lie on a straight line.
                 /// The midpoint of interest lies either (1) between the leftCoordinate of the first and the rightCoordinate of the second or
                 /// (2) the rightCoordinate of the first and the leftCoordinate of the second.  We add both midpoints.
+                let segment1 = Segment(other: lineString1)
+                let segment2 = Segment(other: lineString2)
                 midpointCoord1 = midpoint(segment1.leftCoordinate, segment2.rightCoordinate)
                 midpointCoord2 = midpoint(segment1.rightCoordinate, segment2.leftCoordinate)
 
@@ -1774,16 +1789,8 @@ extension IntersectionMatrix {
                 relatedToResult.firstInteriorTouchesSecondInterior = pointRelatedToResult.firstInteriorTouchesSecondInterior
             }
 
-            if pointRelatedToResult.firstBoundaryTouchesSecondInterior > .empty {
-                relatedToResult.firstBoundaryTouchesSecondInterior = pointRelatedToResult.firstBoundaryTouchesSecondInterior
-            }
-
             if pointRelatedToResult.firstInteriorTouchesSecondExterior > .empty {
                 relatedToResult.firstInteriorTouchesSecondExterior = .one
-            }
-
-            if pointRelatedToResult.firstBoundaryTouchesSecondExterior > .empty {
-                relatedToResult.firstBoundaryTouchesSecondExterior = pointRelatedToResult.firstBoundaryTouchesSecondExterior
             }
 
         }
@@ -3187,6 +3194,57 @@ extension IntersectionMatrix {
         }
 
         return reducedLinearRings
+    }
+
+    /// This currently assumes a Geometry array where all of the elements are either Points or LineStrings.
+    /// Duplicate Points will have already been removed.
+    /// This will remove all Points that are currently subsets of any of the LineStrings.
+    /// This currently does not handle the case where LineStrings overlap or are subsets of one another.
+    fileprivate static func reduce(_ geometryArray: [Geometry]) -> [Geometry] {
+
+        guard geometryArray.count >= 2 else {
+            return geometryArray
+        }
+
+        var points = [Point]()
+        var lineStrings = [LineString]()
+        var otherGeometries = [Geometry]()
+
+        var reducedGeometryArray = [Geometry]()
+
+        for geometry in geometryArray {
+            switch geometry {
+            case let point as Point:
+                points.append(point)
+            case let lineString as LineString:
+                lineStrings.append(lineString)
+            default:
+                otherGeometries.append(geometry)
+            }
+        }
+
+        guard lineStrings.count > 0 else {
+            return geometryArray
+        }
+
+        for point in points {
+            var pointInsideLineString = false
+            for lineString in lineStrings {
+                if subset(point.coordinate, lineString) {
+                    pointInsideLineString = true
+                    break
+                }
+            }
+            if pointInsideLineString {
+                continue
+            }
+            reducedGeometryArray.append(point)
+        }
+
+        reducedGeometryArray += lineStrings
+        reducedGeometryArray += otherGeometries
+
+        return reducedGeometryArray
     }
 
     /// Reduces a multi line string to a sequence of points on each line string such that each consecutive line segment will have a different slope.
