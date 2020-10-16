@@ -1476,19 +1476,7 @@ extension IntersectionMatrix {
                         /// The segment is completely contained in the linear ring
                         segmentCompletelyContainedInLinearRing = true
                         relatedToResult.firstInteriorTouchesSecondInterior = .one
-                        if leftCoordinateBoundaryPoint || rightCoordinateBoundaryPoint {
-                            relatedToResult.firstBoundaryTouchesSecondInterior = .zero
-                        }
                     }
-                } else if intersectionGeometry.dimension == .zero {
-                    if (lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior && leftCoordinateBoundaryPoint) || (lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior && rightCoordinateBoundaryPoint) {
-                        relatedToResult.firstBoundaryTouchesSecondInterior = .zero
-                    }
-                }
-
-                if (lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onBoundary && leftCoordinateBoundaryPoint) ||
-                    (lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onBoundary && rightCoordinateBoundaryPoint) {
-                    relatedToResult.firstBoundaryTouchesSecondInterior = .zero
                 }
 
                 if lineSegmentIntersection.firstSubsetOfSecond {
