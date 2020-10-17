@@ -3656,6 +3656,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testLineString_MultiPolygon_polygonsHaveEmptyHoles() {
+
+        let geometry1 = LineString([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 10.0, y: 8.0), Coordinate(x: 5.0, y: 20.0), Coordinate(x: -34.0, y: 20.0), Coordinate(x: -7.0, y: 9.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [[]]), Polygon([Coordinate(x: 20.0, y: -2.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: 2.0, y: -20.0), Coordinate(x: 2.0, y: -2.0), Coordinate(x: 20.0, y: -2.0)], innerRings: [[]])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,  .one,  .one],
+            [.zero, .zero, .empty],
+            [.two,  .one,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     func testLineString_MultiPolygon_lineStringInsidePolygonHole() {
 
         let geometry1 = LineString([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 4.0), Coordinate(x: 4.0, y: 4.0), Coordinate(x: 4.0, y: 2.0), Coordinate(x: 3.0, y: 2.0)], precision: precision, coordinateSystem: cs)
@@ -7409,6 +7425,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
             [.one,  .one,  .one],
             [.zero, .zero, .empty],
             [.two,  .one,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testMultiLineString_MultiPolygon_boundaryIntersectsInterior() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: -10.0, y: 4.0), Coordinate(x: -40.0, y: 4.0), Coordinate(x: -40.0, y: 10.0), Coordinate(x: -10.0, y: 10.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: -2.0, y: 3.0), Coordinate(x: -20.0, y: 3.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: -2.0, y: 20.0), Coordinate(x: -2.0, y: 3.0)], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,  .zero,  .one],
+            [.zero, .empty, .empty],
+            [.two,  .one,   .two]
             ])
 
         XCTAssertEqual(matrix, expected)

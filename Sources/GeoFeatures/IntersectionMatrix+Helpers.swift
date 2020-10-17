@@ -1235,9 +1235,7 @@ extension IntersectionMatrix {
             relatedToBase.firstExteriorTouchesSecondBoundary = relatedToNew.firstExteriorTouchesSecondBoundary
         }
 
-        if relatedToNew.firstExteriorTouchesSecondExterior > relatedToBase.firstExteriorTouchesSecondExterior {
-            relatedToBase.firstExteriorTouchesSecondExterior = relatedToNew.firstExteriorTouchesSecondExterior
-        }
+        /// firstExteriorTouchesSecondExterior will never be updated, since it will always be two.
     }
 
     /// This function takes one IntersectionMatrix struct, the base struct, and compares a new IntersectionMatrix struct to it.
