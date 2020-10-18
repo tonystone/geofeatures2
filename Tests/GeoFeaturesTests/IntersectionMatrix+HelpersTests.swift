@@ -172,6 +172,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testPoint_LineString_allLineStringCoordinatesMatchPoint() {
+
+        let geometry1 = Point(Coordinate(x: 1.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = LineString([Coordinate(x: 1.0, y: 3.0), Coordinate(x: 1.0, y: 3.0), Coordinate(x: 1.0, y: 3.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .zero,  .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// Point LinearRing tests
     ///
@@ -203,6 +219,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
             [.zero,  .empty, .empty],
             [.empty, .empty, .empty],
             [.one,   .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPoint_LinearRing_allCoordinatesOfLinearRingIdentical() {
+
+        let geometry1 = Point(Coordinate(x: 2.0, y: 2.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = LinearRing([Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0), Coordinate(x: 2.0, y: 2.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.zero,  .empty, .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
             ])
 
         XCTAssertEqual(matrix, expected)
@@ -255,6 +287,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
             [.empty, .zero,  .empty],
             [.empty, .empty, .empty],
             [.one,   .zero,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPoint_MultiLineString_allLineStringsWithSameStartEndPoints() {
+
+        let geometry1 = Point(Coordinate(x: 3.0, y: 3.0), precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 3.0, y: 3.0), Coordinate(x: 3.0, y: 3.0)]), LineString([Coordinate(x: 3.0, y: 3.0), Coordinate(x: 3.0, y: 3.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.empty, .zero,  .empty],
+            [.empty, .empty, .empty],
+            [.empty, .empty, .two]
             ])
 
         XCTAssertEqual(matrix, expected)

@@ -2988,6 +2988,10 @@ extension IntersectionMatrix {
             if lsFirstCoord == lsSecondCoord { continue }
             tempLineString.append(lsSecondCoord)
         }
+        if tempLineString.count == 1 {
+            /// A valid line string will not have just one point, so duplicate the first point so there are two points.
+            tempLineString.append(tempLineString[0])
+        }
 
         /// Must have at least 3 coordinates or two lines segments for this algorithm to apply
         guard tempLineString.count >= 3 else {
@@ -3065,7 +3069,10 @@ extension IntersectionMatrix {
             if lrFirstCoord == lrSecondCoord { continue }
             tempLinearRing.append(lrSecondCoord)
         }
-        tempLinearRing.append(linearRing[linearRing.count - 1])
+        if tempLinearRing.count == 1 {
+            /// A valid linear ring cannot have just one point, so add a duplicate of the first so there are two points.
+            tempLinearRing.append(tempLinearRing[0])
+        }
 
         guard tempLinearRing.count >= 3 else {
             return tempLinearRing
