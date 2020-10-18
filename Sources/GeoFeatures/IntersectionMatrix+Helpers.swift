@@ -718,16 +718,6 @@ extension IntersectionMatrix {
         return MultiPoint(uniquePointsArray)
     }
 
-    fileprivate static func subset(_ point: Point, _ points: [Point]) -> Bool {
-
-        for tempPoint in points {
-            if point.coordinate == tempPoint.coordinate {
-                return true
-            }
-        }
-        return false
-    }
-
     fileprivate static func subset(_ coordinate: Coordinate, _ coordinates: [Coordinate]) -> Bool {
 
         for tempCoordinate in coordinates {
@@ -969,50 +959,6 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
-    /// This code parallels that of a point and a simple polygon.
-    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
-    /// The coordinate is a Coordinate object and a flag indicating whether it is a boundary point.
-    fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ linearRing: LinearRing) -> RelatedTo {
-
-        var relatedToResult = RelatedTo()
-
-        /// Check if the coordinate is on the boundary of the linear ring
-        var coordinates = [(Coordinate, Bool)]()
-        coordinates.append(coordinateTuple)
-        let tempRelatedToResult = relatedTo(coordinates, linearRing)
-        if tempRelatedToResult.firstTouchesSecondInterior != .empty {
-            relatedToResult.firstInteriorTouchesSecondInterior = .zero
-            return relatedToResult
-        }
-
-        let coordinate = coordinateTuple.0
-
-        var secondCoord = linearRing[linearRing.count - 1]
-
-        var isSubset = false
-
-        for firstCoordIndex in 0..<linearRing.count - 1 {
-            let firstCoord  = linearRing[firstCoordIndex]
-
-            if ((firstCoord.y >= coordinate.y) != (secondCoord.y >= coordinate.y)) &&
-                (coordinate.x <= (secondCoord.x - firstCoord.x) * (coordinate.y - firstCoord.y) / (secondCoord.y - firstCoord.y) + firstCoord.x) {
-                isSubset = !isSubset
-            }
-
-            secondCoord = firstCoord
-        }
-
-        relatedToResult = RelatedTo() /// Resets to default values
-
-        if isSubset {
-            relatedToResult.firstInteriorTouchesSecondInterior = .zero
-        } else {
-            relatedToResult.firstInteriorTouchesSecondExterior = .zero
-        }
-
-        return relatedToResult
-    }
-
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
     /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
     /// The algorithm was modified because we assume the polygon is defined as a LinearRing, whose first and last points are the same.
@@ -1085,11 +1031,6 @@ extension IntersectionMatrix {
     fileprivate static func relatedTo(_ coordinate: Coordinate, _ simplePolygon: Polygon) -> RelatedTo {
 
         return relatedTo((coordinate, false), simplePolygon)
-    }
-
-    fileprivate static func relatedTo(_ coordinate: Coordinate, _ linearRing: LinearRing) -> RelatedTo {
-
-        return relatedTo((coordinate, false), linearRing)
     }
 
     /// Assume here that the polygon is a general polygon with holes.
