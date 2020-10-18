@@ -121,6 +121,9 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let multiLineString = MultiLineString([LineString([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]), LineString([[2.0, 2.0], [4.0, -4.0], [13.0, -13.0]])], precision: precision, coordinateSystem: cs)
         let polygon = Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 6.0], [3.5, 6.0], [6.0, 6.0], [6.0, 1.0]], innerRings: [[[5.0, 2.0], [5.0, 3.0], [3.5, 3.5], [2.0, 3.0], [2.0, 2.0], [5.0, 2.0]]]), Polygon([[10.0, 1.0], [8.0, 1.0], [8.0, 10.0], [10.0, 10.0], [10.0, 1.0]], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let geometryCollection1 = GeometryCollection([Point(Coordinate(x: 1.0, y: 1.0))] as [Geometry], precision: precision, coordinateSystem: cs)
+        let geometryCollection2 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]])] as [Geometry], precision: precision, coordinateSystem: cs)
+        let geometryCollection3 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testLineString.equals(point))
         XCTAssertFalse(testLineString.equals(multiPoint))
@@ -130,6 +133,9 @@ class LineStringGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertFalse(testLineString.equals(multiLineString))
         XCTAssertFalse(testLineString.equals(polygon))
         XCTAssertFalse(testLineString.equals(multiPolygon))
+        XCTAssertFalse(testLineString.equals(geometryCollection1))
+        XCTAssertFalse(testLineString.equals(geometryCollection2))
+        XCTAssertFalse(testLineString.equals(geometryCollection3))
      }
 
     func testDisjointTrue() {

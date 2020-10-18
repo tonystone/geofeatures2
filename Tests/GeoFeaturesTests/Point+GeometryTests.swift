@@ -536,6 +536,9 @@ class PointGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         let multiLineString = MultiLineString([LineString([Coordinate(x: 1.0, y: 1.0, m: 1.0), Coordinate(x: 2.0, y: 2.0, m: 2.0), Coordinate(x: 2.0, y: 1.0, m: 1.0)])], precision: precision, coordinateSystem: cs)
         let polygon = Polygon([Coordinate(x: 6.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 2.0), Coordinate(x: 1.0, y: 3.0, m: 1.0), Coordinate(x: 3.5, y: 4.0, m: 2.0), Coordinate(x: 6.0, y: 3.0, m: 1.0), Coordinate(x: 6.0, y: 1.0, m: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0, m: 1.0), Coordinate(x: 5.0, y: 3.0, m: 2.0), Coordinate(x: 3.5, y: 3.5, m: 1.0), Coordinate(x: 2.0, y: 3.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, m: 1.0), Coordinate(x: 5.0, y: 2.0, m: 1.0)]], precision: precision, coordinateSystem: cs)
         let multiPolygon = MultiPolygon([Polygon([Coordinate(x: 6.0, y: 1.0, m: 1.0), Coordinate(x: 1.0, y: 1.0, m: 2.0), Coordinate(x: 1.0, y: 3.0, m: 1.0), Coordinate(x: 3.5, y: 4.0, m: 2.0), Coordinate(x: 6.0, y: 3.0, m: 1.0), Coordinate(x: 6.0, y: 1.0, m: 1.0)], innerRings: [[Coordinate(x: 5.0, y: 2.0, m: 1.0), Coordinate(x: 5.0, y: 3.0, m: 2.0), Coordinate(x: 3.5, y: 3.5, m: 1.0), Coordinate(x: 2.0, y: 3.0, m: 2.0), Coordinate(x: 2.0, y: 2.0, m: 1.0), Coordinate(x: 5.0, y: 2.0, m: 1.0)]]), Polygon([Coordinate(x: 10.0, y: 1.0, m: 1.0), Coordinate(x: 8.0, y: 1.0, m: 2.0), Coordinate(x: 8.0, y: 10.0, m: 1.0), Coordinate(x: 10.0, y: 10.0, m: 2.0), Coordinate(x: 10.0, y: 1.0, m: 1.0)], innerRings: [])], precision: precision, coordinateSystem: cs)
+        let geometryCollection1 = GeometryCollection([Point(Coordinate(x: 1.0, y: 1.0))] as [Geometry], precision: precision, coordinateSystem: cs)
+        let geometryCollection2 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]])] as [Geometry], precision: precision, coordinateSystem: cs)
+        let geometryCollection3 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testPoint.equals(point))
         XCTAssertFalse(testPoint.equals(multiPoint))
@@ -544,6 +547,9 @@ class PointGeometryCoordinate2DMFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertFalse(testPoint.equals(multiLineString))
         XCTAssertFalse(testPoint.equals(polygon))
         XCTAssertFalse(testPoint.equals(multiPolygon))
+        XCTAssertFalse(testPoint.equals(geometryCollection1))
+        XCTAssertFalse(testPoint.equals(geometryCollection2))
+        XCTAssertFalse(testPoint.equals(geometryCollection3))
     }
 
     func testBoundary() {

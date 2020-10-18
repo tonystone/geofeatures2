@@ -126,6 +126,9 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let multiPolygon2 = MultiPolygon([Polygon([[1.0, 1.0], [1.0, -4.0], [4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0]], innerRings: [[[3.0, -3.5], [2.0, -3.0], [2.0, -2.0], [3.0, -2.0], [3.0, -3.0]]])], precision: precision, coordinateSystem: cs)
         let multiPolygon3 = MultiPolygon([Polygon([[1.0, 1.0], [2.0, 2.0], [2.0, 4.0], [4.0, 4.0], [4.2, -4.0], [1.0, -4.0], [1.0, 1.0]], innerRings: [[[3.0, -3.0], [3.0, -2.0], [2.0, -2.0], [2.0, -3.0], [3.0, -3.0]]])], precision: precision, coordinateSystem: cs)
         let multiPolygon4 = MultiPolygon([Polygon([[1.0, 1.0], [1.0, -4.0], [4.0, -4.0], [4.0, 4.0], [2.0, 4.0], [2.0, 2.0], [1.0, 1.0]], innerRings: [[[3.0, -3.0], [3.0, -2.0], [2.0, -2.0], [2.0, -3.4], [3.0, -3.0]]])], precision: precision, coordinateSystem: cs)
+        
+        let geometryCollection1 = GeometryCollection([Point(Coordinate(x: 10.4, y: 20.5))] as [Geometry], precision: precision, coordinateSystem: cs)
+        let geometryCollection2 = GeometryCollection([LineString([[1.0, 1.0], [2.0, 2.0]]), Polygon([[6.0, 1.0], [1.0, 1.0], [1.0, 3.0], [3.5, 4.0], [6.0, 3.0]], innerRings: [])] as [Geometry], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testPolygon.equals(point))
         XCTAssertFalse(testPolygon.equals(multiPoint))
@@ -140,6 +143,8 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertFalse(testPolygon.equals(multiPolygon2))
         XCTAssertFalse(testPolygon.equals(multiPolygon3))
         XCTAssertFalse(testPolygon.equals(multiPolygon4))
+        XCTAssertFalse(testPolygon.equals(geometryCollection1))
+        XCTAssertFalse(testPolygon.equals(geometryCollection2))
      }
 
     // MARK: - Disjoint
