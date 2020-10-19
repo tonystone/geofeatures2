@@ -43,9 +43,7 @@ struct RelatedTo {
         }
         return tempDimension
     }
-    var firstTouchesSecondInteriorOnly: Bool {
-        return firstTouchesSecondInterior > .empty && firstTouchesSecondBoundary == .empty && firstTouchesSecondExterior == .empty
-    }
+
     var firstTouchesSecondInteriorOrBoundaryOnly: Bool {
         return (firstTouchesSecondInterior > .empty || firstTouchesSecondBoundary > .empty) && firstTouchesSecondExterior == .empty
     }
@@ -70,9 +68,6 @@ struct RelatedTo {
             tempDimension = firstBoundaryTouchesSecondExterior
         }
         return tempDimension
-    }
-    var firstTouchesSecondExteriorOnly: Bool {
-        return firstTouchesSecondExterior > .empty && firstTouchesSecondBoundary == .empty && firstTouchesSecondInterior == .empty
     }
 }
 
