@@ -3241,29 +3241,6 @@ extension IntersectionMatrix {
         return resultLinearRingArray
     }
 
-    /// Reduces the linear rings of a polygon to another polygon whose linear rings are such that each consecutive
-    /// line segment of each linear ring will have a different slope.
-    fileprivate static func reduce(_ polygon: Polygon) -> Polygon {
-
-        /// Check there is a valid outer ring, else return the original polygon.
-        guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
-            polygonBoundary.count > 0,
-            let outerLinearRing = polygonBoundary[0] as? LinearRing,
-            outerLinearRing.count > 0 else {
-                return polygon
-        }
-
-        /// Reduce the main boundary
-        let reducedMainLinearRing = reduce(outerLinearRing)
-
-        /// Reduce the holes
-        let holesArray = holes(polygon)
-        let reducedHoles = reduce(holesArray)
-
-        /// Construct the new polygon from the reduced pieces
-        return Polygon(reducedMainLinearRing, innerRings: reducedHoles, precision: Floating(), coordinateSystem: Cartesian())
-    }
-
     /// Is segment1 contained in or a subset of segment2?
     fileprivate static func subset(_ segment1: Segment, _ segment2: Segment) -> Bool {
 
