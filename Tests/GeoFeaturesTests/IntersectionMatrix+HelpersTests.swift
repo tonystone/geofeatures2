@@ -3151,6 +3151,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testLineString_MultiLineString_firstSubsetOfMultipleSegmentsOfMultiLineString() {
+
+        let geometry1 = LineString([Coordinate(x: 6.0, y: 6.0), Coordinate(x: 16.0, y: 16.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiLineString([LineString([Coordinate(x: 9.0, y: 9.0), Coordinate(x: 11.0, y: 11.0)]), LineString([Coordinate(x: 1.0, y: 1.0), Coordinate(x: 10.0, y: 10.0)]), LineString([Coordinate(x: 8.0, y: 8.0), Coordinate(x: 20.0, y: 20.0)])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,  .zero,  .empty],
+            [.zero, .empty, .empty],
+            [.one,  .zero,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// LineString Polygon tests
     ///
