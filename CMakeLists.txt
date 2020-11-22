@@ -7,7 +7,7 @@ message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "")
 
 # Git tag
-set(BUILD_TOOLS_VERSION 1.2.0)
+set(BUILD_TOOLS_VERSION 1.2.1)
 
 include(ExternalProject)
 
