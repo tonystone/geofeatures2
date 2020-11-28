@@ -1725,14 +1725,6 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// This is very similar to the simple polygon case below.
-    fileprivate static func relatedTo(_ lineString: LineString, _ linearRing: LinearRing) -> RelatedTo {
-
-        let polygon = Polygon(linearRing)
-
-        return relatedTo(lineString, polygon)
-    }
-
     /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
     fileprivate static func relatedTo(_ lineString: LineString, _ simplePolygon: Polygon) -> RelatedTo {
 
