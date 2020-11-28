@@ -1998,6 +1998,7 @@ extension IntersectionMatrix {
 
                 if polygonsRelatedToResult.firstInteriorTouchesSecondExterior < tempInteriorExteriorDimension {
                     tempInteriorExteriorDimension = polygonsRelatedToResult.firstInteriorTouchesSecondExterior
+                    tempBoundaryExteriorDimension = .one
                 }
 
                 if polygonsRelatedToResult.firstBoundaryTouchesSecondInterior > relatedToResult.firstBoundaryTouchesSecondInterior {
@@ -2006,10 +2007,6 @@ extension IntersectionMatrix {
 
                 if polygonsRelatedToResult.firstBoundaryTouchesSecondBoundary > relatedToResult.firstBoundaryTouchesSecondBoundary {
                     relatedToResult.firstBoundaryTouchesSecondBoundary = polygonsRelatedToResult.firstBoundaryTouchesSecondBoundary
-                }
-
-                if polygonsRelatedToResult.firstBoundaryTouchesSecondExterior < tempBoundaryExteriorDimension {
-                    tempBoundaryExteriorDimension = polygonsRelatedToResult.firstBoundaryTouchesSecondExterior
                 }
 
                 if polygonsRelatedToResult.firstExteriorTouchesSecondInterior < tempExteriorInteriorDimension {
@@ -2021,22 +2018,22 @@ extension IntersectionMatrix {
                 }
             }
 
-            /// Update the final interior/exterior dimensions as needed
+            /// Update the final interior/exterior dimension as needed
             if finalInteriorExteriorDimension < tempInteriorExteriorDimension {
                 finalInteriorExteriorDimension = tempInteriorExteriorDimension
             }
 
-            /// Update the final interior/exterior dimensions as needed
+            /// Update the final boundary/exterior dimension as needed
             if finalBoundaryExteriorDimension < tempBoundaryExteriorDimension {
                 finalBoundaryExteriorDimension = tempBoundaryExteriorDimension
             }
 
-            /// Update the final interior/exterior dimensions as needed
+            /// Update the final exterior/interior dimension as needed
             if finalExteriorInteriorDimension < tempExteriorInteriorDimension {
                 finalExteriorInteriorDimension = tempExteriorInteriorDimension
             }
 
-            /// Update the final interior/exterior dimensions as needed
+            /// Update the final exterior/boundary dimension as needed
             if finalExteriorBoundaryDimension < tempExteriorBoundaryDimension {
                 finalExteriorBoundaryDimension = tempExteriorBoundaryDimension
             }
