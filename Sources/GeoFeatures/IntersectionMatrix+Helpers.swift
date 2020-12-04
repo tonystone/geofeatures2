@@ -1399,7 +1399,7 @@ extension IntersectionMatrix {
             let secondCoord = linearRing[firstCoordIndex + 1]
             let segment2 = Segment(left: firstCoord, right: secondCoord)
 
-            let lineSegmentIntersection = intersection(segment: segment, other: segment2)
+            let lineSegmentIntersection = intersection(segment: segment, other: segment2, firstCoordinateFirstSegmentBoundary: leftCoordinateBoundaryPoint, secondCoordinateFirstSegmentBoundary: rightCoordinateBoundaryPoint)
 
             if let intersectionGeometry = lineSegmentIntersection.geometry {
                 intersectionGeometries.append(intersectionGeometry)
@@ -1419,6 +1419,11 @@ extension IntersectionMatrix {
 
                 if !lineSegmentIntersection.secondSubsetOfFirst {
                     relatedToResult.firstExteriorTouchesSecondInterior = .one
+                }
+                
+                if lineSegmentIntersection.firstSegmentFirstBoundaryLocation == .onInterior ||
+                    lineSegmentIntersection.firstSegmentSecondBoundaryLocation == .onInterior {
+                    relatedToResult.firstBoundaryTouchesSecondInterior = .zero
                 }
             }
         }

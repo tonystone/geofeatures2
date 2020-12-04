@@ -9394,6 +9394,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testPolygon_Polygon_secondRotated45DegreesFromFirst() {
+
+        let geometry1 = Polygon([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 20.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: -4.0, y: 10.0), Coordinate(x: 10.0, y: 24.0), Coordinate(x: 24.0, y: 10.0), Coordinate(x: 10.0, y: -4.0), Coordinate(x: -4.0, y: 10.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two, .one,  .two],
+            [.one, .zero, .one],
+            [.two, .one,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// Polygon MultiPolygon tests
     ///
