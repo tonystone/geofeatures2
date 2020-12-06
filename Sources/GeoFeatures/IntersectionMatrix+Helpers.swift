@@ -1402,6 +1402,9 @@ extension IntersectionMatrix {
             let lineSegmentIntersection = intersection(segment: segment, other: segment2, firstCoordinateFirstSegmentBoundary: leftCoordinateBoundaryPoint, secondCoordinateFirstSegmentBoundary: rightCoordinateBoundaryPoint)
 
             if let intersectionGeometry = lineSegmentIntersection.geometry {
+                if (intersectionGeometry.dimension == .zero) && (lineSegmentIntersection.interiorsTouchAtPoint == false) {
+                    continue
+                }
                 intersectionGeometries.append(intersectionGeometry)
 
                 if intersectionGeometry.dimension == .one {
@@ -1439,91 +1442,6 @@ extension IntersectionMatrix {
             relatedToResult.firstBoundaryTouchesSecondExterior = .zero
         }
 
-        /// Check the cases where no further work is needed.
-        if (relatedToResult.firstTouchesSecondInterior == .one && relatedToResult.firstTouchesSecondExterior == .one) ||
-            (relatedToResult.firstTouchesSecondInterior == .empty) ||
-            (intersectionGeometries.count <= 1) {
-            return relatedToResult
-        }
-
-        /// Check the case where the line segment interior lies on the interior or exterior of the linear ring.  This is why we have been collecting the geometries.
-        /// Do the following:
-        /// - Generate an array of the midpoints of the consecutive geometries.
-        /// - Check whether each point in that array is inside or outside of the linear ring.
-        ///   If inside, set the firstTouchesSecondInterior to .one.
-        ///   If outside, set firstTouchesSecondExterior to .one.
-        ///
-        /// Note that this algorithm can likely be made better in the cases where two midpoints are created rather than just one.
-        ///
-        /// Note, too, the following code has been commented out but left in for now.  The current tests do not test any of this, so this code may not be needed.
-
-//        guard intersectionGeometries.count >= 2 else { return relatedToResult }
-//
-//        var midpointCoordinates = [Coordinate]()
-//
-//        for firstGeometryIndex in 0..<intersectionGeometries.count - 1 {
-//            let intersectionGeometry1 = intersectionGeometries[firstGeometryIndex]
-//            let intersectionGeometry2 = intersectionGeometries[firstGeometryIndex + 1]
-//
-//            var midpointCoord1: Coordinate?
-//            var midpointCoord2: Coordinate?
-//            if let point1 = intersectionGeometry1 as? Point, let point2 = intersectionGeometry2 as? Point {
-//
-//                midpointCoord1 = midpoint(point1.coordinate, point2.coordinate)
-//
-//            } else if let point = intersectionGeometry1 as? Point, let segment = intersectionGeometry2 as? Segment {
-//
-//                /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
-//                midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
-//                midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
-//
-//            } else if let point = intersectionGeometry2 as? Point, let segment = intersectionGeometry1 as? Segment {
-//
-//                /// Since we don't know which end of the segment is sequentially next to the point, we add both midpoints
-//                midpointCoord1 = midpoint(point.coordinate, segment.leftCoordinate)
-//                midpointCoord2 = midpoint(point.coordinate, segment.rightCoordinate)
-//
-//            } else if let segment1 = intersectionGeometry1 as? Segment, let segment2 = intersectionGeometry2 as? Segment {
-//
-//                /// Both line segments lie on a straight line.
-//                /// The midpoint of interest lies either (1) between the leftCoordinate of the first and the rightCoordinate of the second or
-//                /// (2) the rightCoordinate of the first and the leftCoordinate of the second.  We add both midpoints.
-//                midpointCoord1 = midpoint(segment1.leftCoordinate, segment2.rightCoordinate)
-//                midpointCoord2 = midpoint(segment1.rightCoordinate, segment2.leftCoordinate)
-//
-//            }
-//
-//            if let midpointCoord1 = midpointCoord1 { midpointCoordinates.append(midpointCoord1) }
-//            if let midpointCoord2 = midpointCoord2 { midpointCoordinates.append(midpointCoord2) }
-//        }
-//
-//        /// The midpoints have all been generated.  Check whether each is inside or outside of the linear ring.
-//
-//        for coord in midpointCoordinates {
-//
-//            let pointRelatedToResult = relatedTo(coord, linearRing)
-//
-//            if pointRelatedToResult.firstInteriorTouchesSecondInterior > .empty {
-//                relatedToResult.firstInteriorTouchesSecondInterior = pointRelatedToResult.firstInteriorTouchesSecondInterior
-//            }
-//
-//            if pointRelatedToResult.firstBoundaryTouchesSecondInterior > .empty {
-//                relatedToResult.firstBoundaryTouchesSecondInterior = pointRelatedToResult.firstBoundaryTouchesSecondInterior
-//            }
-//
-//            if pointRelatedToResult.firstInteriorTouchesSecondExterior > .empty {
-//                relatedToResult.firstInteriorTouchesSecondExterior = pointRelatedToResult.firstInteriorTouchesSecondExterior
-//            }
-//
-//            if pointRelatedToResult.firstBoundaryTouchesSecondExterior > .empty {
-//                relatedToResult.firstBoundaryTouchesSecondExterior = pointRelatedToResult.firstBoundaryTouchesSecondExterior
-//            }
-//
-//        }
-//
-//        /// Return
-//
-        /// The line below is left in for completeness but is currently not hit by any tests.
         return relatedToResult
     }
 

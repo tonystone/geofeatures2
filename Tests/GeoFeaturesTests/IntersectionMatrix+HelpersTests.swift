@@ -9410,6 +9410,54 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testPolygon_Polygon_firstInsideSecondButTouchesSecondBoundaryAtPoints() {
+
+        let geometry1 = Polygon([Coordinate(x: -10.0, y: -10.0), Coordinate(x: -10.0, y: 10.0), Coordinate(x: 10.0, y: 10.0), Coordinate(x: 10.0, y: -10.0), Coordinate(x: -10.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 0.0, y: -10.0), Coordinate(x: -10.0, y: -20.0), Coordinate(x: -20.0, y: -10.0), Coordinate(x: -10.0, y: 0.0), Coordinate(x: -20.0, y: 10.0), Coordinate(x: -10.0, y: 20.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 20.0), Coordinate(x: 20.0, y: 10.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 20.0, y: -10.0), Coordinate(x: 10.0, y: -20.0), Coordinate(x: 0.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two, .empty, .empty],
+            [.one, .zero,  .empty],
+            [.two, .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPolygon_Polygon_firstPartiallyInsideSecondAndCrossesSecondBoundaryAtMultiplePoints() {
+
+        let geometry1 = Polygon([Coordinate(x: -12.0, y: -12.0), Coordinate(x: -12.0, y: 12.0), Coordinate(x: 12.0, y: 12.0), Coordinate(x: 12.0, y: -12.0), Coordinate(x: -12.0, y: -12.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 0.0, y: -10.0), Coordinate(x: -10.0, y: -20.0), Coordinate(x: -20.0, y: -10.0), Coordinate(x: -10.0, y: 0.0), Coordinate(x: -20.0, y: 10.0), Coordinate(x: -10.0, y: 20.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 20.0), Coordinate(x: 20.0, y: 10.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 20.0, y: -10.0), Coordinate(x: 10.0, y: -20.0), Coordinate(x: 0.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two, .one,  .two],
+            [.one, .zero, .one],
+            [.two, .one,  .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
+    func testPolygon_Polygon_firstContainsSecondButTouchesSecondBoundaryAtMultiplePoints() {
+
+        let geometry1 = Polygon([Coordinate(x: -20.0, y: -20.0), Coordinate(x: -20.0, y: 20.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: -20.0), Coordinate(x: -20.0, y: -20.0)], precision: precision, coordinateSystem: cs)
+        let geometry2 = Polygon([Coordinate(x: 0.0, y: -10.0), Coordinate(x: -10.0, y: -20.0), Coordinate(x: -20.0, y: -10.0), Coordinate(x: -10.0, y: 0.0), Coordinate(x: -20.0, y: 10.0), Coordinate(x: -10.0, y: 20.0), Coordinate(x: 0.0, y: 10.0), Coordinate(x: 10.0, y: 20.0), Coordinate(x: 20.0, y: 10.0), Coordinate(x: 10.0, y: 0.0), Coordinate(x: 20.0, y: -10.0), Coordinate(x: 10.0, y: -20.0), Coordinate(x: 0.0, y: -10.0)], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.two,   .one,   .two],
+            [.empty, .zero,  .one],
+            [.empty, .empty, .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// Polygon MultiPolygon tests
     ///
