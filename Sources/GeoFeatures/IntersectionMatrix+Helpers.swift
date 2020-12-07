@@ -1086,7 +1086,13 @@ extension IntersectionMatrix {
         }
 
         /// If we've gotten this far, the coordinate must on the interior of the polygon
-        relatedToResult.firstInteriorTouchesSecondInterior = .zero
+        if coordinateTuple.1 {
+            /// This is the case where the coordinate is a boundary point
+            relatedToResult.firstBoundaryTouchesSecondInterior = .zero
+        } else {
+            /// This is the case where the coordinate is not a boundary point but rather an interior point
+            relatedToResult.firstInteriorTouchesSecondInterior = .zero
+        }
 
         return relatedToResult
     }

@@ -7526,6 +7526,22 @@ class IntersectionMatrixHelperTests: XCTestCase {
         XCTAssertEqual(matrix, expected)
     }
 
+    func testMultiLineString_MultiPolygon_boundaryIntersectsInterior2() {
+
+        let geometry1 = MultiLineString([LineString([Coordinate(x: -10.0, y: 0.0), Coordinate(x: -10.0, y: 40.0), Coordinate(x: 40.0, y: 40.0), Coordinate(x: 40.0, y: 0.0)]), LineString([Coordinate(x: -10.0, y: 10.0), Coordinate(x: -10.0, y: -20.0), Coordinate(x: 10.0, y: -20.0), Coordinate(x: 10.0, y: 10.0)])], precision: precision, coordinateSystem: cs)
+        let geometry2 = MultiPolygon([Polygon([Coordinate(x: 0.0, y: 0.0), Coordinate(x: 0.0, y: 20.0), Coordinate(x: 20.0, y: 20.0), Coordinate(x: 20.0, y: 0.0), Coordinate(x: 0.0, y: 0.0)], innerRings: [])], precision: precision, coordinateSystem: cs)
+
+        let matrix = IntersectionMatrix.generateMatrix(geometry1, geometry2)
+
+        let expected  = IntersectionMatrix(arrayLiteral: [
+            [.one,  .zero,  .one],
+            [.zero, .empty, .zero],
+            [.two,  .one,   .two]
+            ])
+
+        XCTAssertEqual(matrix, expected)
+    }
+
     ///
     /// Polygon Point tests
     ///
