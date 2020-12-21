@@ -681,13 +681,15 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         /// Polygon with hole that touches the outer ring with dimension one
         let testPolygon10 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 10.0], [0.0, 10.0], [0.0, 10.0], [100.0, 10.0], [100.0, -10.0], [0.0, -10.0], [0.0, 10.0]]], precision: precision, coordinateSystem: cs)
         /// Polygon with four holes that touch each in a circular pattern that disconnects part of the interior from another part of the interior
-        let testPolygon11 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 10.0], [0.0, 10.0], [10.0, 0.0], [20.0, 10.0], [10.0, 20.0], [10.0, 0.0]], [[0.0, -10.0], [-10.0, 0.0], [-20.0, -10.0], [-20.0, -10.0], [-10.0, -20.0], [0.0, -10.0]], [[-10.0, 0.0], [-20.0, 10.0], [-10.0, 20.0], [0.0, 10.0], [-10.0, 0.0]], [[20.0, -10.0], [10.0, -20.0], [0.0, -10.0], [10.0, 0.0], [20.0, -10.0], [20.0, -10.0]]], precision: precision, coordinateSystem: cs)
+        let testPolygon11 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 10.0], [0.0, 10.0], [10.0, 0.0], [20.0, 10.0], [10.0, 20.0], [0.0, 10.0]], [[0.0, -10.0], [-10.0, 0.0], [-20.0, -10.0], [-20.0, -10.0], [-10.0, -20.0], [0.0, -10.0]], [[-10.0, 0.0], [-20.0, 10.0], [-10.0, 20.0], [0.0, 10.0], [-10.0, 0.0]], [[20.0, -10.0], [10.0, -20.0], [0.0, -10.0], [10.0, 0.0], [20.0, -10.0], [20.0, -10.0]]], precision: precision, coordinateSystem: cs)
         /// Polygon with hole that falls outside the outer ring
         let testPolygon12 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-120.0, 0.0], [0.0, 120.0], [120.0, 0.0], [0.0, -120.0], [-120.0, 0.0]]], precision: precision, coordinateSystem: cs)
         /// Polygon with hole that crosses itself
         let testPolygon13 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-20.0, 0.0], [0.0, 20.0], [0.0, -20.0], [20.0, 0.0], [-20.0, 0.0]]], precision: precision, coordinateSystem: cs)
         /// Polygon with a one-dimensional hole
         let testPolygon14 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[-20.0, 0.0], [0.0, 0.0], [-20.0, 0.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with two holes that touch each other twice
+        let testPolygon15 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [0.0, 50.0], [50.0, 50.0], [50.0, 0.0], [0.0, 0.0]], [[0.0, -30.0], [0.0, 0.0], [25.0, -25.0], [50.0, 0.0], [50.0, -30.0], [0.0, -30.0]]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testPolygon1.valid())
         XCTAssertFalse(testPolygon2.valid())
@@ -703,6 +705,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertFalse(testPolygon12.valid())
         XCTAssertFalse(testPolygon13.valid())
         XCTAssertFalse(testPolygon14.valid())
+        XCTAssertFalse(testPolygon15.valid())
     }
 }
 

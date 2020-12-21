@@ -1725,13 +1725,15 @@ extension IntersectionMatrix {
 
         /// Check the relationships between each line segment of the linear rings
 
-        for firstCoordIndex in 0..<linearRing1.count - 1 {
+        let reducedLinearRing1 = reduce(linearRing1)
+        let reducedLinearRing2 = reduce(linearRing2)
+        for firstCoordIndex in 0..<reducedLinearRing1.count - 1 {
 
-            let firstCoord  = linearRing1[firstCoordIndex]
-            let secondCoord = linearRing1[firstCoordIndex + 1]
+            let firstCoord  = reducedLinearRing1[firstCoordIndex]
+            let secondCoord = reducedLinearRing1[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
 
-            let segmentRelatedToResult = relatedTo(segment, linearRing2)
+            let segmentRelatedToResult = relatedTo(segment, reducedLinearRing2)
 
             if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
                 relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
@@ -1743,7 +1745,7 @@ extension IntersectionMatrix {
 
         }
 
-        if !subset(linearRing2, linearRing1) {
+        if !subset(reducedLinearRing2, reducedLinearRing1) {
             relatedToResult.firstExteriorTouchesSecondInterior = .one
         }
 
@@ -1764,14 +1766,15 @@ extension IntersectionMatrix {
         }
 
         /// Check the relationships between each line segment of the linear ring and the simple polygon
+        let reducedLinearRing = reduce(linearRing)
+        let reducedPolygon = reduce(simplePolygon)
+        for firstCoordIndex in 0..<reducedLinearRing.count - 1 {
 
-        for firstCoordIndex in 0..<linearRing.count - 1 {
-
-            let firstCoord  = linearRing[firstCoordIndex]
-            let secondCoord = linearRing[firstCoordIndex + 1]
+            let firstCoord  = reducedLinearRing[firstCoordIndex]
+            let secondCoord = reducedLinearRing[firstCoordIndex + 1]
             let segment = Segment(left: firstCoord, right: secondCoord)
 
-            let segmentRelatedToResult = relatedTo(segment, simplePolygon)
+            let segmentRelatedToResult = relatedTo(segment, reducedPolygon)
 
             if segmentRelatedToResult.firstInteriorTouchesSecondInterior > relatedToResult.firstInteriorTouchesSecondInterior {
                 relatedToResult.firstInteriorTouchesSecondInterior = segmentRelatedToResult.firstInteriorTouchesSecondInterior
@@ -3022,6 +3025,20 @@ extension IntersectionMatrix {
         }
 
         return newLinearRing
+    }
+
+    /// Reduces a polygon by reducing each linear ring of that polygon
+    fileprivate static func reduce(_ polygon: Polygon) -> Polygon {
+
+        var reducedPolygon = Polygon()
+
+        /// Remove duplicate coordinates
+        for linearRing in polygon {
+            let reducedLinearRing  = reduce(linearRing)
+            reducedPolygon.append(reducedLinearRing)
+        }
+
+        return reducedPolygon
     }
 
     /// This currently assumes a GeometryCollection where all of the elements are LinearRings.

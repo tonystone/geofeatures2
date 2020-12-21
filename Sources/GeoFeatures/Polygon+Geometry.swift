@@ -443,7 +443,7 @@ extension Polygon {
 
         for holeChain in holeChains {
             var holesTouchingOuterRingCount = 0
-            /// Does the chain touch the outer ring of the polygon at two points fo two different holes?
+            /// Does the chain touch the outer ring of the polygon at two points of two different holes?
             for hole in holeChain {
                 if holeTouchesOuterRing(hole, holesTouchingOuterRing) {
                     holesTouchingOuterRingCount += 1
