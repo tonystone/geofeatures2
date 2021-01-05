@@ -247,13 +247,9 @@ extension Polygon {
             } else {
                 /// If you reach here, the two line segments touch at a single point that is on the boundary of one segment and the interior of the other.
                 var intersectionCoordinate = dummyCoordinate
-//                var interiorsTouchAtPoint = false
                 if segment1Boundary1Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
                     intersectionCoordinate = segment.leftCoordinate
-//                    if !firstCoordinateFirstSegmentBoundary {
-//                        interiorsTouchAtPoint = true
-//                    }
                 } else if segment1Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
                     intersectionCoordinate = segment.rightCoordinate
@@ -263,71 +259,15 @@ extension Polygon {
                 } else if segment2Boundary2Location == .onInterior {
                     /// Segment boundary point 1 is on the interior of other
                     intersectionCoordinate = other.rightCoordinate
-//                    if !secondCoordinateSecondSegmentBoundary {
-//                        interiorsTouchAtPoint = true
-//                    }
                 }
                 return (.zero, intersectionCoordinate)
             }
         }
 
         ///
-        /// Check whether the two segments intersect at an interior point of each.
-        /// Since the cases where the segments touch at a boundary point have all been handled, intersecting here is guaranteed to be in segments' interior.
-        ///
-        /// The two segments will intersect if and only if the signs of the isLeft function are non-zero and are different for both segments.
-        /// This means one segment cannot be completely on one side of the other.
-        ///
-        /// TODO: We will need to separate out the = 0 cases below because these imply the segments fall on the same line.
-        ///
-        /// The line segments must intersect at a single point.  Calculate and return the point of intersection.
-        ///
-        let x1 = segment.leftCoordinate.x
-        let y1 = segment.leftCoordinate.y
-        let x2 = segment.rightCoordinate.x
-        let y2 = segment.rightCoordinate.y
-        let x3 = other.leftCoordinate.x
-        let y3 = other.leftCoordinate.y
-        let x4 = other.rightCoordinate.x
-        let y4 = other.rightCoordinate.y
+        /// There is no intersection.  Return an empty dimension with a dummy coordinate.
 
-        let det1 = det2d(a: x1, b: y1, c: x2, d: y2)
-        let det2 = det2d(a: x3, b: y3, c: x4, d: y4)
-        let det3 = det2d(a: x1, b: 1, c: x2, d: 1)
-        let det4 = det2d(a: x3, b: 1, c: x4, d: 1)
-        let det5 = det2d(a: y1, b: 1, c: y2, d: 1)
-        let det6 = det2d(a: y3, b: 1, c: y4, d: 1)
-
-        let numx = det2d(a: det1, b: det3, c: det2, d: det4)
-        let numy = det2d(a: det1, b: det5, c: det2, d: det6)
-        let den  = det2d(a: det3, b: det5, c: det4, d: det6) // The denominator
-
-        ///
-        /// TODO: Add check for den = 0.
-        /// The den is 0 when (x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4) = 0
-        /// For now we will add guard statement to make sure the den is not zero.
-        /// Note that if den is zero, it implies the two line segments are either parallel or
-        /// fall on the same line and may or may not overlap.
-        /// These cases must be addressed separately.
-        ///
-        guard den != 0 else {
-            /// TODO: Might also have to check for near zero.
-            return (.empty, dummyCoordinate)
-        }
-
-        let x = numx / den
-        let y = numy / den
-
-        var interiorsIntersect = false
-        if ((leftSign < 0 && rightSign > 0) || (leftSign > 0 && rightSign < 0)) && ((leftSign2 < 0 && rightSign2 > 0) || (leftSign2 > 0 && rightSign2 < 0)) {
-            interiorsIntersect = true
-        }
-
-        if interiorsIntersect {
-            return (.zero, Coordinate(x:x, y: y))
-        } else {
-            return (.empty, dummyCoordinate)
-        }
+        return (.empty, dummyCoordinate)
     }
 
     ///
@@ -371,29 +311,6 @@ extension Polygon {
         }
 
         return coordinateSet.count
-    }
-
-    ///
-    /// - Returns: true if linearRing1 touches linearRing2 , given an array of tuples, where the first element of the tuple is a linear ring,
-    ///            and the second element of the tuple is the array of linear rings it touches.
-    ///
-    fileprivate func touches(_ linearRing1: LinearRing, _ linearRing2: LinearRing, _ touchesTuple: [(LinearRing, [LinearRing])]) -> Bool {
-
-        for (tupleLinearRing, tupleLinearRingArray) in touchesTuple {
-
-            if linearRing1 != tupleLinearRing { continue }
-
-            for tempLinearRing in tupleLinearRingArray {
-
-                if linearRing2 != tempLinearRing { continue }
-
-                /// A match was found.  Return true.
-                return true
-            }
-        }
-
-        /// No match was found.  Return false.
-        return false
     }
 
     ///
