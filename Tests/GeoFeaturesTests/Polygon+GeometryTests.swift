@@ -641,6 +641,8 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         let testPolygon8 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[70.0, 40.0], [50.0, 40.0], [50.0, 60.0], [70.0, 60.0], [70.0, 40.0]]], precision: precision, coordinateSystem: cs)
         /// Polygon with hole that touches outer ring and two other holes, each at one coordinate.  There is also a fourth hole that touches none of the others.
         let testPolygon9 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [-50.0, 50.0], [0.0, 100.0], [50.0, 50.0], [0.0, 0.0]], [[0.0, 0.0], [-20.0, -20.0], [0.0, -40.0], [20.0, -20.0], [0.0, 0.0]], [[70.0, 40.0], [70.0, 40.0], [70.0, 40.0], [50.0, 40.0], [50.0, 40.0], [50.0, 60.0], [70.0, 60.0], [70.0, 40.0], [70.0, 40.0], [70.0, 40.0]], [[-90.0, -90.0], [-80.0, -90.0], [-80.0, -80.0], [-90.0, -80.0], [-90.0, -90.0]]], precision: precision, coordinateSystem: cs)
+        /// Polygon with hole that touches second hole at one interior coordinate
+        let testPolygon10 = Polygon([[100.0, 100.0], [100.0, -100.0], [-100.0, -100.0], [-100.0, 100.0], [100.0, 100.0]], innerRings: [[[0.0, 0.0], [0.0, 50.0], [50.0, 50.0], [50.0, 0.0], [0.0, 0.0]], [[60.0, 40.0], [40.0, 60.0], [60.0, 80.0], [80.0, 60.0], [60.0, 40.0]]], precision: precision, coordinateSystem: cs)
 
         XCTAssertTrue(testPolygon1.valid())
         XCTAssertTrue(testPolygon2.valid())
@@ -651,6 +653,7 @@ class PolygonGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase {
         XCTAssertTrue(testPolygon7.valid())
         XCTAssertTrue(testPolygon8.valid())
         XCTAssertTrue(testPolygon9.valid())
+        XCTAssertTrue(testPolygon10.valid())
     }
 
     func testValidFalse() {

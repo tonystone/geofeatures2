@@ -48,51 +48,6 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: the slope as a tuple.
-    ///            The first value is the slope, if the line is not vertical.
-    ///            The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
-    ///
-    fileprivate func slope(_ coordinate1: Coordinate, _ coordinate2: Coordinate) -> (Double, Bool) {
-
-        /// Check for the vertical case
-        guard coordinate1.x != coordinate2.x else {
-            return (0, true)
-        }
-
-        /// Normal case
-        return ((coordinate2.y - coordinate1.y) / (coordinate2.x - coordinate1.x), false)
-    }
-
-    ///
-    /// - Returns: the slope as a tuple.
-    ///            The first value is the slope, if the line is not vertical.
-    ///            The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
-    ///
-    fileprivate func slope(_ segment: Segment) -> (Double, Bool) {
-
-        return slope(segment.leftCoordinate, segment.rightCoordinate)
-    }
-
-    ///
-    /// - Returns: true if the bounding boxes touch at just a single coordinate
-    ///
-    fileprivate func boundingBoxesTouchAtCoordinate(segment: Segment, other: Segment) -> Bool {
-        let range1x = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
-        let range1y = (Swift.min(segment.leftCoordinate.y, segment.rightCoordinate.y), Swift.max(segment.leftCoordinate.y, segment.rightCoordinate.y))
-        let range2x = (Swift.min(other.leftCoordinate.x, other.rightCoordinate.x), Swift.max(other.leftCoordinate.x, other.rightCoordinate.x))
-        let range2y = (Swift.min(other.leftCoordinate.y, other.rightCoordinate.y), Swift.max(other.leftCoordinate.y, other.rightCoordinate.y))
-
-        if ((range1x.1 == range2x.0) && (range1y.1 == range2y.0)) ||
-           ((range1x.1 == range2x.0) && (range1y.0 == range2y.1)) ||
-           ((range1x.0 == range2x.1) && (range1y.0 == range2y.1)) ||
-            ((range1x.0 == range2x.1) && (range1y.1 == range2y.0)) {
-            return true
-        }
-
-        return false
-    }
-
-    ///
     /// - Returns: true if the bounding boxes overlap for two one dimensional line ranges.
     ///            The first value for each range is the minimum value and the second is the maximum value.
     ///
@@ -212,17 +167,17 @@ extension Polygon {
         ///
         let leftSign   = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
         let rightSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
-        let leftSign2  = isLeft(p0: other.leftCoordinate, p1: other.rightCoordinate, p2: segment.leftCoordinate)
-        let rightSign2 = isLeft(p0: other.leftCoordinate, p1: other.rightCoordinate, p2: segment.rightCoordinate)
         let oneLine    = leftSign == 0 && rightSign == 0 /// Both line segments lie on one line
         if  (segment1Boundary1Location != .onExterior) ||  (segment1Boundary2Location != .onExterior) ||
             (segment2Boundary1Location != .onExterior) ||  (segment2Boundary2Location != .onExterior) {
 
             if (segment1Boundary1Location != .onExterior) &&  (segment1Boundary2Location != .onExterior) {
                 /// Segment is completely contained in other
+                /// Note this code is not currently needed because the case where two segments overlap by an amount > 0 is handled elsewhere.  It is left in for completeness.
                 return (.one, dummyCoordinate)
             } else if (segment2Boundary1Location != .onExterior) &&  (segment2Boundary2Location != .onExterior) {
                 /// Other is completely contained in segment
+                /// Note this code is not currently needed because the case where two segments overlap by an amount > 0 is handled elsewhere.  It is left in for completeness.
                 return (.one, dummyCoordinate)
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
@@ -236,13 +191,9 @@ extension Polygon {
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
                 return (.zero, segment.rightCoordinate)
-            } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
-                      (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
-                /// Two segments meet at a single boundary point.
-                /// This section may be redundant.  Possibly remove it later.
-                return (.zero, segment.rightCoordinate)
             } else if oneLine {
                 /// If you reach here, the two line segments overlap by an amount > 0, but neither line segment is contained in the other.
+                /// Note this code is not currently needed because the case where two segments overlap by an amount > 0 is handled elsewhere.  It is left in for completeness.
                 return (.one, dummyCoordinate)
             } else {
                 /// If you reach here, the two line segments touch at a single point that is on the boundary of one segment and the interior of the other.
