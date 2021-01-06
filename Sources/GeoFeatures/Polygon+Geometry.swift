@@ -121,16 +121,6 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: the value of a 2x2 determinant
-    ///
-    /// | a b |
-    /// | c d |
-    ///
-    fileprivate func det2d(a: Double, b: Double, c: Double, d: Double) -> Double {
-        return a*d - b*c
-    }
-
-    ///
     /// - Returns: a numeric value indicating where point p2 is relative to the line determined by p0 and p1.
     ///            value > 0 implies p2 is on the left
     ///            value = 0 implies p2 is on the line
