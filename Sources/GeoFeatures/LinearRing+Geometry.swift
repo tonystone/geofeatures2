@@ -363,10 +363,6 @@ extension LinearRing {
     ///
     fileprivate func hasThreeDifferentCoordinates() -> Bool {
 
-        guard self.count >= 3 else {
-            return false
-        }
-
         let coordinate1 = self[0]
         var coordinate2 = coordinate1
         var twoDifferentCoordinates = false

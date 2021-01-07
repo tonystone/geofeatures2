@@ -651,6 +651,10 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let testLinearRing15 = LinearRing([[0.0, 0.0], [0.0, 2.0], [1.0, 2.0], [0.0, 1.0], [1.0, 0.0], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
         /// Linear ring touches itself at a single point on a diagonal segment
         let testLinearRing16 = LinearRing([[0.0, 0.0], [2.0, 2.0], [2.0, 0.0], [1.0, 1.0], [1.0, 0.0], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
+        /// Linear ring touches itself at line segment, where the first segment is contained in the second
+        let testLinearRing17 = LinearRing([[0.0, 0.0], [1.0, 1.0], [1.0, -1.0], [-1.0, -1.0], [2.0, 2.0], [0.0, 2.0], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
+        /// Only two coordinates that are the same
+        let testLinearRing18 = LinearRing([[2.0, 2.0], [2.0, 2.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testLinearRing1.valid())
         XCTAssertFalse(testLinearRing2.valid())
@@ -668,6 +672,8 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertFalse(testLinearRing14.valid())
         XCTAssertFalse(testLinearRing15.valid())
         XCTAssertFalse(testLinearRing16.valid())
+        XCTAssertFalse(testLinearRing17.valid())
+        XCTAssertFalse(testLinearRing18.valid())
     }
 
     func testReverse() {
