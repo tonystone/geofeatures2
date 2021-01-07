@@ -270,6 +270,7 @@ extension LinearRing {
                 return .one
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
+                /// This case may not be possible with a linear ring, whether that linear ring is valid or not.  It is left in for completeness.
                 return .zero
             } else if (segment1Boundary1Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
@@ -278,10 +279,6 @@ extension LinearRing {
                 /// Two segments meet at a single boundary point
                 return .zero
             } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
-                /// Two segments meet at a single boundary point
-                return .zero
-            } else if (segment1Boundary2Location == .onBoundary) && (segment2Boundary1Location == .onBoundary) ||
-                      (segment1Boundary2Location == .onBoundary) && (segment2Boundary2Location == .onBoundary) {
                 /// Two segments meet at a single boundary point
                 return .zero
             } else if oneLine {
@@ -320,8 +317,6 @@ extension LinearRing {
         let det5 = det2d(a: y1, b: 1, c: y2, d: 1)
         let det6 = det2d(a: y3, b: 1, c: y4, d: 1)
 
-//        let numx = det2d(a: det1, b: det3, c: det2, d: det4)
-//        let numy = det2d(a: det1, b: det5, c: det2, d: det6)
         let den  = det2d(a: det3, b: det5, c: det4, d: det6) // The denominator
 
         ///
@@ -336,9 +331,6 @@ extension LinearRing {
             /// TODO: Might also have to check for near zero.
             return .empty
         }
-
-//        let x = numx / den
-//        let y = numy / den
 
         var interiorsIntersect = false
         if ((leftSign < 0 && rightSign > 0) || (leftSign > 0 && rightSign < 0)) && ((leftSign2 < 0 && rightSign2 > 0) || (leftSign2 > 0 && rightSign2 < 0)) {
@@ -359,17 +351,18 @@ extension LinearRing {
     ///
     fileprivate func lastSegmentStartIndex() -> Int {
 
-        guard self.count >= 4 else { return 0 }
-        
+        var startIndex = 0
+        guard self.count >= 4 else { return startIndex }
+
         for index in (0..<self.count).reversed() {
             let firstCoord  = self[index]
             let secondCoord = self[index - 1]
             if firstCoord == secondCoord { continue }
-            return index - 1
+            startIndex = index - 1
+            break
         }
-        
-        /// This should never happen
-        return 0
+
+        return startIndex
     }
 
 
@@ -429,6 +422,10 @@ extension LinearRing {
     ///
     fileprivate func hasThreeDifferentCoordinates() -> Bool {
 
+        guard self.count >= 3 else {
+            return false
+        }
+
         let coordinate1 = self[0]
         var coordinate2 = coordinate1
         var twoDifferentCoordinates = false
@@ -438,10 +435,9 @@ extension LinearRing {
             if !twoDifferentCoordinates && coordinate1 != tempCoordinate {
                 coordinate2 = tempCoordinate
                 twoDifferentCoordinates = true
-                return true
             } else if !threeDifferentCoordinates && (coordinate1 != tempCoordinate) && (coordinate2 != tempCoordinate) {
                 threeDifferentCoordinates = true
-                return true
+                break
             }
         }
 

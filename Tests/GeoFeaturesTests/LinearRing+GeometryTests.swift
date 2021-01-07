@@ -637,6 +637,14 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         let testLinearRing8 = LinearRing([[1.0, 1.0], [2.0, 2.0], Coordinate(x: x2, y: y2), [2.0, 4.0], [4.0, 4.0], [4.0, 20.0]], precision: precision, coordinateSystem: cs)
         /// Linear ring crosses itself
         let testLinearRing9 = LinearRing([[1.0, 1.0], [1.0, -1.0], [-1.0, 1.0], [-1.0, -1.0], [1.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Linear ring touches itself at one coordinate
+        let testLinearRing10 = LinearRing([[1.0, 1.0], [1.0, -1.0], [0.0, 0.0], [-1.0, -1.0], [-1.0, 1.0], [0.0, 0.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Linear ring touches itself at boundary line segment, and one segment is contained in the other
+        let testLinearRing11 = LinearRing([[1.0, 1.0], [1.0, -1.0], [-1.0, 1.0], [0.0, 0.0], [0.0, 1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Linear ring touches itself at boundary line segment, but neither one is contained in the other
+        let testLinearRing12 = LinearRing([[1.0, 1.0], [1.0, -1.0], [0.0, 0.0], [-2.0, -2.0], [0.0, -2.0], [0.0, -1.0], [-1.0, -1.0], [1.0, 1.0]], precision: precision, coordinateSystem: cs)
+        /// Linear ring touches itself at boundary line segment, but neither one is contained in the other
+        let testLinearRing13 = LinearRing([[0.0, 0.0], [-2.0, -2.0], [2.0, -2.0], [2.0, 2.0], [-1.0, -1.0], [-1.0, 1.0], [0.0, -1.0], [0.0, 0.0]], precision: precision, coordinateSystem: cs)
 
         XCTAssertFalse(testLinearRing1.valid())
         XCTAssertFalse(testLinearRing2.valid())
@@ -647,6 +655,10 @@ class LinearRingGeometryCoordinate2DFloatingPrecisionCartesianTests: XCTestCase 
         XCTAssertFalse(testLinearRing7.valid())
         XCTAssertFalse(testLinearRing8.valid())
         XCTAssertFalse(testLinearRing9.valid())
+        XCTAssertFalse(testLinearRing10.valid())
+        XCTAssertFalse(testLinearRing11.valid())
+        XCTAssertFalse(testLinearRing12.valid())
+        XCTAssertFalse(testLinearRing13.valid())
     }
 
     func testReverse() {
