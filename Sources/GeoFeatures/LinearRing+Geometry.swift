@@ -80,65 +80,6 @@ extension LinearRing {
     }
 
     ///
-    /// - Returns: the y-intercept of the line with the given slope that passes through the given coordinate, if the line is not vertical.
-    ///            Else, if vertical, the x-intercept is returned.
-    ///            The second value in the input tuple is true if the line is vertical.
-    ///
-    fileprivate func intercept(_ slope: (Double, Bool), _ coordinate: Coordinate) -> (Double, Bool) {
-
-        if slope.1 {
-            return (coordinate.x, true)
-        } else {
-            return ((coordinate.y - slope.0 * coordinate.x), false)
-        }
-    }
-
-    ///
-    /// - Returns: the slope as a tuple.
-    ///            The first value is the slope, if the line is not vertical.
-    ///            The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
-    ///
-    fileprivate func slope(_ coordinate1: Coordinate, _ coordinate2: Coordinate) -> (Double, Bool) {
-
-        /// Check for the vertical case
-        guard coordinate1.x != coordinate2.x else {
-            return (0, true)
-        }
-
-        /// Normal case
-        return ((coordinate2.y - coordinate1.y) / (coordinate2.x - coordinate1.x), false)
-    }
-
-    ///
-    /// - Returns: the slope as a tuple.
-    ///            The first value is the slope, if the line is not vertical.
-    ///            The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
-    ///
-    fileprivate func slope(_ segment: Segment) -> (Double, Bool) {
-
-        return slope(segment.leftCoordinate, segment.rightCoordinate)
-    }
-
-    ///
-    /// - Returns: true if the bounding boxes touch at just a single coordinate
-    ///
-    fileprivate func boundingBoxesTouchAtCoordinate(segment: Segment, other: Segment) -> Bool {
-        let range1x = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
-        let range1y = (Swift.min(segment.leftCoordinate.y, segment.rightCoordinate.y), Swift.max(segment.leftCoordinate.y, segment.rightCoordinate.y))
-        let range2x = (Swift.min(other.leftCoordinate.x, other.rightCoordinate.x), Swift.max(other.leftCoordinate.x, other.rightCoordinate.x))
-        let range2y = (Swift.min(other.leftCoordinate.y, other.rightCoordinate.y), Swift.max(other.leftCoordinate.y, other.rightCoordinate.y))
-
-        if ((range1x.1 == range2x.0) && (range1y.1 == range2y.0)) ||
-           ((range1x.1 == range2x.0) && (range1y.0 == range2y.1)) ||
-           ((range1x.0 == range2x.1) && (range1y.0 == range2y.1)) ||
-            ((range1x.0 == range2x.1) && (range1y.1 == range2y.0)) {
-            return true
-        }
-
-        return false
-    }
-
-    ///
     /// - Returns: true if the bounding boxes overlap for two one dimensional line ranges.
     ///            The first value for each range is the minimum value and the second is the maximum value.
     ///
