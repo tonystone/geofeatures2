@@ -119,4 +119,25 @@ class GeometryCollectionGeometryTests: XCTestCase {
 
         XCTAssertFalse(input1.equals(input2), "\(input1) is not equal to \(input2)")
     }
+
+    // MARK: Valid
+
+    func testValidTrue() {
+        /// Empty case
+        let testGeometryCollection1 = GeometryCollection(precision: precision, coordinateSystem: cs)
+        /// Geometry collection with a LineString and a MultiPoint
+        let testGeometryCollection2 = GeometryCollection([LineString([[3, 3], [60, 60], [120, 3]]), MultiPoint([[3, 3], [60, 60], [120, 3]])])
+
+        XCTAssertTrue(testGeometryCollection1.valid())
+        XCTAssertTrue(testGeometryCollection2.valid())
+    }
+
+    func testValidFalse() {
+        /// We cannot currently test the false case, so simply create a dummy case that will return true
+        ///
+        /// Empty case
+        let testGeometryCollection1 = GeometryCollection(precision: precision, coordinateSystem: cs)
+
+        XCTAssertFalse(!testGeometryCollection1.valid())
+    }
 }
