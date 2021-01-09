@@ -73,6 +73,17 @@ struct RelatedTo {
 
 extension IntersectionMatrix {
 
+    ///
+    /// The main function used to generate the intersection matrix of two geometries.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry
+    ///     - geometry2: The second geometry
+    ///
+    /// - Returns: An intersection matrix
+    ///
+    /// - Note: Code for handling a geometry collection has been left in but commented out.  It may need to be removed later.
+    ///
     static func generateMatrix(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
 //        /// Note in the cases where one or two of the input geometries is a GeometryCollection, it is assumed that the GeometryCollections are not nested,
@@ -109,8 +120,17 @@ extension IntersectionMatrix {
         return IntersectionMatrix.intersectionGeometry(geometry1, geometry2)
     }
 
-    /// Returns the intersection geometry and the intersection matrix.
-    /// Note that in general the intersection of two geometries will result in a set of geometries, not just one.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry
+    ///     - geometry2: The second geometry
+    ///
+    /// - Returns: An intersection matrix
+    ///
+    /// - Note: in general the intersection of two geometries will result in a set of geometries, not just one
+    ///
     fileprivate static func intersectionGeometry(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         switch geometry1.dimension {
@@ -159,7 +179,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .zero
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries of dimension .zero.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension zero
+    ///     - geometry2: The second geometry of dimension zero
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryZeroZero(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let point1 = geometry1 as? Point, let point2 = geometry2 as? Point {
@@ -175,7 +203,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .zero and .one, respectively.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries, the first of dimension zero and the second of dimenion one.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension zero
+    ///     - geometry2: The second geometry of dimension one
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryZeroOne(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let point = geometry1 as? Point, let lineString = geometry2 as? LineString {
@@ -194,7 +230,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .zero and .two, respectively.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries, the first of dimension zero and the second of dimenion two.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension zero
+    ///     - geometry2: The second geometry of dimension two
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryZeroTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let point = geometry1 as? Point, let polygon = geometry2 as? Polygon {
@@ -209,7 +253,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .one and .zero, respectively.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries, the first of dimension one and the second of dimenion zero.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension one
+    ///     - geometry2: The second geometry of dimension zero
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryOneZero(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let lineString = geometry1 as? LineString, let point = geometry2 as? Point {
@@ -234,7 +286,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .one.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries, both of dimension one.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension one
+    ///     - geometry2: The second geometry of dimension one
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryOneOne(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let lineString1 = geometry1 as? LineString, let lineString2 = geometry2 as? LineString {
@@ -262,7 +322,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .one and .two, respectively.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries, the first of dimension one and the second of dimenion two.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension one
+    ///     - geometry2: The second geometry of dimension two
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryOneTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let lineString = geometry1 as? LineString, let polygon = geometry2 as? Polygon {
@@ -281,7 +349,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .two and .zero, respectively.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries, the first of dimension two and the second of dimenion zero.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension two
+    ///     - geometry2: The second geometry of dimension zero
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryTwoZero(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let polgyon = geometry1 as? Polygon, let point = geometry2 as? Point {
@@ -300,7 +376,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .two and .one, respectively.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries, the first of dimension two and the second of dimenion one.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension two
+    ///     - geometry2: The second geometry of dimension one
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryTwoOne(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let polgyon = geometry1 as? Polygon, let lineString = geometry2 as? LineString {
@@ -325,7 +409,15 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    /// For the intersection of two geometries of dimension .two.
+    ///
+    /// An intermediate function used to generate the intersection matrix of two geometries, both of dimension two.
+    ///
+    /// - Parameters:
+    ///     - geometry1: The first geometry of dimension two
+    ///     - geometry2: The second geometry of dimension two
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionGeometryTwoTwo(_ geometry1: Geometry, _ geometry2: Geometry) -> IntersectionMatrix {
 
         if let polgyon1 = geometry1 as? Polygon, let polygon2 = geometry2 as? Polygon {
@@ -341,10 +433,17 @@ extension IntersectionMatrix {
         return IntersectionMatrix()
     }
 
-    ///
-    /// Dimension .zero and dimension .zero
-    ///
+    // MARK: Dimension .zero and dimension .zero
 
+    ///
+    /// Generate the intersection matrix of two points
+    ///
+    /// - Parameters:
+    ///     - point1: The first point
+    ///     - point2: The second point
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ point1: Point, _ point2: Point) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
@@ -360,6 +459,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a point and a multi point
+    ///
+    /// - Parameters:
+    ///     - point:  A point
+    ///     - points: A multi point
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ point: Point, _ points: MultiPoint) -> IntersectionMatrix {
 
         /// Identical
@@ -398,6 +506,15 @@ extension IntersectionMatrix {
         return disjoint
     }
 
+    ///
+    /// Generate the intersection matrix of two multi points
+    ///
+    /// - Parameters:
+    ///     - points1: The first multi point
+    ///     - points2: The second multi point
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ points1: MultiPoint, _ points2: MultiPoint) -> IntersectionMatrix {
 
         /// Identical
@@ -479,15 +596,21 @@ extension IntersectionMatrix {
         }
     }
 
-    ///
-    /// Dimension .zero and dimesion .one
-    ///
+    // MARK: Dimension .zero and dimesion .one
 
     enum LocationType {
         case onBoundary, onInterior, onExterior
     }
 
-    /// Returns true if the coordinate is on the line segment.
+    ///
+    /// Determine the location of a coordinate relative to a line segment
+    ///
+    /// - Parameters:
+    ///     - coordinate:  A coordinate
+    ///     - segment:     A line segment
+    ///
+    /// - Returns: A location type indicating whether the coordinate is on the interior, boundary or exterior of the line segment.
+    ///
     fileprivate static func coordinateIsOnLineSegment(_ coordinate: Coordinate, segment: Segment) -> LocationType {
 
         /// Will likely use precision later, but use EPSILON for now.
