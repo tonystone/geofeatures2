@@ -596,7 +596,7 @@ extension IntersectionMatrix {
         }
     }
 
-    // MARK: Dimension .zero and dimesion .one
+    // MARK: Dimension .zero and dimension .one
 
     enum LocationType {
         case onBoundary, onInterior, onExterior
@@ -655,6 +655,15 @@ extension IntersectionMatrix {
         return .onExterior
     }
 
+    ///
+    /// Generate the intersection matrix of a point and a line string
+    ///
+    /// - Parameters:
+    ///     - point:      A point
+    ///     - lineString: A line string
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ point: Point, _ lineString: LineString) -> IntersectionMatrix {
 
         /// Simple line string where all points are the same
@@ -712,6 +721,15 @@ extension IntersectionMatrix {
         return disjoint
     }
 
+    ///
+    /// Generate the intersection matrix of a point and a linear ring
+    ///
+    /// - Parameters:
+    ///     - point:      A point
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ point: Point, _ linearRing: LinearRing) -> IntersectionMatrix {
 
         /// Point matches linear ring
@@ -753,6 +771,15 @@ extension IntersectionMatrix {
         return disjoint
     }
 
+    ///
+    /// Generate the intersection matrix of a point and a multi line string
+    ///
+    /// - Parameters:
+    ///     - point:           A point
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ point: Point, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 
         /// Simple multi line string where all points are the same
@@ -821,6 +848,14 @@ extension IntersectionMatrix {
         return disjoint
     }
 
+    ///
+    /// Simplify a given multi point by removing unnecessary or redundant points
+    ///
+    /// - Parameters:
+    ///     - points: The multi point to be reduced
+    ///
+    /// - Returns: The reduced multi point
+    ///
     fileprivate static func reduce(_ points: MultiPoint) -> MultiPoint {
 
         var initialPointsArray = [Point]()
@@ -836,6 +871,16 @@ extension IntersectionMatrix {
         return MultiPoint(uniquePointsArray)
     }
 
+    ///
+    /// Is a coordinate a member of the given array of coordinates?
+    ///
+    ///
+    /// - Parameters:
+    ///     - coordinate:  A coordinate
+    ///     - coordinates: An array of coordinates
+    ///
+    /// - Returns: A boolean indicating whether the single coordinate is a member of the array of coordinates.
+    ///
     fileprivate static func subset(_ coordinate: Coordinate, _ coordinates: [Coordinate]) -> Bool {
 
         for tempCoordinate in coordinates {
@@ -846,6 +891,16 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
+    /// Is one array of coordinates a subset of a second array of coordinates?
+    ///
+    ///
+    /// - Parameters:
+    ///     - coordinates1: The first array of coordinates
+    ///     - coordinates2: The second array of coordinates
+    ///
+    /// - Returns: A boolean indicating whether the first array of coordinates is a subset of the second array of coordinates.
+    ///
     fileprivate static func subset(_ coordinates1: [Coordinate], _ coordinates2: [Coordinate]) -> Bool {
 
         for tempCoordinate in coordinates1 {
@@ -858,6 +913,16 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
+    /// Is a coordinate a subset of a multi point?
+    ///
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate
+    ///     - multiPoint: A multi point
+    ///
+    /// - Returns: A boolean indicating whether a coordinate is a subset of a multi point.
+    ///
     fileprivate static func subset(_ coordinate: Coordinate, _ multiPoint: MultiPoint) -> Bool {
 
         for point in multiPoint {
@@ -868,6 +933,16 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
+    /// Is a coordinate a subset of a line string?
+    ///
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate
+    ///     - lineString: A line string
+    ///
+    /// - Returns: A boolean indicating whether a coordinate is a subset of a line string.
+    ///
     fileprivate static func subset(_ coordinate: Coordinate, _ lineString: LineString) -> Bool {
 
         for firstCoordIndex in 0..<lineString.count - 1 {
@@ -882,6 +957,16 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
+    /// Is a coordinate a subset of a multi line string?
+    ///
+    ///
+    /// - Parameters:
+    ///     - coordinate:      A coordinate
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: A boolean indicating whether a coordinate is a subset of a multi line string.
+    ///
     fileprivate static func subset(_ coordinate: Coordinate, _ multiLineString: MultiLineString) -> Bool {
 
         for lineString in multiLineString {
@@ -898,6 +983,16 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
+    /// How is an array of coordinates related to a line string?
+    ///
+    ///
+    /// - Parameters:
+    ///     - coordinates: An array of coordinates
+    ///     - lineString:  A line string
+    ///
+    /// - Returns: A RelatedTo structure indicating how an array of coordinates is related to a line string.
+    ///
     fileprivate static func relatedTo(_ coordinates: [Coordinate], _ lineString: LineString) -> RelatedTo {
 
         var relatedTo = RelatedTo()
@@ -946,6 +1041,16 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
+    ///
+    /// Is a coordinate a subset of a linear ring?
+    ///
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: A boolean indicating whether a coordinate is a subset of a linear ring.
+    ///
     fileprivate static func subset(_ coordinate: Coordinate, _ linearRing: LinearRing) -> Bool {
 
         for firstCoordIndex in 0..<linearRing.count - 1 {
@@ -960,8 +1065,16 @@ extension IntersectionMatrix {
         return false
     }
 
-    /// The coordinates array consists of a collection of tuples where each item contains a Coordinate and a boolean indicating
-    /// whether the Coordinate is a boundary point.
+    ///
+    /// How is an array of coordinate tuples related to a linear ring?
+    ///
+    ///
+    /// - Parameters:
+    ///     - coordinates: An array of coordinate tuples where each item contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
+    ///     - linearRing:  A linear ring
+    ///
+    /// - Returns: A RelatedTo structure indicating how an array of coordinate tuples is related to a linear ring.
+    ///
     fileprivate static func relatedTo(_ coordinates: [(Coordinate, Bool)], _ linearRing: LinearRing) -> RelatedTo {
 
         var relatedTo = RelatedTo()
