@@ -874,7 +874,6 @@ extension IntersectionMatrix {
     ///
     /// Is a coordinate a member of the given array of coordinates?
     ///
-    ///
     /// - Parameters:
     ///     - coordinate:  A coordinate
     ///     - coordinates: An array of coordinates
@@ -893,7 +892,6 @@ extension IntersectionMatrix {
 
     ///
     /// Is one array of coordinates a subset of a second array of coordinates?
-    ///
     ///
     /// - Parameters:
     ///     - coordinates1: The first array of coordinates
@@ -916,7 +914,6 @@ extension IntersectionMatrix {
     ///
     /// Is a coordinate a subset of a multi point?
     ///
-    ///
     /// - Parameters:
     ///     - coordinate: A coordinate
     ///     - multiPoint: A multi point
@@ -935,7 +932,6 @@ extension IntersectionMatrix {
 
     ///
     /// Is a coordinate a subset of a line string?
-    ///
     ///
     /// - Parameters:
     ///     - coordinate: A coordinate
@@ -959,7 +955,6 @@ extension IntersectionMatrix {
 
     ///
     /// Is a coordinate a subset of a multi line string?
-    ///
     ///
     /// - Parameters:
     ///     - coordinate:      A coordinate
@@ -985,7 +980,6 @@ extension IntersectionMatrix {
 
     ///
     /// How is an array of coordinates related to a line string?
-    ///
     ///
     /// - Parameters:
     ///     - coordinates: An array of coordinates
@@ -1044,7 +1038,6 @@ extension IntersectionMatrix {
     ///
     /// Is a coordinate a subset of a linear ring?
     ///
-    ///
     /// - Parameters:
     ///     - coordinate: A coordinate
     ///     - linearRing: A linear ring
@@ -1067,7 +1060,6 @@ extension IntersectionMatrix {
 
     ///
     /// How is an array of coordinate tuples related to a linear ring?
-    ///
     ///
     /// - Parameters:
     ///     - coordinates: An array of coordinate tuples where each item contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
@@ -1114,8 +1106,15 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
-    /// This assumes a GeometryCollection where all of the elements are LinearRings.
-    /// The coordinates array is a collection of Coordinate, Bool tuples, where the Bool is a flag indicating whether the point is a boundary point.
+    ///
+    /// How is an array of coordinate tuples related to a geometry collection of linear rings?
+    ///
+    /// - Parameters:
+    ///     - coordinates:        An array of coordinate tuples where each item contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
+    ///     - geometryCollection: A geometry collection of only linear rings
+    ///
+    /// - Returns: A RelatedTo structure indicating how an array of coordinate tuples is related to a geometry collection of only linear rings.
+    ///
     fileprivate static func relatedTo(_ coordinates: [(Coordinate, Bool)], _ geometryCollection: GeometryCollection) -> RelatedTo {
 
         var relatedTo = RelatedTo()
@@ -1147,6 +1146,15 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
+    ///
+    /// How is an array of coordinates related to a multi line string?
+    ///
+    /// - Parameters:
+    ///     - coordinates:     An array of coordinates
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: A RelatedTo structure indicating how an array of coordinates is related to a multi line string.
+    ///
     fileprivate static func relatedTo(_ coordinates: [Coordinate], _ multiLineString: MultiLineString) -> RelatedTo {
 
         var relatedTo = RelatedTo()
@@ -1190,10 +1198,19 @@ extension IntersectionMatrix {
         return relatedTo
     }
 
-    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-    /// Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon
-    /// The algorithm was modified because we assume the polygon is defined as a LinearRing, whose first and last points are the same.
-    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    ///
+    /// How is a coordinate tuple related to a simple polgyon with no holes?
+    ///
+    /// - Parameters:
+    ///     - coordinateTuple: A coordinate tuple which contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
+    ///     - simplePolygon:   A simple polygon consisting of a single boundary with no holes.
+    ///
+    /// - Returns: A RelatedTo structure indicating how a coordinate tuple is related to a simple polygon.
+    ///
+    /// - Note: Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
+    ///         Algorithm taken from: https://stackoverflow.com/questions/29344791/check-whether-a-point-is-inside-of-a-simple-polygon.
+    ///         The algorithm was modified because we assume the polygon is defined as a linear ring, whose first and last points are the same.
+    ///
     fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ simplePolygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1259,14 +1276,32 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
+    ///
+    /// How is a coordinate related to a simple polgyon with no holes?
+    ///
+    /// - Parameters:
+    ///     - coordinate:    A coordinate
+    ///     - simplePolygon: A simple polygon consisting of a single boundary with no holes.
+    ///
+    /// - Returns: A RelatedTo structure indicating how a coordinate is related to a simple polygon.
+    ///
     fileprivate static func relatedTo(_ coordinate: Coordinate, _ simplePolygon: Polygon) -> RelatedTo {
 
         return relatedTo((coordinate, false), simplePolygon)
     }
 
-    /// Assume here that the polygon is a general polygon with holes.
-    /// Note we've changed the name so as not to conflict with the simple polygon case.  This may change later.
-    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    ///
+    /// How is a coordinate tuple related to a general polgyon possibly with holes?
+    ///
+    /// - Parameters:
+    ///     - coordinateTuple: A coordinate tuple which contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
+    ///     - polygon:         A general polygon which may have holes.
+    ///
+    /// - Returns: A RelatedTo structure indicating how a coordinate tuple is related to a polygon.
+    ///
+    /// - Note: Assume here that the polygon is a general polygon with holes.
+    ///         Note we've changed the name so as not to conflict with the simple polygon case.  This may change later.
+    ///
     fileprivate static func relatedToGeneral(_ coordinateTuple: (Coordinate, Bool), _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1333,8 +1368,17 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that the multi polygon is a general multi polygon with a collection of non-intersecting general polygons.
-    /// The coordinate tuple is a Coordinate object and a flag indicating whether it is a boundary point.
+    ///
+    /// How is a coordinate tuple related to a multi polgyon?
+    ///
+    /// - Parameters:
+    ///     - coordinateTuple: A coordinate tuple which contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
+    ///     - multipolygon:    A multi polygon
+    ///
+    /// - Returns: A RelatedTo structure indicating how a coordinate tuple is related to a multi polygon.
+    ///
+    /// - Note: Assume here that the multi polygon is a general multi polygon with a collection of non-intersecting general polygons.
+    ///
     fileprivate static func relatedTo(_ coordinateTuple: (Coordinate, Bool), _ multipolygon: MultiPolygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1377,8 +1421,16 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
+    ///
     /// This function takes one RelatedTo struct, the base struct, and compares a new RelatedTo struct to it.
     /// If the values of the new RelatedTo struct are greater than the base struct, the base struct is updated with the new values.
+    ///
+    /// - Parameters:
+    ///     - relatedToBase: The base RelatedTo structure that may be updated
+    ///     - relatedToNew:  The new RelatedTo structure to compare against the base RelatedTo structure
+    ///
+    /// - Returns: There is no explicit return value here, but the base RelatedTo structure may be updated.
+    ///
     fileprivate static func update(relatedToBase: inout RelatedTo, relatedToNew: RelatedTo) {
 
         if relatedToNew.firstInteriorTouchesSecondInterior > relatedToBase.firstInteriorTouchesSecondInterior {
@@ -1416,10 +1468,18 @@ extension IntersectionMatrix {
         /// firstExteriorTouchesSecondExterior will never be updated, since it will always be two.
     }
 
+    ///
     /// This function takes one IntersectionMatrix struct, the base struct, and compares a new IntersectionMatrix struct to it.
     /// If the values of the new IntersectionMatrix struct are greater than the base struct, the base struct is updated with the new values.
-    /// Note the RelatedTo struct has evolved into an IntersectionMatrix equivalent.
-    /// We may use both or simply replace RelatedTo with IntersectionMatric everywhere.
+    ///
+    /// - Parameters:
+    ///     - intersectionMatrixBase: The base IntersectionMatrix that may be updated
+    ///     - intersectionMatrixNew:  The new IntersectionMatrix to compare against the base IntersectionMatrix
+    ///
+    /// - Returns: There is no explicit return value here, but the base IntersectionMatrix structure may be updated.
+    ///
+    /// - Note: The RelatedTo struct has evolved into an IntersectionMatrix equivalent.  We may use both or simply replace RelatedTo with IntersectionMatrix everywhere.
+    ///
     fileprivate static func update(intersectionMatrixBase: inout IntersectionMatrix, intersectionMatrixNew: IntersectionMatrix) {
 
         if intersectionMatrixNew[.interior, .interior] > intersectionMatrixBase[.interior, .interior] {
@@ -2835,7 +2895,7 @@ extension IntersectionMatrix {
     }
 
     ///
-    /// Dimension .one and dimesion .one
+    /// Dimension .one and dimension .one
     ///
 
     struct LineSegmentIntersection {
