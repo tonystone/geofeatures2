@@ -1519,8 +1519,17 @@ extension IntersectionMatrix {
         }
     }
 
-    /// The polygon is a general polygon.  This polygon has holes.
-    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    ///
+    /// How is a coordinate tuple array related to a polgyon?
+    ///
+    /// - Parameters:
+    ///     - coordinatesTupleArray: A coordinate tuple array that contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
+    ///     - polygon:               A polygon
+    ///
+    /// - Returns: A RelatedTo structure indicating how a coordinate tuple array is related to a polygon.
+    ///
+    /// - Note: The polygon is a general polygon.  The polygon may have holes.
+    ///
     fileprivate static func relatedTo(_ coordinatesTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1596,9 +1605,18 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that the polygon is a general polygon with holes.
-    /// Note we've changed the name so as not to conflict with the simply polygon case.  This may change later.
-    /// Each element of the coordinate tuple array consists of a Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    ///
+    /// How is a coordinate tuple array related to a polgyon?
+    ///
+    /// - Parameters:
+    ///     - coordinateTupleArray: A coordinate tuple array that contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
+    ///     - polygon:              A polygon
+    ///
+    /// - Returns: A RelatedTo structure indicating how a coordinate tuple array is related to a polygon.
+    ///
+    /// - Note: The polygon is a general polygon.  The polygon may have holes.
+    ///         Note we've changed the name so as not to conflict with the simple polygon case.  This may change later.
+    ///
     fileprivate static func relatedToGeneral(_ coordinateTupleArray: [(Coordinate, Bool)], _ polygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1648,8 +1666,17 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that the multi polygon is a general multi polygon with holes.
-    /// The coordinate tuple array consists of a tuple of Coordinate and Bool, where the Bool is a flag indicating whether the coordinate is a boundary point.
+    ///
+    /// How is a coordinate tuple array related to a multi polgyon?
+    ///
+    /// - Parameters:
+    ///     - coordinateTupleArray: A coordinate tuple array that contains a coordinate and a boolean indicating whether the coordinate is a boundary point.
+    ///     - multipolygon:         A multi polygon
+    ///
+    /// - Returns: A RelatedTo structure indicating how a coordinate tuple array is related to a multi polygon.
+    ///
+    /// - Note: The multi polygon is a general multi polygon, possibly with holes.
+    ///
     fileprivate static func relatedTo(_ coordinateTupleArray: [(Coordinate, Bool)], _ multipolygon: MultiPolygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1668,14 +1695,32 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
+    ///
+    /// Find the midpoint coordinate between two coordinates
+    ///
+    /// - Parameters:
+    ///     - coord1: The first coordinate
+    ///     - coord2: The second coordinate
+    ///
+    /// - Returns: A coordinate that is the midpoint of the other two coordinates.
+    ///
     fileprivate static func midpoint(_ coord1: Coordinate, _ coord2: Coordinate) -> Coordinate {
 
         return Coordinate(x: (coord1.x + coord2.x) / 2.0, y: (coord1.y + coord2.y) / 2.0)
 
     }
 
-    /// This code parallels that where the second geometry is a simple polygon.
-    /// The leftCoordinateBoundaryPoint and rightCoordinateBoundaryPoint flags apply to the segment.
+    ///
+    /// How is a line segment related to a linear ring?
+    ///
+    /// - Parameters:
+    ///     - segment:                      A line segment
+    ///     - linearRing:                   A linear ring
+    ///     - leftCoordinateBoundaryPoint:  A boolean indicating whether the left coordinate of the segment is a boundary point. Defaults to false.
+    ///     - rightCoordinateBoundaryPoint: A boolean indicating whether the right coordinate of the segment is a boundary point. Defaults to false.
+    ///
+    /// - Returns: A RelatedTo structure indicating how a line segment is related to a linear ring.
+    ///
     fileprivate static func relatedTo(_ segment: Segment, _ linearRing: LinearRing, leftCoordinateBoundaryPoint: Bool = false, rightCoordinateBoundaryPoint: Bool = false) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1747,8 +1792,17 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
-    /// The leftCoordinateBoundaryPoint and rightCoordinateBoundaryPoint flags apply to the segment.
+    ///
+    /// How is a line segment related to a simple polygon?
+    ///
+    /// - Parameters:
+    ///     - segment:                      A line segment
+    ///     - simplePolygon:                A polygon with no holes
+    ///     - leftCoordinateBoundaryPoint:  A boolean indicating whether the left coordinate of the segment is a boundary point. Defaults to false.
+    ///     - rightCoordinateBoundaryPoint: A boolean indicating whether the right coordinate of the segment is a boundary point. Defaults to false.
+    ///
+    /// - Returns: A RelatedTo structure indicating how a line segment is related to a simple polygon.
+    ///
     fileprivate static func relatedTo(_ segment: Segment, _ simplePolygon: Polygon, leftCoordinateBoundaryPoint: Bool = false, rightCoordinateBoundaryPoint: Bool = false) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -1950,7 +2004,15 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
+    ///
+    /// How is a line string related to a simple polygon?
+    ///
+    /// - Parameters:
+    ///     - lineString:    A line string
+    ///     - simplePolygon: A polygon with no holes
+    ///
+    /// - Returns: A RelatedTo structure indicating how a line string is related to a simple polygon.
+    ///
     fileprivate static func relatedTo(_ lineString: LineString, _ simplePolygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -2014,7 +2076,17 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// These relationships will most often be used when relating parts of a polygon to one another.
+    ///
+    /// How is one linear ring related to a second linear ring?
+    ///
+    /// - Parameters:
+    ///     - linearRing1: The first linear ring
+    ///     - linearRing2: The second linear ring
+    ///
+    /// - Returns: A RelatedTo structure indicating how one linear ring is related to a second linear ring.
+    ///
+    /// - Note: This code will most often be used when relating parts of a polygon to one another.
+    ///
     fileprivate static func relatedTo(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -2048,7 +2120,15 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that the polygon is a simple polygon with no holes, just a single simple boundary.
+    ///
+    /// How is a linear ring related to a simple polygon?
+    ///
+    /// - Parameters:
+    ///     - linearRing:    A linear ring
+    ///     - simplePolygon: A polygon with no holes
+    ///
+    /// - Returns: A RelatedTo structure indicating how a linear ring is related to a simple polygon.
+    ///
     fileprivate static func relatedTo(_ linearRing: LinearRing, _ simplePolygon: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -2097,7 +2177,15 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that both polygons are simple polygons with no holes, just a single simple boundary.
+    ///
+    /// How is one simple polygon related to a second simple polygon?
+    ///
+    /// - Parameters:
+    ///     - simplePolygon1: The first polygon with no holes
+    ///     - simplePolygon2: The second polygon with no holes
+    ///
+    /// - Returns: A RelatedTo structure indicating how one simple polygon is related to a second simple polygon.
+    ///
     fileprivate static func relatedTo(_ simplePolygon1: Polygon, _ simplePolygon2: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -2188,7 +2276,17 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
-    /// Assume here that both polygon arrays are the holes of a polygon and both arrays are non-empty.
+    ///
+    /// How is one simple polygon array related to a second simple polygon array?
+    ///
+    /// - Parameters:
+    ///     - simplePolygonArray1: The first polygon array where each polygon has no holes
+    ///     - simplePolygonArray2: The second polygon array where each polygon has no holes
+    ///
+    /// - Returns: A RelatedTo structure indicating how one simple polygon array is related to a second simple polygon array.
+    ///
+    /// - Note: Assume here that both polygon arrays are the holes of a polygon and both arrays are non-empty.
+    ///
     fileprivate static func relatedTo(_ simplePolygonArray1: [Polygon], _ simplePolygonArray2: [Polygon]) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -2270,6 +2368,15 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
+    ///
+    /// Are two polygons disjoint?
+    ///
+    /// - Parameters:
+    ///     - polygon1: The first polygon
+    ///     - polygon2: The second polygon
+    ///
+    /// - Returns: A boolean which is true if the two polygons are disconnected from each other.
+    ///
     fileprivate static func disjoint(_ polygon1: Polygon, _ polygon2: Polygon) -> Bool {
 
         /// Get the relationship of the outer ring of the first polygon to the second polygon.
@@ -2294,8 +2401,16 @@ extension IntersectionMatrix {
         return true
     }
 
-    /// This will pick out the linear rings in a geometry collection and return an array of those linear rings.
-    /// For our current purposes, all of the objects in the geometry collection should be linear rings.
+    ///
+    /// Pick out the linear rings in a geometry collection and return an array of those linear rings.
+    ///
+    /// - Parameters:
+    ///     - geometryCollection: A geometry collection
+    ///
+    /// - Returns: An array of linear rings.
+    ///
+    /// - Note: For our current purposes, all of the objects in the geometry collection should be linear rings.
+    ///
     fileprivate static func geometryCollectionToLinearRingArray(_ geometryCollection: GeometryCollection) -> [LinearRing] {
 
         var linearRings = [LinearRing]()
@@ -2314,6 +2429,14 @@ extension IntersectionMatrix {
         return linearRings
     }
 
+    ///
+    /// Convert an array of linear rings to an array of polygons.
+    ///
+    /// - Parameters:
+    ///     - linearRings: An array of linear rings
+    ///
+    /// - Returns: An array of polygons.
+    ///
     fileprivate static func linearRingsToPolygons(_ linearRings: [LinearRing]) -> [Polygon] {
 
         var polygons = [Polygon]()
@@ -2324,7 +2447,17 @@ extension IntersectionMatrix {
         return polygons
     }
 
-    /// Assume here that both polygons are full polygons with holes
+    ///
+    /// How is one polygon related to a second polygon?
+    ///
+    /// - Parameters:
+    ///     - polygon1: The first polygon
+    ///     - polygon2: The second polygon
+    ///
+    /// - Returns: A RelatedTo structure indicating how one polygon is related to a second polygon.
+    ///
+    /// - Note: Both polygons are full polygons, possibly with holes.
+    ///
     fileprivate static func relatedToFull(_ polygon1: Polygon, _ polygon2: Polygon) -> RelatedTo {
 
         var relatedToResult = RelatedTo()
@@ -2441,7 +2574,14 @@ extension IntersectionMatrix {
         return relatedToResult
     }
 
+    ///
     /// Get the holes for a polygon.  This will be an array of linear rings.
+    ///
+    /// - Parameters:
+    ///     - polygon: A polygon
+    ///
+    /// - Returns: An array of linear rings that are the holes of the input polygon.
+    ///
     fileprivate static func holes(_ polygon: Polygon) -> [LinearRing] {
 
         guard let polygonBoundary = polygon.boundary() as? GeometryCollection,
@@ -2458,12 +2598,27 @@ extension IntersectionMatrix {
         return innerLinearRings
     }
 
-    /// It is assumed that a RelatedTo structure has been generated for two linear rings,
-    /// and now we want to know if the two match.
+    ///
+    /// Determine if two linear rings are topologically equivalent.
+    ///
+    /// - Parameters:
+    ///     - relatedToLinearRings: A RelatedTo structure produced by comparing two linear rings.
+    ///
+    /// - Returns: A boolean indicating whether the two linear rings are topologically equivalent.
+    ///
     fileprivate static func areLinearRingsIdentical(_ relatedToLinearRings: RelatedTo) -> Bool {
         return relatedToLinearRings.firstTouchesSecondInterior == .one && relatedToLinearRings.firstTouchesSecondExterior == .empty
     }
 
+    ///
+    /// Determine if two linear rings have the same number of coordinates.
+    ///
+    /// - Parameters:
+    ///     - linearRingArray1: The first linear ring array
+    ///     - linearRingArray2: The second linear ring array
+    ///
+    /// - Returns: A boolean indicating whether the coordinate count of both linear rings is the same.
+    ///
     fileprivate static func countIdentical(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> Bool {
 
         return linearRingArray1.count == linearRingArray2.count
