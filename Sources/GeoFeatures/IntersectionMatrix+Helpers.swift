@@ -3159,9 +3159,7 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
-    ///
-    /// Dimension .one and dimension .one
-    ///
+    // MARK: Dimension .one and dimension .one
 
     struct LineSegmentIntersection {
 
@@ -3195,14 +3193,25 @@ extension IntersectionMatrix {
     
     ///
     /// Check if the bounding boxes overlap for two one dimensional line ranges.
-    /// The first value for each range is the minimum value and the second is the maximum value.
+    ///
+    /// - Parameters:
+    ///     - range1: First tuple with the first value being a minimum and the second value being a maximum.
+    ///     - range2: Second tuple with the first value being a minimum and the second value being a maximum.
+    ///
+    /// - Returns: A boolean indicating whether the two ranges overlap by a single point or more.
     ///
     fileprivate static func boundingBoxesOverlap1D(range1: (Double, Double), range2: (Double, Double)) -> Bool {
         return range1.1 >= range2.0 && range2.1 >= range1.0
     }
 
     ///
-    /// Check if the bounding boxes overlap for two line segments
+    /// Check if the bounding boxes overlap for two line segments.
+    ///
+    /// - Parameters:
+    ///     - segment: First line segment
+    ///     - other:   Second line segment
+    ///
+    /// - Returns: A boolean indicating whether the two line segments overlap by a single point or more.
     ///
     fileprivate static func boundingBoxesOverlap2D(segment: Segment, other: Segment) -> Bool {
         let range1x = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
@@ -3214,10 +3223,14 @@ extension IntersectionMatrix {
 
         return boundingBoxesOverlap1D(range1: box1.0, range2: box2.0) && boundingBoxesOverlap1D(range1: box1.1, range2: box2.1)
     }
-    
+
     ///
-    /// Return the bounding box of a line segment.  This is a tuple of tuples.
-    /// The first element is the min and max x values, and the second element is the min and max y values.
+    /// Return the bounding box of a line segment.
+    ///
+    /// - Parameters:
+    ///     - segment: A line segment
+    ///
+    /// - Returns: The bounding box of a line segment.  This is a tuple of tuples.  The first element is the min and max x values, and the second element is the min and max y values.
     ///
     fileprivate static func boundingBox(_ segment: Segment) -> ((Double, Double), (Double, Double)) {
         let rangex = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
@@ -3231,20 +3244,33 @@ extension IntersectionMatrix {
     /// | a b |
     /// | c d |
     ///
-    /// Returns a value of ad - bc
+    /// - Parameters:
+    ///     - a: The upper left value
+    ///     - b: The upper right value
+    ///     - c: The lower left value
+    ///     - d: The lower right value
+    ///
+    /// - Returns: Returns a two-dimensional determinant with value of ad - bc.
     ///
     fileprivate static func det2d(a: Double, b: Double, c: Double, d: Double) -> Double {
         return a*d - b*c
     }
 
     ///
-    /// Returns a numeric value indicating where point p2 is relative to the line determined by p0 and p1.
-    /// value > 0 implies p2 is on the left
-    /// value = 0 implies p2 is on the line
-    /// value < 0 implies p2 is to the right
+    /// Returns a numeric value indicating where coordinate c2 is relative to the line determined by coordinates c0 and c1.
     ///
-    fileprivate static func isLeft(p0: Coordinate, p1: Coordinate, p2: Coordinate) -> Double {
-        return (p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y -  p0.y)
+    /// - Parameters:
+    ///     - c0: The first coordinate
+    ///     - c1: The second coordinate
+    ///     - c2: The third coordinate
+    ///
+    /// - Returns: A numeric value indicating where coordinate c2 is relative to the line determined by coordinates c0 and c1.
+    ///            value > 0 implies c2 is on the left,
+    ///            value = 0 implies c2 is on the line,
+    ///            value < 0 implies c2 is to the right
+    ///
+    fileprivate static func isLeft(c0: Coordinate, c1: Coordinate, c2: Coordinate) -> Double {
+        return (c1.x - c0.x)*(c2.y - c0.y) - (c2.x - c0.x)*(c1.y -  c0.y)
     }
 
     ///
@@ -3253,6 +3279,16 @@ extension IntersectionMatrix {
     /// If the second coordinate of the first segment, "segment", is a boundary point, secondCoordinateFirstSegmentBoundary should be true.
     /// If the first coordinate of the second segment, "other", is a boundary point, firstCoordinateSecondSegmentBoundary should be true.
     /// If the second coordinate of the second segment, "other", is a boundary point, secondCoordinateSecondSegmentBoundary should be true.
+    ///
+    /// - Parameters:
+    ///     - segment:                               The first segment
+    ///     - other:                                 The second segment
+    ///     - firstCoordinateFirstSegmentBoundary:   Boolean indicating whether the first coordinate of the first segment is a boundary point.
+    ///     - secondCoordinateFirstSegmentBoundary:  Boolean indicating whether the second coordinate of the first segment is a boundary point.
+    ///     - firstCoordinateSecondSegmentBoundary:  Boolean indicating whether the first coordinate of the second segment is a boundary point.
+    ///     - secondCoordinateSecondSegmentBoundary: Boolean indicating whether the second coordinate of the second segment is a boundary point.
+    ///
+    /// - Returns: A LineSegmentIntersection structure that captures details of the relationship of the two line segments.
     ///
     fileprivate static func intersection(segment: Segment, other: Segment, firstCoordinateFirstSegmentBoundary: Bool = false, secondCoordinateFirstSegmentBoundary: Bool = false, firstCoordinateSecondSegmentBoundary: Bool = false, secondCoordinateSecondSegmentBoundary: Bool = false) -> LineSegmentIntersection {
 
@@ -3277,10 +3313,10 @@ extension IntersectionMatrix {
         ///
         /// Check cases where at least one boundary point of one segment touches the other line segment
         ///
-        let leftSign   = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
-        let rightSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
-        let leftSign2  = isLeft(p0: other.leftCoordinate, p1: other.rightCoordinate, p2: segment.leftCoordinate)
-        let rightSign2 = isLeft(p0: other.leftCoordinate, p1: other.rightCoordinate, p2: segment.rightCoordinate)
+        let leftSign   = isLeft(c0: segment.leftCoordinate, c1: segment.rightCoordinate, c2: other.leftCoordinate)
+        let rightSign  = isLeft(c0: segment.leftCoordinate, c1: segment.rightCoordinate, c2: other.rightCoordinate)
+        let leftSign2  = isLeft(c0: other.leftCoordinate, c1: other.rightCoordinate, c2: segment.leftCoordinate)
+        let rightSign2 = isLeft(c0: other.leftCoordinate, c1: other.rightCoordinate, c2: segment.rightCoordinate)
         let oneLine    = leftSign == 0 && rightSign == 0 /// Both line segments lie on one line
         if  (segment1Boundary1Location != .onExterior) ||  (segment1Boundary2Location != .onExterior) ||
             (segment2Boundary1Location != .onExterior) ||  (segment2Boundary2Location != .onExterior) {
@@ -3412,6 +3448,15 @@ extension IntersectionMatrix {
         return LineSegmentIntersection(sb11: segment1Boundary1Location, sb12: segment1Boundary2Location, sb21: segment2Boundary1Location, sb22: segment2Boundary2Location, interiors: interiorsIntersect, theGeometry: Point(Coordinate(x:x, y: y), precision: precision, coordinateSystem: csystem))
     }
 
+    ///
+    ///  Do the two multi points have any points in common?
+    ///
+    /// - Parameters:
+    ///     - points1: The first multi point
+    ///     - points2: The second multi point
+    ///
+    /// - Returns: A boolean which is true if the two multi points have any points in common.
+    ///
     fileprivate static func intersects(_ points1: MultiPoint, _ points2: MultiPoint) -> Bool {
 
         let coordinates1 = multiPointToCoordinateArray(points1)
@@ -3419,6 +3464,15 @@ extension IntersectionMatrix {
         return intersects(coordinates1, coordinates2)
     }
 
+    ///
+    ///  Do the two coordinate arrays have any coordinates in common?
+    ///
+    /// - Parameters:
+    ///     - coordinates1: The first coordinate array
+    ///     - coordinates2: The second coordinate array
+    ///
+    /// - Returns: A boolean which is true if the two coordinate arrays have any coordinates in common.
+    ///
     fileprivate static func intersects(_ coordinates1: [Coordinate], _ coordinates2: [Coordinate]) -> Bool {
 
         for tempCoordinate in coordinates1 {
@@ -3429,9 +3483,19 @@ extension IntersectionMatrix {
         return false
     }
 
-    /// Calculate the slope as a tuple.
+    ///
+    /// Calculate the slope of the line formed by two coordinates as a tuple.
     /// The first value is the slope, if the line is not vertical.
     /// The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
+    ///
+    /// - Parameters:
+    ///     - coordinate1: The first coordinate
+    ///     - coordinate2: The second coordinate
+    ///
+    /// - Returns: A tuple.  The first value is the slope of the line formed by the two coordinates, if not vertical.  The second value is a boolean which is true if the line is vertical.
+    ///
+    /// - Note: In the odd case where both coordinates are the same, the line formed will assume to be vertical and the resulting tuple will be consistent with that.
+    ///
     fileprivate static func slope(_ coordinate1: Coordinate, _ coordinate2: Coordinate) -> (Double, Bool) {
 
         /// Check for the vertical case
@@ -3443,6 +3507,18 @@ extension IntersectionMatrix {
         return ((coordinate2.y - coordinate1.y) / (coordinate2.x - coordinate1.x), false)
     }
 
+    ///
+    /// Calculate the slope of the line segment as a tuple.
+    /// The first value is the slope, if the line is not vertical.
+    /// The second value is a boolean flag indicating whether the line is vertical.  If it is, the first value is irrelevant and will typically be zero.
+    ///
+    /// - Parameters:
+    ///     - segment: A line segment
+    ///
+    /// - Returns: A tuple.  The first value is the slope of the line segment, if not vertical.  The second value is a boolean which is true if the line is vertical.
+    ///
+    /// - Note: In the odd case where both coordinates of the line segment are the same, the line formed will assume to be vertical and the resulting tuple will be consistent with that.
+    ///
     fileprivate static func slope(_ segment: Segment) -> (Double, Bool) {
 
         return slope(segment.leftCoordinate, segment.rightCoordinate)
