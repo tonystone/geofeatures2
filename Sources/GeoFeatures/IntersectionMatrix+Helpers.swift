@@ -2624,7 +2624,15 @@ extension IntersectionMatrix {
         return linearRingArray1.count == linearRingArray2.count
     }
 
+    ///
     /// Does the line string match the linear ring?
+    ///
+    /// - Parameters:
+    ///     - lineString: A line string
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: A boolean indicating whether the line string and linear ring are topologically equivalent.
+    ///
     fileprivate static func matches(_ lineString: LineString, _ linearRing: LinearRing) -> Bool {
 
         guard lineString.count == linearRing.count else { return false }
@@ -2649,7 +2657,15 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
     /// Does the linear ring match any of the linear rings in the array?
+    ///
+    /// - Parameters:
+    ///     - linearRing1:     A linear ring
+    ///     - linearRingArray: A linear ring array
+    ///
+    /// - Returns: A boolean indicating whether a linear ring is topologically equivalent to any linear ring in an array of linear rings.
+    ///
     fileprivate static func matchesOne(_ linearRing1: LinearRing, _ linearRingArray: [LinearRing]) -> Bool {
 
         for linearRing2 in linearRingArray {
@@ -2664,7 +2680,15 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
     /// Does the first array of linear rings match a subset of the linear rings in the second array?
+    ///
+    /// - Parameters:
+    ///     - linearRingArray1: The first linear ring array
+    ///     - linearRingArray2: The second linear ring array
+    ///
+    /// - Returns: A boolean indicating whether each linear ring of a linear ring array is topologically equivalent to some linear ring in a second array of linear rings.
+    ///
     fileprivate static func matchesSubset(_ linearRingArray1: [LinearRing], _ linearRingArray2: [LinearRing]) -> Bool {
 
         for linearRing1 in linearRingArray1 {
@@ -2679,6 +2703,15 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
+    /// Generate the intersection matrix of a multi point and a line string
+    ///
+    /// - Parameters:
+    ///     - points:     A multi point
+    ///     - lineString: A line string
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ points: MultiPoint, _ lineString: LineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -2777,6 +2810,15 @@ extension IntersectionMatrix {
         return disjoint
     }
 
+    ///
+    /// Generate the intersection matrix of a multi point and a linear ring
+    ///
+    /// - Parameters:
+    ///     - points:     A multi point
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ points: MultiPoint, _ linearRing: LinearRing) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -2844,6 +2886,15 @@ extension IntersectionMatrix {
         return disjoint
     }
 
+    ///
+    /// Generate the intersection matrix of a multi point and a multi line string
+    ///
+    /// - Parameters:
+    ///     - points:          A multi point
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ points: MultiPoint, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -2935,10 +2986,16 @@ extension IntersectionMatrix {
         return disjoint
     }
 
-    ///
-    /// Dimension .zero and dimension .two
-    ///
+    // MARK: Dimension .zero and dimension .two
 
+    ///
+    /// Generate an intersection matrix from a RelatedTo structure
+    ///
+    /// - Parameters:
+    ///     - relatedTo: A RelatedTo structure
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func intersectionMatrix(from relatedTo: RelatedTo) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -2959,6 +3016,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a point and a polygon
+    ///
+    /// - Parameters:
+    ///     - point:   A point
+    ///     - polygon: A polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ point: Point, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -2983,6 +3049,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a point and a multi polygon
+    ///
+    /// - Parameters:
+    ///     - point:        A point
+    ///     - multipolygon: A multi polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ point: Point, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         let relatedToCoordinateMP = relatedTo((point.coordinate, false), multipolygon)
@@ -2992,6 +3067,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Convert a multi point and a boolean flag into an array of coordinate tuples.
+    ///
+    /// - Parameters:
+    ///     - points:            A multi point
+    ///     - allBoundaryPoints: A boolean indicating whether all points in the multi point are boundary points.  It defaults to false.
+    ///
+    /// - Returns: An array of coordinate tuples
+    ///
     fileprivate static func multiPointToCoordinateTupleArray(_ points: MultiPoint, _ allBoundaryPoints: Bool = false) -> [(Coordinate, Bool)] {
 
         var tupleArray = [(Coordinate, Bool)]()
@@ -3001,6 +3085,14 @@ extension IntersectionMatrix {
         return tupleArray
     }
 
+    ///
+    /// Convert a multi point into an array of coordinates.
+    ///
+    /// - Parameters:
+    ///     - points:            A multi point
+    ///
+    /// - Returns: An array of coordinates
+    ///
     fileprivate static func multiPointToCoordinateArray(_ points: MultiPoint) -> [Coordinate] {
 
         var coordinateArray = [Coordinate]()
@@ -3010,6 +3102,15 @@ extension IntersectionMatrix {
         return coordinateArray
     }
 
+    ///
+    /// Generate the intersection matrix of a multi point and a polygon
+    ///
+    /// - Parameters:
+    ///     - points:  A multi point
+    ///     - polygon: A polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ points: MultiPoint, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -3037,6 +3138,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a multi point and a multi polygon
+    ///
+    /// - Parameters:
+    ///     - points:       A multi point
+    ///     - multipolygon: A multi polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ points: MultiPoint, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         let coordinateTupleArray = multiPointToCoordinateTupleArray(points, false)
