@@ -4082,8 +4082,16 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
     /// Is the line string contained in or a subset of the multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - lineString1:     A line string
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: A boolean indicating whether the line string is contained in the multi line string.
+    ///
     fileprivate static func subset(_ lineString1: LineString, _ multiLineString: MultiLineString) -> Bool {
 
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
@@ -4099,9 +4107,16 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
     /// Is the linear ring contained in or a subset of the multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    /// TODO:
+    ///
+    /// - Parameters:
+    ///     - linearRing:      A linear ring
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: A boolean indicating whether the linear ring is contained in the multi line string.
+    ///
     fileprivate static func subset(_ linearRing: LinearRing, _ multiLineString: MultiLineString) -> Bool {
 
         for lrFirstCoordIndex in 0..<linearRing.count - 1 {
@@ -4136,9 +4151,17 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
     /// Is the linear ring contained in or a subset of the linear ring array?
     /// If the linear ring is a subset of the collection, it must match one of the linear rings, although the sequence of points need not match.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - linearRing:  A linear ring
+    ///     - linearRings: A linear ring array
+    ///
+    /// - Returns: A boolean indicating whether the linear ring is contained in the array of linear rings.
+    ///
     fileprivate static func subset(_ linearRing: LinearRing, _ linearRings: [LinearRing]) -> Bool {
 
         for linearRing2 in linearRings {
@@ -4151,8 +4174,16 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
     /// Is the multi line string contained in or a subset of the linear ring?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - multiLineString: A multi line string
+    ///     - linearRing:      A linear ring
+    ///
+    /// - Returns: A boolean indicating whether the multi line string is contained in the linear ring.
+    ///
     fileprivate static func subset(_ multiLineString: MultiLineString, _ linearRing: LinearRing) -> Bool {
 
         for lineString in multiLineString {
@@ -4164,8 +4195,16 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
     /// Subtracts segment1 from segment2 and returns an array of resulting segments that may have zero, one or two Segments in it.
     /// The algorithm here assumes that the segments have been previously checked to make sure they overlap by a segment of dimension one.
+    ///
+    /// - Parameters:
+    ///     - segment1: The first line segment
+    ///     - segment2: The second line segment
+    ///
+    /// - Returns: An array of line segments
+    ///
     fileprivate static func subtract(_ segment1: Segment, _ segment2: Segment) -> [Segment] {
 
         let boundingBox1 = boundingBox(segment1)
@@ -4232,8 +4271,16 @@ extension IntersectionMatrix {
         }
     }
 
+    ///
     /// Is the segment contained in or a subset of the multi line string?
     /// The algorithm here assumes that the multi line string has been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - segment1:        A line segment
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: A boolean that is true if the line segment is contained in the multi line string.
+    ///
     fileprivate static func subset(_ segment1: Segment, _ multiLineString: MultiLineString) -> Bool {
 
         for lineString in multiLineString {
@@ -4263,9 +4310,16 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
     /// Is the first multi line string contained in or a subset of the second multi line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
-    /// TODO:
+    ///
+    /// - Parameters:
+    ///     - multiLineString1: The first multi line string
+    ///     - multiLineString2: The second multi line string
+    ///
+    /// - Returns: A boolean that is true if the first multi line string is contained in the second multi line string.
+    ///
     fileprivate static func subset(_ multiLineString1: MultiLineString, _ multiLineString2: MultiLineString) -> Bool {
 
         for lineString1 in multiLineString1 {
@@ -4283,9 +4337,17 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
     /// Is the multi line string contained in or a subset of the collection of linear rings?
     /// If the multi line string is a subset of the collection, each line string of the multi line string must be a subset of just one linear ring.
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - multiLineString:    A multi line string
+    ///     - geometryCollection: A geometry collection
+    ///
+    /// - Returns: A boolean that is true if the multi line string is contained in the geometry collection.
+    ///
     fileprivate static func subset(_ multiLineString: MultiLineString, _ geometryCollection: GeometryCollection) -> Bool {
         
         for lineString in multiLineString {
@@ -4310,6 +4372,15 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
+    /// Generate the intersection matrix of two line strings
+    ///
+    /// - Parameters:
+    ///     - lineString1: The first line string
+    ///     - lineString2: The second line string
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ lineString1: LineString, _ lineString2: LineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -4415,7 +4486,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
-    /// There is an assumption here that the line string is not a linear ring
+    ///
+    /// Generate the intersection matrix of a line string and a linear ring.
+    ///
+    /// - Parameters:
+    ///     - lineString: A line string
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ lineString: LineString, _ linearRing: LinearRing) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -4496,6 +4575,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a line string and a multi line string.
+    ///
+    /// - Parameters:
+    ///     - lineString:      A line string
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ lineString: LineString, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -4603,6 +4691,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of two linear rings.
+    ///
+    /// - Parameters:
+    ///     - linearRing1: The first linear ring
+    ///     - linearRing2: The second linear ring
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -4663,6 +4760,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a linear ring and a multi line string.
+    ///
+    /// - Parameters:
+    ///     - linearRing:      A linear ring
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multiLineString: MultiLineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -4743,6 +4849,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of two multi line strings.
+    ///
+    /// - Parameters:
+    ///     - multiLineString1: The first multi line string
+    ///     - multiLineString2: The second multi line string
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ multiLineString1: MultiLineString, _ multiLineString2: MultiLineString) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -4851,11 +4966,19 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
-    ///
-    /// Dimension .one and dimension .two
-    ///
+    // MARK: Dimension .one and dimension .two
 
-    /// The polygon here is a full polygon with holes
+    ///
+    /// Generate the intersection matrix of a line string and a polygon.
+    ///
+    /// - Parameters:
+    ///     - lineString: A line string
+    ///     - polygon:    A polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
+    /// - Note: The polygon here is a full polygon, possibly with holes
+    ///
     fileprivate static func generateIntersection(_ lineString: LineString, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -5041,6 +5164,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a line string and a multi polygon.
+    ///
+    /// - Parameters:
+    ///     - lineString:   A line string
+    ///     - multipolygon: A multi polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ lineString: LineString, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
@@ -5086,6 +5218,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a linear ring and a polygon.
+    ///
+    /// - Parameters:
+    ///     - linearRing: A linear ring
+    ///     - polygon:    A polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ linearRing: LinearRing, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -5179,6 +5320,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a linear ring and a multi polygon.
+    ///
+    /// - Parameters:
+    ///     - linearRing:   A linear ring
+    ///     - multipolygon: A multi polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ linearRing: LinearRing, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
@@ -5212,6 +5362,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a multi line string and a polygon.
+    ///
+    /// - Parameters:
+    ///     - multiLineString: A multi line string
+    ///     - polygon:         A polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ polygon: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -5363,6 +5522,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a multi line string and a multi polygon.
+    ///
+    /// - Parameters:
+    ///     - multiLineString: A multi line string
+    ///     - multipolygon:    A multi polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ multiLineString: MultiLineString, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
@@ -5418,10 +5586,17 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
-    ///
-    /// Dimension .two and dimension .two
-    ///
+    // MARK: Dimension .two and dimension .two
 
+    ///
+    /// Generate the intersection matrix of two polygons.
+    ///
+    /// - Parameters:
+    ///     - polygon1: The first polygon
+    ///     - polygon2: The second polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ polygon1: Polygon, _ polygon2: Polygon) -> IntersectionMatrix {
 
         /// Default intersection matrix
@@ -5445,6 +5620,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of a polygon and a multi polygon.
+    ///
+    /// - Parameters:
+    ///     - polygon:      A polygon
+    ///     - multipolygon: A multi polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ polygon: Polygon, _ multipolygon: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
@@ -5493,6 +5677,15 @@ extension IntersectionMatrix {
         return matrixIntersects
     }
 
+    ///
+    /// Generate the intersection matrix of two multi polygons.
+    ///
+    /// - Parameters:
+    ///     - multipolygon1: The first multi polygon
+    ///     - multipolygon2: The second multi polygon
+    ///
+    /// - Returns: An intersection matrix
+    ///
     fileprivate static func generateIntersection(_ multipolygon1: MultiPolygon, _ multipolygon2: MultiPolygon) -> IntersectionMatrix {
 
         var matrixIntersects = IntersectionMatrix()
