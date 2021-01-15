@@ -3524,7 +3524,15 @@ extension IntersectionMatrix {
         return slope(segment.leftCoordinate, segment.rightCoordinate)
     }
 
-    /// Reduces a line string to a sequence of points such that each consecutive line segment will have a different slope
+    ///
+    /// Reduces a line string to a sequence of coordinates such that each consecutive line segment will have a different slope.
+    /// Also, all redundant or unnecessary coordinates are removed.
+    ///
+    /// - Parameters:
+    ///     - lineString: A line string
+    ///
+    /// - Returns: A line string that is topologically identical to the original line string but with a minimal set of coordinates.
+    ///
     fileprivate static func reduce(_ lineString: LineString) -> LineString {
 
         /// Must have at least two coordinates to reduce
@@ -3573,7 +3581,14 @@ extension IntersectionMatrix {
         return newLineString
     }
 
-    /// Creates a new linear ring from an original linear ring that starts and ends at the second to last point of the original
+    ///
+    /// Creates a new linear ring from an original linear ring that starts and ends at the second to last point of the original.
+    ///
+    /// - Parameters:
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: A linear ring that is topologically identical to the original linear ring but starts and ends at the second to last point of the original.
+    ///
     fileprivate static func moveStartBackOne(_ linearRing: LinearRing) -> LinearRing {
 
         var newLinearRing = LinearRing(precision: Floating(), coordinateSystem: Cartesian())
@@ -3593,8 +3608,18 @@ extension IntersectionMatrix {
         return newLinearRing
     }
 
+    ///
     /// Returns a boolean indicating whether the second/middle coordinate is unnecessary and should be removed,
     /// since it's on the line segment between the first and third coordinates.
+    ///
+    /// - Parameters:
+    ///     - firstCoord:  The first coordinate
+    ///     - secondCoord: The second coordinate
+    ///     - thirdCoord:  The third coordinate
+    ///
+    /// - Returns: A boolean indicating whether the second/middle coordinate is unnecessary and should be removed,
+    ///            since it's on the line segment between the first and third coordinates.
+    ///
     fileprivate static func removeCoordinate(_ firstCoord: Coordinate, _ secondCoord: Coordinate, _ thirdCoord: Coordinate) -> Bool {
 
         let segment = Segment(left: firstCoord, right: thirdCoord)
@@ -3605,7 +3630,15 @@ extension IntersectionMatrix {
         return false
     }
 
-    /// Reduces a linear ring to a sequence of points such that each consecutive line segment will have a different slope
+    ///
+    /// Reduces a linear ring to a sequence of coordinates such that each consecutive line segment will have a different slope.
+    /// Also, it removes any redundant or unnecessary coordinates.
+    ///
+    /// - Parameters:
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: A linear ring that is topologically equivalent to the original linear ring but has unnecessary or redundant coordinates removed.
+    ///
     fileprivate static func reduce(_ linearRing: LinearRing) -> LinearRing {
 
         /// This algorithm will reduce even invalid linear rings.
@@ -3664,7 +3697,14 @@ extension IntersectionMatrix {
         return newLinearRing
     }
 
-    /// Reduces a polygon by reducing each linear ring of that polygon
+    ///
+    /// Reduces a polygon by reducing each linear ring of that polygon.
+    ///
+    /// - Parameters:
+    ///     - polygon: A polygon
+    ///
+    /// - Returns: A polygon that is topologically equivalent to the original polygon but has unnecessary or redundant coordinates removed.
+    ///
     fileprivate static func reduce(_ polygon: Polygon) -> Polygon {
 
         var reducedPolygon = Polygon()
@@ -3678,9 +3718,17 @@ extension IntersectionMatrix {
         return reducedPolygon
     }
 
-    /// This currently assumes a GeometryCollection where all of the elements are LinearRings.
-    /// Specifically the LinearRings which represent the boundary of a Polygon.
+    ///
+    /// Reduces a geometry collection by reducing each element of that geometry collection.
+    /// This currently assumes a geometry collection where all of the elements are linear rings.
+    /// Specifically the linear rings which represent the boundary of a polygon.
     /// This function can be extended to handle other geometry collections.
+    ///
+    /// - Parameters:
+    ///     - geometryCollection: A geometry collection
+    ///
+    /// - Returns: A geometry collection that is topologically equivalent to the original geometry collection but has unnecessary or redundant coordinates removed.
+    ///
     fileprivate static func reduce(_ geometryCollection: GeometryCollection) -> GeometryCollection {
 
         var reducedLinearRings = GeometryCollection(precision: Floating(), coordinateSystem: Cartesian())
@@ -3700,10 +3748,18 @@ extension IntersectionMatrix {
         return reducedLinearRings
     }
 
-    /// This currently assumes a Geometry array where all of the elements are either Points or LineStrings.
-    /// Duplicate Points will have already been removed.
-    /// This will remove all Points that are currently subsets of any of the LineStrings.
-    /// This currently does not handle the case where LineStrings overlap or are subsets of one another.
+    ///
+    /// Reduces a geometry array in a limited way.
+    /// This currently assumes a geometry array where all of the elements are either points or line strings.
+    /// Duplicate points will have already been removed.
+    /// This will remove all points that are currently subsets of any of the line strings.
+    /// This currently does not handle the case where line strings overlap or are subsets of one another.
+    ///
+    /// - Parameters:
+    ///     - geometryArray: A geometry array
+    ///
+    /// - Returns: A geometry array that is topologically equivalent to the original geometry array but has unnecessary or redundant points removed.
+    ///
     fileprivate static func reduce(_ geometryArray: [Geometry]) -> [Geometry] {
 
         guard geometryArray.count >= 2 else {
@@ -3751,9 +3807,16 @@ extension IntersectionMatrix {
         return reducedGeometryArray
     }
 
-    /// Reduces a multi line string to a sequence of points on each line string such that each consecutive line segment will have a different slope.
+    ///
+    /// Reduces a multi line string to a sequence of coordinates on each line string such that each consecutive line segment will have a different slope.
     /// Note that for this first pass, we will handle each line string separately.
     /// TODO: Reduce connections between possibly connected line strings.
+    ///
+    /// - Parameters:
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: A multi line string that is topologically equivalent to the original multi line string but has unnecessary or redundant coordinates removed.
+    ///
     fileprivate static func reduce(_ multiLineString: MultiLineString) -> MultiLineString {
 
         /// Define the MultiLineString geometry that might be returned
@@ -3771,8 +3834,15 @@ extension IntersectionMatrix {
         return resultMultiLineString
     }
 
+    ///
     /// Reduces an array of linear rings to another array of linear rings such that each consecutive
     /// line segment of each linear ring will have a different slope.
+    ///
+    /// - Parameters:
+    ///     - linearRingArray: A line ring array
+    ///
+    /// - Returns: A line ring array that is topologically equivalent to the original line ring array but has unnecessary or redundant coordinates removed.
+    ///
     fileprivate static func reduce(_ linearRingArray: [LinearRing]) -> [LinearRing] {
 
         /// Define the inear ring array that might be returned
@@ -3813,7 +3883,15 @@ extension IntersectionMatrix {
         return resultLinearRingArray
     }
 
+    ///
     /// Is segment1 contained in or a subset of segment2?
+    ///
+    /// - Parameters:
+    ///     - segment1: The first line segment
+    ///     - segment2: The second line segment
+    ///
+    /// - Returns: A boolean indicating whether segment1 is contained in segment2.
+    ///
     fileprivate static func subset(_ segment1: Segment, _ segment2: Segment) -> Bool {
 
         /// If the slopes are not the same one segment being contained in another is not possible
@@ -3833,8 +3911,16 @@ extension IntersectionMatrix {
         }
     }
 
+    ///
     /// Is line string 1 contained in or a subset of line string 2?
     /// The algorithm here assumes that both line strings have been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - lineString1: The first line string
+    ///     - lineString2: The second line string
+    ///
+    /// - Returns: A boolean indicating whether lineString1 is contained in lineString2.
+    ///
     fileprivate static func subset(_ lineString1: LineString, _ lineString2: LineString) -> Bool {
 
         for ls1FirstCoordIndex in 0..<lineString1.count - 1 {
@@ -3862,8 +3948,16 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
     /// Is the line string contained in or a subset of the linear ring?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - lineString: A line string
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: A boolean indicating whether the line string is contained in the linear ring.
+    ///
     fileprivate static func subset(_ lineString: LineString, _ linearRing: LinearRing) -> Bool {
 
         for lsFirstCoordIndex in 0..<lineString.count - 1 {
@@ -3891,9 +3985,17 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
     /// Is the line string contained in or a subset of the linear ring array?
     /// The algorithm here assumes that all geometries have been reduced, so that no two consecutive segments have the same slope.
     /// It also assumes the line string is a subset of just one linear ring rather than some combination of linear rings.
+    ///
+    /// - Parameters:
+    ///     - lineString:  A line string
+    ///     - linearRings: A linear ring array
+    ///
+    /// - Returns: A boolean indicating whether the line string is contained in some linear ring of the linear ring array.
+    ///
     fileprivate static func subset(_ lineString: LineString, _ linearRings: [LinearRing]) -> Bool {
 
         for linearRing in linearRings {
@@ -3906,8 +4008,16 @@ extension IntersectionMatrix {
         return false
     }
 
+    ///
     /// Is the linear ring contained in or a subset of the line string?
     /// The algorithm here assumes that both geometries have been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - linearRing: A linear ring
+    ///     - lineString: A line string
+    ///
+    /// - Returns: A boolean indicating whether the linear ring is contained in the line string.
+    ///
     fileprivate static func subset(_ linearRing: LinearRing, _ lineString: LineString) -> Bool {
 
         for lrFirstCoordIndex in 0..<linearRing.count - 1 {
@@ -3935,8 +4045,16 @@ extension IntersectionMatrix {
         return true
     }
 
+    ///
     /// Is the first linear ring contained in or a subset of the second linear ring?
     /// The algorithm here assumes that both linear rings have been reduced, so that no two consecutive segments have the same slope.
+    ///
+    /// - Parameters:
+    ///     - linearRing1: The first linear ring
+    ///     - linearRing2: The second linear ring
+    ///
+    /// - Returns: A boolean indicating whether the first linear ring is contained in the second linear ring.
+    ///
     fileprivate static func subset(_ linearRing1: LinearRing, _ linearRing2: LinearRing) -> Bool {
 
         for lr1FirstCoordIndex in 0..<linearRing1.count - 1 {
