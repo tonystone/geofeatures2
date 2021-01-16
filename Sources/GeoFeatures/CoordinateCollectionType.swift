@@ -47,14 +47,14 @@ extension CoordinateCollectionType where Self: Geometry & Curve {
     }
 
     ///
-    /// - Returns: true if this Geometry is an empty Geometry.
+    /// - Returns: True if this Geometry is an empty Geometry.
     ///
     public func isEmpty() -> Bool {
         return self.isEmpty
     }
 
     ///
-    /// - Returns: the closure of the combinatorial boundary of this Geometry instance.
+    /// - Returns: The closure of the combinatorial boundary of this Geometry instance.
     ///
     /// - Note: The boundary of a LineString if empty is the empty MultiPoint. If not empty it is the first and last point.
     ///
@@ -71,6 +71,9 @@ extension CoordinateCollectionType where Self: Geometry & Curve {
         return boundary
     }
 
+    ///
+    /// - Returns: An optional Bounds struct defined by the collection of coordinates.
+    ///
     public func bounds() -> Bounds? {
 
         var iterator = self.makeIterator()

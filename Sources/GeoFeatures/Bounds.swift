@@ -44,7 +44,13 @@ public struct Bounds {
     }
 
     ///
-    /// Initialize a Bounds with the min and max coordinates.
+    /// Initialize a Bounds struct with min and max coordinates.
+    ///
+    /// - Parameters:
+    ///     - min: The minimum, or lower left, coordinate.
+    ///     - max: The maximum, or upper right, coordinate.
+    ///
+    /// - Returns: A Bounds struct defined by the input min and max values.
     ///
     public init(min: Coordinate, max: Coordinate) {
         self.min = (x: min.x, y: min.y)
@@ -52,7 +58,13 @@ public struct Bounds {
     }
 
     ///
-    /// Initialize a Bounds with the min and max tuples.
+    /// Initialize a Bounds struct with min and max tuples.
+    ///
+    /// - Parameters:
+    ///     - min: The minimum, or lower left, coordinate as a tuple.
+    ///     - max: The maximum, or upper right, coordinate as a tuple.
+    ///
+    /// - Returns: A Bounds struct defined by the input min and max values.
     ///
     public init(min: (x: Double, y: Double), max: (x: Double, y: Double)) {
         self.min = (x: min.x, y: min.y)
@@ -63,7 +75,12 @@ public struct Bounds {
 extension Bounds {
 
     ///
-    /// Returns the minX, minY, maxX, maxY, of 2 `Bounds`s as a `Bounds`.
+    /// Creates a Bounds struct that encloses both Bounds structs "self" and "other."
+    ///
+    /// - Parameters:
+    ///     - other: A Bounds struct
+    ///
+    /// - Returns: A Bounds struct that encloses both Bounds structs "self" and "other."
     ///
     public func expand(other: Bounds) -> Bounds {
         return Bounds(min: (x: Swift.min(self.min.x, other.min.x), y: Swift.min(self.min.y, other.min.y)),
@@ -72,7 +89,7 @@ extension Bounds {
 }
 
 extension Bounds: Equatable {
-    
+
     public static func == (lhs: Bounds, rhs: Bounds) -> Bool {
         return lhs.min == rhs.min && lhs.max == rhs.max
     }

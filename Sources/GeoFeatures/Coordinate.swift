@@ -44,6 +44,17 @@ public struct Coordinate {
     ///
     public var m: Double?
 
+    ///
+    /// Initialize a Coordinate struct with at least two but possibly up to four values.
+    ///
+    /// - Parameters:
+    ///     - x: The x value of the coordinate.
+    ///     - y: The y value of the coordinate.
+    ///     - z: The optional z value of the coordinate.  Defaults to nil.
+    ///     - m: The optional measurement value that exists at the given coordinate.  Defaults to nil.
+    ///
+    /// - Returns: A Coordinate struct defined by the input values.
+    ///
     public init(x: Double, y: Double, z: Double? = nil, m: Double? = nil) {
         self.x = x
         self.y = y
@@ -51,6 +62,14 @@ public struct Coordinate {
         self.m = m
     }
 
+    ///
+    /// Initialize a Coordinate struct with another Coordinate struct.
+    ///
+    /// - Parameters:
+    ///     - other: A coordinate.
+    ///
+    /// - Returns: A Coordinate struct defined by another Coordinate struct.
+    ///
     public init(other: Coordinate) {
         self.init(x: other.x, y: other.y, z: other.z, m: other.m)
     }
@@ -58,7 +77,14 @@ public struct Coordinate {
 
 extension Coordinate: ExpressibleByArrayLiteral {
 
-    /// Creates an instance initialized with the given elements.
+    ///
+    /// Creates a Coordinate struct initialized with the given elements, which should number between two and four.
+    ///
+    /// - Parameters:
+    ///     - values: An array of values numbering between two and four.
+    ///
+    /// - Returns: A Coordinate struct defined by an array of values.
+    ///
     public init(arrayLiteral values: Double...) {
         precondition(values.count >= 2)
 
@@ -68,7 +94,14 @@ extension Coordinate: ExpressibleByArrayLiteral {
 
 extension Coordinate: ExpressibleByDictionaryLiteral {
 
-    /// Creates an instance initialized with the given elements.
+    ///
+    /// Creates a Coordinate struct initialized with the given key-value tuples, which should number between two and four.
+    ///
+    /// - Parameters:
+    ///     - elements: An array of values numbering between two and four.
+    ///
+    /// - Returns: A Coordinate struct defined by an array of key-value tuples.
+    ///
     public init(dictionaryLiteral elements: (String, Double)...) {
         precondition(elements.count >= 2)
         precondition(elements[0].0 == "x")
