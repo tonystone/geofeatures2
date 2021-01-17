@@ -46,7 +46,7 @@ public class GeoJSONReader {
     /// - Parameters:
     ///     - precision: The `Precision` model that should used for all coordinates.
     ///     - coordinateSystem: The 'CoordinateSystem` the result Geometries should use in calculations on their coordinates.
-///
+    ///
     public init(precision: Precision = defaultPrecision, coordinateSystem: CoordinateSystem = defaultCoordinateSystem) {
         self.cs = coordinateSystem
         self.precision = precision
@@ -132,7 +132,14 @@ public class GeoJSONReader {
         }
     }
 
-    /// Parse a Point type
+    ///
+    /// Parse a Point type.
+    ///
+    /// - Parameters:
+    ///     - jsonObject: The GeoJSON object to read
+    ///
+    /// - Returns: A Point object representing the GeoJSON
+    ///
     private func point(jsonObject: [String: Any]) throws -> Point {
 
         let coordinates = try Coordinates<[Any]>.coordinates(json: jsonObject)
@@ -140,13 +147,27 @@ public class GeoJSONReader {
         return try self.point(coordinates: coordinates)
     }
 
-    /// Parse coordinates into a Point
+    ///
+    /// Parse coordinates into a Point.
+    ///
+    /// - Parameters:
+    ///     - coordinates: An array of any objects that one could parse into a point.  If not, an error is thrown.
+    ///
+    /// - Returns: A Point object representing the GeoJSON
+    ///
     private func point(coordinates: [Any]) throws -> Point {
 
         return Point(try self.coordinate(array: coordinates), precision: self.precision, coordinateSystem: self.cs)
     }
 
-    /// Parse a LineString type
+    ///
+    /// Read a GeoJSON object into a LineString.
+    ///
+    /// - Parameters:
+    ///     - jsonObject: The GeoJSON object to read.
+    ///
+    /// - Returns: A LineString object representing the GeoJSON.
+    ///
     private func lineString(jsonObject: [String: Any]) throws -> LineString {
 
         let coordinates = try Coordinates<[[Any]]>.coordinates(json: jsonObject)
@@ -154,7 +175,14 @@ public class GeoJSONReader {
         return LineString(try self.coordinates(jsonArray: coordinates), precision: self.precision, coordinateSystem: self.cs)
     }
 
-    /// Parse coordinates into a LineString
+    ///
+    /// Parse an array of arrays of coordinates into a LineString.
+    ///
+    /// - Parameters:
+    ///     - coordinates: An array of arrays of coordinates that one could parse into a line string.
+    ///
+    /// - Returns: A LineString object represented by the coordinate arrays.
+    ///
     private func lineString(coordinates: [[Any]]) throws -> LineString {
 
         var elements: [Coordinate] = []
@@ -166,7 +194,14 @@ public class GeoJSONReader {
         return LineString(try self.coordinates(jsonArray: coordinates), precision: self.precision, coordinateSystem: self.cs)
     }
 
-    /// Parse a Polygon type
+    ///
+    /// Read a GeoJSON object into a Polygon..
+    ///
+    /// - Parameters:
+    ///     - jsonObject: The GeoJSON object to read.
+    ///
+    /// - Returns: A Polygon object representing the GeoJSON.
+    ///
     private func polygon(jsonObject: [String: Any]) throws -> Polygon {
 
         let coordinates = try Coordinates<[[[Any]]]>.coordinates(json: jsonObject)
@@ -174,7 +209,14 @@ public class GeoJSONReader {
         return try self.polygon(coordinates: coordinates)
     }
 
-    /// Parse coordinates into a Polygon
+    ///
+    /// Parse an array of arrays of arrays of coordinates into a Polygon.
+    ///
+    /// - Parameters:
+    ///     - coordinates: An array of arrays of arrays of coordinates that one could parse into a polygon.
+    ///
+    /// - Returns: A Polygon object represented by the coordinate arrays.
+    ///
     private func polygon(coordinates: [[[Any]]]) throws -> Polygon {
 
         var outerRing:  LinearRing = LinearRing(precision: self.precision, coordinateSystem: self.cs)
@@ -191,7 +233,14 @@ public class GeoJSONReader {
         return Polygon(outerRing, innerRings: innerRings, precision: self.precision, coordinateSystem: self.cs)
     }
 
-    /// Parse a MultiPoint type
+    ///
+    /// Read a GeoJSON object into a MultiPoint..
+    ///
+    /// - Parameters:
+    ///     - jsonObject: The GeoJSON object to read.
+    ///
+    /// - Returns: A MultiPoint object representing the GeoJSON.
+    ///
     private func multiPoint(jsonObject: [String: Any]) throws -> MultiPoint {
 
         let coordinates = try Coordinates<[[Any]]>.coordinates(json: jsonObject)
@@ -199,7 +248,14 @@ public class GeoJSONReader {
         return try self.multiPoint(coordinates: coordinates)
     }
 
-    /// Parse coordinates into a MultiPoint
+    ///
+    /// Parse an array of arrays of coordinates into a MultiPoint.
+    ///
+    /// - Parameters:
+    ///     - coordinates: An array of arrays of coordinates that one could parse into a multi point.
+    ///
+    /// - Returns: A MultiPoint object represented by the coordinate arrays.
+    ///
     private func multiPoint(coordinates: [[Any]]) throws -> MultiPoint {
 
         var elements: [Point] = []
@@ -211,7 +267,14 @@ public class GeoJSONReader {
         return MultiPoint(elements, precision: self.precision, coordinateSystem: self.cs)
     }
 
-    /// Parse a MultiLineString type
+    ///
+    /// Read a GeoJSON object into a MultiLineString.
+    ///
+    /// - Parameters:
+    ///     - jsonObject: The GeoJSON object to read.
+    ///
+    /// - Returns: A MultiLineString object representing the GeoJSON.
+    ///
     private func multiLineString(jsonObject: [String: Any]) throws -> MultiLineString {
 
         let coordinates = try Coordinates<[ [[Any]] ]>.coordinates(json: jsonObject)
@@ -219,7 +282,14 @@ public class GeoJSONReader {
         return try self.multiLineString(coordinates: coordinates)
     }
 
-    /// Parse coordinates into a MultiPoint
+    ///
+    /// Parse an array of arrays of arrays of coordinates into a MultiLineString.
+    ///
+    /// - Parameters:
+    ///     - coordinates: An array of arrays of arrays of coordinates that one could parse into a multi line string.
+    ///
+    /// - Returns: A MultiLineString object represented by the coordinate arrays.
+    ///
     private func multiLineString(coordinates: [ [[Any]] ]) throws -> MultiLineString {
 
         var elements: [LineString] = []
@@ -231,7 +301,14 @@ public class GeoJSONReader {
         return MultiLineString(elements, precision: self.precision, coordinateSystem: self.cs)
     }
 
-    /// Parse a MultiPolygon type
+    ///
+    /// Read a GeoJSON object into a MultiPolygon.
+    ///
+    /// - Parameters:
+    ///     - jsonObject: The GeoJSON object to read.
+    ///
+    /// - Returns: A MultiPolygon object representing the GeoJSON.
+    ///
     private func multiPolygon(jsonObject: [String: Any]) throws -> MultiPolygon {
 
         let coordinates = try Coordinates<[ [[[Any]]] ]>.coordinates(json: jsonObject)
@@ -239,7 +316,14 @@ public class GeoJSONReader {
         return try self.multiPolygon(coordinates: coordinates)
     }
 
-    /// Parse coordinates into a MultiPolygon
+    ///
+    /// Parse an array of arrays of arrays of arrays of coordinates into a MultiPolygon.
+    ///
+    /// - Parameters:
+    ///     - coordinates: An array of arrays of arrays of arrays of coordinates that one could parse into a multi polygon.
+    ///
+    /// - Returns: A MultiPolygon object represented by the coordinate arrays.
+    ///
     private func multiPolygon(coordinates: [ [[[Any]]] ]) throws -> MultiPolygon {
 
         var elements: [Polygon] = []
@@ -251,7 +335,14 @@ public class GeoJSONReader {
         return MultiPolygon(elements, precision: self.precision, coordinateSystem: self.cs)
     }
 
-    /// Parse a GeometryCollection type
+    ///
+    /// Read a GeoJSON object into a GeometryCollection.
+    ///
+    /// - Parameters:
+    ///     - jsonObject: The GeoJSON object to read.
+    ///
+    /// - Returns: A GeometryCollection object representing the GeoJSON.
+    ///
     private func geometryCollection(jsonObject: [String: Any]) throws -> GeometryCollection {
         var elements: [Geometry] = []
 
@@ -269,6 +360,14 @@ public class GeoJSONReader {
         return GeometryCollection(elements, precision: self.precision, coordinateSystem: self.cs)
     }
 
+    ///
+    /// Parse an array of array of GeoJSON objects into an array of coordinates.
+    ///
+    /// - Parameters:
+    ///     - jsonArray: An array of arrays of GeoJSON objects that one could parse into an array of coordinates.
+    ///
+    /// - Returns: An array of Coordinates represented by the array of GeoJSON objects.
+    ///
     private func coordinates(jsonArray: [[Any]]) throws -> [Coordinate] {
         var coordinates: [Coordinate] = []
 
@@ -278,6 +377,14 @@ public class GeoJSONReader {
         return coordinates
     }
 
+    ///
+    /// Parse an array of values into a single coordinate.  Normally there will be two to four values.
+    ///
+    /// - Parameters:
+    ///     - array: An array of values representing different components of a single coordinate.
+    ///
+    /// - Returns: A Coordinate represented by the values of the input array.
+    ///
     internal /// @Testable
     func coordinate(array: [Any]) throws -> Coordinate {
 
@@ -308,6 +415,14 @@ public class GeoJSONReader {
 internal /// @Testable
 class Coordinates<T> {
 
+    ///
+    /// Parse GeoJSON into a coordinate collection of type T.
+    ///
+    /// - Parameters:
+    ///     - json: A GeoJSON object that one could parse into a collection of coordinates.
+    ///
+    /// - Returns: A collection of coordinates of type T represented by the GeoJSON object.
+    ///
     internal /// @Testable
     class func coordinates(json: [String: Any]) throws -> T {
 
