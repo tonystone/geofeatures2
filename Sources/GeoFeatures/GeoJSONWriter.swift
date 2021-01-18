@@ -43,12 +43,15 @@ public class GeoJSONWriter {
     ///
     /// Initialize this writer
     ///
+    /// - Parameters:
+    ///     - axes: An array of zero to two Axis values indicating whether the z and m values are included.
+    ///
     public init(axes: [Axis] = []) {
         self.output = (axes.contains(.z), axes.contains(.m))
     }
 
     ///
-    /// Based on the geometry passed in, converts it into a Object representation as specified by
+    /// Based on the geometry passed in, converts it into an Object representation as specified by
     /// the GeoJSON draft spec.
     ///
     /// - Parameter geometry: A `Geometry` type to be converted to GeoJSON
@@ -98,12 +101,22 @@ extension GeoJSONWriter {
     ///
     /// Creates a Point GeoJSON Object.
     ///
+    /// - Parameters:
+    ///     - point: A point
+    ///
+    /// - Returns: A Point GeoJSON Object.
+    ///
     fileprivate func pointObject(_ point: Point) throws -> [String: Any] {
         return [TYPE: "Point", COORDINATES: try self.coordinateArray(point.coordinate)]
     }
 
     ///
     /// Creates a LineString GeoJSON Object.
+    ///
+    /// - Parameters:
+    ///     - lineString: A line string
+    ///
+    /// - Returns: A LineString GeoJSON Object.
     ///
     fileprivate func lineStringObject(_ lineString: LineString) throws -> [String: Any] {
         return [TYPE: "LineString", COORDINATES: try lineString.map({ try self.coordinateArray($0) })]
@@ -112,12 +125,22 @@ extension GeoJSONWriter {
     ///
     /// Creates a LinearRing GeoJSON Object.
     ///
+    /// - Parameters:
+    ///     - linearRing: A linear ring
+    ///
+    /// - Returns: A LinearRing GeoJSON Object.
+    ///
     fileprivate func linearRingObject(_ linearRing: LinearRing) throws -> [String: Any] {
         return [TYPE: "LineString", COORDINATES: try linearRing.map({ try self.coordinateArray($0) })]
     }
 
     ///
     /// Creates a Polygon GeoJSON Object.
+    ///
+    /// - Parameters:
+    ///     - polygon: A polygon
+    ///
+    /// - Returns: A Polygon GeoJSON Object.
     ///
     fileprivate func polygonObject(_ polygon: Polygon) throws -> [String: Any] {
         var coordinates =  [try polygon.outerRing.map({ try self.coordinateArray($0) })]
@@ -131,12 +154,22 @@ extension GeoJSONWriter {
     ///
     /// Creates a MultiPoint GeoJSON Object.
     ///
+    /// - Parameters:
+    ///     - multiPoint: A multi point
+    ///
+    /// - Returns: A MultiPoint GeoJSON Object.
+    ///
     fileprivate func multiPointObject(_ multiPoint: MultiPoint) throws -> [String: Any] {
         return [TYPE: "MultiPoint", COORDINATES: try multiPoint.map({ try self.coordinateArray($0.coordinate) })]
     }
 
     ///
-    /// Creates a MultiLineStrig GeoJSON Object.
+    /// Creates a MultiLineString GeoJSON Object.
+    ///
+    /// - Parameters:
+    ///     - multiLineString: A multi line string
+    ///
+    /// - Returns: A MultiLineString GeoJSON Object.
     ///
     fileprivate func multiLineStringObject(_ multiLineString: MultiLineString) throws -> [String: Any] {
         return [TYPE: "MultiLineString", COORDINATES: try multiLineString.map({ try coordinateCollection($0) }) ]
@@ -145,6 +178,11 @@ extension GeoJSONWriter {
     ///
     /// Creates a MultiPolygon GeoJSON Object.
     ///
+    /// - Parameters:
+    ///     - multiPolygon: A multi polygon
+    ///
+    /// - Returns: A MultiPolygon GeoJSON Object.
+    ///
     fileprivate func multiPolygonObject(_ multiPolygon: MultiPolygon) throws -> [String: Any] {
         return [TYPE: "MultiPolygon", COORDINATES: try multiPolygon.map({ try $0.map({ try coordinateCollection($0) }) }) ]
     }
@@ -152,19 +190,35 @@ extension GeoJSONWriter {
     ///
     /// Creates a GeometryCollection GeoJSON Object.
     ///
+    /// - Parameters:
+    ///     - geometryCollection: A geometry collection
+    ///
+    /// - Returns: A GeometryCollection GeoJSON Object.
+    ///
     fileprivate func geometryCollectionObject(_ geometryCollection: GeometryCollection) throws -> [String: Any] {
         return [TYPE: "GeometryCollection", GEOMETRIES: try geometryCollection.map({ try write($0) }) ]
     }
 
     ///
     /// Creates an Array of Arrays representing the coordinates.
+    /// Each single array consists of the elements of a single coordinate.
+    ///
+    /// - Parameters:
+    ///     - coordinateCollection: Some type of coordinate collection
+    ///
+    /// - Returns: An array of arrays representing the coordinates of a certain type.
     ///
     private func coordinateCollection<C: CoordinateCollectionType>(_ coordinateCollection: C) throws -> [[Double]] {
         return try coordinateCollection.map({ try self.coordinateArray($0) })
     }
 
     ///
-    /// Creates an array of values for printing.
+    /// Creates an array of coordinate values for printing.
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate
+    ///
+    /// - Returns: An array of two to four coordinate values.
     ///
     fileprivate func coordinateArray(_ coordinate: Coordinate) throws -> [Double] {
 
