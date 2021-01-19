@@ -115,7 +115,12 @@ public struct LineString: Geometry, Curve {
 
 extension LineString: ExpressibleByArrayLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - elements: A variadic list of `Coordinate`s.
+    ///
     public init(arrayLiteral elements: Coordinate...) {
         self.init(elements)
     }
@@ -150,6 +155,11 @@ extension LineString: CoordinateCollectionType, RangeReplaceableCollection {
 
     ///
     /// Accesses the element at the specified position.
+    ///
+    /// - Parameters:
+    ///     - index: The index of the coordinate within the linear ring.
+    ///
+    /// - Returns: The coordinate at the specified position.
     ///
     public subscript(index: Int) -> Coordinate {
         get {

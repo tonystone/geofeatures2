@@ -43,6 +43,8 @@ extension LineString {
     ///
     /// The length of this LinearType calculated using its associated CoordinateSystem.
     ///
+    /// - Returns: The length of the linear string.
+    ///
     public func length() -> Double {
 
         var length: Double = 0.0

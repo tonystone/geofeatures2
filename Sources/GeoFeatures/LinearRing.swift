@@ -180,6 +180,8 @@ extension LinearRing: CoordinateCollectionType, RangeReplaceableCollection {
     /// - Parameters:
     ///     - index: The index of the coordinate within the linear ring.
     ///
+    /// - Returns: The coordinate at the specified position.
+    ///
     public subscript(index: Int) -> Coordinate {
         get {
             return coordinates[index]
