@@ -80,6 +80,12 @@ extension LinearRing {
     }
 
     ///
+    /// Check if the bounding boxes overlap for two one dimensional line ranges.
+    ///
+    /// - Parameters:
+    ///     - range1: First tuple with the first value being a minimum and the second value being a maximum.
+    ///     - range2: Second tuple with the first value being a minimum and the second value being a maximum.
+    ///
     /// - Returns: true if the bounding boxes overlap for two one dimensional line ranges.
     ///            The first value for each range is the minimum value and the second is the maximum value.
     ///
@@ -87,6 +93,12 @@ extension LinearRing {
         return range1.1 >= range2.0 && range2.1 >= range1.0
     }
 
+    ///
+    /// Check if the bounding boxes overlap for two line segments.
+    ///
+    /// - Parameters:
+    ///     - segment: First line segment
+    ///     - other:   Second line segment
     ///
     /// - Returns: true if the bounding boxes overlap for two line segments
     ///
@@ -105,6 +117,12 @@ extension LinearRing {
         case onBoundary, onInterior, onExterior
     }
 
+    ///
+    /// Determine the location of a coordinate relative to a line segment
+    ///
+    /// - Parameters:
+    ///     - coordinate:  A coordinate
+    ///     - segment:     A line segment
     ///
     /// - Returns: a LocationType depending on where the coordinate is relative to the line segment.
     ///
@@ -153,27 +171,48 @@ extension LinearRing {
     }
 
     ///
-    /// - Returns: the value of a 2x2 determinant
+    /// 2x2 Determinant
     ///
     /// | a b |
     /// | c d |
+    ///
+    ///- Parameters:
+    ///     - a: The upper left value
+    ///     - b: The upper right value
+    ///     - c: The lower left value
+    ///     - d: The lower right value
+    ///
+    /// - Returns: Returns a two-dimensional determinant with value of ad - bc.
     ///
     fileprivate func det2d(a: Double, b: Double, c: Double, d: Double) -> Double {
         return a*d - b*c
     }
 
     ///
-    /// - Returns: a numeric value indicating where point p2 is relative to the line determined by p0 and p1.
-    ///            value > 0 implies p2 is on the left
-    ///            value = 0 implies p2 is on the line
-    ///            value < 0 implies p2 is to the right
+    /// Returns a numeric value indicating where coordinate c2 is relative to the line determined by coordinates c0 and c1.
     ///
-    fileprivate func isLeft(p0: Coordinate, p1: Coordinate, p2: Coordinate) -> Double {
-        return (p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y -  p0.y)
+    /// - Parameters:
+    ///     - c0: The first coordinate
+    ///     - c1: The second coordinate
+    ///     - c2: The third coordinate
+    ///
+    /// - Returns: a numeric value indicating where coordinate c2 is relative to the line determined by c0 and c1.
+    ///            value > 0 implies c2 is on the left
+    ///            value = 0 implies c2 is on the line
+    ///            value < 0 implies c2 is to the right.
+    ///
+    fileprivate func isLeft(c0: Coordinate, c1: Coordinate, c2: Coordinate) -> Double {
+        return (c1.x - c0.x)*(c2.y - c0.y) - (c2.x - c0.x)*(c1.y -  c0.y)
     }
 
     ///
-    /// - Returns: a Dimension of the intersection of the two line segments passed in.
+    ///  Do the two multi points have any points in common?
+    ///
+    /// - Parameters:
+    ///     - segment: The first line segment
+    ///     - other:   The second line segment
+    ///
+    /// - Returns: A Dimension of the intersection of the two line segments passed in.
     ///
     fileprivate func intersects(segment: Segment, other: Segment) -> Dimension {
 
@@ -195,10 +234,10 @@ extension LinearRing {
         ///
         /// Check cases where at least one boundary point of one segment touches the other line segment
         ///
-        let leftSign   = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
-        let rightSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
-        let leftSign2  = isLeft(p0: other.leftCoordinate, p1: other.rightCoordinate, p2: segment.leftCoordinate)
-        let rightSign2 = isLeft(p0: other.leftCoordinate, p1: other.rightCoordinate, p2: segment.rightCoordinate)
+        let leftSign   = isLeft(c0: segment.leftCoordinate, c1: segment.rightCoordinate, c2: other.leftCoordinate)
+        let rightSign  = isLeft(c0: segment.leftCoordinate, c1: segment.rightCoordinate, c2: other.rightCoordinate)
+        let leftSign2  = isLeft(c0: other.leftCoordinate, c1: other.rightCoordinate, c2: segment.leftCoordinate)
+        let rightSign2 = isLeft(c0: other.leftCoordinate, c1: other.rightCoordinate, c2: segment.rightCoordinate)
         let oneLine    = leftSign == 0 && rightSign == 0 /// Both line segments lie on one line
         if  (segment1Boundary1Location != .onExterior) ||  (segment1Boundary2Location != .onExterior) ||
             (segment2Boundary1Location != .onExterior) ||  (segment2Boundary2Location != .onExterior) {
@@ -286,7 +325,7 @@ extension LinearRing {
     }
     
     ///
-    /// - Returns: an integer that is the zero-based index of the coordinate that starts the final non-zero length segment of the linear ring.
+    /// - Returns: An integer that is the zero-based index of the coordinate that starts the final non-zero length segment of the linear ring.
     ///            It is assumed that a check has already been performed to assure there are at least three distinct coordinates in the linear ring.
     ///            Note consecutive coordinates can be repeated.
     ///
@@ -308,7 +347,7 @@ extension LinearRing {
 
 
     ///
-    /// - Returns: true if any interior point of the linear ring touches or crosses another interior point.
+    /// - Returns: True if any interior point of the linear ring touches or crosses another interior point.
     ///            Note consecutive coordinates can be repeated.
     ///
     fileprivate func selfIntersects() -> Bool {
@@ -359,7 +398,7 @@ extension LinearRing {
     }
 
     ///
-    /// - Returns: true if this linear ring has at least three distinct coordinates.
+    /// - Returns: True if this linear ring has at least three distinct coordinates.
     ///
     fileprivate func hasThreeDifferentCoordinates() -> Bool {
 
@@ -382,7 +421,7 @@ extension LinearRing {
     }
 
     ///
-    /// - Returns: true if this geometric object meets the following constraints:
+    /// - Returns: True if this geometric object meets the following constraints:
     ///            • A linear ring must have either 0 or 4 or more coordinates.
     ///            • The first and last coordinates must be equal.
     ///            • Consecutive coordinates may be equal.

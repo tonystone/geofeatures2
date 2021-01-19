@@ -132,7 +132,9 @@ extension IntersectionMatrix {
     /// - 1: Matches when dim(x) = 1
     /// - 2: Matches when dim(x) = 2
     ///
-    /// - parameter pattern: The pattern string consisting of legal characters from the set above.
+    /// - Parameter pattern: The pattern string consisting of legal characters from the set above.
+    ///
+    /// - Returns: True if the intersection matrix 'self' matches the input pattern string.
     ///
     internal func matches(_ pattern: String) -> Bool {
 
@@ -210,6 +212,7 @@ extension IntersectionMatrix: Sequence {
     ///
     ///    matrix[.interior, .boundary] = .two
     /// ```
+    ///  - Returns: The dimension of the matrix at the given row and column.
     ///
     internal subscript (row: Index, col: Index) -> Dimension {
 

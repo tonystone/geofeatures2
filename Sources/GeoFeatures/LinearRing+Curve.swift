@@ -42,6 +42,8 @@ extension LinearRing {
     ///
     /// The length of this LinearType calculated using its associated CoordinateSystem.
     ///
+    /// - Returns: The length of the linear ring.
+    ///
     public func length() -> Double {
 
         var length: Double = 0.0

@@ -136,7 +136,12 @@ public struct LinearRing: Geometry, Curve {
 
 extension LinearRing: ExpressibleByArrayLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - elements: A variadic list of `Coordinate`s.
+    ///
     public init(arrayLiteral elements: Coordinate...) {
         self.init(elements)
     }
@@ -171,6 +176,9 @@ extension LinearRing: CoordinateCollectionType, RangeReplaceableCollection {
 
     ///
     /// Accesses the element at the specified position.
+    ///
+    /// - Parameters:
+    ///     - index: The index of the coordinate within the linear ring.
     ///
     public subscript(index: Int) -> Coordinate {
         get {
