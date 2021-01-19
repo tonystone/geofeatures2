@@ -101,7 +101,12 @@ public struct GeometryCollection: Geometry {
 
 extension GeometryCollection: ExpressibleByArrayLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - elements: A variadic list of `Geometry`s.
+    ///
     public init(arrayLiteral elements: Geometry...) {
         self.init(elements)
     }
@@ -115,6 +120,11 @@ extension GeometryCollection: GeometryCollectionType, RangeReplaceableCollection
     /// Returns the position immediately after `i`.
     ///
     /// - Precondition: `(startIndex..<endIndex).contains(i)`
+    ///
+    /// - Parameters:
+    ///     - i: An integer
+    ///
+    /// - Returns: The index after the input index.
     ///
     public func index(after i: Int) -> Int {
         return i+1
