@@ -101,7 +101,12 @@ public struct MultiPolygon: Geometry {
 
 extension MultiPolygon: ExpressibleByArrayLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - elements: A variadic list of `Polygon`s.
+    ///
     public init(arrayLiteral elements: Polygon...) {
         self.init(elements)
     }
@@ -136,6 +141,11 @@ extension MultiPolygon: GeometryCollectionType, RangeReplaceableCollection {
 
     ///
     /// Accesses the element at the specified position.
+    ///
+    /// - Parameters:
+    ///     - index: The index of the polygon within the multi polygon.
+    ///
+    /// - Returns: The polygon at the specified position.
     ///
     public subscript(index: Int) -> Polygon {
         get {

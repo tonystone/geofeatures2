@@ -101,7 +101,12 @@ public struct MultiLineString: Geometry {
 
 extension MultiLineString: ExpressibleByArrayLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - elements: A variadic list of `LineString`s.
+    ///
     public init(arrayLiteral elements: LineString...) {
         self.init(elements)
     }
@@ -136,6 +141,8 @@ extension MultiLineString: GeometryCollectionType, RangeReplaceableCollection {
 
     ///
     /// Accesses the element at the specified position.
+    ///
+    /// - Returns: The line string at the specified position.
     ///
     public subscript(index: Int) -> LineString {
         get {

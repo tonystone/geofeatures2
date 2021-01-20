@@ -24,6 +24,11 @@ import Swift
 ///
 extension MultiPolygon {
 
+    ///
+    /// Calculates the area of this `MultiPolygon`
+    ///
+    ///  - Returns: The area of this `MultiPolygon`.   The area may be the sum of positive and negative numbers, depending on the orientations of the polygon rings.
+    ///
     public func area() -> Double {
         var area: Double = 0.0
 

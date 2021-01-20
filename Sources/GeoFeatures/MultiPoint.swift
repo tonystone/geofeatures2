@@ -101,7 +101,12 @@ public struct MultiPoint: Geometry {
 
 extension MultiPoint: ExpressibleByArrayLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - elements: A variadic list of `Point`s.
+    ///
     public init(arrayLiteral elements: Point...) {
         self.init(elements)
     }
@@ -136,6 +141,11 @@ extension MultiPoint: GeometryCollectionType, RangeReplaceableCollection {
 
     ///
     /// Accesses the element at the specified position.
+    ///
+    /// - Parameters:
+    ///     - index: The index of the point within the multi point.
+    ///
+    /// - Returns: The point at the specified position.
     ///
     public subscript(index: Int) -> Point {
         get {
