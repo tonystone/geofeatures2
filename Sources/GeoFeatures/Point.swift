@@ -110,7 +110,12 @@ public struct Point: Geometry {
 
 extension Point: ExpressibleByArrayLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - values: A variadic list of coordinate values, normally between 2 and 4 elements.
+    ///
     public init(arrayLiteral values: Double...) {
         precondition(values.count >= 2)
 
@@ -122,7 +127,14 @@ extension Point: ExpressibleByArrayLiteral {
 
 extension Point: ExpressibleByDictionaryLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - elements: A variadic list of tuples numbering between two and four.  Each tuple consists of a string identifying the element name followed by the element value.
+    ///
+    /// - Returns: A Point struct defined by a list of key-value tuples.
+    ///
     public init(dictionaryLiteral elements: (String, Double)...) {
         precondition(elements.count >= 2)
         precondition(elements[0].0 == "x")
@@ -148,8 +160,21 @@ extension Point: CoordinateCollectionType {
 
     public var endIndex: Int { return 1 }
 
+    ///
+    /// Returns the position immediately after `i`.
+    ///
+    /// - Precondition: `(startIndex..<endIndex).contains(i)`
+    ///
     public func index(after i: Int) -> Int { return i+1 }
 
+    ///
+    /// Accesses the coordinate at the specified position.
+    ///
+    /// - Parameters:
+    ///     - index: The index of the coordinate.  The index should only be zero.
+    ///
+    /// - Returns: The coordinate at the specified position, normally zero.
+    ///
     public subscript(index: Int) -> Coordinate {
         get {
             precondition(index == 0)

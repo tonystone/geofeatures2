@@ -206,7 +206,7 @@ extension LinearRing {
     }
 
     ///
-    ///  Do the two multi points have any points in common?
+    ///  Do the two line segments have any points in common?
     ///
     /// - Parameters:
     ///     - segment: The first line segment

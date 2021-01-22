@@ -98,9 +98,9 @@ extension Coordinate: ExpressibleByDictionaryLiteral {
     /// Creates a Coordinate struct initialized with the given key-value tuples, which should number between two and four.
     ///
     /// - Parameters:
-    ///     - elements: An array of values numbering between two and four.
+    ///     - elements: A variadic list of tuples numbering between two and four.  Each tuple consists of a string identifying the element name followed by the element value.
     ///
-    /// - Returns: A Coordinate struct defined by an array of key-value tuples.
+    /// - Returns: A Coordinate struct defined by a list of key-value tuples.
     ///
     public init(dictionaryLiteral elements: (String, Double)...) {
         precondition(elements.count >= 2)

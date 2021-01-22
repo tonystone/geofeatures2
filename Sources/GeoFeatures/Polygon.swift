@@ -130,7 +130,12 @@ public struct Polygon: Geometry, Surface {
 
 extension Polygon: ExpressibleByArrayLiteral {
 
+    ///
     /// Creates an instance initialized with the given elements.
+    ///
+    /// - Parameters:
+    ///     - elements: A variadic list of LinearRings.
+    ///
     public init(arrayLiteral elements: LinearRing...) {
         self.init(elements)
     }
@@ -163,6 +168,14 @@ extension Polygon: GeometryCollectionType, RangeReplaceableCollection {
         return rings.endIndex
     }
 
+    ///
+    /// Accesses the linear ring at the specified position.
+    ///
+    /// - Parameters:
+    ///     - index: The index of the linear ring.
+    ///
+    /// - Returns: The linear ring at the specified position.
+    ///
     public subscript(index: Int) -> LinearRing {
         get {
             return self.rings[index]

@@ -48,15 +48,26 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: true if the bounding boxes overlap for two one dimensional line ranges.
-    ///            The first value for each range is the minimum value and the second is the maximum value.
+    /// Check if the bounding boxes overlap for two one dimensional line ranges.
+    ///
+    /// - Parameters:
+    ///     - range1: First tuple with the first value being a minimum and the second value being a maximum.
+    ///     - range2: Second tuple with the first value being a minimum and the second value being a maximum.
+    ///
+    /// - Returns: A boolean indicating whether the two ranges overlap by a single point or more.
     ///
     fileprivate func boundingBoxesOverlap1D(range1: (Double, Double), range2: (Double, Double)) -> Bool {
         return range1.1 >= range2.0 && range2.1 >= range1.0
     }
 
     ///
-    /// - Returns: true if the bounding boxes overlap for two line segments
+    /// Check if the bounding boxes overlap for two line segments.
+    ///
+    /// - Parameters:
+    ///     - segment: First line segment
+    ///     - other:   Second line segment
+    ///
+    /// - Returns: A boolean indicating whether the two line segments overlap by a single point or more.
     ///
     fileprivate func boundingBoxesOverlap2D(segment: Segment, other: Segment) -> Bool {
         let range1x = (Swift.min(segment.leftCoordinate.x, segment.rightCoordinate.x), Swift.max(segment.leftCoordinate.x, segment.rightCoordinate.x))
@@ -74,7 +85,13 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: a LocationType depending on where the coordinate is relative to the line segment.
+    /// Determine the location of a coordinate relative to a line segment
+    ///
+    /// - Parameters:
+    ///     - coordinate:  A coordinate
+    ///     - segment:     A line segment
+    ///
+    /// - Returns: A location type indicating whether the coordinate is on the interior, boundary or exterior of the line segment.
     ///
     fileprivate func coordinateIsOnLineSegment(_ coordinate: Coordinate, segment: Segment) -> LocationType {
 
@@ -121,15 +138,28 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: a numeric value indicating where point p2 is relative to the line determined by p0 and p1.
-    ///            value > 0 implies p2 is on the left
-    ///            value = 0 implies p2 is on the line
-    ///            value < 0 implies p2 is to the right
+    /// Returns a numeric value indicating where coordinate c2 is relative to the line determined by coordinates c0 and c1.
     ///
-    fileprivate func isLeft(p0: Coordinate, p1: Coordinate, p2: Coordinate) -> Double {
-        return (p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y -  p0.y)
+    /// - Parameters:
+    ///     - c0: The first coordinate
+    ///     - c1: The second coordinate
+    ///     - c2: The third coordinate
+    ///
+    /// - Returns: A numeric value indicating where coordinate c2 is relative to the line determined by coordinates c0 and c1.
+    ///            value > 0 implies c2 is on the left,
+    ///            value = 0 implies c2 is on the line,
+    ///            value < 0 implies c2 is to the right
+    ///
+    fileprivate func isLeft(c0: Coordinate, c1: Coordinate, c2: Coordinate) -> Double {
+        return (c1.x - c0.x)*(c2.y - c0.y) - (c2.x - c0.x)*(c1.y -  c0.y)
     }
 
+    ///
+    ///  Do the two line segments have any points in common?
+    ///
+    /// - Parameters:
+    ///     - segment: The first line segment
+    ///     - other:   The second line segment
     ///
     /// - Returns: a tuple consisting of (1) a Dimension of the intersection of the two line segments passed in, and (2) a coordinate where the two intersect, if the Dimension is .zero.
     ///            If it is not .zero, the Coordinate is irrelevant and will have a dummy value.
@@ -155,8 +185,8 @@ extension Polygon {
         ///
         /// Check cases where at least one boundary point of one segment touches the other line segment
         ///
-        let leftSign   = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.leftCoordinate)
-        let rightSign  = isLeft(p0: segment.leftCoordinate, p1: segment.rightCoordinate, p2: other.rightCoordinate)
+        let leftSign   = isLeft(c0: segment.leftCoordinate, c1: segment.rightCoordinate, c2: other.leftCoordinate)
+        let rightSign  = isLeft(c0: segment.leftCoordinate, c1: segment.rightCoordinate, c2: other.rightCoordinate)
         let oneLine    = leftSign == 0 && rightSign == 0 /// Both line segments lie on one line
         if  (segment1Boundary1Location != .onExterior) ||  (segment1Boundary2Location != .onExterior) ||
             (segment2Boundary1Location != .onExterior) ||  (segment2Boundary2Location != .onExterior) {
@@ -212,7 +242,13 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: an integer that is the number of times one linear ring touches another at a point.
+    ///  How many times do the two linear rings touch each other at a single coordinate?
+    ///
+    /// - Parameters:
+    ///     - linearRing1: The first linear ring
+    ///     - linearRing2: The second linear ring
+    ///
+    /// - Returns: An integer that is the number of times one linear ring touches another at a point.
     ///            It is assumed that the intersection dimension of the linear rings is zero, and the two linear rings do not cross.
     ///            Note consecutive coordinates can be repeated.
     ///
@@ -255,7 +291,13 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: an array of linear rings that touch the input linear ring.  All of these linear rings are holes in this polygon.  The array may be empty.
+    ///  Which linear rings touch the input linear ring?
+    ///
+    /// - Parameters:
+    ///     - linearRing:   A linear ring
+    ///     - touchesTuple: An array of tuples where the first item in the tuple is a linear ring and the second element is an array of linear rings it touches.
+    ///
+    /// - Returns: An array of linear rings that touch the input linear ring.  All of these linear rings are holes in this polygon.  The array may be empty.
     ///
     fileprivate func holesTouchingHole(_ linearRing: LinearRing, _ touchesTuple: [(LinearRing, [LinearRing])]) -> [LinearRing] {
 
@@ -271,7 +313,13 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: true if the given linear ring matches any of the linear rings in the array of linear rings that touch the outer ring.  All of these linear rings are holes in this polygon.  The array may be empty.
+    ///  Is the input linear ring a hole that touches the outer linear ring?
+    ///
+    /// - Parameters:
+    ///     - linearRing:             A linear ring
+    ///     - holesTouchingOuterRing: An array of linear rings that are holes that touch the outer linear ring.
+    ///
+    /// - Returns: True if the given linear ring matches any of the linear rings in the array of linear rings that touch the outer ring.  All of these linear rings are holes in this polygon.
     ///
     fileprivate func holeTouchesOuterRing(_ linearRing: LinearRing, _ holesTouchingOuterRing: [LinearRing]) -> Bool {
 
@@ -285,13 +333,15 @@ extension Polygon {
         /// No match was found.  Return false.
         return false
     }
-    
+
     ///
-    /// - Returns: true if any of the chains disconnect this polygon.
+    ///  Do any of the input linear ring chains disconnect the polygon?  To do this, the chain must separate one portion of the polygon from another.
     ///
-    ///            The input values are
-    ///            (1) an array of LinearRing chains, such that each LinearRing (hole) in a chain touches the next, and
-    ///            (2) an array of holes that touch the outer ring.
+    /// - Parameters:
+    ///     - holeChains:             An array of linear ring chains, such that each linear ring (hole) in a chain touches the next
+    ///     - holesTouchingOuterRing: An array of linear rings that are holes that touch the outer linear ring.
+    ///
+    /// - Returns: True if any of the chains disconnect this polygon.
     ///
     fileprivate func chainsDisconnectPolygon(_ holeChains:[[LinearRing]], _ holesTouchingOuterRing: [LinearRing]) -> Bool {
 
@@ -326,13 +376,16 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: true if any of the chains disconnect this polygon.
+    ///  Do any of the input linear ring chains disconnect the polygon?  To do this, the chain must separate one portion of the polygon from another.
     ///
-    ///            The input values are
-    ///            (1) an array of LinearRing chains, such that each LinearRing (hole) in a chain touches the next,
-    ///            (2) an array of holes that touch the outer ring, and
-    ///            (3) an array of tuples, where the first element of the tuple is a linear ring, and the second element of the tuple is the array of linear rings (holes) it touches.
-    ///            Note that only LinearRing chains that are not yet complete will appear in the array of chains.
+    /// - Parameters:
+    ///     - holeChains:             An array of linear ring chains, such that each linear ring (hole) in a chain touches the next
+    ///     - holesTouchingOuterRing: An array of linear rings that are holes that touch the outer linear ring.
+    ///     - touchesTuple:           An array of tuples, where the first element of the tuple is a linear ring, and the second element of the tuple is the array of linear rings (holes) it touches.
+    ///
+    /// - Returns: True if any of the chains disconnect this polygon.
+    ///
+    /// - Note: Only linear ring chains that are not yet complete will appear in the array of chains.
     ///
     fileprivate func generateChains(_ holeChains:[[LinearRing]], _ holesTouchingOuterRing: [LinearRing], _ touchesTuple: [(LinearRing, [LinearRing])]) -> Bool {
 
@@ -370,12 +423,16 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: true if there is no sequence of holes that separates part of the interior of the polygon from another part.
-    ///            A disconnected interior can be formed by two or more holes that connect to each other and the outer ring,
-    ///            or a collection of three or more holes that form a loop and may or may not touch the outer ring.
+    /// Are there any linear ring (hole) chains that separate one portion of the polygon from another?
     ///
-    ///            The input values are (1) an array of holes that touch the outer ring, and (2) an array of tuples, where the first element of the tuple is a linear ring,
-    ///            and the second element of the tuple is the array of linear rings (holes) it touches.
+    /// - Parameters:
+    ///     - holesTouchingOuterRing: An array of linear rings that are holes that touch the outer linear ring.
+    ///     - touchesTuple:           An array of tuples, where the first element of the tuple is a linear ring, and the second element of the tuple is the array of linear rings (holes) it touches.
+    ///
+    /// - Returns: True if there is no sequence of holes that separates part of the interior of the polygon from another part.
+    ///
+    /// - Note: A disconnected interior can be formed by two or more holes that connect to each other and the outer ring,
+    ///         or a collection of three or more holes that form a loop that may or may not touch the outer ring.
     ///
     fileprivate func polygonIsConnected(_ holesTouchingOuterRing: [LinearRing], _ touchesTuple: [(LinearRing, [LinearRing])]) -> Bool {
 
@@ -393,7 +450,7 @@ extension Polygon {
     }
 
     ///
-    /// - Returns: true if this geometric object meets the following constraints:
+    /// - Returns: True if this geometric object meets the following constraints:
     ///            •    the coordinates which define it are valid coordinates
     ///            •    the linear rings for the shell and holes are valid (i.e. are closed and do not self-intersect)
     ///            •    the holes are completely contained inside the shell
