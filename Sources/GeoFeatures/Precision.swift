@@ -27,6 +27,9 @@ public protocol Precision {
     ///
     /// Convert a double into `self` precision.
     ///
+    ///- Parameters:
+    ///     - value: A double to convert.
+    ///
     /// - Returns: A double converted to `self` precision.
     ///
     func convert(_ value: Double) -> Double
@@ -34,12 +37,18 @@ public protocol Precision {
     ///
     /// Convert an optional double into `self` precision.
     ///
+    /// - Parameters:
+    ///     - value: An optional double to convert.
+    ///
     /// - Returns: A double converted to `self` precision if a value was passed, or nil otherwise.
     ///
     func convert(_ value: Double?) -> Double?
 
     ///
     /// Convert a Coordinate into `self` precision.
+    ///
+    /// - Parameters:
+    ///     - coordinate: A coordinate to convert.
     ///
     /// - Returns: A Coordinate converted to `self` precision.
     ///

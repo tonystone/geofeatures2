@@ -34,6 +34,12 @@ internal class Tokenizer<T: Token> {
     fileprivate var stringStream: String
     fileprivate var matchRange: Range<String.Index>
 
+    ///
+    /// Construct a Tokenizer from a string.
+    ///
+    /// - parameters:
+    ///     - string:  A string
+    ///
     init(string: String) {
         self.stringStream = string
         self.matchRange = stringStream.startIndex..<stringStream.endIndex
@@ -44,6 +50,14 @@ internal class Tokenizer<T: Token> {
         }
     }
 
+    ///
+    /// Construct an optional string from a token.
+    ///
+    /// - Parameters:
+    ///     - token:  A token
+    ///
+    /// - Returns: An optional string.
+    ///
     func accept(_ token: T) -> String? {
         if let range = token.match(stringStream, matchRange: matchRange) {
 
@@ -64,6 +78,14 @@ internal class Tokenizer<T: Token> {
         return nil
     }
 
+    ///
+    /// Is this a valid token?
+    ///
+    /// - Parameters:
+    ///     - token:  A token
+    ///
+    /// - Returns: True if the string stream and match range match.
+    ///
     func expect(_ token: T) -> Bool {
         return token.match(stringStream, matchRange: matchRange) != nil
     }

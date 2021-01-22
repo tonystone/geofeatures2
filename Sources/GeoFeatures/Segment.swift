@@ -27,17 +27,24 @@ internal class Segment {
     var leftCoordinate:  Coordinate
     var rightCoordinate: Coordinate
 
+    ///
+    /// Construct a line segment.
+    ///
+    /// - Parameters:
+    ///     - left:  The first coordinate
+    ///     - right: The second coordinate.
+    ///
     init(left: Coordinate, right: Coordinate) {
         self.leftCoordinate  = left
         self.rightCoordinate = right
     }
 
     ///
-    /// Construct a Segment from a LineString.
-    /// The LineString should have exactly two coordinates.  If not, a dummy value is returned.
+    /// Construct a segment from a line string.
+    /// A segment should have exactly two coordinates.  If not, dummy values will returned.
     ///
-    /// - parameters:
-    ///     - other: The LineString.
+    /// - Parameters:
+    ///     - other: A line string.
     ///
     public init(other: LineString) {
         guard other.count == 2 else {
