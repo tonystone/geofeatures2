@@ -22,6 +22,7 @@ import PackageDescription
 
 let package = Package(
     name: "GeoFeatures",
+    platforms: [.iOS(.v12)],
     products: [
         /// Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(name: "GeoFeatures", type: .dynamic, targets: ["GeoFeatures", "GeoFeaturesQuartz", "GeoFeaturesPlaygroundSupport"])
